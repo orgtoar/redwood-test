@@ -4,10 +4,46 @@ on:
   pull_request
 
 jobs:
+  only-doc-changes:
+    # if: github.repository == 'redwoodjs/redwood'
+    name: 📖 Only doc changes?
+    runs-on: ubuntu-latest
+    outputs:
+      only-doc-changes: ${{ steps.only-doc-changes.outputs.only-doc-changes }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+        shell: bash
+
+      - name: Restore yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: yarn-1234-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
+          restore-keys: |
+            yarn-1234-
+
+      - run: yarn install
+
+      - name: 📖 Only doc changes?
+        id: only-doc-changes
+        uses: ./.github/actions/only_doc_changes
+
+      - run: echo ${{ steps.only-doc-changes.outputs.only-doc-changes }}
+
   check:
+    needs: only-doc-changes
+    if: needs.only-doc-changes.outputs.only-doc-changes == 'false'
     name: ✅ Check constraints, dependencies, and package.json's
     runs-on: ubuntu-latest
-    # if: github.repository == 'redwoodjs/redwood'
     steps:
       - uses: actions/checkout@v3
       - name: 🧶 Setup job
@@ -15,6 +51,14 @@ jobs:
 
       - name: ✅ Check constraints, dependencies, and package.json's
         uses: ./tasks/check
+
+  check-docs:
+    needs: only-doc-changes
+    if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
+    name: ✅ Check constraints, dependencies, and package.json's
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Only doc changes"
 
   build-lint-test:
     needs: check
@@ -44,6 +88,18 @@ jobs:
 
       - name: 🧪 Test
         run: echo "yarn test"
+
+  build-lint-test-docs:
+    needs: only-doc-changes
+    if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: [14, 16]
+    name: 🏗 Build, lint, test / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: echo "Only doc changes"
 
   tutorial-e2e:
     needs: check
@@ -103,6 +159,18 @@ jobs:
           spec: |
              cypress/integration/01-tutorial/*.spec.js
              cypress/integration/04-logger/*.spec.js
+
+  tutorial-e2e-docs:
+    needs: only-doc-changes
+    if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [14, 16]
+    name: 🌲 Tutorial E2E / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: echo "Only doc changes"
 
   smoke-test:
     needs: check
@@ -230,3 +298,15 @@ jobs:
           yarn rw g sdl DoesNotExist
         working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
         continue-on-error: true
+
+  smoke-test-docs:
+    needs: only-doc-changes
+    if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: [14, 16]
+    name: 👀 Smoke test / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: echo "Only doc changes"
