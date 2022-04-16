@@ -32,7 +32,7 @@ jobs:
           BRANCH_TAG=$(basename ${{ github.ref_name }})
           BRANCH_TAG=${BRANCH_TAG:1}
 
-          echo "Current tag is $CURRENT_TAG"
+          echo "::notice::Current tag is $CURRENT_TAG"
           echo "Branch tag is $BRANCH_TAG"
           echo 'Running "yarn dlx semver-compare-cli $CURRENT_TAG le $BRANCH_TAG"'
 
