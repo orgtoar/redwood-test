@@ -1,54 +1,80 @@
-name: Lint, Build & Test
+name: 🏗 Build, lint, test
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  pull_request
 
 jobs:
-  all:
-    strategy:
-      matrix:
-        os: ['ubuntu-latest', 'windows-latest']
-        node-version: ['14', '16.10']
-      fail-fast: true
-    runs-on: ${{ matrix.os }}
-    name: ${{ matrix.os }} | Node ${{ matrix.node-version }} latest
+  check:
+    name: ✅ Check constraints, dependencies, and package.json's
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup node
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+
+      - name: Restore yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: yarn-1235-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
+          restore-keys: |
+            yarn-1235-
+
+      - name: 🧶 Install dependencies
+        run: yarn install
+
+      - name: ✅ Check constraints, dependencies, and package.json's
+        uses: ./tasks/check
+
+  build-lint-test:
+    needs: check
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: [14, 16]
+      fail-fast: true
+    name: 🏗 Build, lint, test / ${{ matrix.os }} / Node.js ${{ matrix.node-version }} latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Remove the tsc problem matcher if not ubuntu-node-16
-        if: (matrix.os == 'ubuntu-latest' && matrix.node-version == '16.10') == false
+      - name: Remove the tsc problem matcher if not ubuntu-latest, Node.js 16
+        if: (matrix.os == 'ubuntu-latest' && matrix.node-version == '16') == false
         run: echo "echo "::remove-matcher owner=tsc::""
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
 
-      - name: Cache yarn
+      - name: Restore yarn cache
         uses: actions/cache@v3
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: yarn-1235-${{ hashFiles('yarn.lock') }} # Change `yarn-{randomString}` to bust the cache
+          # Change `yarn-{randomString}-` to bust the cache.
+          key: yarn-1235-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
           restore-keys: |
-            yarn-1234
+            yarn-1235-
 
-      - name: Install dependencies
-        run: yarn install --immutable
+      - name: 🧶 Install dependencies
+        run: yarn install
 
-      - name: Check constraints, dependencies, and package.json's
-        uses: ./tasks/check
+      - name: 🔨 Build
+        run: echo "yarn build"
 
-      - name: Build
-        run: yarn build
+      - name: 🔎 Lint
+        run: echo "yarn lint"
 
-      - name: Run ESLint
-        run: yarn lint
-
-      - name: Run tests
-        run: yarn test
+      - name: 🧪 Test
+        run: echo "yarn test"
