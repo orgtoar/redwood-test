@@ -35,12 +35,12 @@ jobs:
           echo
           echo "Current tag is $CURRENT_TAG"
           echo "Branch tag is $BRANCH_TAG"
-          echo "Comparing tags with \"yarn dlx semver-compare-cli $CURRENT_TAG le $BRANCH_TAG\""
+          echo "Comparing tags with \"yarn dlx semver-compare-cli $CURRENT_TAG lt $BRANCH_TAG\""
           echo
 
           # See if the current tag is less than the branch's tag.
           # If it is, we're good to keep going.
-          yarn dlx semver-compare-cli $CURRENT_TAG le $BRANCH_TAG
+          yarn dlx semver-compare-cli $CURRENT_TAG lt $BRANCH_TAG
 
   publish-release-candidate:
     name: 🚢 Publish Release Candidate
