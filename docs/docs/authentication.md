@@ -6,6 +6,8 @@ description: Set up an authentication provider
 
 `@redwoodjs/auth` contains both a built-in database-backed authentication system (dbAuth), as well as lightweight wrappers around popular SPA authentication libraries.
 
+<!-- docs only -->
+
 We currently support the following third-party authentication providers:
 
 - Netlify Identity _([Repo on GitHub](https://github.com/netlify/netlify-identity-widget))_
