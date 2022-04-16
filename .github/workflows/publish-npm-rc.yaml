@@ -32,8 +32,9 @@ jobs:
           BRANCH_TAG=$(basename ${{ github.ref_name }})
           BRANCH_TAG=${BRANCH_TAG:1}
 
-          echo $CURRENT_TAG
-          echo $BRANCH_TAG
+          echo "Current tag is $CURRENT_TAG"
+          echo "Branch tag is $BRANCH_TAG"
+          echo 'Running "yarn dlx semver-compare-cli $CURRENT_TAG le $BRANCH_TAG"'
 
           # See if the current tag is less than the branch's tag.
           # If it is, we're good to keep going.
