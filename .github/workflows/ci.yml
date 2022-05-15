@@ -5,7 +5,6 @@ on:
 
 jobs:
   only-doc-changes:
-    if: github.repository == 'redwoodjs/redwood'
     name: 📖 Only doc changes?
     runs-on: ubuntu-latest
     outputs:
