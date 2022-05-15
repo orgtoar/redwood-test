@@ -217,6 +217,10 @@ jobs:
           PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
           REDWOOD_DISABLE_TELEMETRY: 1
 
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
+
       - name: Run `rw info`
         run: |
           yarn rw info
