@@ -1,0 +1,61 @@
+name: "🐛 Bug report"
+description: "Is something not working the way it should be?"
+
+title: "[Bug?]: "
+labels: bug/needs-info
+
+body:
+  - type: textarea
+    attributes:
+      label: Describe the bug
+      description: |
+        What's not working?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: How do we reproduce the bug?
+      description: |
+        What commands do we need to run? What packages do we need to install? What does the `schema.prisma` need to look like? The more detail, the better!
+    validations:
+        required: true
+
+  - type: textarea
+    attributes:
+      label: What's your environment?
+      render: shell
+      description: |
+        Run `yarn rw info` and paste the output here.
+      placeholder: |
+        System:
+          OS: macOS 12.3.1
+          Shell: 5.8 - /bin/zsh
+        Binaries:
+          Node: 16.15.1 - /private/var/folders/dt/yks4v5m53k114qxgz6jh4pgw0000gn/T/xfs-0cbbe6f7/node
+          Yarn: 3.2.1 - /private/var/folders/dt/yks4v5m53k114qxgz6jh4pgw0000gn/T/xfs-0cbbe6f7/yarn
+        Databases:
+          SQLite: 3.37.0 - /usr/bin/sqlite3
+        Browsers:
+          Chrome: 102.0.5005.115
+          Safari: 15.4
+        npmPackages:
+          @redwoodjs/core: 1.5.2 => 1.5.2
+    validations:
+        required: true
+
+  - type: checkboxes
+    attributes:
+      label: Are you interested in working on a fix?
+      description: "No pressure—this is totally optional! We just want to invite you to contribute to Redwood. If you choose to contribute, the core team will be there to answer your questions."
+      options:
+        - label: "I want to work on a fix"
+
+  - type: markdown
+    attributes:
+      value: |
+      "## How long will it take my issue to be fixed?"
+
+      "Your issue will be triaged within 3 to seven days. From there, it'll be prioritized"
+      "If it's critical we'll start workin on a fix right away"
+      "But if it's not it may take some time. You're willingness to work on a fix will speed that up greatly"
