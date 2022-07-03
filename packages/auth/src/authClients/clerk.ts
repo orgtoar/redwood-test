@@ -12,7 +12,7 @@ import {
   SignOut,
 } from '@clerk/types'
 
-import type { AuthClient } from '.'
+import type { AuthClient } from './'
 
 export interface AuthClientClerk extends AuthClient {
   logout: SignOut
