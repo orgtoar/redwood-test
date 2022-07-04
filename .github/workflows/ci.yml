@@ -206,6 +206,10 @@ jobs:
           yarn rw build --no-prerender
         working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
 
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
+
       - name: Run `rw prerender`
         run: |
           yarn rw prerender --verbose
