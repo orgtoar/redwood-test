@@ -1,6 +1,5 @@
-import type { QueryResolvers, MutationResolvers } from 'types/graphql'
-
 import { db } from 'src/lib/db'
+import type { QueryResolvers, MutationResolvers } from 'types/graphql'
 
 export const contacts: QueryResolvers['contacts'] = () => {
   return db.contact.findMany()

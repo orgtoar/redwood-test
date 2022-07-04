@@ -1,5 +1,4 @@
 import type { FindContactById } from 'types/graphql'
-
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import Contact from 'src/components/Contact/Contact'
