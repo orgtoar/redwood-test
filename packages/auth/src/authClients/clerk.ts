@@ -35,7 +35,9 @@ function clerkClient(propsClient: Clerk | null): Clerk | null {
 
 export const clerk = async (client: Clerk): Promise<AuthClientClerk> => {
   // We use the typescript dynamic import feature to pull in the react library only if clerk is needed.
-  const { useUser: useClerkUser } = await import('@clerk/clerk-react')
+  const { useUser: useClerkUser } = await import(
+    /* webpackIgnore: true */ '@clerk/clerk-react'
+  )
 
   return {
     type: 'clerk',
