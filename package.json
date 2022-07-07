@@ -25,6 +25,7 @@
     "test-ci": "lerna run test --concurrency 2 -- --colors --maxWorkers"
   },
   "resolutions": {
+    "@testing-library/react": "13.4.0",
     "@types/react": "18.0.20",
     "microtime": "3.1.1",
     "prop-types": "15.8.1",
@@ -57,8 +58,7 @@
     "@playwright/test": "1.26.1",
     "@replayio/playwright": "0.2.27",
     "@testing-library/jest-dom": "5.16.5",
-    "@testing-library/react": "12.1.5",
-    "@testing-library/react-hooks": "8.0.1",
+    "@testing-library/react": "13.4.0",
     "@testing-library/user-event": "14.4.3",
     "@tsd/typescript": "4.8.4",
     "@types/babel__generator": "7.6.4",
