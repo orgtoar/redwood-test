@@ -21,6 +21,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         node-version: [14, 16]
+      fail-fast: false
     name: 🏗 Build, lint, test / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
     runs-on: ${{ matrix.os }}
     steps:
@@ -58,15 +59,15 @@ jobs:
 
       - name: 🧪 runInBand
         if: always()
-        run: yarn lerna run test --stream -- --colors --runInBand
+        run: yarn testRunInBand
 
       - name: 🧪 runInBand
         if: always()
-        run: yarn lerna run test --stream -- --colors --runInBand
+        run: yarn testRunInBand
 
       - name: 🧪 runInBand
         if: always()
-        run: yarn lerna run test --stream -- --colors --runInBand
+        run: yarn testRunInBand
 
         # 3
 
@@ -81,12 +82,12 @@ jobs:
 
       - name: 🧪 cores
         if: always()
-        run: yarn lerna run test --stream -- --colors --maxWorkers=${{ steps.cpu-cores.outputs.count }}
+        run: yarn testWorkers ${{ steps.cpu-cores.outputs.count }}
 
       - name: 🧪 cores
         if: always()
-        run: yarn lerna run test --stream -- --colors --maxWorkers=${{ steps.cpu-cores.outputs.count }}
+        run: yarn testWorkers ${{ steps.cpu-cores.outputs.count }}
 
       - name: 🧪 cores
         if: always()
-        run: yarn lerna run test --stream -- --colors --maxWorkers=${{ steps.cpu-cores.outputs.count }}
+        run: yarn testWorkers ${{ steps.cpu-cores.outputs.count }}
