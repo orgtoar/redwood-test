@@ -21,7 +21,6 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         node-version: [14, 16]
-      fail-fast: true
     name: 🏗 Build, lint, test / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
     runs-on: ${{ matrix.os }}
     steps:
@@ -44,39 +43,50 @@ jobs:
         # 1
 
       - name: 🧪 CONTROL
+        if: always()
         run: yarn test
 
       - name: 🧪 CONTROL
+        if: always()
         run: yarn test
 
       - name: 🧪 CONTROL
+        if: always()
         run: yarn test
 
         # 2
 
       - name: 🧪 runInBand
+        if: always()
         run: yarn lerna run test --stream -- --colors --runInBand
 
       - name: 🧪 runInBand
+        if: always()
         run: yarn lerna run test --stream -- --colors --runInBand
 
       - name: 🧪 runInBand
+        if: always()
         run: yarn lerna run test --stream -- --colors --runInBand
 
         # 3
 
       - name: Get number of CPU cores
+        if: always()
         id: cpu-cores
         uses: SimenB/github-actions-cpu-cores@v1
 
       - name: echo cores
+        if: always()
         run: echo ${{ steps.cpu-cores.outputs.count }}
 
       - name: 🧪 cores
+        if: always()
         run: yarn lerna run test --stream -- --colors --maxWorkers=${{ steps.cpu-cores.outputs.count }}
 
       - name: 🧪 cores
+        if: always()
         run: yarn lerna run test --stream -- --colors --maxWorkers=${{ steps.cpu-cores.outputs.count }}
 
       - name: 🧪 cores
+        if: always()
         run: yarn lerna run test --stream -- --colors --maxWorkers=${{ steps.cpu-cores.outputs.count }}
