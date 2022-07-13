@@ -1,0 +1,5 @@
+import type { Prisma } from '@prisma/client'
+
+export const standard = defineScenario<Prisma.${prismaTypeName}>(${stringifiedScenario})
+
+export type StandardScenario = typeof standard

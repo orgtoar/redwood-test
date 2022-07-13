@@ -1,0 +1,1 @@
+{"version":3,"file":"RWLayout.d.ts","sourceRoot":"","sources":["../../src/model/RWLayout.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,MAAM,QAAQ,CAAA;AAEjC,OAAO,EAAE,SAAS,EAAE,MAAM,aAAa,CAAA;AACvC;;GAEG;AACH,qBAAa,QAAS,SAAQ,QAAQ;IACjB,QAAQ,EAAE,MAAM;IAAS,MAAM,EAAE,SAAS;gBAA1C,QAAQ,EAAE,MAAM,EAAS,MAAM,EAAE,SAAS;CAG9D"}

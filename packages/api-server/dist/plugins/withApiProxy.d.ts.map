@@ -1,0 +1,1 @@
+{"version":3,"file":"withApiProxy.d.ts","sourceRoot":"","sources":["../../src/plugins/withApiProxy.ts"],"names":[],"mappings":";AACA,OAAO,EAAE,eAAe,EAAE,MAAM,SAAS,CAAA;AAEzC,UAAU,eAAe;IACvB,MAAM,EAAE,MAAM,CAAA;IACd,OAAO,EAAE,MAAM,CAAA;CAChB;AAED,QAAA,MAAM,YAAY,QACX,eAAe,uBACC,eAAe,mJAWrC,CAAA;AAED,eAAe,YAAY,CAAA"}

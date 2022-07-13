@@ -1,0 +1,1 @@
+{"version":3,"file":"RWFunction.d.ts","sourceRoot":"","sources":["../../src/model/RWFunction.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,MAAM,QAAQ,CAAA;AAEjC,OAAO,EAAE,SAAS,EAAE,MAAM,aAAa,CAAA;AACvC;;GAEG;AACH,qBAAa,UAAW,SAAQ,QAAQ;IACnB,QAAQ,EAAE,MAAM;IAAS,MAAM,EAAE,SAAS;gBAA1C,QAAQ,EAAE,MAAM,EAAS,MAAM,EAAE,SAAS;CAG9D"}
