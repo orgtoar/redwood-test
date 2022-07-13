@@ -146,10 +146,8 @@ let RWLanguageServer = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.
         uri
       }
     }) => {
-      var _this$getProject;
-
       const actions = [];
-      const node = await ((_this$getProject = this.getProject()) === null || _this$getProject === void 0 ? void 0 : _this$getProject.findNode(uri));
+      const node = await this.getProject()?.findNode(uri);
 
       if (!node) {
         return [];
@@ -233,9 +231,7 @@ let RWLanguageServer = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.
   }
 
   async collectIDEInfo(uri) {
-    var _this$getProject2;
-
-    return (await ((_this$getProject2 = this.getProject()) === null || _this$getProject2 === void 0 ? void 0 : _this$getProject2.collectIDEInfo(uri))) ?? [];
+    return (await this.getProject()?.collectIDEInfo(uri)) ?? [];
   }
 
   async info(uri, kind) {
@@ -245,9 +241,7 @@ let RWLanguageServer = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.
   }
 
   get hasWorkspaceFolderCapability() {
-    var _this$initializeParam;
-
-    return ((_this$initializeParam = this.initializeParams.capabilities.workspace) === null || _this$initializeParam === void 0 ? void 0 : _this$initializeParam.workspaceFolders) === true;
+    return this.initializeParams.capabilities.workspace?.workspaceFolders === true;
   }
 
 }, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "connection", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "connection"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "start", [_dec2], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "start"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "diagnostics", [_dec3], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "diagnostics"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "commands", [_dec4], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "commands"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "outline", [_dec5], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "outline"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "xmethods", [_dec6], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "xmethods"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "host", [_dec7], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "host"), _class.prototype)), _class));

@@ -30,9 +30,7 @@ const getJsxElements = (ast, name) => {
   (0, _traverse.default)(ast, {
     JSXIdentifier(path) {
       if (path.node.name === name && path.parentPath.type === 'JSXOpeningElement') {
-        var _path$parentPath, _path$parentPath$pare;
-
-        if ((path === null || path === void 0 ? void 0 : (_path$parentPath = path.parentPath) === null || _path$parentPath === void 0 ? void 0 : (_path$parentPath$pare = _path$parentPath.parentPath) === null || _path$parentPath$pare === void 0 ? void 0 : _path$parentPath$pare.type) === 'JSXElement') {
+        if (path?.parentPath?.parentPath?.type === 'JSXElement') {
           const element = reduceJsxElement([], path.parentPath.parentPath.node);
           elements = (0, _concat.default)(elements).call(elements, element);
         }

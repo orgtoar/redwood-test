@@ -65,7 +65,7 @@ const prebuildApiFiles = srcFiles => {
 
     const result = (0, _api.prebuildApiFile)(srcPath, dstPath, plugins);
 
-    if (!(result !== null && result !== void 0 && result.code)) {
+    if (!result?.code) {
       // TODO: Figure out a better way to return these programatically.
       console.warn('Error:', srcPath, 'could not prebuilt.');
       return undefined;
@@ -89,7 +89,7 @@ const transpileApi = (files, options = {}) => {
     absWorkingDir: rwjsPaths.api.base,
     entryPoints: files,
     platform: 'node',
-    target: 'node14',
+    target: 'node16',
     // Netlify defaults NodeJS 14: https://answers.netlify.com/t/aws-lambda-now-supports-node-js-14/31789/3
     format: 'cjs',
     bundle: false,

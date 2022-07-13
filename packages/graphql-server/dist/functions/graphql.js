@@ -199,8 +199,6 @@ const createGraphQLHandler = ({
   });
 
   function buildRequestObject(event) {
-    var _event$requestContext;
-
     const requestHeaders = new _crossUndiciFetch.Headers();
 
     for (const headerName in event.headers) {
@@ -222,7 +220,7 @@ const createGraphQLHandler = ({
     }
 
     const protocol = isDevEnv ? 'http' : 'https';
-    const requestUrl = new _url.default(event.path, protocol + '://' + (((_event$requestContext = event.requestContext) === null || _event$requestContext === void 0 ? void 0 : _event$requestContext.domainName) || 'localhost'));
+    const requestUrl = new _url.default(event.path, protocol + '://' + (event.requestContext?.domainName || 'localhost'));
 
     if (event.multiValueQueryStringParameters) {
       for (const queryStringParam in event.multiValueQueryStringParameters) {

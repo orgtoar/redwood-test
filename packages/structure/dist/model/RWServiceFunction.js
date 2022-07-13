@@ -12,8 +12,6 @@ _Object$defineProperty(exports, "__esModule", {
 
 exports.RWServiceFunction = void 0;
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
-
 var _sort = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/sort"));
 
 var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
@@ -53,9 +51,7 @@ let RWServiceFunction = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators
 
 
   get sdlField() {
-    var _this$parent$sdl, _this$parent$sdl$impl;
-
-    return (_this$parent$sdl = this.parent.sdl) === null || _this$parent$sdl === void 0 ? void 0 : (_this$parent$sdl$impl = _this$parent$sdl.implementableFields) === null || _this$parent$sdl$impl === void 0 ? void 0 : (0, _find.default)(_this$parent$sdl$impl).call(_this$parent$sdl$impl, f => f.name === this.name);
+    return this.parent.sdl?.implementableFields?.find(f => f.name === this.name);
   }
 
   get parameterNames() {

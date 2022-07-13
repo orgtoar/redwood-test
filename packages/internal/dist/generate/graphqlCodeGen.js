@@ -106,14 +106,12 @@ const generateTypeDefGraphQLWeb = async () => {
 exports.generateTypeDefGraphQLWeb = generateTypeDefGraphQLWeb;
 
 async function runCodegenGraphQL(documents, extraPlugins, filename) {
-  var _userCodegenConfig$co;
-
   const userCodegenConfig = await (0, _cli.loadCodegenConfig)({
     configFilePath: (0, _paths.getPaths)().base
   }); // Merge in user codegen config with the rw built-in one
 
   const mergedConfig = { ...getPluginConfig(),
-    ...(userCodegenConfig === null || userCodegenConfig === void 0 ? void 0 : (_userCodegenConfig$co = userCodegenConfig.config) === null || _userCodegenConfig$co === void 0 ? void 0 : _userCodegenConfig$co.config)
+    ...userCodegenConfig?.config?.config
   };
   const options = getCodegenOptions(documents, mergedConfig, extraPlugins);
   const output = await (0, _core.codegen)(options);

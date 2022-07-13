@@ -25,9 +25,7 @@ const defaultOptions = {
 };
 
 function getVariableName(p) {
-  var _p$node$specifiers;
-
-  if ((_p$node$specifiers = p.node.specifiers) !== null && _p$node$specifiers !== void 0 && _p$node$specifiers[0] && p.node.specifiers[0].local) {
+  if (p.node.specifiers?.[0] && p.node.specifiers[0].local) {
     return p.node.specifiers[0].local.name;
   }
 

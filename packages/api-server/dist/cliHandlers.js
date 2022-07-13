@@ -30,8 +30,6 @@ var _withWebServer = _interopRequireDefault(require("./plugins/withWebServer"));
 
 var _server = require("./server");
 
-var _getConfig$web, _getConfig$api, _getConfig$web2;
-
 /*
  * This file has defines CLI handlers used by the redwood cli, for `rw serve`
  * Also used in index.ts for the api server
@@ -42,7 +40,7 @@ const sendProcessReady = () => {
 
 const commonOptions = {
   port: {
-    default: ((_getConfig$web = (0, _internal.getConfig)().web) === null || _getConfig$web === void 0 ? void 0 : _getConfig$web.port) || 8910,
+    default: (0, _internal.getConfig)().web?.port || 8910,
     type: 'number',
     alias: 'p'
   },
@@ -53,7 +51,7 @@ const commonOptions = {
 exports.commonOptions = commonOptions;
 const apiCliOptions = {
   port: {
-    default: ((_getConfig$api = (0, _internal.getConfig)().api) === null || _getConfig$api === void 0 ? void 0 : _getConfig$api.port) || 8911,
+    default: (0, _internal.getConfig)().api?.port || 8911,
     type: 'number',
     alias: 'p'
   },
@@ -71,7 +69,7 @@ const apiCliOptions = {
 exports.apiCliOptions = apiCliOptions;
 const webCliOptions = {
   port: {
-    default: ((_getConfig$web2 = (0, _internal.getConfig)().web) === null || _getConfig$web2 === void 0 ? void 0 : _getConfig$web2.port) || 8910,
+    default: (0, _internal.getConfig)().web?.port || 8910,
     type: 'number',
     alias: 'p'
   },
@@ -111,7 +109,7 @@ const apiServerHandler = async ({
     sendProcessReady();
   });
   process.on('exit', () => {
-    http === null || http === void 0 ? void 0 : http.close();
+    http?.close();
   });
 };
 

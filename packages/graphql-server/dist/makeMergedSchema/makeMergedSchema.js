@@ -45,12 +45,12 @@ const mapFieldsToService = ({
 
   return (0, _reduce.default)(_context = (0, _keys.default)(fields)).call(_context, (resolvers, name) => {
     // Does the function already exist in the resolvers from the schema definition?
-    if (resolvers !== null && resolvers !== void 0 && resolvers[name]) {
+    if (resolvers?.[name]) {
       return resolvers;
     } // Does a function exist in the service?
 
 
-    if (services !== null && services !== void 0 && services[name]) {
+    if (services?.[name]) {
       return { ...resolvers,
         // Map the arguments from GraphQL to an ordinary function a service would
         // expect.
@@ -75,8 +75,6 @@ const mapFieldsToService = ({
 
 const resolveUnionType = types => ({
   __resolveType(obj) {
-    var _maxIntersectionType;
-
     // resolves type of object by looking for the largest intersection of common fields
     let maxIntersectionType;
     let maxIntersectionFields = 0;
@@ -92,7 +90,7 @@ const resolveUnionType = types => ({
       }
     }
 
-    return ((_maxIntersectionType = maxIntersectionType) === null || _maxIntersectionType === void 0 ? void 0 : _maxIntersectionType.name) ?? null;
+    return maxIntersectionType?.name ?? null;
   }
 
 });
@@ -130,13 +128,13 @@ const mergeResolversWithServices = ({
     let servicesForType = mergedServices;
 
     if (!(0, _includes.default)(_context11 = ['Query', 'Mutation']).call(_context11, type.name)) {
-      servicesForType = mergedServices === null || mergedServices === void 0 ? void 0 : mergedServices[type.name];
+      servicesForType = mergedServices?.[type.name];
     }
 
     return { ...acc,
       [type.name]: mapFieldsToService({
         fields: type.getFields(),
-        resolvers: resolvers === null || resolvers === void 0 ? void 0 : resolvers[type.name],
+        resolvers: resolvers?.[type.name],
         services: servicesForType
       })
     };

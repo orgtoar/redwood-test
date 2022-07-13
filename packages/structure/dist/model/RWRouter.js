@@ -14,8 +14,6 @@ exports.RWRouter = void 0;
 
 var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
 var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
 
 var _repeat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/repeat"));
@@ -56,20 +54,20 @@ let RWRouter = (_dec = (0, _decorators.memo)(), _dec2 = (0, _decorators.memo)(),
 
 
   getFilePathForRoutePath(routePath) {
-    var _this$routes$find, _this$routes$find$pag, _context;
+    var _context;
 
     // TODO: params
-    return (_this$routes$find = (0, _find.default)(_context = this.routes).call(_context, r => r.path === routePath)) === null || _this$routes$find === void 0 ? void 0 : (_this$routes$find$pag = _this$routes$find.page) === null || _this$routes$find$pag === void 0 ? void 0 : _this$routes$find$pag.filePath;
+    return (0, _find.default)(_context = this.routes).call(_context, r => r.path === routePath)?.page?.filePath;
   } // this is used by the live preview
 
 
   getRoutePathForFilePath(filePath) {
-    var _this$parent$pages$fi, _this$parent$pages$fi2, _context2;
+    var _context2;
 
     // TODO: params
-    const path = (_this$parent$pages$fi = (0, _find.default)(_context2 = this.parent.pages).call(_context2, p => p.filePath === filePath)) === null || _this$parent$pages$fi === void 0 ? void 0 : (_this$parent$pages$fi2 = _this$parent$pages$fi.route) === null || _this$parent$pages$fi2 === void 0 ? void 0 : _this$parent$pages$fi2.path;
+    const path = (0, _find.default)(_context2 = this.parent.pages).call(_context2, p => p.filePath === filePath)?.route?.path;
 
-    if (path !== null && path !== void 0 && (0, _includes.default)(path).call(path, '{')) {
+    if (path?.includes('{')) {
       return;
     }
 

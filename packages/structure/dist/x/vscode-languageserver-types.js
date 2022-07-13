@@ -417,8 +417,8 @@ function ExtendedDiagnostic_format(d, opts) {
       code
     }
   } = d;
-  const cwd = opts === null || opts === void 0 ? void 0 : opts.cwd;
-  const getSeverityLabel = (opts === null || opts === void 0 ? void 0 : opts.getSeverityLabel) ?? DiagnosticSeverity_getLabel;
+  const cwd = opts?.cwd;
+  const getSeverityLabel = opts?.getSeverityLabel ?? DiagnosticSeverity_getLabel;
   let base = 'file://';
 
   if (cwd) {
@@ -464,7 +464,7 @@ function WorkspaceEdit_fromFileSet(files, getExistingFileText) {
       });
       continue;
     } else {
-      const text = getExistingFileText === null || getExistingFileText === void 0 ? void 0 : getExistingFileText(uri);
+      const text = getExistingFileText?.(uri);
 
       if (text) {
         // file exists

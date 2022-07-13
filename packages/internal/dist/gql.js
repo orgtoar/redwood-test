@@ -35,7 +35,7 @@ const parseDocumentAST = document => {
   const operations = [];
   (0, _graphql.visit)(document, {
     OperationDefinition(node) {
-      var _context, _node$name;
+      var _context;
 
       const fields = [];
       (0, _forEach.default)(_context = node.selectionSet.selections).call(_context, field => {
@@ -43,7 +43,7 @@ const parseDocumentAST = document => {
       });
       operations.push({
         operation: node.operation,
-        name: (_node$name = node.name) === null || _node$name === void 0 ? void 0 : _node$name.value,
+        name: node.name?.value,
         fields
       });
     }
@@ -64,9 +64,7 @@ const getFields = field => {
     };
 
     const lookAtFieldNode = node => {
-      var _node$selectionSet, _context2;
-
-      (_node$selectionSet = node.selectionSet) === null || _node$selectionSet === void 0 ? void 0 : (0, _forEach.default)(_context2 = _node$selectionSet.selections).call(_context2, subField => {
+      node.selectionSet?.selections.forEach(subField => {
         switch (subField.kind) {
           case 'Field':
             obj[field.name.value].push(getFields(subField));
@@ -89,8 +87,6 @@ const getFields = field => {
 
 const listQueryTypeFieldsInProject = async () => {
   try {
-    var _mergedSchema$getQuer;
-
     const schemaPointerMap = {
       [(0, _graphql.print)(_graphqlServer.rootSchema.schema)]: {},
       'graphql/**/*.sdl.{js,ts}': {},
@@ -106,7 +102,7 @@ const listQueryTypeFieldsInProject = async () => {
       cwd: (0, _paths.getPaths)().api.src,
       assumeValidSDL: true
     });
-    const queryTypeFields = (_mergedSchema$getQuer = mergedSchema.getQueryType()) === null || _mergedSchema$getQuer === void 0 ? void 0 : _mergedSchema$getQuer.getFields(); // Return empty array if no schema found
+    const queryTypeFields = mergedSchema.getQueryType()?.getFields(); // Return empty array if no schema found
 
     return (0, _keys.default)(queryTypeFields ?? {});
   } catch (e) {

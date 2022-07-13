@@ -63,9 +63,9 @@ const uniqueOperationName = async (name, {
 exports.uniqueOperationName = uniqueOperationName;
 
 const getIdType = model => {
-  var _model$fields$find, _context3;
+  var _context3;
 
-  return (_model$fields$find = (0, _find.default)(_context3 = model.fields).call(_context3, field => field.isId)) === null || _model$fields$find === void 0 ? void 0 : _model$fields$find.type;
+  return (0, _find.default)(_context3 = model.fields).call(_context3, field => field.isId)?.type;
 };
 /**
  *

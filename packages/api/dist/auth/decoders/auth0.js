@@ -54,7 +54,7 @@ const verifyAuth0Token = bearerToken => {
 
     _jsonwebtoken.default.verify(bearerToken, (header, callback) => {
       client.getSigningKey(header.kid, (error, key) => {
-        callback(error, key === null || key === void 0 ? void 0 : key.getPublicKey());
+        callback(error, key?.getPublicKey());
       });
     }, {
       audience: AUTH0_AUDIENCE,

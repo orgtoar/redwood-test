@@ -13,13 +13,13 @@ exports.validateSchemaForDirectives = validateSchemaForDirectives;
 
 var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
-
 var _values = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/values"));
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
 
 var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+
+var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
 
 var _values2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/values"));
 
@@ -53,9 +53,7 @@ function validateSchemaForDirectives(schemaDocumentNode, typesToCheck = ['Query'
           const isCurrentUserQuery = fieldName === 'currentUser' && fieldTypeName === 'Query'; // skip validation for redwood query and currentUser
 
           if (!(isRedwoodQuery || isCurrentUserQuery)) {
-            var _field$directives, _field$directives2;
-
-            const hasDirective = (_field$directives = field.directives) === null || _field$directives === void 0 ? void 0 : _field$directives.length;
+            const hasDirective = field.directives?.length;
 
             if (!hasDirective) {
               validationOutput.push(`${fieldName} ${fieldTypeName}`);
@@ -63,11 +61,9 @@ function validateSchemaForDirectives(schemaDocumentNode, typesToCheck = ['Query'
             // is a string or an array of strings
 
 
-            (_field$directives2 = field.directives) === null || _field$directives2 === void 0 ? void 0 : (0, _forEach.default)(_field$directives2).call(_field$directives2, directive => {
+            field.directives?.forEach(directive => {
               if (directive.name.value === 'requireAuth') {
-                var _directive$arguments;
-
-                (_directive$arguments = directive.arguments) === null || _directive$arguments === void 0 ? void 0 : (0, _forEach.default)(_directive$arguments).call(_directive$arguments, arg => {
+                directive.arguments?.forEach(arg => {
                   if (arg.name.value === 'roles') {
                     if (arg.value.kind !== _graphql.Kind.STRING && arg.value.kind !== _graphql.Kind.LIST) {
                       directiveRoleValidationOutput.push({
@@ -78,9 +74,7 @@ function validateSchemaForDirectives(schemaDocumentNode, typesToCheck = ['Query'
 
 
                     if (arg.value.kind === _graphql.Kind.LIST) {
-                      var _arg$value$values;
-
-                      const invalidValues = (_arg$value$values = (0, _values.default)(arg.value)) === null || _arg$value$values === void 0 ? void 0 : (0, _filter.default)(_arg$value$values).call(_arg$value$values, val => val.kind !== _graphql.Kind.STRING);
+                      const invalidValues = (0, _values.default)(arg.value)?.filter(val => val.kind !== _graphql.Kind.STRING);
 
                       if (invalidValues.length > 0) {
                         (0, _forEach.default)(invalidValues).call(invalidValues, invalid => {

@@ -95,9 +95,9 @@ let RWSDLField = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(
 
 
   get impl() {
-    var _context2, _this$parent$service;
+    var _context2;
 
-    return (0, _find.default)(_context2 = ((_this$parent$service = this.parent.service) === null || _this$parent$service === void 0 ? void 0 : _this$parent$service.funcs) ?? []).call(_context2, f => f.name === this.name);
+    return (0, _find.default)(_context2 = this.parent.service?.funcs ?? []).call(_context2, f => f.name === this.name);
   } // TODO: improve snippet
 
 

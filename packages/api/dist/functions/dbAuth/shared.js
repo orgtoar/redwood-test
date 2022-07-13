@@ -28,9 +28,7 @@ const extractCookie = event => {
 
   if (process.env.NODE_ENV === 'development') {
     try {
-      var _JSON$parse$extension, _JSON$parse$extension2;
-
-      cookieFromGraphiqlHeader = (_JSON$parse$extension = JSON.parse(event.body ?? '{}').extensions) === null || _JSON$parse$extension === void 0 ? void 0 : (_JSON$parse$extension2 = _JSON$parse$extension.headers) === null || _JSON$parse$extension2 === void 0 ? void 0 : _JSON$parse$extension2.cookie;
+      cookieFromGraphiqlHeader = JSON.parse(event.body ?? '{}').extensions?.headers?.cookie;
     } catch (e) {
       return event.headers.cookie || event.headers.Cookie;
     }
