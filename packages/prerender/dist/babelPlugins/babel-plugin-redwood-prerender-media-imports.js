@@ -59,7 +59,7 @@ function _default({
           const copiedAssetPath = webpackManifest[webpackManifestKey]; // If webpack has copied it over, use the path from the asset manifest
           // Otherwise convert it to a base64 encoded data uri
 
-          const assetSrc = copiedAssetPath !== null && copiedAssetPath !== void 0 ? copiedAssetPath : (0, _utils.convertToDataUrl)((0, _path.join)(state.file.opts.sourceRoot || './', importPath));
+          const assetSrc = copiedAssetPath ?? (0, _utils.convertToDataUrl)((0, _path.join)(state.file.opts.sourceRoot || './', importPath));
 
           if (importConstName) {
             p.replaceWith(t.variableDeclaration('const', [t.variableDeclarator(t.identifier(importConstName), t.stringLiteral(assetSrc))]));

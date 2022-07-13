@@ -85,9 +85,7 @@ let RWServiceFunction = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators
       const p2 = (0, _sort.default)(_context2 = this.parameterNames).call(_context2).join(' '); //?
 
       if (p1 !== p2) {
-        var _this$node$getParamet;
-
-        const locationNode = (_this$node$getParamet = this.node.getParameters()[0]) !== null && _this$node$getParamet !== void 0 ? _this$node$getParamet : this.node;
+        const locationNode = this.node.getParameters()[0] ?? this.node;
         const {
           uri,
           range

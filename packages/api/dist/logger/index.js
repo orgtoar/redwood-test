@@ -261,7 +261,7 @@ exports.emitLogLevels = emitLogLevels;
  *
  */
 const handlePrismaLogging = config => {
-  var _config$slowQueryThre, _config$logLevels;
+  var _config$logLevels;
 
   const logger = config.logger.child({
     // @TODO Change this once this issue is resolved
@@ -270,7 +270,7 @@ const handlePrismaLogging = config => {
       clientVersion: config.db['_clientVersion']
     }
   });
-  const slowQueryThreshold = (_config$slowQueryThre = config.slowQueryThreshold) !== null && _config$slowQueryThre !== void 0 ? _config$slowQueryThre : DEFAULT_SLOW_QUERY_THRESHOLD;
+  const slowQueryThreshold = config.slowQueryThreshold ?? DEFAULT_SLOW_QUERY_THRESHOLD;
   (_config$logLevels = config.logLevels) === null || _config$logLevels === void 0 ? void 0 : (0, _forEach.default)(_config$logLevels).call(_config$logLevels, level => {
     if (level === 'query') {
       config.db.$on(level, event => {

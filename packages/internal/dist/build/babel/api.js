@@ -24,7 +24,10 @@ var _paths = require("../../paths");
 
 var _common = require("./common");
 
-const TARGETS_NODE = '12.16'; // Warning! Use the minor core-js version: "corejs: '3.6'", instead of "corejs: 3",
+// RedwoodJS targets Node.js 14.x because it's the default version for Netlify and Vercel's functions:
+// - https://docs.netlify.com/functions/build-with-javascript/#runtime-settings
+// - https://vercel.com/docs/runtimes#official-runtimes/node-js/node-js-version
+const TARGETS_NODE = '14.20'; // Warning! Use the minor core-js version: "corejs: '3.6'", instead of "corejs: 3",
 // because we want to include the features added in the minor version.
 // https://github.com/zloirock/core-js/blob/master/README.md#babelpreset-env
 // Use preset env in all cases other than actual build

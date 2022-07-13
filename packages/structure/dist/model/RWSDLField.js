@@ -74,9 +74,9 @@ let RWSDLField = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(
   }
 
   get argumentNames() {
-    var _context, _this$field$arguments;
+    var _context;
 
-    return (0, _map.default)(_context = (_this$field$arguments = this.field.arguments) !== null && _this$field$arguments !== void 0 ? _this$field$arguments : []).call(_context, a => a.name.value);
+    return (0, _map.default)(_context = this.field.arguments ?? []).call(_context, a => a.name.value);
   }
 
   *ideInfo() {
@@ -95,16 +95,14 @@ let RWSDLField = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(
 
 
   get impl() {
-    var _context2, _this$parent$service$, _this$parent$service;
+    var _context2, _this$parent$service;
 
-    return (0, _find.default)(_context2 = (_this$parent$service$ = (_this$parent$service = this.parent.service) === null || _this$parent$service === void 0 ? void 0 : _this$parent$service.funcs) !== null && _this$parent$service$ !== void 0 ? _this$parent$service$ : []).call(_context2, f => f.name === this.name);
+    return (0, _find.default)(_context2 = ((_this$parent$service = this.parent.service) === null || _this$parent$service === void 0 ? void 0 : _this$parent$service.funcs) ?? []).call(_context2, f => f.name === this.name);
   } // TODO: improve snippet
 
 
   get defaultImplSnippet() {
-    var _this$field$arguments2;
-
-    const args = (_this$field$arguments2 = this.field.arguments) !== null && _this$field$arguments2 !== void 0 ? _this$field$arguments2 : [];
+    const args = this.field.arguments ?? [];
     const params = (0, _map.default)(args).call(args, a => a.name.value).join(',');
     return `
 export const ${this.field.name.value} = ({${params}}) => {

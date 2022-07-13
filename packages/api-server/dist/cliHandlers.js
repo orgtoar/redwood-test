@@ -158,14 +158,12 @@ const webServerHandler = ({
   socket,
   apiHost
 }) => {
-  var _getConfig$web$apiGra;
-
   const tsServer = (0, _now.default)();
   process.stdout.write(_ansiColors.default.dim(_ansiColors.default.italic('Starting Web Server...\n')));
   const apiUrl = (0, _internal.getConfig)().web.apiUrl; // Construct the graphql url from apiUrl by default
   // But if apiGraphQLUrl is specified, use that instead
 
-  const graphqlEndpoint = coerceRootPath((_getConfig$web$apiGra = (0, _internal.getConfig)().web.apiGraphQLUrl) !== null && _getConfig$web$apiGra !== void 0 ? _getConfig$web$apiGra : `${apiUrl}/graphql`);
+  const graphqlEndpoint = coerceRootPath((0, _internal.getConfig)().web.apiGraphQLUrl ?? `${apiUrl}/graphql`);
   const fastifyInstance = (0, _app.default)(loadServerConfig()); // serve static files from "web/dist"
 
   let app = (0, _withWebServer.default)(fastifyInstance); // If apiHost is supplied, it means the functions are running elsewhere

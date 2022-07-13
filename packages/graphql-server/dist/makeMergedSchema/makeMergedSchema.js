@@ -75,7 +75,7 @@ const mapFieldsToService = ({
 
 const resolveUnionType = types => ({
   __resolveType(obj) {
-    var _maxIntersectionType$, _maxIntersectionType;
+    var _maxIntersectionType;
 
     // resolves type of object by looking for the largest intersection of common fields
     let maxIntersectionType;
@@ -92,7 +92,7 @@ const resolveUnionType = types => ({
       }
     }
 
-    return (_maxIntersectionType$ = (_maxIntersectionType = maxIntersectionType) === null || _maxIntersectionType === void 0 ? void 0 : _maxIntersectionType.name) !== null && _maxIntersectionType$ !== void 0 ? _maxIntersectionType$ : null;
+    return ((_maxIntersectionType = maxIntersectionType) === null || _maxIntersectionType === void 0 ? void 0 : _maxIntersectionType.name) ?? null;
   }
 
 });

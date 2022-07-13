@@ -106,11 +106,7 @@ const PATH_WEB_DIR_DIST = 'web/dist';
  * Search the parent directories for the Redwood configuration file.
  */
 
-const getConfigPath = (cwd = (() => {
-  var _process$env$RWJS_CWD;
-
-  return (_process$env$RWJS_CWD = process.env.RWJS_CWD) !== null && _process$env$RWJS_CWD !== void 0 ? _process$env$RWJS_CWD : process.cwd();
-})()) => {
+const getConfigPath = (cwd = process.env.RWJS_CWD ?? process.cwd()) => {
   const configPath = (0, _findupSync.default)(CONFIG_FILE_NAME, {
     cwd
   });
