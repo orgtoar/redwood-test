@@ -43,7 +43,7 @@ class VSCodeWindowUI {
     const res = await this.w.showQuickPick(items2, {
       placeHolder: msg
     });
-    return res === null || res === void 0 ? void 0 : res.label;
+    return res?.label;
   }
 
   async pickMany(items, msg) {
@@ -52,7 +52,7 @@ class VSCodeWindowUI {
       placeHolder: msg,
       canPickMany: true
     });
-    return res === null || res === void 0 ? void 0 : (0, _map.default)(res).call(res, r => r.label);
+    return res?.map(r => r.label);
   }
 
 }

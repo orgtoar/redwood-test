@@ -27,8 +27,6 @@ const clerk = async token => {
   }
 
   try {
-    var _user$publicMetadata$;
-
     const jwtPayload = await base.verifySessionToken(token);
 
     if (!jwtPayload.sub) {
@@ -37,7 +35,7 @@ const clerk = async token => {
 
     const user = await users.getUser(jwtPayload.sub);
     return { ...user,
-      roles: (_user$publicMetadata$ = user.publicMetadata['roles']) !== null && _user$publicMetadata$ !== void 0 ? _user$publicMetadata$ : []
+      roles: user.publicMetadata['roles'] ?? []
     };
   } catch (error) {
     return _promise.default.reject(error);

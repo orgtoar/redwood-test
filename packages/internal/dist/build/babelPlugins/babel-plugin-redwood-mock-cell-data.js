@@ -67,20 +67,20 @@ function _default({
         const filename = state.file.opts.filename;
         let mockFunction; // Only auto-mock the standard export
 
-        switch (d === null || d === void 0 ? void 0 : d.type) {
+        switch (d?.type) {
           case 'VariableDeclaration':
             // If its an arrow function
             // or export standard = function()
             {
               const standardMockExport = d.declarations[0];
               const id = standardMockExport.id;
-              const exportName = id === null || id === void 0 ? void 0 : id.name;
+              const exportName = id?.name;
 
               if (exportName !== 'standard') {
                 return;
               }
 
-              const mockFunctionMaybe = standardMockExport === null || standardMockExport === void 0 ? void 0 : standardMockExport.init;
+              const mockFunctionMaybe = standardMockExport?.init;
 
               if (!mockFunctionMaybe) {
                 return;
@@ -97,9 +97,7 @@ function _default({
 
           case 'FunctionDeclaration':
             {
-              var _d$id;
-
-              const exportName = (_d$id = d.id) === null || _d$id === void 0 ? void 0 : _d$id.name;
+              const exportName = d.id?.name;
 
               if (exportName !== 'standard') {
                 return;
@@ -125,7 +123,7 @@ function _default({
           return (0, _startsWith.default)(_context2 = path.uri).call(_context2, dir);
         });
 
-        if (!cell || !(cell !== null && cell !== void 0 && cell.filePath)) {
+        if (!cell || !cell?.filePath) {
           return;
         }
 

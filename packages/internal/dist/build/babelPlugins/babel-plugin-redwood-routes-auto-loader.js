@@ -56,13 +56,13 @@ function _default({
       // because when one is present, the user is requesting that the module be
       // included in the main bundle.
       ImportDeclaration(p) {
-        var _p$node$source, _context2;
+        var _context2;
 
         if (pages.length === 0) {
           return;
         }
 
-        const userImportRelativePath = getPathRelativeToSrc((0, _paths.importStatementPath)((_p$node$source = p.node.source) === null || _p$node$source === void 0 ? void 0 : _p$node$source.value));
+        const userImportRelativePath = getPathRelativeToSrc((0, _paths.importStatementPath)(p.node.source?.value));
         const defaultSpecifier = (0, _filter.default)(_context2 = p.node.specifiers).call(_context2, specifiers => t.isImportDefaultSpecifier(specifiers))[0]; // Remove Page imports in prerender mode (see babel-preset)
         // This is to make sure that all the imported "Page modules" are normal imports
         // and not asynchronous ones.

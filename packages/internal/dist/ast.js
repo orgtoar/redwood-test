@@ -47,7 +47,7 @@ const fileToAst = filePath => {
   } catch (e) {
     console.error(_chalk.default.red(`Error parsing: ${filePath}`));
     console.error(e);
-    throw new Error(e === null || e === void 0 ? void 0 : e.message); // we throw, so typescript doesn't complain about returning
+    throw new Error(e?.message); // we throw, so typescript doesn't complain about returning
   }
 };
 
@@ -60,11 +60,9 @@ const getNamedExports = ast => {
   const namedExports = [];
   (0, _traverse.default)(ast, {
     ExportNamedDeclaration(path) {
-      var _path$node;
-
       // Re-exports from other modules
       // Eg: export { a, b } from './module'
-      const specifiers = (_path$node = path.node) === null || _path$node === void 0 ? void 0 : _path$node.specifiers;
+      const specifiers = path.node?.specifiers;
 
       if (specifiers.length) {
         for (const s of specifiers) {
@@ -91,17 +89,13 @@ const getNamedExports = ast => {
           type: 'variable'
         });
       } else if (declaration.type === 'FunctionDeclaration') {
-        var _declaration$id;
-
         namedExports.push({
-          name: declaration === null || declaration === void 0 ? void 0 : (_declaration$id = declaration.id) === null || _declaration$id === void 0 ? void 0 : _declaration$id.name,
+          name: declaration?.id?.name,
           type: 'function'
         });
       } else if (declaration.type === 'ClassDeclaration') {
-        var _declaration$id2;
-
         namedExports.push({
-          name: declaration === null || declaration === void 0 ? void 0 : (_declaration$id2 = declaration.id) === null || _declaration$id2 === void 0 ? void 0 : _declaration$id2.name,
+          name: declaration?.id?.name,
           type: 'class'
         });
       }

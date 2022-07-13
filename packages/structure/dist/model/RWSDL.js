@@ -50,9 +50,7 @@ let RWSDL = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), _d
 
 
   get schemaStringNode() {
-    var _this$sf$getVariableD;
-
-    const i = (_this$sf$getVariableD = this.sf.getVariableDeclaration('schema')) === null || _this$sf$getVariableD === void 0 ? void 0 : _this$sf$getVariableD.getInitializer();
+    const i = this.sf.getVariableDeclaration('schema')?.getInitializer();
 
     if (!i) {
       return undefined;
@@ -71,9 +69,7 @@ let RWSDL = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), _d
   }
 
   get schemaString() {
-    var _this$schemaStringNod;
-
-    return (_this$schemaStringNod = this.schemaStringNode) === null || _this$schemaStringNod === void 0 ? void 0 : _this$schemaStringNod.getLiteralText();
+    return this.schemaStringNode?.getLiteralText();
   }
 
   get serviceFilePath() {
@@ -105,9 +101,7 @@ let RWSDL = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), _d
       for (const def of ast.definitions) {
         if (def.kind === 'ObjectTypeDefinition') {
           if (def.name.value === 'Query' || def.name.value === 'Mutation') {
-            for (const field of (_def$fields = def.fields) !== null && _def$fields !== void 0 ? _def$fields : []) {
-              var _def$fields;
-
+            for (const field of def.fields ?? []) {
               yield new _RWSDLField.RWSDLField(def, field, self);
             }
           }

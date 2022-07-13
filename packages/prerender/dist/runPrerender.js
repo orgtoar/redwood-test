@@ -65,16 +65,16 @@ const runPrerender = async ({
 
   if (helmet) {
     const helmetElements = `
-  ${helmet === null || helmet === void 0 ? void 0 : helmet.link.toString()}
-  ${helmet === null || helmet === void 0 ? void 0 : helmet.meta.toString()}
-  ${helmet === null || helmet === void 0 ? void 0 : helmet.script.toString()}
-  ${helmet === null || helmet === void 0 ? void 0 : helmet.noscript.toString()}
+  ${helmet?.link.toString()}
+  ${helmet?.meta.toString()}
+  ${helmet?.script.toString()}
+  ${helmet?.noscript.toString()}
   `; // Add all head elements
 
     indexHtmlTree('head').prepend(helmetElements); // Only change the title, if its not empty
 
-    if (_cheerio.default.load(helmet === null || helmet === void 0 ? void 0 : helmet.title.toString())('title').text() !== '') {
-      indexHtmlTree('title').replaceWith(helmet === null || helmet === void 0 ? void 0 : helmet.title.toString());
+    if (_cheerio.default.load(helmet?.title.toString())('title').text() !== '') {
+      indexHtmlTree('title').replaceWith(helmet?.title.toString());
     }
   } // This is set by webpack by the html plugin
 

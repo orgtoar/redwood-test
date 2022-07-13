@@ -20,7 +20,7 @@ const mapRwCorsOptionsToYoga = (rwCorsConfig, requestOrigin) => {
     return false;
   }
 
-  if (rwCorsConfig !== null && rwCorsConfig !== void 0 && rwCorsConfig.methods) {
+  if (rwCorsConfig?.methods) {
     if (typeof rwCorsConfig.methods === 'string') {
       yogaCORSOptions.methods = [rwCorsConfig.methods];
     } else if ((0, _isArray.default)(rwCorsConfig.methods)) {
@@ -28,7 +28,7 @@ const mapRwCorsOptionsToYoga = (rwCorsConfig, requestOrigin) => {
     }
   }
 
-  if (rwCorsConfig !== null && rwCorsConfig !== void 0 && rwCorsConfig.allowedHeaders) {
+  if (rwCorsConfig?.allowedHeaders) {
     if (typeof rwCorsConfig.allowedHeaders === 'string') {
       yogaCORSOptions.allowedHeaders = [rwCorsConfig.allowedHeaders];
     } else if ((0, _isArray.default)(rwCorsConfig.allowedHeaders)) {
@@ -36,7 +36,7 @@ const mapRwCorsOptionsToYoga = (rwCorsConfig, requestOrigin) => {
     }
   }
 
-  if (rwCorsConfig !== null && rwCorsConfig !== void 0 && rwCorsConfig.exposedHeaders) {
+  if (rwCorsConfig?.exposedHeaders) {
     if (typeof rwCorsConfig.exposedHeaders === 'string') {
       yogaCORSOptions.exposedHeaders = [rwCorsConfig.exposedHeaders];
     } else if ((0, _isArray.default)(rwCorsConfig.exposedHeaders)) {
@@ -44,15 +44,15 @@ const mapRwCorsOptionsToYoga = (rwCorsConfig, requestOrigin) => {
     }
   }
 
-  if (rwCorsConfig !== null && rwCorsConfig !== void 0 && rwCorsConfig.credentials) {
+  if (rwCorsConfig?.credentials) {
     yogaCORSOptions.credentials = rwCorsConfig.credentials;
   }
 
-  if (rwCorsConfig !== null && rwCorsConfig !== void 0 && rwCorsConfig.maxAge) {
+  if (rwCorsConfig?.maxAge) {
     yogaCORSOptions.maxAge = rwCorsConfig.maxAge;
   }
 
-  if (rwCorsConfig !== null && rwCorsConfig !== void 0 && rwCorsConfig.origin) {
+  if (rwCorsConfig?.origin) {
     if (typeof rwCorsConfig.origin === 'string') {
       yogaCORSOptions.origin = [rwCorsConfig.origin];
     } else if (rwCorsConfig.origin === true) {

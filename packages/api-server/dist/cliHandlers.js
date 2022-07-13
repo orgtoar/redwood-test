@@ -30,8 +30,6 @@ var _withWebServer = _interopRequireDefault(require("./plugins/withWebServer"));
 
 var _server = require("./server");
 
-var _getConfig$web, _getConfig$api, _getConfig$web2;
-
 /*
  * This file has defines CLI handlers used by the redwood cli, for `rw serve`
  * Also used in index.ts for the api server
@@ -42,7 +40,7 @@ const sendProcessReady = () => {
 
 const commonOptions = {
   port: {
-    default: ((_getConfig$web = (0, _internal.getConfig)().web) === null || _getConfig$web === void 0 ? void 0 : _getConfig$web.port) || 8910,
+    default: (0, _internal.getConfig)().web?.port || 8910,
     type: 'number',
     alias: 'p'
   },
@@ -53,7 +51,7 @@ const commonOptions = {
 exports.commonOptions = commonOptions;
 const apiCliOptions = {
   port: {
-    default: ((_getConfig$api = (0, _internal.getConfig)().api) === null || _getConfig$api === void 0 ? void 0 : _getConfig$api.port) || 8911,
+    default: (0, _internal.getConfig)().api?.port || 8911,
     type: 'number',
     alias: 'p'
   },
@@ -71,7 +69,7 @@ const apiCliOptions = {
 exports.apiCliOptions = apiCliOptions;
 const webCliOptions = {
   port: {
-    default: ((_getConfig$web2 = (0, _internal.getConfig)().web) === null || _getConfig$web2 === void 0 ? void 0 : _getConfig$web2.port) || 8910,
+    default: (0, _internal.getConfig)().web?.port || 8910,
     type: 'number',
     alias: 'p'
   },
@@ -111,7 +109,7 @@ const apiServerHandler = async ({
     sendProcessReady();
   });
   process.on('exit', () => {
-    http === null || http === void 0 ? void 0 : http.close();
+    http?.close();
   });
 };
 
@@ -158,14 +156,12 @@ const webServerHandler = ({
   socket,
   apiHost
 }) => {
-  var _getConfig$web$apiGra;
-
   const tsServer = (0, _now.default)();
   process.stdout.write(_ansiColors.default.dim(_ansiColors.default.italic('Starting Web Server...\n')));
   const apiUrl = (0, _internal.getConfig)().web.apiUrl; // Construct the graphql url from apiUrl by default
   // But if apiGraphQLUrl is specified, use that instead
 
-  const graphqlEndpoint = coerceRootPath((_getConfig$web$apiGra = (0, _internal.getConfig)().web.apiGraphQLUrl) !== null && _getConfig$web$apiGra !== void 0 ? _getConfig$web$apiGra : `${apiUrl}/graphql`);
+  const graphqlEndpoint = coerceRootPath((0, _internal.getConfig)().web.apiGraphQLUrl ?? `${apiUrl}/graphql`);
   const fastifyInstance = (0, _app.default)(loadServerConfig()); // serve static files from "web/dist"
 
   let app = (0, _withWebServer.default)(fastifyInstance); // If apiHost is supplied, it means the functions are running elsewhere

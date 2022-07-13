@@ -14,8 +14,6 @@ exports.RWEnvHelper = void 0;
 
 var _startsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/starts-with"));
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
 var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
 
 var _from = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/array/from"));
@@ -98,10 +96,8 @@ let RWEnvHelper = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)
 
 
   get env_default_merged() {
-    var _this$env_defaults, _this$env;
-
-    return { ...((_this$env_defaults = this.env_defaults) !== null && _this$env_defaults !== void 0 ? _this$env_defaults : {}),
-      ...((_this$env = this.env) !== null && _this$env !== void 0 ? _this$env : {})
+    return { ...(this.env_defaults ?? {}),
+      ...(this.env ?? {})
     };
   }
   /**
@@ -113,7 +109,7 @@ let RWEnvHelper = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)
 
 
   env_default_merged_filtered(include) {
-    return (0, _lodash.pickBy)(this.env_default_merged, (_v, k) => (0, _startsWith.default)(k).call(k, 'REDWOOD_ENV_') || (include === null || include === void 0 ? void 0 : (0, _includes.default)(include).call(include, k)));
+    return (0, _lodash.pickBy)(this.env_default_merged, (_v, k) => (0, _startsWith.default)(k).call(k, 'REDWOOD_ENV_') || include?.includes(k));
   }
 
   _dotenv(f) {
@@ -134,9 +130,7 @@ let RWEnvHelper = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)
   }
 
   get env_available_to_web() {
-    var _this$parent$redwoodT;
-
-    return this.env_default_merged_filtered((_this$parent$redwoodT = this.parent.redwoodTOML.web_includeEnvironmentVariables) !== null && _this$parent$redwoodT !== void 0 ? _this$parent$redwoodT : []);
+    return this.env_default_merged_filtered(this.parent.redwoodTOML.web_includeEnvironmentVariables ?? []);
   }
 
   children() {
@@ -219,11 +213,11 @@ let ProcessDotEnvExpression = (_dec9 = (0, _decorators.lazy)(), _dec10 = (0, _de
       }
     } = this;
 
-    if (env !== null && env !== void 0 && env[key]) {
+    if (env?.[key]) {
       return '.env';
     }
 
-    if (env_defaults !== null && env_defaults !== void 0 && env_defaults[key]) {
+    if (env_defaults?.[key]) {
       return '.env.defaults';
     }
 
@@ -282,14 +276,12 @@ let ProcessDotEnvExpression = (_dec9 = (0, _decorators.lazy)(), _dec10 = (0, _de
 
 
     if (typeof value_as_available !== 'undefined') {
-      var _this$value_definitio;
-
       yield {
         kind: 'Hover',
         location,
         hover: {
           range: location.range,
-          contents: `${key}=${value_as_available} (${(_this$value_definitio = this.value_definition_file_basename) !== null && _this$value_definitio !== void 0 ? _this$value_definitio : ''})`
+          contents: `${key}=${value_as_available} (${this.value_definition_file_basename ?? ''})`
         }
       };
 

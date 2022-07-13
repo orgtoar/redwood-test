@@ -47,14 +47,14 @@ const createContextProxy = () => {
     return new Proxy(GLOBAL_CONTEXT, {
       get: (_target, property) => {
         const store = getAsyncStoreInstance().getStore();
-        const ctx = (store === null || store === void 0 ? void 0 : store.get('context')) || {};
+        const ctx = store?.get('context') || {};
         return ctx[property];
       },
       set: (_target, property, newVal) => {
         const store = getAsyncStoreInstance().getStore();
-        const ctx = (store === null || store === void 0 ? void 0 : store.get('context')) || {};
+        const ctx = store?.get('context') || {};
         ctx[property] = newVal;
-        store === null || store === void 0 ? void 0 : store.set('context', ctx);
+        store?.set('context', ctx);
         return true;
       }
     });
@@ -80,7 +80,7 @@ const setContext = newContext => {
     // not one initialized earlier.
     exports.context = context = createContextProxy();
     const store = getAsyncStoreInstance().getStore();
-    store === null || store === void 0 ? void 0 : store.set('context', GLOBAL_CONTEXT);
+    store?.set('context', GLOBAL_CONTEXT);
   } else {
     exports.context = context = GLOBAL_CONTEXT;
   }

@@ -143,8 +143,8 @@ const generateMirrorCell = (p, rwjsPaths = (0, _paths.getPaths)()) => {
     const gqlDoc = (0, _gql.parseGqlQueryToAst)(cellQuery)[0];
     (0, _templates.writeTemplate)('templates/mirror-cell.d.ts.template', typeDefPath, {
       name,
-      queryResultType: `${gqlDoc === null || gqlDoc === void 0 ? void 0 : gqlDoc.name}`,
-      queryVariablesType: `${gqlDoc === null || gqlDoc === void 0 ? void 0 : gqlDoc.name}Variables`
+      queryResultType: `${gqlDoc?.name}`,
+      queryVariablesType: `${gqlDoc?.name}Variables`
     });
   } else {
     // If for some reason we can't parse the query, generated the mirror cell anyway
@@ -176,10 +176,8 @@ const generateTypeDefRouterRoutes = () => {
 
   const ast = (0, _ast.fileToAst)((0, _paths.getPaths)().web.routes);
   const routes = (0, _filter.default)(_context3 = (0, _jsx.getJsxElements)(ast, 'Route')).call(_context3, x => {
-    var _x$props, _x$props2;
-
     // All generated "routes" should have a "name" and "path" prop-value
-    return typeof ((_x$props = x.props) === null || _x$props === void 0 ? void 0 : _x$props.path) !== 'undefined' && typeof ((_x$props2 = x.props) === null || _x$props2 === void 0 ? void 0 : _x$props2.name) !== 'undefined';
+    return typeof x.props?.path !== 'undefined' && typeof x.props?.name !== 'undefined';
   });
   return writeTypeDefIncludeFile('web-routerRoutes.d.ts.template', {
     routes

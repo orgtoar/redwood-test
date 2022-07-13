@@ -34,12 +34,10 @@ function transform(file, api) {
       value: '@redwoodjs/api'
     }
   })).call(_context, importDeclaration => {
-    var _context2;
-
     const {
       specifiers
     } = importDeclaration.node;
-    specifiers === null || specifiers === void 0 ? void 0 : (0, _forEach.default)(_context2 = specifiers).call(_context2, specifier => {
+    specifiers?.forEach(specifier => {
       const {
         name
       } = specifier.imported;

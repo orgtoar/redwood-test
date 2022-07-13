@@ -59,9 +59,7 @@ function _default({
         }
 
         if (declaration.type === 'FunctionDeclaration') {
-          var _declaration$id;
-
-          name = declaration === null || declaration === void 0 ? void 0 : (_declaration$id = declaration.id) === null || _declaration$id === void 0 ? void 0 : _declaration$id.name;
+          name = declaration?.id?.name;
         }
 
         if (name && (0, _includes.default)(EXPECTED_EXPORTS_FROM_CELL).call(EXPECTED_EXPORTS_FROM_CELL, name)) {

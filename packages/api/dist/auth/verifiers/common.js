@@ -26,8 +26,6 @@ var _skipVerifier = _interopRequireDefault(require("./skipVerifier"));
 
 var _timestampSchemeVerifier = _interopRequireDefault(require("./timestampSchemeVerifier"));
 
-var _process$env$WEBHOOK_;
-
 const verifierLookup = {
   skipVerifier: _skipVerifier.default,
   secretKeyVerifier: _secretKeyVerifier.default,
@@ -39,7 +37,7 @@ const verifierLookup = {
   jwtVerifier: _jwtVerifier.default
 };
 exports.verifierLookup = verifierLookup;
-const DEFAULT_WEBHOOK_SECRET = (_process$env$WEBHOOK_ = process.env['WEBHOOK_SECRET']) !== null && _process$env$WEBHOOK_ !== void 0 ? _process$env$WEBHOOK_ : '';
+const DEFAULT_WEBHOOK_SECRET = process.env['WEBHOOK_SECRET'] ?? '';
 exports.DEFAULT_WEBHOOK_SECRET = DEFAULT_WEBHOOK_SECRET;
 const VERIFICATION_ERROR_MESSAGE = "You don't have access to invoke this function.";
 exports.VERIFICATION_ERROR_MESSAGE = VERIFICATION_ERROR_MESSAGE;

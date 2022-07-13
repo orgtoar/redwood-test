@@ -25,18 +25,14 @@ const detectPrerenderRoutes = () => {
   const routes = rwProject.getRouter().routes;
   const prerenderRoutes = (0, _map.default)(_context = (0, _filter.default)(_context2 = (0, _filter.default)(routes).call(routes, route => !route.hasParameters) // ignore routes that take params
   ).call(_context2, route => route.prerender) // only select routes with prerender prop
-  ).call(_context, route => {
-    var _route$page;
-
-    return {
-      name: route.isNotFound ? '404' : route.name,
-      path: route.isNotFound ? '/404' : route.path,
-      hasParams: route.hasParameters,
-      id: route.id,
-      isNotFound: route.isNotFound,
-      filePath: (_route$page = route.page) === null || _route$page === void 0 ? void 0 : _route$page.filePath
-    };
-  });
+  ).call(_context, route => ({
+    name: route.isNotFound ? '404' : route.name,
+    path: route.isNotFound ? '/404' : route.path,
+    hasParams: route.hasParameters,
+    id: route.id,
+    isNotFound: route.isNotFound,
+    filePath: route.page?.filePath
+  }));
   return prerenderRoutes;
 };
 

@@ -35,9 +35,7 @@ let XMethodsManager = (_dec = (0, _decorators.memo)(), (_class = class XMethodsM
       connection
     } = server;
     connection.onRequest('redwoodjs/x-getInfo', async uri => {
-      var _server$getProject;
-
-      const node = await ((_server$getProject = server.getProject()) === null || _server$getProject === void 0 ? void 0 : _server$getProject.findNode(uri));
+      const node = await server.getProject()?.findNode(uri);
 
       if (!node) {
         return undefined;
@@ -46,14 +44,10 @@ let XMethodsManager = (_dec = (0, _decorators.memo)(), (_class = class XMethodsM
       return await node.collectIDEInfo();
     });
     connection.onRequest('redwoodjs/x-getFilePathForRoutePath', routePath => {
-      var _server$getProject2;
-
-      return (_server$getProject2 = server.getProject()) === null || _server$getProject2 === void 0 ? void 0 : _server$getProject2.router.getFilePathForRoutePath(routePath);
+      return server.getProject()?.router.getFilePathForRoutePath(routePath);
     });
     connection.onRequest('redwoodjs/x-getRoutePathForFilePath', uri => {
-      var _server$getProject3;
-
-      return (_server$getProject3 = server.getProject()) === null || _server$getProject3 === void 0 ? void 0 : _server$getProject3.router.getRoutePathForFilePath(uri);
+      return server.getProject()?.router.getRoutePathForFilePath(uri);
     });
   }
 

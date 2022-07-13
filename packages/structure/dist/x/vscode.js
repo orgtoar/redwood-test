@@ -84,13 +84,11 @@ let TreeItem2Wrapper = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.
   }
 
   get keys() {
-    var _this$parent$keys, _this$parent;
-
     if (!this.parent) {
       return [];
     }
 
-    return [...((_this$parent$keys = (_this$parent = this.parent) === null || _this$parent === void 0 ? void 0 : (0, _keys.default)(_this$parent)) !== null && _this$parent$keys !== void 0 ? _this$parent$keys : []), this.key];
+    return [...(this.parent?.keys ?? []), this.key];
   }
 
   get key() {
@@ -106,7 +104,7 @@ let TreeItem2Wrapper = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.
       return key;
     }
 
-    return (label !== null && label !== void 0 ? label : '') + '-' + indexInParent;
+    return (label ?? '') + '-' + indexInParent;
   }
 
   get id() {
@@ -114,16 +112,14 @@ let TreeItem2Wrapper = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.
   }
 
   get collapsibleState() {
-    var _this$item$collapsibl;
-
-    return (_this$item$collapsibl = this.item.collapsibleState) !== null && _this$item$collapsibl !== void 0 ? _this$item$collapsibl : this.item.children ? TreeItemCollapsibleState2.Collapsed : TreeItemCollapsibleState2.None;
+    return this.item.collapsibleState ?? (this.item.children ? TreeItemCollapsibleState2.Collapsed : TreeItemCollapsibleState2.None);
   }
 
   async children() {
-    var _this$item$children, _this$item, _context;
+    var _context;
 
-    const cs = await ProviderResult_normalize((_this$item$children = (_this$item = this.item).children) === null || _this$item$children === void 0 ? void 0 : _this$item$children.call(_this$item));
-    return (0, _map.default)(_context = cs !== null && cs !== void 0 ? cs : []).call(_context, (c, i) => new TreeItem2Wrapper(c, this, i));
+    const cs = await ProviderResult_normalize(this.item.children?.());
+    return (0, _map.default)(_context = cs ?? []).call(_context, (c, i) => new TreeItem2Wrapper(c, this, i));
   }
 
   async findChild(key) {
@@ -135,14 +131,12 @@ let TreeItem2Wrapper = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.
   }
 
   async findChildRec(keys) {
-    var _await$this$findChild;
-
     if (keys.length === 0) {
       return this;
     }
 
     const [k, ...rest] = keys;
-    return await ((_await$this$findChild = await this.findChild(k)) === null || _await$this$findChild === void 0 ? void 0 : _await$this$findChild.findChildRec(rest));
+    return await (await this.findChild(k))?.findChildRec(rest);
   }
 
   get serializableTreeItem() {
@@ -232,13 +226,13 @@ let RemoteTreeDataProviderImpl = (_dec9 = (0, _decorators.memo)(), (_class2 = cl
 
     const keys = id ? JSON.parse(id) : [];
     const self = await this.root.findChildRec(keys);
-    const children = await (self === null || self === void 0 ? void 0 : self.children());
+    const children = await self?.children();
 
     if (!children) {
       return [];
     }
 
-    const res = children === null || children === void 0 ? void 0 : (0, _map.default)(children).call(children, c => c.id); //console.log('--->', res)
+    const res = children?.map(c => c.id); //console.log('--->', res)
 
     return res;
   } //   getParent(id: string) {
@@ -252,10 +246,8 @@ exports.RemoteTreeDataProviderImpl = RemoteTreeDataProviderImpl;
 
 function RemoteTreeDataProvider_publishOverLSPConnection(tdp, connection, methodPrefix) {
   const lazyInit = (0, _lodash.memoize)(() => {
-    var _tdp$onDidChangeTreeD;
-
     // we only setup this listener if we receive a call
-    (_tdp$onDidChangeTreeD = tdp.onDidChangeTreeData) === null || _tdp$onDidChangeTreeD === void 0 ? void 0 : _tdp$onDidChangeTreeD.call(tdp, id => connection.sendRequest(`${methodPrefix}onDidChangeTreeData`, [id]));
+    tdp.onDidChangeTreeData?.(id => connection.sendRequest(`${methodPrefix}onDidChangeTreeData`, [id]));
   });
   connection.onRequest(`${methodPrefix}getChildren`, async id => {
     lazyInit();

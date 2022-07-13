@@ -310,9 +310,7 @@ const lifecycleTask = (lifecycle, task, skip, {
   ssh,
   cmdPath
 }) => {
-  var _serverLifecycle$life;
-
-  if ((_serverLifecycle$life = serverLifecycle[lifecycle]) !== null && _serverLifecycle$life !== void 0 && _serverLifecycle$life[task]) {
+  if (serverLifecycle[lifecycle]?.[task]) {
     const tasks = [];
 
     for (const command of serverLifecycle[lifecycle][task]) {
@@ -402,7 +400,7 @@ const deployTasks = (yargs, ssh, serverConfig, serverLifecycle) => {
   tasks.push(commandWithLifecycleEvents({
     name: 'migrate',
     config,
-    skip: !yargs.migrate || (serverConfig === null || serverConfig === void 0 ? void 0 : serverConfig.migrate) === false,
+    skip: !yargs.migrate || serverConfig?.migrate === false,
     command: {
       title: `DB Migrations...`,
       task: async () => {
@@ -618,7 +616,7 @@ const handler = async yargs => {
       margin: 0,
       borderColor: 'red'
     }));
-    process.exit((e === null || e === void 0 ? void 0 : e.exitCode) || 1);
+    process.exit(e?.exitCode || 1);
   }
 };
 

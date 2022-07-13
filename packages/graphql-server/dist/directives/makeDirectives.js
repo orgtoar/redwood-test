@@ -46,10 +46,10 @@ const makeDirectivesForPlugin = directiveGlobs => {
 exports.makeDirectivesForPlugin = makeDirectivesForPlugin;
 
 const getDirectiveName = schema => {
-  var _context3, _definition$name;
+  var _context3;
 
   const definition = (0, _find.default)(_context3 = schema.definitions).call(_context3, definition => definition.kind === 'DirectiveDefinition');
-  return (_definition$name = definition.name) === null || _definition$name === void 0 ? void 0 : _definition$name.value;
+  return definition.name?.value;
 };
 
 exports.getDirectiveName = getDirectiveName;

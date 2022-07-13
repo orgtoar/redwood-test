@@ -116,33 +116,23 @@ let CommandBuilder = (_dec = (0, _decorators.memo)(), _dec2 = (0, _decorators.me
   }
 
   async arg_command() {
-    var _this$args$;
-
-    return (_this$args$ = this.args[0]) !== null && _this$args$ !== void 0 ? _this$args$ : breakIfNull(await this.prompts.command());
+    return this.args[0] ?? breakIfNull(await this.prompts.command());
   }
 
   async arg_generate_type() {
-    var _this$args$2;
-
-    return (_this$args$2 = this.args[1]) !== null && _this$args$2 !== void 0 ? _this$args$2 : breakIfNull(await this.prompts.generate_type());
+    return this.args[1] ?? breakIfNull(await this.prompts.generate_type());
   }
 
   async arg_db_operation() {
-    var _this$args$3;
-
-    return (_this$args$3 = this.args[1]) !== null && _this$args$3 !== void 0 ? _this$args$3 : breakIfNull(await this.prompts.db_operations());
+    return this.args[1] ?? breakIfNull(await this.prompts.db_operations());
   }
 
   async arg_generate_sdl_modelName() {
-    var _this$args$4;
-
-    return (_this$args$4 = this.args[2]) !== null && _this$args$4 !== void 0 ? _this$args$4 : breakIfNull(await this.prompts.model('Choose Model for SDL...'));
+    return this.args[2] ?? breakIfNull(await this.prompts.model('Choose Model for SDL...'));
   }
 
   async arg_generate_scaffold_modelName() {
-    var _this$args$5;
-
-    return (_this$args$5 = this.args[2]) !== null && _this$args$5 !== void 0 ? _this$args$5 : breakIfNull(await this.prompts.model('Choose Model to Scaffold...'));
+    return this.args[2] ?? breakIfNull(await this.prompts.model('Choose Model to Scaffold...'));
   }
 
 }, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "buildCommand", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "buildCommand"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "buildCommandString", [_dec2], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "buildCommandString"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "args", [_dec3], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "args"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "arg_command", [_dec4], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "arg_command"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "arg_generate_type", [_dec5], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "arg_generate_type"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "arg_db_operation", [_dec6], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "arg_db_operation"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "arg_generate_sdl_modelName", [_dec7], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "arg_generate_sdl_modelName"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "arg_generate_scaffold_modelName", [_dec8], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "arg_generate_scaffold_modelName"), _class.prototype)), _class));

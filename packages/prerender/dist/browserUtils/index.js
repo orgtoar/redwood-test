@@ -12,9 +12,7 @@ var _react = require("react");
 
 /* Web side prerender utils, to be used on the browser */
 const isPrerendering = () => {
-  var _global$__REDWOOD__PR;
-
-  return (_global$__REDWOOD__PR = global.__REDWOOD__PRERENDERING) !== null && _global$__REDWOOD__PR !== void 0 ? _global$__REDWOOD__PR : false;
+  return global.__REDWOOD__PRERENDERING ?? false;
 };
 
 exports.isPrerendering = isPrerendering;
@@ -23,9 +21,7 @@ exports.isBrowser = isBrowser;
 
 const useIsBrowser = () => {
   return (0, _react.useMemo)(() => {
-    var _global;
-
-    return !((_global = global) !== null && _global !== void 0 && _global.__REDWOOD__PRERENDERING);
+    return !global?.__REDWOOD__PRERENDERING;
   }, []);
 };
 

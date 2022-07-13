@@ -112,19 +112,17 @@ const verifyEvent = (type, {
 
   let signature = signatureFromEvent({
     event,
-    signatureHeader: (options === null || options === void 0 ? void 0 : options.signatureHeader) || DEFAULT_WEBHOOK_SIGNATURE_HEADER
+    signatureHeader: options?.signatureHeader || DEFAULT_WEBHOOK_SIGNATURE_HEADER
   });
 
-  if (options !== null && options !== void 0 && options.signatureTransformer) {
+  if (options?.signatureTransformer) {
     signature = options.signatureTransformer(signature);
   }
 
-  if (options !== null && options !== void 0 && options.eventTimestamp) {
-    var _options$currentTimes, _options$tolerance;
-
-    const timestamp = (_options$currentTimes = options === null || options === void 0 ? void 0 : options.currentTimestampOverride) !== null && _options$currentTimes !== void 0 ? _options$currentTimes : (0, _now.default)();
-    const difference = Math.abs(timestamp - (options === null || options === void 0 ? void 0 : options.eventTimestamp));
-    const tolerance = (_options$tolerance = options === null || options === void 0 ? void 0 : options.tolerance) !== null && _options$tolerance !== void 0 ? _options$tolerance : _verifiers.DEFAULT_TOLERANCE;
+  if (options?.eventTimestamp) {
+    const timestamp = options?.currentTimestampOverride ?? (0, _now.default)();
+    const difference = Math.abs(timestamp - options?.eventTimestamp);
+    const tolerance = options?.tolerance ?? _verifiers.DEFAULT_TOLERANCE;
 
     if (difference > tolerance) {
       throw new _verifiers.WebhookVerificationError();

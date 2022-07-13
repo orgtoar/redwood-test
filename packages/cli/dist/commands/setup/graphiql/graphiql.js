@@ -87,7 +87,7 @@ const getSupabasePayload = (id, expiry) => {
   const payload = {
     aud: 'authenticated',
     exp: getExpiryTime(expiry),
-    sub: id !== null && id !== void 0 ? id : 'test-user-id',
+    sub: id ?? 'test-user-id',
     email: 'user@example.com',
     app_metadata: {
       provider: 'email'
@@ -102,7 +102,7 @@ const getSupabasePayload = (id, expiry) => {
 const getNetlifyPayload = (id, expiry) => {
   const payload = {
     exp: getExpiryTime(expiry),
-    sub: id !== null && id !== void 0 ? id : 'test-user-id',
+    sub: id ?? 'test-user-id',
     email: 'user@example.com',
     app_metadata: {
       provider: 'email',
@@ -274,7 +274,7 @@ const handler = async ({
   } catch (e) {
     (0, _telemetry.errorTelemetry)(process.argv, e.message);
     console.error(_colors.default.error(e.message));
-    process.exit((e === null || e === void 0 ? void 0 : e.exitCode) || 1);
+    process.exit(e?.exitCode || 1);
   }
 };
 

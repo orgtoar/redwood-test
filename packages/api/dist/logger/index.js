@@ -12,10 +12,6 @@ exports.redactionsList = exports.logLevel = exports.isTest = exports.isProductio
 
 var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
-
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
-
 var _pino = _interopRequireDefault(require("pino"));
 
 /**
@@ -215,7 +211,7 @@ const defaultLogLevels = ['info', 'warn', 'error'];
 exports.defaultLogLevels = defaultLogLevels;
 
 const emitLogLevels = setLogLevels => {
-  return setLogLevels === null || setLogLevels === void 0 ? void 0 : (0, _map.default)(setLogLevels).call(setLogLevels, level => {
+  return setLogLevels?.map(level => {
     return {
       emit: 'event',
       level
@@ -261,8 +257,6 @@ exports.emitLogLevels = emitLogLevels;
  *
  */
 const handlePrismaLogging = config => {
-  var _config$slowQueryThre, _config$logLevels;
-
   const logger = config.logger.child({
     // @TODO Change this once this issue is resolved
     // See https://github.com/prisma/prisma/issues/8290
@@ -270,8 +264,8 @@ const handlePrismaLogging = config => {
       clientVersion: config.db['_clientVersion']
     }
   });
-  const slowQueryThreshold = (_config$slowQueryThre = config.slowQueryThreshold) !== null && _config$slowQueryThre !== void 0 ? _config$slowQueryThre : DEFAULT_SLOW_QUERY_THRESHOLD;
-  (_config$logLevels = config.logLevels) === null || _config$logLevels === void 0 ? void 0 : (0, _forEach.default)(_config$logLevels).call(_config$logLevels, level => {
+  const slowQueryThreshold = config.slowQueryThreshold ?? DEFAULT_SLOW_QUERY_THRESHOLD;
+  config.logLevels?.forEach(level => {
     if (level === 'query') {
       config.db.$on(level, event => {
         const queryEvent = event;

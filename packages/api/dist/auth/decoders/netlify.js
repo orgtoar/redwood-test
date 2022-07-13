@@ -36,7 +36,7 @@ const netlify = (token, req) => {
     return decodedToken;
   } else {
     const clientContext = req.context.clientContext;
-    return (clientContext === null || clientContext === void 0 ? void 0 : clientContext.user) || null;
+    return clientContext?.user || null;
   }
 };
 

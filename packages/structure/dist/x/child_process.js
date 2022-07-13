@@ -24,16 +24,12 @@ function spawnCancellable(cmd, args, opts) {
     let stderr = '',
         stdout = '';
     cp.stdout.on('data', data => {
-      var _opts$stdout_cb;
-
       stdout += data;
-      opts === null || opts === void 0 ? void 0 : (_opts$stdout_cb = opts.stdout_cb) === null || _opts$stdout_cb === void 0 ? void 0 : _opts$stdout_cb.call(opts, data);
+      opts?.stdout_cb?.(data);
     });
     cp.stderr.on('data', data => {
-      var _opts$stderr_cb;
-
       stderr += data;
-      opts === null || opts === void 0 ? void 0 : (_opts$stderr_cb = opts.stderr_cb) === null || _opts$stderr_cb === void 0 ? void 0 : _opts$stderr_cb.call(opts, data);
+      opts?.stderr_cb?.(data);
     });
     cp.on('close', code => {
       resolve({

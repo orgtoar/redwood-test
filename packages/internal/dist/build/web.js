@@ -46,7 +46,7 @@ const prebuildWebFiles = (srcFiles, flags) => {
 
     const result = (0, _web.prebuildWebFile)(srcPath, flags);
 
-    if (!(result !== null && result !== void 0 && result.code)) {
+    if (!result?.code) {
       console.warn('Error:', srcPath, 'could not prebuilt.');
       return undefined;
     }

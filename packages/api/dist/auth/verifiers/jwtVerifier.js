@@ -25,8 +25,8 @@ const createSignature = ({
   options
 }) => {
   try {
-    const signOptions = options !== null && options !== void 0 && options.issuer ? {
-      issuer: options === null || options === void 0 ? void 0 : options.issuer
+    const signOptions = options?.issuer ? {
+      issuer: options?.issuer
     } : undefined;
     return _jsonwebtoken.default.sign(payload, secret, { ...signOptions
     });
@@ -48,13 +48,13 @@ const verifySignature = ({
   options
 }) => {
   try {
-    if (payload === undefined || (payload === null || payload === void 0 ? void 0 : payload.length) === 0) {
+    if (payload === undefined || payload?.length === 0) {
       console.warn('Missing payload');
     }
 
-    if (options !== null && options !== void 0 && options.issuer) {
+    if (options?.issuer) {
       _jsonwebtoken.default.verify(signature, secret, {
-        issuer: options === null || options === void 0 ? void 0 : options.issuer
+        issuer: options?.issuer
       });
     } else {
       _jsonwebtoken.default.verify(signature, secret);

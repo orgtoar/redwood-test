@@ -400,7 +400,7 @@ function DiagnosticSeverity_getLabel(severity) {
     [Hint]: 'hint',
     [Warning]: 'warning'
   };
-  return labels[severity !== null && severity !== void 0 ? severity : Information];
+  return labels[severity ?? Information];
 }
 
 /**
@@ -410,8 +410,6 @@ function DiagnosticSeverity_getLabel(severity) {
  * ex: "/path/to/app/b.ts:1:2: info: this is a message"
  */
 function ExtendedDiagnostic_format(d, opts) {
-  var _opts$getSeverityLabe;
-
   const {
     diagnostic: {
       severity,
@@ -419,8 +417,8 @@ function ExtendedDiagnostic_format(d, opts) {
       code
     }
   } = d;
-  const cwd = opts === null || opts === void 0 ? void 0 : opts.cwd;
-  const getSeverityLabel = (_opts$getSeverityLabe = opts === null || opts === void 0 ? void 0 : opts.getSeverityLabel) !== null && _opts$getSeverityLabe !== void 0 ? _opts$getSeverityLabe : DiagnosticSeverity_getLabel;
+  const cwd = opts?.cwd;
+  const getSeverityLabel = opts?.getSeverityLabel ?? DiagnosticSeverity_getLabel;
   let base = 'file://';
 
   if (cwd) {
@@ -466,7 +464,7 @@ function WorkspaceEdit_fromFileSet(files, getExistingFileText) {
       });
       continue;
     } else {
-      const text = getExistingFileText === null || getExistingFileText === void 0 ? void 0 : getExistingFileText(uri);
+      const text = getExistingFileText?.(uri);
 
       if (text) {
         // file exists

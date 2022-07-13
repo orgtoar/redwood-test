@@ -31,12 +31,10 @@ const removeBabelConfig = async () => {
 
 
   if (_fs.default.existsSync(rootBabelConfigPath)) {
-    var _rootConfig$presets;
-
     const rootConfig = require(rootBabelConfigPath); // If the rootConfig is the default, we can remove it
 
 
-    if ((0, _keys.default)(rootConfig).length === 1 && ((_rootConfig$presets = rootConfig.presets) === null || _rootConfig$presets === void 0 ? void 0 : _rootConfig$presets[0]) === '@redwoodjs/core/config/babel-preset') {
+    if ((0, _keys.default)(rootConfig).length === 1 && rootConfig.presets?.[0] === '@redwoodjs/core/config/babel-preset') {
       console.log('Removing root babel.config.js');
 
       _fs.default.rmSync(rootBabelConfigPath);

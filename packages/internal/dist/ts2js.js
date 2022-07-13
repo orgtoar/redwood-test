@@ -123,7 +123,7 @@ const transformTSToJS = file => {
     retainLines: true
   });
 
-  if (!(result !== null && result !== void 0 && result.code)) {
+  if (!result?.code) {
     return undefined;
   }
 

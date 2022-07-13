@@ -40,7 +40,7 @@ var _decoders = require("./decoders");
 const AUTH_PROVIDER_HEADER = 'auth-provider';
 
 const getAuthProviderHeader = event => {
-  return event === null || event === void 0 ? void 0 : event.headers[AUTH_PROVIDER_HEADER];
+  return event?.headers[AUTH_PROVIDER_HEADER];
 };
 
 exports.getAuthProviderHeader = getAuthProviderHeader;
@@ -49,11 +49,9 @@ exports.getAuthProviderHeader = getAuthProviderHeader;
  * Split the `Authorization` header into a schema and token part.
  */
 const parseAuthorizationHeader = event => {
-  var _ref, _event$headers, _event$headers2;
+  const parts = (event.headers?.authorization || event.headers?.Authorization)?.split(' ');
 
-  const parts = (_ref = ((_event$headers = event.headers) === null || _event$headers === void 0 ? void 0 : _event$headers.authorization) || ((_event$headers2 = event.headers) === null || _event$headers2 === void 0 ? void 0 : _event$headers2.Authorization)) === null || _ref === void 0 ? void 0 : _ref.split(' ');
-
-  if ((parts === null || parts === void 0 ? void 0 : parts.length) !== 2) {
+  if (parts?.length !== 2) {
     throw new Error('The `Authorization` header is not valid.');
   }
 

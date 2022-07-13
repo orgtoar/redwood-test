@@ -79,7 +79,7 @@ const handler = async ({
   } catch (e) {
     (0, _telemetry.errorTelemetry)(process.argv, e.message);
     console.error(_colors.default.error(e.message));
-    process.exit((e === null || e === void 0 ? void 0 : e.exitCode) || 1);
+    process.exit(e?.exitCode || 1);
   }
 };
 

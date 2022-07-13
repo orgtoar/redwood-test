@@ -35,7 +35,7 @@ async function redwood_gen_dry_run(opts) {
 
   const x = [_proxyquire.default].length; // we need to make sure this module is required. it will be used in a script we will generate dynamically
 
-  const tempDir = tmpdir !== null && tmpdir !== void 0 ? tmpdir : (0, _path.join)(cwd, '.tmp');
+  const tempDir = tmpdir ?? (0, _path.join)(cwd, '.tmp');
   const jsfile = (0, _path.join)(tempDir, 'rwcli.js');
   let requireStatement = 'proxyquire'; // if (extensionPath) {
   //   requireStatement = relative(

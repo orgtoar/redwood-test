@@ -14,8 +14,6 @@ var _defineProperty = _interopRequireDefault(require("@babel/runtime-corejs3/cor
 
 var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
-
 var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
 
 var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
@@ -105,12 +103,10 @@ function _schemaForModel2(name = this.model.name) {
 }
 
 function _parseHasMany2() {
-  var _selfSchema$fields;
-
   const selfSchema = (0, _classPrivateFieldLooseBase2.default)(this, _schemaForModel)[_schemaForModel]();
 
   (0, _classPrivateFieldLooseBase2.default)(this, _hasMany)[_hasMany] = {};
-  selfSchema === null || selfSchema === void 0 ? void 0 : (_selfSchema$fields = selfSchema.fields) === null || _selfSchema$fields === void 0 ? void 0 : (0, _forEach.default)(_selfSchema$fields).call(_selfSchema$fields, field => {
+  selfSchema?.fields?.forEach(field => {
     if (field.isList) {
       var _context2;
 
@@ -130,15 +126,11 @@ function _parseHasMany2() {
 }
 
 function _parseBelongsTo2() {
-  var _selfSchema$fields2;
-
   const selfSchema = (0, _classPrivateFieldLooseBase2.default)(this, _schemaForModel)[_schemaForModel]();
 
   (0, _classPrivateFieldLooseBase2.default)(this, _belongsTo)[_belongsTo] = {};
-  selfSchema === null || selfSchema === void 0 ? void 0 : (_selfSchema$fields2 = selfSchema.fields) === null || _selfSchema$fields2 === void 0 ? void 0 : (0, _forEach.default)(_selfSchema$fields2).call(_selfSchema$fields2, field => {
-    var _field$relationFromFi;
-
-    if ((_field$relationFromFi = field.relationFromFields) !== null && _field$relationFromFi !== void 0 && _field$relationFromFi.length) {
+  selfSchema?.fields?.forEach(field => {
+    if (field.relationFromFields?.length) {
       (0, _classPrivateFieldLooseBase2.default)(this, _belongsTo)[_belongsTo][field.name] = {
         modelName: field.type,
         foreignKey: field.relationFromFields[0],
@@ -149,8 +141,6 @@ function _parseBelongsTo2() {
 }
 
 function _parseAttributes2() {
-  var _selfSchema$fields3;
-
   const selfSchema = (0, _classPrivateFieldLooseBase2.default)(this, _schemaForModel)[_schemaForModel]();
 
   (0, _classPrivateFieldLooseBase2.default)(this, _attributes)[_attributes] = {};
@@ -163,7 +153,7 @@ function _parseAttributes2() {
     (0, _classPrivateFieldLooseBase2.default)(this, _parseBelongsTo)[_parseBelongsTo]();
   }
 
-  selfSchema === null || selfSchema === void 0 ? void 0 : (_selfSchema$fields3 = selfSchema.fields) === null || _selfSchema$fields3 === void 0 ? void 0 : (0, _forEach.default)(_selfSchema$fields3).call(_selfSchema$fields3, field => {
+  selfSchema?.fields?.forEach(field => {
     var _context3, _context4;
 
     const {

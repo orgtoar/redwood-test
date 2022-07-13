@@ -183,9 +183,7 @@ class DbAuthHandler {
     } = this.params; // was the username sent in at all?
 
     if (!username || (0, _trim.default)(username).call(username) === '') {
-      var _this$options$forgotP, _this$options$forgotP2;
-
-      throw new DbAuthError.UsernameRequiredError(((_this$options$forgotP = this.options.forgotPassword) === null || _this$options$forgotP === void 0 ? void 0 : (_this$options$forgotP2 = _this$options$forgotP.errors) === null || _this$options$forgotP2 === void 0 ? void 0 : _this$options$forgotP2.usernameRequired) || `Username is required`);
+      throw new DbAuthError.UsernameRequiredError(this.options.forgotPassword?.errors?.usernameRequired || `Username is required`);
     }
 
     let user;
@@ -230,9 +228,7 @@ class DbAuthHandler {
       return [response ? (0, _stringify.default)(response) : '', { ...this._deleteSessionHeader
       }];
     } else {
-      var _this$options$forgotP3, _this$options$forgotP4;
-
-      throw new DbAuthError.UsernameNotFoundError(((_this$options$forgotP3 = this.options.forgotPassword) === null || _this$options$forgotP3 === void 0 ? void 0 : (_this$options$forgotP4 = _this$options$forgotP3.errors) === null || _this$options$forgotP4 === void 0 ? void 0 : _this$options$forgotP4.usernameNotFound) || `Username '${username} not found`);
+      throw new DbAuthError.UsernameNotFoundError(this.options.forgotPassword?.errors?.usernameNotFound || `Username '${username} not found`);
     }
   }
 
@@ -282,9 +278,7 @@ class DbAuthHandler {
     } = this.params; // is the resetToken present?
 
     if (resetToken == null || (0, _trim.default)(_context2 = String(resetToken)).call(_context2) === '') {
-      var _this$options$resetPa, _this$options$resetPa2;
-
-      throw new DbAuthError.ResetTokenRequiredError((_this$options$resetPa = this.options.resetPassword) === null || _this$options$resetPa === void 0 ? void 0 : (_this$options$resetPa2 = _this$options$resetPa.errors) === null || _this$options$resetPa2 === void 0 ? void 0 : _this$options$resetPa2.resetTokenRequired);
+      throw new DbAuthError.ResetTokenRequiredError(this.options.resetPassword?.errors?.resetTokenRequired);
     } // is password present?
 
 
@@ -297,9 +291,7 @@ class DbAuthHandler {
     const [hashedPassword] = this._hashPassword(password, user.salt);
 
     if (!this.options.resetPassword.allowReusedPassword && user.hashedPassword === hashedPassword) {
-      var _this$options$resetPa3, _this$options$resetPa4;
-
-      throw new DbAuthError.ReusedPasswordError((_this$options$resetPa3 = this.options.resetPassword) === null || _this$options$resetPa3 === void 0 ? void 0 : (_this$options$resetPa4 = _this$options$resetPa3.errors) === null || _this$options$resetPa4 === void 0 ? void 0 : _this$options$resetPa4.reusedPassword);
+      throw new DbAuthError.ReusedPasswordError(this.options.resetPassword?.errors?.reusedPassword);
     }
 
     try {
@@ -352,9 +344,7 @@ class DbAuthHandler {
 
     // is token present at all?
     if (this.params.resetToken == null || (0, _trim.default)(_context4 = String(this.params.resetToken)).call(_context4) === '') {
-      var _this$options$resetPa5, _this$options$resetPa6;
-
-      throw new DbAuthError.ResetTokenRequiredError((_this$options$resetPa5 = this.options.resetPassword) === null || _this$options$resetPa5 === void 0 ? void 0 : (_this$options$resetPa6 = _this$options$resetPa5.errors) === null || _this$options$resetPa6 === void 0 ? void 0 : _this$options$resetPa6.resetTokenRequired);
+      throw new DbAuthError.ResetTokenRequiredError(this.options.resetPassword?.errors?.resetTokenRequired);
     }
 
     const user = await this._findUserByToken(this.params.resetToken);
@@ -364,35 +354,33 @@ class DbAuthHandler {
 
 
   _validateOptions() {
-    var _this$options, _this$options$login, _this$options2, _this$options2$login, _this$options3, _this$options3$signup, _this$options4, _this$options4$forgot, _this$options5, _this$options5$resetP;
-
     // must have a SESSION_SECRET so we can encrypt/decrypt the cookie
     if (!process.env.SESSION_SECRET) {
       throw new DbAuthError.NoSessionSecretError();
     } // must have an expiration time set for the session cookie
 
 
-    if (!((_this$options = this.options) !== null && _this$options !== void 0 && (_this$options$login = _this$options.login) !== null && _this$options$login !== void 0 && _this$options$login.expires)) {
+    if (!this.options?.login?.expires) {
       throw new DbAuthError.NoSessionExpirationError();
     } // must have a login handler to actually log a user in
 
 
-    if (!((_this$options2 = this.options) !== null && _this$options2 !== void 0 && (_this$options2$login = _this$options2.login) !== null && _this$options2$login !== void 0 && _this$options2$login.handler)) {
+    if (!this.options?.login?.handler) {
       throw new DbAuthError.NoLoginHandlerError();
     } // must have a signup handler to define how to create a new user
 
 
-    if (!((_this$options3 = this.options) !== null && _this$options3 !== void 0 && (_this$options3$signup = _this$options3.signup) !== null && _this$options3$signup !== void 0 && _this$options3$signup.handler)) {
+    if (!this.options?.signup?.handler) {
       throw new DbAuthError.NoSignupHandlerError();
     } // must have a forgot password handler to define how to notify user of reset token
 
 
-    if (!((_this$options4 = this.options) !== null && _this$options4 !== void 0 && (_this$options4$forgot = _this$options4.forgotPassword) !== null && _this$options4$forgot !== void 0 && _this$options4$forgot.handler)) {
+    if (!this.options?.forgotPassword?.handler) {
       throw new DbAuthError.NoForgotPasswordHandlerError();
     } // must have a reset password handler to define what to do with user once password changed
 
 
-    if (!((_this$options5 = this.options) !== null && _this$options5 !== void 0 && (_this$options5$resetP = _this$options5.resetPassword) !== null && _this$options5$resetP !== void 0 && _this$options5$resetP.handler)) {
+    if (!this.options?.resetPassword?.handler) {
       throw new DbAuthError.NoResetPasswordHandlerError();
     }
   } // removes sensative fields from user before sending over the wire
@@ -482,17 +470,13 @@ class DbAuthHandler {
     }); // user not found with the given token
 
     if (!user) {
-      var _this$options$resetPa7, _this$options$resetPa8;
-
-      throw new DbAuthError.ResetTokenInvalidError((_this$options$resetPa7 = this.options.resetPassword) === null || _this$options$resetPa7 === void 0 ? void 0 : (_this$options$resetPa8 = _this$options$resetPa7.errors) === null || _this$options$resetPa8 === void 0 ? void 0 : _this$options$resetPa8.resetTokenInvalid);
+      throw new DbAuthError.ResetTokenInvalidError(this.options.resetPassword?.errors?.resetTokenInvalid);
     } // token has expired
 
 
     if (user[this.options.authFields.resetTokenExpiresAt] < tokenExpires) {
-      var _this$options$resetPa9, _this$options$resetPa10;
-
       await this._clearResetToken(user);
-      throw new DbAuthError.ResetTokenExpiredError((_this$options$resetPa9 = this.options.resetPassword) === null || _this$options$resetPa9 === void 0 ? void 0 : (_this$options$resetPa10 = _this$options$resetPa9.errors) === null || _this$options$resetPa10 === void 0 ? void 0 : _this$options$resetPa10.resetTokenExpired);
+      throw new DbAuthError.ResetTokenExpiredError(this.options.resetPassword?.errors?.resetTokenExpired);
     }
 
     return user;
@@ -521,9 +505,7 @@ class DbAuthHandler {
 
     // do we have all the query params we need to check the user?
     if (!username || (0, _trim.default)(_context7 = username.toString()).call(_context7) === '' || !password || (0, _trim.default)(_context8 = password.toString()).call(_context8) === '') {
-      var _this$options$login2, _this$options$login2$;
-
-      throw new DbAuthError.UsernameAndPasswordRequiredError((_this$options$login2 = this.options.login) === null || _this$options$login2 === void 0 ? void 0 : (_this$options$login2$ = _this$options$login2.errors) === null || _this$options$login2$ === void 0 ? void 0 : _this$options$login2$.usernameOrPasswordMissing);
+      throw new DbAuthError.UsernameAndPasswordRequiredError(this.options.login?.errors?.usernameOrPasswordMissing);
     }
 
     let user;
@@ -541,9 +523,7 @@ class DbAuthHandler {
     }
 
     if (!user) {
-      var _this$options$login3, _this$options$login3$;
-
-      throw new DbAuthError.UserNotFoundError(username, (_this$options$login3 = this.options.login) === null || _this$options$login3 === void 0 ? void 0 : (_this$options$login3$ = _this$options$login3.errors) === null || _this$options$login3$ === void 0 ? void 0 : _this$options$login3$.usernameNotFound);
+      throw new DbAuthError.UserNotFoundError(username, this.options.login?.errors?.usernameNotFound);
     } // is password correct?
 
 
@@ -552,28 +532,22 @@ class DbAuthHandler {
     if (hashedPassword === user[this.options.authFields.hashedPassword]) {
       return user;
     } else {
-      var _this$options$login4, _this$options$login4$;
-
-      throw new DbAuthError.IncorrectPasswordError(username, (_this$options$login4 = this.options.login) === null || _this$options$login4 === void 0 ? void 0 : (_this$options$login4$ = _this$options$login4.errors) === null || _this$options$login4$ === void 0 ? void 0 : _this$options$login4$.incorrectPassword);
+      throw new DbAuthError.IncorrectPasswordError(username, this.options.login?.errors?.incorrectPassword);
     }
   } // gets the user from the database and returns only its ID
 
 
   async _getCurrentUser() {
-    var _this$session;
-
-    if (!((_this$session = this.session) !== null && _this$session !== void 0 && _this$session.id)) {
+    if (!this.session?.id) {
       throw new DbAuthError.NotLoggedInError();
     }
 
     let user;
 
     try {
-      var _this$session2;
-
       user = await this.dbAccessor.findUnique({
         where: {
-          [this.options.authFields.id]: (_this$session2 = this.session) === null || _this$session2 === void 0 ? void 0 : _this$session2.id
+          [this.options.authFields.id]: this.session?.id
         },
         select: {
           [this.options.authFields.id]: true
@@ -608,9 +582,7 @@ class DbAuthHandler {
       });
 
       if (user) {
-        var _this$options$signup, _this$options$signup$;
-
-        throw new DbAuthError.DuplicateUsernameError(username, (_this$options$signup = this.options.signup) === null || _this$options$signup === void 0 ? void 0 : (_this$options$signup$ = _this$options$signup.errors) === null || _this$options$signup$ === void 0 ? void 0 : _this$options$signup$.usernameTaken);
+        throw new DbAuthError.DuplicateUsernameError(username, this.options.signup?.errors?.usernameTaken);
       } // if we get here everything is good, call the app's signup handler and let
       // them worry about scrubbing data and saving to the DB
 
@@ -639,10 +611,10 @@ class DbAuthHandler {
 
 
   _getAuthMethod() {
-    var _this$event$queryStri, _context9;
+    var _context9;
 
     // try getting it from the query string, /.redwood/functions/auth?method=[methodName]
-    let methodName = (_this$event$queryStri = this.event.queryStringParameters) === null || _this$event$queryStri === void 0 ? void 0 : _this$event$queryStri.method;
+    let methodName = this.event.queryStringParameters?.method;
 
     if (!(0, _includes.default)(_context9 = DbAuthHandler.METHODS).call(_context9, methodName) && this.params) {
       // try getting it from the body in JSON: { method: [methodName] }
@@ -660,9 +632,7 @@ class DbAuthHandler {
   _validateField(name, value) {
     // check for presense
     if (!value || (0, _trim.default)(value).call(value) === '') {
-      var _this$options$signup2, _this$options$signup3;
-
-      throw new DbAuthError.FieldRequiredError(name, (_this$options$signup2 = this.options.signup) === null || _this$options$signup2 === void 0 ? void 0 : (_this$options$signup3 = _this$options$signup2.errors) === null || _this$options$signup3 === void 0 ? void 0 : _this$options$signup3.fieldMissing);
+      throw new DbAuthError.FieldRequiredError(name, this.options.signup?.errors?.fieldMissing);
     } else {
       return true;
     }

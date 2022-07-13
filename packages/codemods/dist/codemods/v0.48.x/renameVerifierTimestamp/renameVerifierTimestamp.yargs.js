@@ -57,7 +57,7 @@ const handler = () => {
         })
       });
     } catch (e) {
-      setError('Failed to codemod your project \n' + (e === null || e === void 0 ? void 0 : e.message));
+      setError('Failed to codemod your project \n' + e?.message);
     }
   });
 };

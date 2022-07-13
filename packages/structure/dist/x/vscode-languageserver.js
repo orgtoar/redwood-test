@@ -64,11 +64,9 @@ function with_catch2(f, clause) {
     try {
       const res = f();
 
-      if (typeof (res === null || res === void 0 ? void 0 : res.then) === 'function') {
-        var _res$catch;
-
+      if (typeof res?.then === 'function') {
         // promise
-        return (_res$catch = res.catch) === null || _res$catch === void 0 ? void 0 : _res$catch.call(res, clause2);
+        return res.catch?.(clause2);
       }
 
       return res;

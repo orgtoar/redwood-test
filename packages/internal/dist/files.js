@@ -219,9 +219,7 @@ const isDirectoryNamedModuleFile = p => {
 exports.isDirectoryNamedModuleFile = isDirectoryNamedModuleFile;
 
 const isGraphQLSchemaFile = p => {
-  var _p$match;
-
-  if (!((_p$match = p.match(/\.sdl\.(ts|js)$/)) !== null && _p$match !== void 0 && _p$match[0])) {
+  if (!p.match(/\.sdl\.(ts|js)$/)?.[0]) {
     return false;
   }
 
