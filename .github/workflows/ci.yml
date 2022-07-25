@@ -20,6 +20,8 @@ jobs:
       - run: yarn install
         working-directory: ./.github/actions/only_doc_changes
 
+      # - run: echo test
+
       - name: 📖 Only doc changes?
         id: only-doc-changes
         uses: ./.github/actions/only_doc_changes
