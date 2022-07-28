@@ -1,0 +1,8 @@
+name: Fixture
+description: Determines if the fixture should be rebuilt
+runs:
+  using: node16
+  main: should_rebuild_fixture.mjs
+inputs:
+  labels:
+    required: true

@@ -308,3 +308,31 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - run: echo "Only doc changes"
+
+  check-test-project-fixture:
+    needs: check
+    name: ✅ Check test project fixture
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: yarn install
+        working-directory: ./.github/actions/should_rebuild_fixture
+
+      - name: debug
+        runs: echo '${{ toJSON(github.event.pull_request.labels) }}'
+
+      - name: ✅ Check test project fixture
+        uses: ./.github/actions/should_rebuild_fixture
+        with:
+          labels: '{ "labels": ${{ toJSON(github.event.pull_request.labels) }} }'
+
+  check-test-project-fixture-docs:
+    needs: only-doc-changes
+    if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
+    name: ✅ Check test project fixture
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Only doc changes"
