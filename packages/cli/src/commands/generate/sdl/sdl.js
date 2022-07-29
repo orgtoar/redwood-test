@@ -68,22 +68,14 @@ const modelFieldToSDL = ({
     Json: 'JSON',
     Decimal: 'Float',
   }
-  if (docs) {
-    return addFieldGraphQLComment(
-      field,
-      `${field.name}: ${field.isList ? '[' : ''}${
-        dictionary[field.type] || field.type
-      }${field.isList ? ']' : ''}${
-        (field.isRequired && required) | field.isList ? '!' : ''
-      }`
-    )
-  } else {
-    return `${field.name}: ${field.isList ? '[' : ''}${
-      dictionary[field.type] || field.type
-    }${field.isList ? ']' : ''}${
-      (field.isRequired && required) | field.isList ? '!' : ''
-    }`
-  }
+
+  const sdl = `${field.name}: ${field.isList ? '[' : ''}${
+    dictionary[field.type] || field.type
+  }${field.isList ? ']' : ''}${
+    (field.isRequired && required) | field.isList ? '!' : ''
+  }`
+
+  return docs ? addFieldGraphQLComment(field, sdl) : sdl
 }
 
 const querySDL = (model, docs = false) => {
