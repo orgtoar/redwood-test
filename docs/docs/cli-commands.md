@@ -897,13 +897,13 @@ A scaffold quickly creates a CRUD for a model by generating the following files 
 
 The content of the generated components is different from what you'd get by running them individually.
 
-| Arguments & Options  | Description                                                                                                                                                                                           |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `model`              | Model to scaffold. You can also use `<path/model>` to nest files by type at the given path directory (or directories). For example, `redwood g scaffold admin/post`                                   |
-| `--docs`             | Use or set to `true` to generated comments in SDL to use in self-documentating your app's GraphQL API. See: [Self-Documenting GraphQL API](./graphql.md#self-documenting-graphql-api) [default:false] |
-| `--force, -f`        | Overwrite existing files                                                                                                                                                                              |
-| `--tailwind`         | Generate TailwindCSS version of scaffold.css (automatically set to `true` if TailwindCSS config exists)                                                                                               |
-| `--typescript, --ts` | Generate TypeScript files Enabled by default if we detect your project is TypeScript                                                                                                                  |
+| Arguments & Options  | Description                                                                                                                                                                                  |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `model`              | Model to scaffold. You can also use `<path/model>` to nest files by type at the given path directory (or directories). For example, `redwood g scaffold admin/post`                          |
+| `--docs`             | Use or set to `true` to generate comments in SDL for self-documenting your app's GraphQL API. See: [Self-Documenting GraphQL API](./graphql.md#self-documenting-graphql-api) [default:false] |
+| `--force, -f`        | Overwrite existing files                                                                                                                                                                     |
+| `--tailwind`         | Generate TailwindCSS version of scaffold.css (automatically set to `true` if TailwindCSS config exists)                                                                                      |
+| `--typescript, --ts` | Generate TypeScript files Enabled by default if we detect your project is TypeScript                                                                                                         |
 
 **Usage**
 
@@ -1045,14 +1045,14 @@ The sdl will inspect your `schema.prisma` and will do its best with relations. S
 <!-- See limited generator support for relations
 https://community.redwoodjs.com/t/prisma-beta-2-and-redwoodjs-limited-generator-support-for-relations-with-workarounds/361 -->
 
-| Arguments & Options  | Description                                                                                                                                                                                            |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `model`              | Model to generate the sdl for                                                                                                                                                                          |
-| `--crud`             | Set to `false`, or use `--no-crud`, if you do not want to generate mutations                                                                                                                           |
-| `--docs`             | Use or set to `true` to generated comments in SDL to use in self-documentating your app's GraphQL API. See: [Self-Documenting GraphQL API](./graphql.md#self-documenting-graphql-api) [default: false] |
-| `--force, -f`        | Overwrite existing files                                                                                                                                                                               |
-| `--tests`            | Generate service test and scenario [default: true]                                                                                                                                                     |
-| `--typescript, --ts` | Generate TypeScript files Enabled by default if we detect your project is TypeScript                                                                                                                   |
+| Arguments & Options  | Description                                                                                                                                                                                   |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `model`              | Model to generate the sdl for                                                                                                                                                                 |
+| `--crud`             | Set to `false`, or use `--no-crud`, if you do not want to generate mutations                                                                                                                  |
+| `--docs`             | Use or set to `true` to generate comments in SDL for self-documenting your app's GraphQL API. See: [Self-Documenting GraphQL API](./graphql.md#self-documenting-graphql-api) [default: false] |
+| `--force, -f`        | Overwrite existing files                                                                                                                                                                      |
+| `--tests`            | Generate service test and scenario [default: true]                                                                                                                                            |
+| `--typescript, --ts` | Generate TypeScript files Enabled by default if we detect your project is TypeScript                                                                                                          |
 
 > **Note:** The generated sdl will include the `@requireAuth` directive by default to ensure queries and mutations are secure. If your app's queries and mutations are all public, you can set up a custom SDL generator template to apply `@skipAuth` (or a custom validator directive) to suit you application's needs.
 
