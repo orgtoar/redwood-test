@@ -46,10 +46,20 @@ const missingIdConsoleMessage = () => {
 }
 
 const addFieldGraphQLComment = (field, str) => {
-  const description = field.documentation || `Description for ${field.name}.`
+  let description
+
+  if (field.documentation) {
+    if (field.documentation.includes('\n')) {
+      description = `"""${field.documentation.replaceAll(/\n/g, '\n  ')}"""`
+    } else {
+      description = `"${field.documentation}"`
+    }
+  } else {
+    description = `"Description for ${field.name}."`
+  }
 
   return `
-  """${description}"""
+  ${description}
   ${str}`
 }
 
@@ -145,7 +155,8 @@ const sdlFromSchemaModel = async (name, crud, docs = false) => {
 
   const modelName = model.name
   const modelDescription =
-    model.documentation || `Representation of ${modelName}.`
+    model.documentation.replaceAll(/\n/g, '\n  ') ||
+    `Representation of ${modelName}.`
 
   return {
     modelName,
