@@ -38,17 +38,13 @@ export const schema = gql`
   Defines details about RedwoodJS such as the current user and version information.
   """
   type Redwood {
-    """
-    The version of Redwood.
-    """
+    "The version of Redwood."
     version: String
-    """
-    The current user.
-    """
+
+    "The current user."
     currentUser: JSON
-    """
-    The version of Prisma.
-    """
+
+    "The version of Prisma."
     prismaVersion: String
   }
 
@@ -56,9 +52,7 @@ export const schema = gql`
   About the Redwood queries.
   """
   type Query {
-    """
-    Fetches the Redwood root schema.
-    """
+    "Fetches the Redwood root schema."
     redwood: Redwood
   }
 `
