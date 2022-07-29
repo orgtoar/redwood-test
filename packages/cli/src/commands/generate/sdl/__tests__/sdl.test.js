@@ -142,11 +142,7 @@ const itCreateAMultiWordSDLFileWithCRUD = (baseArgs = {}) => {
 
 const itCreatesAnSDLFileWithEnumDefinitions = (baseArgs = {}) => {
   test('creates a sdl file with enum definitions', async () => {
-    const files = await sdl.files({
-      ...baseArgs,
-      name: 'Shoe',
-      crud: true,
-    })
+    const files = await sdl.files({ ...baseArgs, name: 'Shoe', crud: true })
     const extension = extensionForBaseArgs(baseArgs)
 
     expect(

@@ -87,9 +87,7 @@ const modelFieldToSDL = ({
 }
 
 const querySDL = (model, docs = false) => {
-  const result = model.fields.map((field) => modelFieldToSDL({ field, docs }))
-
-  return result
+  return model.fields.map((field) => modelFieldToSDL({ field, docs }))
 }
 
 const inputSDL = (model, required, types = {}, docs = false) => {
