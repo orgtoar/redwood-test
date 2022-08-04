@@ -1,0 +1,7 @@
+import ${pascalName}Page from './${pascalName}Page'
+
+export const generated = (args) => {
+  return <${pascalName}Page ${propValueParam} {...args} />
+}
+
+export default { title: 'Pages/${pascalName}Page' }

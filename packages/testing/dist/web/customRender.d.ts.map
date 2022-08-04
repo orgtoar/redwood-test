@@ -1,0 +1,1 @@
+{"version":3,"file":"customRender.d.ts","sourceRoot":"","sources":["../../src/web/customRender.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,OAAO,CAAA;AAGzB,OAAO,KAAK,EAAE,YAAY,EAAE,MAAM,wBAAwB,CAAA;AAC1D,OAAO,KAAK,EACV,iBAAiB,EACjB,gBAAgB,EACjB,MAAM,8BAA8B,CAAA;AASrC,eAAO,MAAM,YAAY,OACnB,MAAM,YAAY,mBAErB,YAKF,CAAA;AAED,eAAO,MAAM,gBAAgB,8LAQ5B,CAAA"}

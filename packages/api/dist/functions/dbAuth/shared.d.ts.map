@@ -1,0 +1,1 @@
+{"version":3,"file":"shared.d.ts","sourceRoot":"","sources":["../../../src/functions/dbAuth/shared.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,oBAAoB,EAAE,MAAM,YAAY,CAAA;AAQtD,eAAO,MAAM,aAAa,sCAazB,CAAA;AAGD,eAAO,MAAM,cAAc,SAAU,MAAM,GAAG,IAAI,UAiBjD,CAAA;AAGD,eAAO,MAAM,UAAU,UAAW,MAAM,kBAevC,CAAA;AAID,eAAO,MAAM,aAAa,sCASzB,CAAA;AAED,eAAO,MAAM,eAAe,gDAc3B,CAAA"}

@@ -1,0 +1,4 @@
+export declare const generateTypeDefGraphQLApi: () => Promise<string[]>;
+export declare const generateTypeDefGraphQLWeb: () => Promise<string[]>;
+export declare const getResolverFnType: () => "(\n      args: TArgs,\n      obj?: { root: TParent; context: TContext; info: GraphQLResolveInfo }\n    ) => TResult extends PromiseLike<infer TResultAwaited>\n      ? Promise<Partial<TResultAwaited>>\n      : Promise<Partial<TResult>> | Partial<TResult>;" | "(\n      args?: TArgs,\n      obj?: { root: TParent; context: TContext; info: GraphQLResolveInfo }\n    ) => TResult extends PromiseLike<infer TResultAwaited>\n      ? Promise<Partial<TResultAwaited>>\n      : Promise<Partial<TResult>> | Partial<TResult>;";
+//# sourceMappingURL=graphqlCodeGen.d.ts.map

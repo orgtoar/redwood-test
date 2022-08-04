@@ -1,0 +1,1 @@
+{"version":3,"file":"azureActiveDirectory.d.ts","sourceRoot":"","sources":["../../../src/auth/decoders/azureActiveDirectory.ts"],"names":[],"mappings":"AAGA,eAAO,MAAM,oBAAoB,UACxB,MAAM,KACZ,QAAQ,IAAI,GAAG,OAAO,MAAM,EAAE,OAAO,CAAC,CA6DxC,CAAA"}

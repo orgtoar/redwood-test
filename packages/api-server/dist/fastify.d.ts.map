@@ -1,0 +1,1 @@
+{"version":3,"file":"fastify.d.ts","sourceRoot":"","sources":["../src/fastify.ts"],"names":[],"mappings":";AAGA,OAAO,KAAK,EAAE,eAAe,EAAE,oBAAoB,EAAE,MAAM,SAAS,CAAA;AAMpE,OAAO,EAAE,mBAAmB,EAAE,MAAM,SAAS,CAAA;AAuB7C,wBAAgB,iBAAiB;;;EAqBhC;AAED,eAAO,MAAM,qBAAqB,aACtB,oBAAoB,KAC7B,eAMF,CAAA;AAED,eAAe,qBAAqB,CAAA"}

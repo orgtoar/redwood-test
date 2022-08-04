@@ -1,0 +1,1 @@
+{"version":3,"file":"outline.d.ts","sourceRoot":"","sources":["../../src/language_server/outline.ts"],"names":[],"mappings":"AAOA,OAAO,EAAE,gBAAgB,EAAE,MAAM,oBAAoB,CAAA;AAErD,qBAAa,cAAc;IACN,MAAM,EAAE,gBAAgB;gBAAxB,MAAM,EAAE,gBAAgB;IAEnC,KAAK;CAoBd"}

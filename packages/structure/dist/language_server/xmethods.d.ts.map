@@ -1,0 +1,1 @@
+{"version":3,"file":"xmethods.d.ts","sourceRoot":"","sources":["../../src/language_server/xmethods.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,gBAAgB,EAAE,MAAM,oBAAoB,CAAA;AAErD;;;GAGG;AACH,qBAAa,eAAe;IACP,MAAM,EAAE,gBAAgB;gBAAxB,MAAM,EAAE,gBAAgB;IACnC,KAAK;CAuBd"}
