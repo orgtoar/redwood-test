@@ -1,0 +1,1 @@
+{"version":3,"file":"global.api-auto-imports.d.ts","sourceRoot":"","sources":["../src/global.api-auto-imports.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,IAAI,MAAM,aAAa,CAAA;AAEnC,OAAO,KAAK,EAAE,aAAa,EAAE,MAAM,iBAAiB,CAAA;AAEpD,OAAO,CAAC,MAAM,CAAC;IACb,MAAM,GAAG,EAAE,OAAO,IAAI,CAAA;IACtB,MAAM,OAAO,EAAE,aAAa,CAAA;CAC7B"}
