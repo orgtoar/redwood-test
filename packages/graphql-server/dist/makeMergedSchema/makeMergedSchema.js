@@ -12,8 +12,6 @@ _Object$defineProperty(exports, "__esModule", {
 
 exports.makeMergedSchema = void 0;
 
-require("core-js/modules/es.object.has-own.js");
-
 var _reduce = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/reduce"));
 
 var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
@@ -51,12 +49,12 @@ const mapFieldsToService = ({
 
   return (0, _reduce.default)(_context = (0, _keys.default)(fields)).call(_context, (resolvers, name) => {
     // Does the function already exist in the resolvers from the schema definition?
-    if (resolvers !== null && resolvers !== void 0 && resolvers[name]) {
+    if (resolvers?.[name]) {
       return resolvers;
     } // Does a function exist in the service?
 
 
-    if (services !== null && services !== void 0 && services[name]) {
+    if (services?.[name]) {
       return { ...resolvers,
         // Map the arguments from GraphQL to an ordinary function a service would
         // expect.
@@ -81,7 +79,7 @@ const mapFieldsToService = ({
 
 const resolveUnionType = types => ({
   __resolveType(obj) {
-    var _context2, _maxIntersectionType;
+    var _context2;
 
     // if obj has __typename, check that first to resolve type, otherwise, look for largest intersection
     if (Object.hasOwn(obj, '__typename')) {
@@ -116,7 +114,7 @@ const resolveUnionType = types => ({
       throw Error('Unable to resolve correct type for union. Try adding unique fields to each type or __typename to each resolver');
     }
 
-    return ((_maxIntersectionType = maxIntersectionType) === null || _maxIntersectionType === void 0 ? void 0 : _maxIntersectionType.name) ?? null;
+    return maxIntersectionType?.name ?? null;
   }
 
 });
@@ -154,13 +152,13 @@ const mergeResolversWithServices = ({
     let servicesForType = mergedServices;
 
     if (!(0, _includes.default)(_context12 = ['Query', 'Mutation']).call(_context12, type.name)) {
-      servicesForType = mergedServices === null || mergedServices === void 0 ? void 0 : mergedServices[type.name];
+      servicesForType = mergedServices?.[type.name];
     }
 
     return { ...acc,
       [type.name]: mapFieldsToService({
         fields: type.getFields(),
-        resolvers: resolvers === null || resolvers === void 0 ? void 0 : resolvers[type.name],
+        resolvers: resolvers?.[type.name],
         services: servicesForType
       })
     };

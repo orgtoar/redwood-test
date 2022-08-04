@@ -64,9 +64,7 @@ let RWRoute = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), 
   }
 
   get isPrivate() {
-    var _this$jsxNode$getPare, _this$jsxNode$getPare2, _this$jsxNode$getPare3;
-
-    const tagText = (_this$jsxNode$getPare = this.jsxNode.getParentIfKind(tsm.SyntaxKind.JsxElement)) === null || _this$jsxNode$getPare === void 0 ? void 0 : (_this$jsxNode$getPare2 = _this$jsxNode$getPare.getOpeningElement()) === null || _this$jsxNode$getPare2 === void 0 ? void 0 : (_this$jsxNode$getPare3 = _this$jsxNode$getPare2.getTagNameNode()) === null || _this$jsxNode$getPare3 === void 0 ? void 0 : _this$jsxNode$getPare3.getText();
+    const tagText = this.jsxNode.getParentIfKind(tsm.SyntaxKind.JsxElement)?.getOpeningElement()?.getTagNameNode()?.getText();
     return tagText === 'Private';
   }
 
@@ -99,9 +97,7 @@ let RWRoute = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), 
   }
 
   get outlineDescription() {
-    var _this$page;
-
-    const fp = (_this$page = this.page) === null || _this$page === void 0 ? void 0 : _this$page.filePath;
+    const fp = this.page?.filePath;
 
     if (!fp) {
       return undefined;
@@ -155,9 +151,7 @@ let RWRoute = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), 
   }
 
   get page_identifier_str() {
-    var _this$page_identifier;
-
-    return (_this$page_identifier = this.page_identifier) === null || _this$page_identifier === void 0 ? void 0 : _this$page_identifier.getText();
+    return this.page_identifier?.getText();
   }
 
   get name() {

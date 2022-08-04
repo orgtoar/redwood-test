@@ -30,7 +30,7 @@ let isServerConfigLoaded = false;
 let serverConfigFile = {
   config: DEFAULT_OPTIONS,
   configureFastify: async (fastify, options) => {
-    fastify.log.info(options, `In configureFastify hook for side: ${options === null || options === void 0 ? void 0 : options.side}`);
+    fastify.log.info(options, `In configureFastify hook for side: ${options?.side}`);
     return fastify;
   }
 };

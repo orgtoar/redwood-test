@@ -111,8 +111,8 @@ const verifySignature = ({
 
   const signedStamp = Number(match[1]);
   const signedPayload = match[2];
-  const timestamp = (options === null || options === void 0 ? void 0 : options.currentTimestampOverride) ?? (0, _now.default)();
-  const tolerance = (options === null || options === void 0 ? void 0 : options.tolerance) ?? _common.DEFAULT_TOLERANCE;
+  const timestamp = options?.currentTimestampOverride ?? (0, _now.default)();
+  const tolerance = options?.tolerance ?? _common.DEFAULT_TOLERANCE;
   const difference = Math.abs(timestamp - signedStamp);
 
   if (difference > tolerance) {
@@ -150,7 +150,7 @@ const timestampSchemeVerifier = options => {
       return createSignature({
         payload,
         secret,
-        timestamp: options === null || options === void 0 ? void 0 : options.currentTimestampOverride
+        timestamp: options?.currentTimestampOverride
       });
     },
     verify: ({

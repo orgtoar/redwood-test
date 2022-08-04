@@ -14,8 +14,6 @@ exports.RWEnvHelper = void 0;
 
 var _startsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/starts-with"));
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
 var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
 
 var _from = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/array/from"));
@@ -111,7 +109,7 @@ let RWEnvHelper = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)
 
 
   env_default_merged_filtered(include) {
-    return (0, _lodash.pickBy)(this.env_default_merged, (_v, k) => (0, _startsWith.default)(k).call(k, 'REDWOOD_ENV_') || (include === null || include === void 0 ? void 0 : (0, _includes.default)(include).call(include, k)));
+    return (0, _lodash.pickBy)(this.env_default_merged, (_v, k) => (0, _startsWith.default)(k).call(k, 'REDWOOD_ENV_') || include?.includes(k));
   }
 
   _dotenv(f) {
@@ -215,11 +213,11 @@ let ProcessDotEnvExpression = (_dec9 = (0, _decorators.lazy)(), _dec10 = (0, _de
       }
     } = this;
 
-    if (env !== null && env !== void 0 && env[key]) {
+    if (env?.[key]) {
       return '.env';
     }
 
-    if (env_defaults !== null && env_defaults !== void 0 && env_defaults[key]) {
+    if (env_defaults?.[key]) {
       return '.env.defaults';
     }
 

@@ -30,10 +30,8 @@ async function transform(file, api) {
   // This is the easy case.
   const match = (0, _trim.default)(_context = file.source).call(_context).match(/module.exports = require\('@redwoodjs\/testing\/config\/jest\/(?<side>api|web)'\)/);
 
-  if (match !== null && match !== void 0 && match.length) {
-    var _match$groups;
-
-    file.source = await (0, _fetchFileFromTemplate.default)('main', `${(_match$groups = match.groups) === null || _match$groups === void 0 ? void 0 : _match$groups.side}/jest.config.js`);
+  if (match?.length) {
+    file.source = await (0, _fetchFileFromTemplate.default)('main', `${match.groups?.side}/jest.config.js`);
     return file.source;
   }
 

@@ -38,7 +38,7 @@ const mappings = {
 
 function lastWord(str) {
   const capitals = str.match(/[A-Z]/g);
-  const lastIndex = (0, _lastIndexOf.default)(str).call(str, capitals === null || capitals === void 0 ? void 0 : (0, _slice.default)(capitals).call(capitals, -1)[0]);
+  const lastIndex = (0, _lastIndexOf.default)(str).call(str, capitals?.slice(-1)[0]);
   return lastIndex >= 0 ? (0, _slice.default)(str).call(str, lastIndex) : str;
 }
 /**

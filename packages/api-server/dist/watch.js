@@ -61,10 +61,8 @@ _dotenv.default.config({
 let httpServerProcess;
 
 const killApiServer = () => {
-  var _httpServerProcess, _httpServerProcess2;
-
-  (_httpServerProcess = httpServerProcess) === null || _httpServerProcess === void 0 ? void 0 : _httpServerProcess.emit('exit');
-  (_httpServerProcess2 = httpServerProcess) === null || _httpServerProcess2 === void 0 ? void 0 : _httpServerProcess2.kill();
+  httpServerProcess?.emit('exit');
+  httpServerProcess?.kill();
 };
 
 const validate = async () => {
@@ -76,7 +74,7 @@ const validate = async () => {
 
     killApiServer();
     console.log(_ansiColors.default.redBright(`[GQL Server Error] - Schema validation failed`));
-    console.error(_ansiColors.default.red(e === null || e === void 0 ? void 0 : e.message));
+    console.error(_ansiColors.default.red(e?.message));
     console.log(_ansiColors.default.redBright((0, _repeat.default)(_context = '-').call(_context, 40)));
     delayRestartServer.cancel();
     return false;

@@ -14,8 +14,6 @@ exports.hasDirective = hasDirective;
 exports.isPromise = isPromise;
 exports.useRedwoodDirective = void 0;
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
-
 var _symbol = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/symbol"));
 
 var _utils = require("@graphql-tools/utils");
@@ -33,8 +31,6 @@ exports.DirectiveType = DirectiveType;
 
 function hasDirective(info) {
   try {
-    var _astNode$directives;
-
     const {
       parentType,
       fieldName,
@@ -45,7 +41,7 @@ function hasDirective(info) {
     const astNode = field.astNode; // if directives array exists, we check the length
     // other wise false
 
-    return !!(astNode !== null && astNode !== void 0 && (_astNode$directives = astNode.directives) !== null && _astNode$directives !== void 0 && _astNode$directives.length);
+    return !!astNode?.directives?.length;
   } catch (error) {
     console.error(error);
     return false;
@@ -53,14 +49,12 @@ function hasDirective(info) {
 }
 
 function getDirectiveByName(fieldConfig, directiveName) {
-  var _fieldConfig$astNode, _fieldConfig$astNode$;
-
-  const associatedDirective = (_fieldConfig$astNode = fieldConfig.astNode) === null || _fieldConfig$astNode === void 0 ? void 0 : (_fieldConfig$astNode$ = _fieldConfig$astNode.directives) === null || _fieldConfig$astNode$ === void 0 ? void 0 : (0, _find.default)(_fieldConfig$astNode$).call(_fieldConfig$astNode$, directive => directive.name.value === directiveName);
+  const associatedDirective = fieldConfig.astNode?.directives?.find(directive => directive.name.value === directiveName);
   return associatedDirective ?? null;
 }
 
 function isPromise(value) {
-  return typeof (value === null || value === void 0 ? void 0 : value.then) === 'function';
+  return typeof value?.then === 'function';
 }
 
 function wrapAffectedResolvers(schema, options) {
@@ -143,15 +137,13 @@ const useRedwoodDirective = options => {
       schema,
       replaceSchema
     }) {
-      var _schema$extensions;
-
       /**
        * Currently graphql-js extensions typings are limited to string keys.
        * We are using symbols as each useRedwoodDirective plugin instance should use its own unique symbol.
        */
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error See https://github.com/graphql/graphql-js/pull/3511 - remove this comments once merged
-      if (((_schema$extensions = schema.extensions) === null || _schema$extensions === void 0 ? void 0 : _schema$extensions[didMapSchemaSymbol]) === true) {
+      if (schema.extensions?.[didMapSchemaSymbol] === true) {
         return;
       }
 

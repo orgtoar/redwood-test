@@ -47,7 +47,7 @@ const handler = async ({
   try {
     var _context;
 
-    const pathString = path === null || path === void 0 ? void 0 : path.join(' ');
+    const pathString = path?.join(' ');
     const result = await (0, _execa.default)('yarn eslint', (0, _filter.default)(_context = [fix && '--fix', !pathString && _fs.default.existsSync((0, _lib.getPaths)().web.src) && 'web/src', !pathString && _fs.default.existsSync((0, _lib.getPaths)().api.src) && 'api/src', pathString]).call(_context, Boolean), {
       cwd: (0, _lib.getPaths)().base,
       shell: true,
@@ -56,7 +56,7 @@ const handler = async ({
     process.exit(result.exitCode);
   } catch (e) {
     console.log(_colors.default.error(e.message));
-    process.exit((e === null || e === void 0 ? void 0 : e.exitCode) || 1);
+    process.exit(e?.exitCode || 1);
   }
 };
 

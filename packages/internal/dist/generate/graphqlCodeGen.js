@@ -108,14 +108,12 @@ const generateTypeDefGraphQLWeb = async () => {
 exports.generateTypeDefGraphQLWeb = generateTypeDefGraphQLWeb;
 
 async function runCodegenGraphQL(documents, extraPlugins, filename) {
-  var _userCodegenConfig$co;
-
   const userCodegenConfig = await (0, _cli.loadCodegenConfig)({
     configFilePath: (0, _paths.getPaths)().base
   }); // Merge in user codegen config with the rw built-in one
 
   const mergedConfig = { ...getPluginConfig(),
-    ...(userCodegenConfig === null || userCodegenConfig === void 0 ? void 0 : (_userCodegenConfig$co = userCodegenConfig.config) === null || _userCodegenConfig$co === void 0 ? void 0 : _userCodegenConfig$co.config)
+    ...userCodegenConfig?.config?.config
   };
   const options = getCodegenOptions(documents, mergedConfig, extraPlugins);
   const output = await (0, _core.codegen)(options);
@@ -194,11 +192,9 @@ function getPluginConfig() {
 }
 
 const getResolverFnType = () => {
-  var _tsConfig$api, _tsConfig$api$compile;
-
   const tsConfig = (0, _project.getTsConfigs)();
 
-  if ((_tsConfig$api = tsConfig.api) !== null && _tsConfig$api !== void 0 && (_tsConfig$api$compile = _tsConfig$api.compilerOptions) !== null && _tsConfig$api$compile !== void 0 && _tsConfig$api$compile.strict) {
+  if (tsConfig.api?.compilerOptions?.strict) {
     // In strict mode, bring a world of pain to the tests
     return `(
       args: TArgs,

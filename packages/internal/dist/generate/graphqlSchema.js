@@ -66,7 +66,7 @@ const generateGraphQLSchema = async () => {
   } catch (e) {
     if (e instanceof Error) {
       const match = e.message.match(/Unknown type: "(\w+)"/);
-      const name = match === null || match === void 0 ? void 0 : match[1];
+      const name = match?.[1];
 
       const schemaPrisma = _fs.default.readFileSync((0, _paths.getPaths)().api.dbSchema);
 

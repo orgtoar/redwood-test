@@ -21,9 +21,7 @@ exports.isBrowser = isBrowser;
 
 const useIsBrowser = () => {
   return (0, _react.useMemo)(() => {
-    var _global;
-
-    return !((_global = global) !== null && _global !== void 0 && _global.__REDWOOD__PRERENDERING);
+    return !global?.__REDWOOD__PRERENDERING;
   }, []);
 };
 

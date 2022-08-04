@@ -69,11 +69,9 @@ const handler = async ({
 
   async function runApiCommands() {
     if (serve) {
-      var _getConfig$api;
-
       console.log('\nStarting api...');
       await (0, _apiServer.apiServerHandler)({
-        port: ((_getConfig$api = (0, _config.getConfig)().api) === null || _getConfig$api === void 0 ? void 0 : _getConfig$api.port) || 8911,
+        port: (0, _config.getConfig)().api?.port || 8911,
         apiRootPath: '/'
       });
     } else {

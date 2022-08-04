@@ -137,7 +137,7 @@ const handler = async args => {
     await tasks.run();
   } catch (e) {
     console.error(_colors.default.error(`The script exited with errors.`));
-    process.exit((e === null || e === void 0 ? void 0 : e.exitCode) || 1);
+    process.exit(e?.exitCode || 1);
   }
 };
 

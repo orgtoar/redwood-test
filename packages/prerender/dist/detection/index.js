@@ -24,23 +24,19 @@ const detectPrerenderRoutes = () => {
   const rwProject = (0, _structure.getProject)((0, _paths.getPaths)().base);
   const routes = rwProject.getRouter().routes;
   const prerenderRoutes = (0, _map.default)(_context = (0, _filter.default)(routes).call(routes, route => route.prerender) // only select routes with prerender prop
-  ).call(_context, route => {
-    var _route$page;
-
-    return {
-      name: route.isNotFound ? '404' : route.name,
-      // `path` will be updated/expanded later where route parameters will be
-      // replaced with actual values
-      path: route.isNotFound ? '/404' : route.path,
-      // `routePath` is always the path specified on the <Route> component
-      // (or the special /404 path)
-      routePath: route.isNotFound ? '/404' : route.path,
-      hasParams: route.hasParameters,
-      id: route.id,
-      isNotFound: route.isNotFound,
-      filePath: (_route$page = route.page) === null || _route$page === void 0 ? void 0 : _route$page.filePath
-    };
-  });
+  ).call(_context, route => ({
+    name: route.isNotFound ? '404' : route.name,
+    // `path` will be updated/expanded later where route parameters will be
+    // replaced with actual values
+    path: route.isNotFound ? '/404' : route.path,
+    // `routePath` is always the path specified on the <Route> component
+    // (or the special /404 path)
+    routePath: route.isNotFound ? '/404' : route.path,
+    hasParams: route.hasParameters,
+    id: route.id,
+    isNotFound: route.isNotFound,
+    filePath: route.page?.filePath
+  }));
   return prerenderRoutes;
 };
 

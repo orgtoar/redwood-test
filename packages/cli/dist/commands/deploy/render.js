@@ -74,12 +74,10 @@ const handler = async ({
   };
 
   async function runApiCommands() {
-    var _getConfig$api;
-
     prisma && _execa.default.sync(_path.default.join(rwjsPaths.base, 'node_modules/.bin/prisma'), ['migrate', 'deploy', '--schema', `"${rwjsPaths.api.dbSchema}"`], execaConfig);
     dataMigrate && _execa.default.sync('yarn rw dataMigrate up', execaConfig);
     await (0, _apiServer.apiServerHandler)({
-      port: ((_getConfig$api = (0, _config.getConfig)().api) === null || _getConfig$api === void 0 ? void 0 : _getConfig$api.port) || 8911,
+      port: (0, _config.getConfig)().api?.port || 8911,
       apiRootPath: '/'
     });
   }

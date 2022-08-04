@@ -24,9 +24,7 @@ function transform(file, api) {
       value: '@clerk/clerk-react'
     }
   })).call(_context, importDeclaration => {
-    var _importDeclaration$va;
-
-    importDeclaration === null || importDeclaration === void 0 ? void 0 : (_importDeclaration$va = importDeclaration.value.specifiers) === null || _importDeclaration$va === void 0 ? void 0 : (0, _forEach.default)(_importDeclaration$va).call(_importDeclaration$va, specifier => {
+    importDeclaration?.value.specifiers?.forEach(specifier => {
       if (j.ImportSpecifier.check(specifier) && specifier.imported.name === 'withClerk') {
         // Found `withClerk` import. Now I want to replace that with a
         // `ClerkLoaded` import instead

@@ -41,9 +41,7 @@ let RWCell = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), _
 
 
   get queryStringNode() {
-    var _this$sf$getVariableD;
-
-    const i = (_this$sf$getVariableD = this.sf.getVariableDeclaration('QUERY')) === null || _this$sf$getVariableD === void 0 ? void 0 : _this$sf$getVariableD.getInitializer();
+    const i = this.sf.getVariableDeclaration('QUERY')?.getInitializer();
 
     if (!i) {
       return undefined;
@@ -63,9 +61,7 @@ let RWCell = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), _
 
 
   get queryString() {
-    var _this$queryStringNode;
-
-    return (_this$queryStringNode = this.queryStringNode) === null || _this$queryStringNode === void 0 ? void 0 : _this$queryStringNode.getLiteralText();
+    return this.queryStringNode?.getLiteralText();
   } // TODO: Move to RWCellQuery
 
 
@@ -95,9 +91,7 @@ let RWCell = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), _
 
     for (const def of ast.definitions) {
       if (def.kind == 'OperationDefinition') {
-        var _def$name;
-
-        return def === null || def === void 0 ? void 0 : (_def$name = def.name) === null || _def$name === void 0 ? void 0 : _def$name.value;
+        return def?.name?.value;
       }
     }
 
