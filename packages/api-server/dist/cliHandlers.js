@@ -154,8 +154,6 @@ const bothServerHandler = async options => {
 exports.bothServerHandler = bothServerHandler;
 
 const webServerHandler = async options => {
-  var _getConfig$web$apiGra;
-
   const {
     port,
     socket,
@@ -166,7 +164,7 @@ const webServerHandler = async options => {
   const apiUrl = (0, _config.getConfig)().web.apiUrl; // Construct the graphql url from apiUrl by default
   // But if apiGraphQLUrl is specified, use that instead
 
-  const graphqlEndpoint = coerceRootPath((_getConfig$web$apiGra = (0, _config.getConfig)().web.apiGraphQLUrl) !== null && _getConfig$web$apiGra !== void 0 ? _getConfig$web$apiGra : `${apiUrl}/graphql`);
+  const graphqlEndpoint = coerceRootPath((0, _config.getConfig)().web.apiGraphQLUrl ?? `${apiUrl}/graphql`);
   let fastify = (0, _fastify.default)(); // serve static files from "web/dist"
 
   fastify = await (0, _withWebServer.default)(fastify, options); // If apiHost is supplied, it means the functions are running elsewhere

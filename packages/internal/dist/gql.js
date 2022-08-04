@@ -108,7 +108,7 @@ const listQueryTypeFieldsInProject = async () => {
     });
     const queryTypeFields = (_mergedSchema$getQuer = mergedSchema.getQueryType()) === null || _mergedSchema$getQuer === void 0 ? void 0 : _mergedSchema$getQuer.getFields(); // Return empty array if no schema found
 
-    return (0, _keys.default)(queryTypeFields !== null && queryTypeFields !== void 0 ? queryTypeFields : {});
+    return (0, _keys.default)(queryTypeFields ?? {});
   } catch (e) {
     console.error(e);
     return [];

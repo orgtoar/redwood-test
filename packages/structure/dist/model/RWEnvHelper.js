@@ -98,10 +98,8 @@ let RWEnvHelper = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)
 
 
   get env_default_merged() {
-    var _this$env_defaults, _this$env;
-
-    return { ...((_this$env_defaults = this.env_defaults) !== null && _this$env_defaults !== void 0 ? _this$env_defaults : {}),
-      ...((_this$env = this.env) !== null && _this$env !== void 0 ? _this$env : {})
+    return { ...(this.env_defaults ?? {}),
+      ...(this.env ?? {})
     };
   }
   /**
@@ -134,9 +132,7 @@ let RWEnvHelper = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)
   }
 
   get env_available_to_web() {
-    var _this$parent$redwoodT;
-
-    return this.env_default_merged_filtered((_this$parent$redwoodT = this.parent.redwoodTOML.web_includeEnvironmentVariables) !== null && _this$parent$redwoodT !== void 0 ? _this$parent$redwoodT : []);
+    return this.env_default_merged_filtered(this.parent.redwoodTOML.web_includeEnvironmentVariables ?? []);
   }
 
   children() {
@@ -282,14 +278,12 @@ let ProcessDotEnvExpression = (_dec9 = (0, _decorators.lazy)(), _dec10 = (0, _de
 
 
     if (typeof value_as_available !== 'undefined') {
-      var _this$value_definitio;
-
       yield {
         kind: 'Hover',
         location,
         hover: {
           range: location.range,
-          contents: `${key}=${value_as_available} (${(_this$value_definitio = this.value_definition_file_basename) !== null && _this$value_definitio !== void 0 ? _this$value_definitio : ''})`
+          contents: `${key}=${value_as_available} (${this.value_definition_file_basename ?? ''})`
         }
       };
 

@@ -21,7 +21,7 @@ var _terminalLink = _interopRequireDefault(require("terminal-link"));
 
 var _paths = require("@redwoodjs/internal/dist/paths");
 
-var _process$env$RWJS_CWD, _context;
+var _context;
 
 const config = new _index.default('@redwoodjs/cli');
 const RWFW_PATH = process.env.RWFW_PATH || process.env.RW_PATH || config.get('RWFW_PATH');
@@ -42,7 +42,7 @@ const absRwFwPath = _path.default.resolve(process.cwd(), RWFW_PATH);
 
 config.set('RWFW_PATH', absRwFwPath); // Execute the commands in the Redwood Framework Tools package.
 
-const projectPath = _path.default.dirname((0, _paths.getConfigPath)((_process$env$RWJS_CWD = process.env.RWJS_CWD) !== null && _process$env$RWJS_CWD !== void 0 ? _process$env$RWJS_CWD : process.cwd()));
+const projectPath = _path.default.dirname((0, _paths.getConfigPath)(process.env.RWJS_CWD ?? process.cwd()));
 
 console.log('Redwood Framework Tools Path:', (0, _terminalLink.default)(absRwFwPath, absRwFwPath));
 let command = (0, _slice.default)(_context = process.argv).call(_context, 2);

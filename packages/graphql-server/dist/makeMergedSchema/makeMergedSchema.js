@@ -81,7 +81,7 @@ const mapFieldsToService = ({
 
 const resolveUnionType = types => ({
   __resolveType(obj) {
-    var _context2, _maxIntersectionType$, _maxIntersectionType;
+    var _context2, _maxIntersectionType;
 
     // if obj has __typename, check that first to resolve type, otherwise, look for largest intersection
     if (Object.hasOwn(obj, '__typename')) {
@@ -116,7 +116,7 @@ const resolveUnionType = types => ({
       throw Error('Unable to resolve correct type for union. Try adding unique fields to each type or __typename to each resolver');
     }
 
-    return (_maxIntersectionType$ = (_maxIntersectionType = maxIntersectionType) === null || _maxIntersectionType === void 0 ? void 0 : _maxIntersectionType.name) !== null && _maxIntersectionType$ !== void 0 ? _maxIntersectionType$ : null;
+    return ((_maxIntersectionType = maxIntersectionType) === null || _maxIntersectionType === void 0 ? void 0 : _maxIntersectionType.name) ?? null;
   }
 
 });

@@ -120,11 +120,9 @@ const verifyEvent = (type, {
   }
 
   if (options !== null && options !== void 0 && options.eventTimestamp) {
-    var _options$currentTimes, _options$tolerance;
-
-    const timestamp = (_options$currentTimes = options === null || options === void 0 ? void 0 : options.currentTimestampOverride) !== null && _options$currentTimes !== void 0 ? _options$currentTimes : (0, _now.default)();
+    const timestamp = (options === null || options === void 0 ? void 0 : options.currentTimestampOverride) ?? (0, _now.default)();
     const difference = Math.abs(timestamp - (options === null || options === void 0 ? void 0 : options.eventTimestamp));
-    const tolerance = (_options$tolerance = options === null || options === void 0 ? void 0 : options.tolerance) !== null && _options$tolerance !== void 0 ? _options$tolerance : _verifiers.DEFAULT_TOLERANCE;
+    const tolerance = (options === null || options === void 0 ? void 0 : options.tolerance) ?? _verifiers.DEFAULT_TOLERANCE;
 
     if (difference > tolerance) {
       throw new _verifiers.WebhookVerificationError();

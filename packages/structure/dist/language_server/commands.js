@@ -58,9 +58,7 @@ let CommandsManager = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.m
     } = this.server;
     connection.onExecuteCommand(async params => {
       if (params.command === redwoodjs_commands['redwoodjs.cli']) {
-        var _params$arguments;
-
-        const [cmd, cwd] = (_params$arguments = params.arguments) !== null && _params$arguments !== void 0 ? _params$arguments : [];
+        const [cmd, cwd] = params.arguments ?? [];
         await this.command__cli(cmd, cwd);
       }
     });
@@ -68,7 +66,7 @@ let CommandsManager = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.m
 
 
   async command__cli(cmdString, cwd) {
-    var _cwd, _context, _context2;
+    var _context, _context2;
 
     const {
       vscodeWindowMethods,
@@ -77,7 +75,7 @@ let CommandsManager = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.m
       connection,
       documents
     } = this.server;
-    cwd = (_cwd = cwd) !== null && _cwd !== void 0 ? _cwd : projectRoot;
+    cwd = cwd ?? projectRoot;
 
     if (!cwd) {
       return;
@@ -85,7 +83,7 @@ let CommandsManager = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.m
     // parse the cmd. this will do some checks and throw
 
 
-    let cmd = new _RedwoodCommandString.RedwoodCommandString(cmdString !== null && cmdString !== void 0 ? cmdString : '...');
+    let cmd = new _RedwoodCommandString.RedwoodCommandString(cmdString ?? '...');
 
     if ((0, _startsWith.default)(_context = cmd.processed).call(_context, 'dev --open') || (0, _startsWith.default)(_context2 = cmd.processed).call(_context2, 'storybook --open')) {
       vscodeWindowMethods.showInformationMessage('not implemented yet: $ redwood ' + cmd.processed);

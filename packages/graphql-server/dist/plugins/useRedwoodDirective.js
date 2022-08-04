@@ -56,7 +56,7 @@ function getDirectiveByName(fieldConfig, directiveName) {
   var _fieldConfig$astNode, _fieldConfig$astNode$;
 
   const associatedDirective = (_fieldConfig$astNode = fieldConfig.astNode) === null || _fieldConfig$astNode === void 0 ? void 0 : (_fieldConfig$astNode$ = _fieldConfig$astNode.directives) === null || _fieldConfig$astNode$ === void 0 ? void 0 : (0, _find.default)(_fieldConfig$astNode$).call(_fieldConfig$astNode$, directive => directive.name.value === directiveName);
-  return associatedDirective !== null && associatedDirective !== void 0 ? associatedDirective : null;
+  return associatedDirective ?? null;
 }
 
 function isPromise(value) {
@@ -70,12 +70,10 @@ function wrapAffectedResolvers(schema, options) {
       const directive = directiveNode ? schema.getDirective(directiveNode.name.value) : null;
 
       if (directiveNode && directive) {
-        var _fieldConfig$resolve;
-
         const directiveArgs = (0, _graphql.getDirectiveValues)(directive, {
           directives: [directiveNode]
         }) || {};
-        const originalResolve = (_fieldConfig$resolve = fieldConfig.resolve) !== null && _fieldConfig$resolve !== void 0 ? _fieldConfig$resolve : _graphql.defaultFieldResolver;
+        const originalResolve = fieldConfig.resolve ?? _graphql.defaultFieldResolver;
 
         if (_isValidator(options)) {
           return { ...fieldConfig,

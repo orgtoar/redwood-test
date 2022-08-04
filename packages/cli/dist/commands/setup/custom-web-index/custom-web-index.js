@@ -46,12 +46,11 @@ const handler = async ({
   const tasks = new _listr.default([{
     title: 'Creating new entry point in `web/src/index.js`.',
     task: () => {
-      var _getPaths$web$index;
-
       // @TODO figure out how we're handling typescript
       // In this file, we're setting everything to js
       // @Note, getPaths.web.index is null, when it doesn't exist
-      const entryPointFile = (_getPaths$web$index = (0, _lib.getPaths)().web.index) !== null && _getPaths$web$index !== void 0 ? _getPaths$web$index : _path.default.join((0, _lib.getPaths)().web.src, 'index.js');
+      const entryPointFile = (0, _lib.getPaths)().web.index ?? _path.default.join((0, _lib.getPaths)().web.src, 'index.js');
+
       return (0, _lib.writeFile)(entryPointFile, _fs.default.readFileSync(_path.default.join((0, _lib.getPaths)().base, // NOTE we're copying over the index.js before babel transform
       'node_modules/@redwoodjs/web/src/entry/index.js')).toString().replace('~redwood-app-root', './App'), {
         overwriteExisting: force

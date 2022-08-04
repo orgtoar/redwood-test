@@ -87,7 +87,7 @@ const getSupabasePayload = (id, expiry) => {
   const payload = {
     aud: 'authenticated',
     exp: getExpiryTime(expiry),
-    sub: id !== null && id !== void 0 ? id : 'test-user-id',
+    sub: id ?? 'test-user-id',
     email: 'user@example.com',
     app_metadata: {
       provider: 'email'
@@ -102,7 +102,7 @@ const getSupabasePayload = (id, expiry) => {
 const getNetlifyPayload = (id, expiry) => {
   const payload = {
     exp: getExpiryTime(expiry),
-    sub: id !== null && id !== void 0 ? id : 'test-user-id',
+    sub: id ?? 'test-user-id',
     email: 'user@example.com',
     app_metadata: {
       provider: 'email',

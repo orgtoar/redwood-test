@@ -400,7 +400,7 @@ function DiagnosticSeverity_getLabel(severity) {
     [Hint]: 'hint',
     [Warning]: 'warning'
   };
-  return labels[severity !== null && severity !== void 0 ? severity : Information];
+  return labels[severity ?? Information];
 }
 
 /**
@@ -410,8 +410,6 @@ function DiagnosticSeverity_getLabel(severity) {
  * ex: "/path/to/app/b.ts:1:2: info: this is a message"
  */
 function ExtendedDiagnostic_format(d, opts) {
-  var _opts$getSeverityLabe;
-
   const {
     diagnostic: {
       severity,
@@ -420,7 +418,7 @@ function ExtendedDiagnostic_format(d, opts) {
     }
   } = d;
   const cwd = opts === null || opts === void 0 ? void 0 : opts.cwd;
-  const getSeverityLabel = (_opts$getSeverityLabe = opts === null || opts === void 0 ? void 0 : opts.getSeverityLabel) !== null && _opts$getSeverityLabe !== void 0 ? _opts$getSeverityLabe : DiagnosticSeverity_getLabel;
+  const getSeverityLabel = (opts === null || opts === void 0 ? void 0 : opts.getSeverityLabel) ?? DiagnosticSeverity_getLabel;
   let base = 'file://';
 
   if (cwd) {

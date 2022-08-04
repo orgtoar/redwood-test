@@ -103,8 +103,6 @@ const verifySignature = ({
   signature,
   options
 }) => {
-  var _options$currentTimes, _options$tolerance;
-
   const match = /t=(\d+),v1=([\da-f]+)/.exec(signature);
 
   if (!match) {
@@ -113,8 +111,8 @@ const verifySignature = ({
 
   const signedStamp = Number(match[1]);
   const signedPayload = match[2];
-  const timestamp = (_options$currentTimes = options === null || options === void 0 ? void 0 : options.currentTimestampOverride) !== null && _options$currentTimes !== void 0 ? _options$currentTimes : (0, _now.default)();
-  const tolerance = (_options$tolerance = options === null || options === void 0 ? void 0 : options.tolerance) !== null && _options$tolerance !== void 0 ? _options$tolerance : _common.DEFAULT_TOLERANCE;
+  const timestamp = (options === null || options === void 0 ? void 0 : options.currentTimestampOverride) ?? (0, _now.default)();
+  const tolerance = (options === null || options === void 0 ? void 0 : options.tolerance) ?? _common.DEFAULT_TOLERANCE;
   const difference = Math.abs(timestamp - signedStamp);
 
   if (difference > tolerance) {

@@ -91,13 +91,11 @@ let RWRoute = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), 
   }
 
   get outlineLabel() {
-    var _this$path;
-
     if (this.isNotFound) {
       return '404';
     }
 
-    return (_this$path = this.path) !== null && _this$path !== void 0 ? _this$path : '';
+    return this.path ?? '';
   }
 
   get outlineDescription() {

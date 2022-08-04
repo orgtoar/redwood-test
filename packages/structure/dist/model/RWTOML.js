@@ -42,9 +42,9 @@ let RWTOML = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), (
   }
 
   get web_includeEnvironmentVariables() {
-    var _this$parsedTOML$web$, _this$parsedTOML, _this$parsedTOML$web;
+    var _this$parsedTOML, _this$parsedTOML$web;
 
-    return (_this$parsedTOML$web$ = (_this$parsedTOML = this.parsedTOML) === null || _this$parsedTOML === void 0 ? void 0 : (_this$parsedTOML$web = _this$parsedTOML.web) === null || _this$parsedTOML$web === void 0 ? void 0 : _this$parsedTOML$web.includeEnvironmentVariables) !== null && _this$parsedTOML$web$ !== void 0 ? _this$parsedTOML$web$ : [];
+    return ((_this$parsedTOML = this.parsedTOML) === null || _this$parsedTOML === void 0 ? void 0 : (_this$parsedTOML$web = _this$parsedTOML.web) === null || _this$parsedTOML$web === void 0 ? void 0 : _this$parsedTOML$web.includeEnvironmentVariables) ?? [];
   }
 
   *diagnostics() {

@@ -58,9 +58,7 @@ let DiagnosticsManager = (_dec = (0, _decorators.memo)(), _dec2 = (0, _decorator
     this.previousURIs = newURIs;
 
     for (const uri of allURIs) {
-      var _dss$uri;
-
-      const diagnostics = (_dss$uri = dss[uri]) !== null && _dss$uri !== void 0 ? _dss$uri : [];
+      const diagnostics = dss[uri] ?? [];
       this.server.connection.sendDiagnostics({
         uri,
         diagnostics
