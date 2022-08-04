@@ -1,23 +1,22 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.getSchemaDefinitions = exports.getSchemaConfig = exports.getSchema = exports.getEnum = void 0;
 exports.verifyModelName = verifyModelName;
 
-var _values = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/values"));
+require("core-js/modules/esnext.async-iterator.find.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.iterator.find.js");
 
-var _values2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/values"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
+
+require("core-js/modules/esnext.iterator.for-each.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -50,7 +49,7 @@ const getExistingModelName = async name => {
 
   const modelName = name.replace(/[_-]/g, '').toLowerCase();
 
-  for (let model of (0, _values.default)(schemaMemo)) {
+  for (let model of Object.values(schemaMemo)) {
     if (model.name.toLowerCase() === modelName) {
       return model.name;
     }
@@ -82,27 +81,21 @@ const getSchema = async name => {
     }
 
     if (!schemaMemo[modelName]) {
-      var _context;
-
       const schema = await getSchemaDefinitions();
-      const model = (0, _find.default)(_context = schema.datamodel.models).call(_context, model => {
+      const model = schema.datamodel.models.find(model => {
         return model.name === modelName;
       });
 
       if (model) {
-        var _context2;
-
         // look for any fields that are enums and attach the possible enum values
         // so we can put them in generated test files
-        (0, _forEach.default)(_context2 = model.fields).call(_context2, field => {
-          var _context3;
-
-          const fieldEnum = (0, _find.default)(_context3 = schema.datamodel.enums).call(_context3, e => {
+        model.fields.forEach(field => {
+          const fieldEnum = schema.datamodel.enums.find(e => {
             return field.type === e.name;
           });
 
           if (fieldEnum) {
-            field.enumValues = (0, _values2.default)(fieldEnum);
+            field.enumValues = fieldEnum.values;
           }
         }); // memoize based on the model name
 
@@ -128,9 +121,7 @@ const getEnum = async name => {
   const schema = await getSchemaDefinitions();
 
   if (name) {
-    var _context4;
-
-    const model = (0, _find.default)(_context4 = schema.datamodel.enums).call(_context4, model => {
+    const model = schema.datamodel.enums.find(model => {
       return model.name === name;
     });
 

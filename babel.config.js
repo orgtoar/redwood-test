@@ -25,11 +25,11 @@ const CORE_JS_VERSION = packageJSON.devDependencies['core-js']
 
 /** @type {import('@babel/core').TransformOptions} */
 module.exports = {
+  targets: { node: TARGETS_NODE },
   presets: [
     [
       '@babel/preset-env',
       {
-        targets: { node: TARGETS_NODE },
         useBuiltIns: 'usage',
         corejs: {
           version: CORE_JS_VERSION,

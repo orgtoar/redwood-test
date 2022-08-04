@@ -1,22 +1,19 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.DirectiveType = void 0;
 exports.getDirectiveByName = getDirectiveByName;
 exports.hasDirective = hasDirective;
 exports.isPromise = isPromise;
 exports.useRedwoodDirective = void 0;
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.async-iterator.find.js");
 
-var _symbol = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/symbol"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.find.js");
 
 var _utils = require("@graphql-tools/utils");
 
@@ -55,7 +52,7 @@ function hasDirective(info) {
 function getDirectiveByName(fieldConfig, directiveName) {
   var _fieldConfig$astNode, _fieldConfig$astNode$;
 
-  const associatedDirective = (_fieldConfig$astNode = fieldConfig.astNode) === null || _fieldConfig$astNode === void 0 ? void 0 : (_fieldConfig$astNode$ = _fieldConfig$astNode.directives) === null || _fieldConfig$astNode$ === void 0 ? void 0 : (0, _find.default)(_fieldConfig$astNode$).call(_fieldConfig$astNode$, directive => directive.name.value === directiveName);
+  const associatedDirective = (_fieldConfig$astNode = fieldConfig.astNode) === null || _fieldConfig$astNode === void 0 ? void 0 : (_fieldConfig$astNode$ = _fieldConfig$astNode.directives) === null || _fieldConfig$astNode$ === void 0 ? void 0 : _fieldConfig$astNode$.find(directive => directive.name.value === directiveName);
   return associatedDirective !== null && associatedDirective !== void 0 ? associatedDirective : null;
 }
 
@@ -139,7 +136,7 @@ const useRedwoodDirective = options => {
   /**
    * This symbol is added to the schema extensions for checking whether the transform got already applied.
    */
-  const didMapSchemaSymbol = (0, _symbol.default)('useRedwoodDirective.didMapSchemaSymbol');
+  const didMapSchemaSymbol = Symbol('useRedwoodDirective.didMapSchemaSymbol');
   return {
     onSchemaChange({
       schema,

@@ -1,16 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = exports.description = exports.command = exports.builder = exports.aliases = void 0;
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _path = _interopRequireDefault(require("path"));
 
@@ -100,25 +101,19 @@ const handler = ({
 
   try {
     if (build) {
-      var _context;
-
-      (0, _execa.default)(`yarn build-storybook`, (0, _filter.default)(_context = [`--config-dir "${storybookConfig}"`, `--output-dir "${buildDirectory}"`, !managerCache && `--no-manager-cache`]).call(_context, Boolean), {
+      (0, _execa.default)(`yarn build-storybook`, [`--config-dir "${storybookConfig}"`, `--output-dir "${buildDirectory}"`, !managerCache && `--no-manager-cache`].filter(Boolean), {
         stdio: 'inherit',
         shell: true,
         cwd
       });
     } else if (smokeTest) {
-      var _context2;
-
-      (0, _execa.default)(`yarn start-storybook`, (0, _filter.default)(_context2 = [`--config-dir "${storybookConfig}"`, `--port ${port}`, `--smoke-test`, `--ci`, `--no-version-updates`]).call(_context2, Boolean), {
+      (0, _execa.default)(`yarn start-storybook`, [`--config-dir "${storybookConfig}"`, `--port ${port}`, `--smoke-test`, `--ci`, `--no-version-updates`].filter(Boolean), {
         stdio: 'inherit',
         shell: true,
         cwd
       });
     } else {
-      var _context3;
-
-      (0, _execa.default)(`yarn start-storybook`, (0, _filter.default)(_context3 = [`--config-dir "${storybookConfig}"`, `--port ${port}`, !managerCache && `--no-manager-cache`, `--no-version-updates`, ci && '--ci', !open && `--no-open`]).call(_context3, Boolean), {
+      (0, _execa.default)(`yarn start-storybook`, [`--config-dir "${storybookConfig}"`, `--port ${port}`, !managerCache && `--no-manager-cache`, `--no-version-updates`, ci && '--ci', !open && `--no-open`].filter(Boolean), {
         stdio: 'inherit',
         shell: true,
         cwd

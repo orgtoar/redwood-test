@@ -1,20 +1,13 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.basenameNoExt = basenameNoExt;
 exports.directoryNameResolver = directoryNameResolver;
 exports.followsDirNameConvention = followsDirNameConvention;
 exports.isCellFileName = isCellFileName;
 exports.isLayoutFileName = isLayoutFileName;
-
-var _endsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/ends-with"));
 
 var _fs = require("fs");
 
@@ -40,7 +33,7 @@ function directoryNameResolver(dirName) {
 function followsDirNameConvention(filePath) {
   filePath = (0, _path.normalize)(filePath);
   const ending = basenameNoExt(filePath) + _path.sep + (0, _path.basename)(filePath);
-  return (0, _endsWith.default)(filePath).call(filePath, ending);
+  return filePath.endsWith(ending);
 }
 
 function basenameNoExt(path) {
@@ -55,15 +48,11 @@ function basenameNoExt(path) {
 }
 
 function isLayoutFileName(f) {
-  var _context;
-
   f = (0, _path.normalize)(f);
-  return (0, _endsWith.default)(_context = basenameNoExt(f)).call(_context, 'Layout');
+  return basenameNoExt(f).endsWith('Layout');
 }
 
 function isCellFileName(f) {
-  var _context2;
-
   f = (0, _path.normalize)(f);
-  return (0, _endsWith.default)(_context2 = basenameNoExt(f)).call(_context2, 'Cell');
+  return basenameNoExt(f).endsWith('Cell');
 }

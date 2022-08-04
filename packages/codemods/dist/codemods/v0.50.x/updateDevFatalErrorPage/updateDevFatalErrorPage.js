@@ -1,16 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.updateDevFatalErrorPage = void 0;
-
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -40,10 +35,10 @@ const updateDevFatalErrorPage = async () => {
    * Now we just fetch and replace files
    */
 
-  for (const [_dir, filenamesToUrls] of (0, _entries.default)(dirs)) {
+  for (const [_dir, filenamesToUrls] of Object.entries(dirs)) {
     const isTSPage = _fs.default.existsSync(_path.default.join(webFatalErrorPagesDir, 'FatalErrorPage.tsx'));
 
-    for (const [filename, url] of (0, _entries.default)(filenamesToUrls)) {
+    for (const [filename, url] of Object.entries(filenamesToUrls)) {
       const res = await (0, _crossUndiciFetch.fetch)(url);
       const text = await res.text();
       const newFatalErrorPage = `${filename}.${isTSPage ? 'tsx' : 'js'}`;

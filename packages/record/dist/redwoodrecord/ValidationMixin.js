@@ -1,18 +1,15 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = void 0;
 
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
+require("core-js/modules/esnext.async-iterator.every.js");
 
-var _every = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/every"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.every.js");
 
 var _api = require("@redwoodjs/api");
 
@@ -29,7 +26,7 @@ var _default = Base => {
 
     // Removes all error messages.
     _clearErrors() {
-      for (const [attribute, _array] of (0, _entries.default)(this._errors)) {
+      for (const [attribute, _array] of Object.entries(this._errors)) {
         this._errors[attribute] = [];
       }
     } // Denotes validations that need to run for the given fields. Must be in the
@@ -59,9 +56,7 @@ var _default = Base => {
 
 
     get hasError() {
-      var _context;
-
-      return !(0, _every.default)(_context = (0, _entries.default)(this._errors)).call(_context, ([_name, errors]) => !errors.length);
+      return !Object.entries(this._errors).every(([_name, errors]) => !errors.length);
     } // Adds an error to the _errors object. Can be called manually via instance,
     // however any errors added this way will be wiped out if calling `validate()`
 
@@ -87,7 +82,7 @@ var _default = Base => {
 
       const results = [];
 
-      for (const [name, recipe] of (0, _entries.default)(this.constructor.validates)) {
+      for (const [name, recipe] of Object.entries(this.constructor.validates)) {
         // TODO: Throw error if attribute is not present at all? Does that mess up undefined validation?
         try {
           (0, _api.validate)(this[name], name, recipe);
@@ -103,7 +98,7 @@ var _default = Base => {
         }
       }
 
-      return (0, _every.default)(results).call(results, result => result);
+      return results.every(result => result);
     }
 
   }, _class.validates = {}, _class;

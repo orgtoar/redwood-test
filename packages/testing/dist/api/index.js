@@ -1,24 +1,21 @@
 "use strict";
 
-var _context, _context2, _context3;
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _forEachInstanceProperty = require("@babel/runtime-corejs3/core-js/instance/for-each");
+require("core-js/modules/esnext.iterator.for-each.js");
 
-var _Object$keys = require("@babel/runtime-corejs3/core-js/object/keys");
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
 var _apiFunction = require("./apiFunction");
 
-_forEachInstanceProperty(_context = _Object$keys(_apiFunction)).call(_context, function (key) {
+Object.keys(_apiFunction).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (key in exports && exports[key] === _apiFunction[key]) return;
-
-  _Object$defineProperty(exports, key, {
+  Object.defineProperty(exports, key, {
     enumerable: true,
     get: function () {
       return _apiFunction[key];
@@ -28,11 +25,10 @@ _forEachInstanceProperty(_context = _Object$keys(_apiFunction)).call(_context, f
 
 var _scenario = require("./scenario");
 
-_forEachInstanceProperty(_context2 = _Object$keys(_scenario)).call(_context2, function (key) {
+Object.keys(_scenario).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (key in exports && exports[key] === _scenario[key]) return;
-
-  _Object$defineProperty(exports, key, {
+  Object.defineProperty(exports, key, {
     enumerable: true,
     get: function () {
       return _scenario[key];
@@ -42,11 +38,10 @@ _forEachInstanceProperty(_context2 = _Object$keys(_scenario)).call(_context2, fu
 
 var _directive = require("./directive");
 
-_forEachInstanceProperty(_context3 = _Object$keys(_directive)).call(_context3, function (key) {
+Object.keys(_directive).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (key in exports && exports[key] === _directive[key]) return;
-
-  _Object$defineProperty(exports, key, {
+  Object.defineProperty(exports, key, {
     enumerable: true,
     get: function () {
       return _directive[key];

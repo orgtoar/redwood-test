@@ -1,24 +1,15 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = exports.getFlightcontrolJson = exports.description = exports.command = exports.builder = exports.alias = void 0;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _findIndex = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find-index"));
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
-var _splice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/splice"));
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
+require("core-js/modules/esnext.iterator.map.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -67,8 +58,6 @@ const getFlightcontrolJson = async database => {
   const detectedDatabase = config.datasources[0].activeProvider;
 
   if (detectedDatabase === database) {
-    var _context;
-
     let dbService;
 
     switch (database) {
@@ -89,7 +78,7 @@ const getFlightcontrolJson = async database => {
       path: _path.default.join((0, _lib.getPaths)().base, 'flightcontrol.json'),
       content: { ..._flightcontrol.flightcontrolConfig,
         environments: [{ ..._flightcontrol.flightcontrolConfig.environments[0],
-          services: [...(0, _map.default)(_context = _flightcontrol.flightcontrolConfig.environments[0].services).call(_context, service => {
+          services: [..._flightcontrol.flightcontrolConfig.environments[0].services.map(service => {
             if (service.id === 'redwood-api') {
               return { ...service,
                 envVariables: { ...service.envVariables,
@@ -142,7 +131,7 @@ const updateGraphQLFunction = () => {
 
       const graphqlContent = _fs.default.readFileSync(graphqlFunctionsPath, 'utf8').split(_os.EOL);
 
-      const graphqlHanderIndex = (0, _findIndex.default)(graphqlContent).call(graphqlContent, line => (0, _includes.default)(line).call(line, 'createGraphQLHandler({'));
+      const graphqlHanderIndex = graphqlContent.findIndex(line => line.includes('createGraphQLHandler({'));
 
       if (graphqlHanderIndex === -1) {
         console.log(`
@@ -154,7 +143,7 @@ const updateGraphQLFunction = () => {
         return;
       }
 
-      (0, _splice.default)(graphqlContent).call(graphqlContent, graphqlHanderIndex + 1, 0, '  cors: { origin: process.env.REDWOOD_WEB_URL, credentials: true },');
+      graphqlContent.splice(graphqlHanderIndex + 1, 0, '  cors: { origin: process.env.REDWOOD_WEB_URL, credentials: true },');
 
       _fs.default.writeFileSync(graphqlFunctionsPath, graphqlContent.join(_os.EOL));
     }
@@ -182,7 +171,7 @@ const updateDbAuth = () => {
 
       const authContent = _fs.default.readFileSync(authFnPath, 'utf8').split(_os.EOL);
 
-      const sameSiteLineIndex = (0, _findIndex.default)(authContent).call(authContent, line => line.match(/SameSite:.*,/));
+      const sameSiteLineIndex = authContent.findIndex(line => line.match(/SameSite:.*,/));
 
       if (sameSiteLineIndex === -1) {
         console.log(`
@@ -194,7 +183,7 @@ const updateDbAuth = () => {
       }
 
       authContent[sameSiteLineIndex] = `      SameSite: 'None',`;
-      const dbHandlerIndex = (0, _findIndex.default)(authContent).call(authContent, line => (0, _includes.default)(line).call(line, 'new DbAuthHandler('));
+      const dbHandlerIndex = authContent.findIndex(line => line.includes('new DbAuthHandler('));
 
       if (dbHandlerIndex === -1) {
         console.log(`
@@ -206,7 +195,7 @@ const updateDbAuth = () => {
         return;
       }
 
-      (0, _splice.default)(authContent).call(authContent, dbHandlerIndex + 1, 0, '  cors: { origin: process.env.REDWOOD_WEB_URL, credentials: true },');
+      authContent.splice(dbHandlerIndex + 1, 0, '  cors: { origin: process.env.REDWOOD_WEB_URL, credentials: true },');
 
       _fs.default.writeFileSync(authFnPath, authContent.join(_os.EOL));
     }
@@ -236,7 +225,7 @@ const updateApp = () => {
 
       const appContent = _fs.default.readFileSync(appPath, 'utf8').split(_os.EOL);
 
-      const authLineIndex = (0, _findIndex.default)(appContent).call(appContent, line => (0, _includes.default)(line).call(line, '<AuthProvider'));
+      const authLineIndex = appContent.findIndex(line => line.includes('<AuthProvider'));
 
       if (authLineIndex === -1) {
         console.log(`
@@ -250,7 +239,7 @@ const updateApp = () => {
 `;
       }
 
-      const gqlLineIndex = (0, _findIndex.default)(appContent).call(appContent, line => (0, _includes.default)(line).call(line, '<RedwoodApolloProvider'));
+      const gqlLineIndex = appContent.findIndex(line => line.includes('<RedwoodApolloProvider'));
 
       if (gqlLineIndex === -1) {
         console.log(`
@@ -315,7 +304,7 @@ const handler = async ({
     task: async () => {
       const fileData = await getFlightcontrolJson(database);
       let files = {};
-      files[fileData.path] = (0, _stringify.default)(fileData.content, null, 2);
+      files[fileData.path] = JSON.stringify(fileData.content, null, 2);
       return (0, _lib.writeFilesTask)(files, {
         overwriteExisting: force
       });

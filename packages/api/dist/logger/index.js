@@ -1,20 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.redactionsList = exports.logLevel = exports.isTest = exports.isProduction = exports.isDevelopment = exports.handlePrismaLogging = exports.emitLogLevels = exports.defaultLoggerOptions = exports.defaultLogLevels = exports.createLogger = void 0;
 
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.for-each.js");
 
 var _pino = _interopRequireDefault(require("pino"));
 
@@ -172,7 +173,7 @@ const createLogger = ({
     console.log(`isFile: ${isFile}`);
     console.log(`isStream: ${isStream}`);
     console.log(`logLevel: ${logLevel}`);
-    console.log(`options: ${(0, _stringify.default)(options, null, 2)}`);
+    console.log(`options: ${JSON.stringify(options, null, 2)}`);
     console.log(`destination: ${destination}`);
   }
 
@@ -215,7 +216,7 @@ const defaultLogLevels = ['info', 'warn', 'error'];
 exports.defaultLogLevels = defaultLogLevels;
 
 const emitLogLevels = setLogLevels => {
-  return setLogLevels === null || setLogLevels === void 0 ? void 0 : (0, _map.default)(setLogLevels).call(setLogLevels, level => {
+  return setLogLevels === null || setLogLevels === void 0 ? void 0 : setLogLevels.map(level => {
     return {
       emit: 'event',
       level
@@ -271,7 +272,7 @@ const handlePrismaLogging = config => {
     }
   });
   const slowQueryThreshold = (_config$slowQueryThre = config.slowQueryThreshold) !== null && _config$slowQueryThre !== void 0 ? _config$slowQueryThre : DEFAULT_SLOW_QUERY_THRESHOLD;
-  (_config$logLevels = config.logLevels) === null || _config$logLevels === void 0 ? void 0 : (0, _forEach.default)(_config$logLevels).call(_config$logLevels, level => {
+  (_config$logLevels = config.logLevels) === null || _config$logLevels === void 0 ? void 0 : _config$logLevels.forEach(level => {
     if (level === 'query') {
       config.db.$on(level, event => {
         const queryEvent = event;

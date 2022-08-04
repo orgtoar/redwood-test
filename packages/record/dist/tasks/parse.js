@@ -1,30 +1,31 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.parseDatamodel = void 0;
 
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.filter.js");
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
+require("core-js/modules/esnext.iterator.for-each.js");
+
+require("core-js/modules/esnext.async-iterator.find.js");
+
+require("core-js/modules/esnext.iterator.find.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -51,49 +52,44 @@ const parseDatamodel = () => {
   (0, _sdk.getDMMF)({
     datamodelPath: (0, _paths.getPaths)().api.dbSchema
   }).then(schema => {
-    var _context, _context2;
-
     datamodel = schema.datamodel;
 
-    _fs.default.writeFileSync(DATAMODEL_PATH, esbuild.transformSync((0, _stringify.default)(datamodel, null, 2), {
+    _fs.default.writeFileSync(DATAMODEL_PATH, esbuild.transformSync(JSON.stringify(datamodel, null, 2), {
       loader: 'json',
       format: 'cjs'
     }).code);
 
     console.info(`\n  Wrote ${DATAMODEL_PATH}`); // figure out what model classes are present
 
-    const modelNames = (0, _filter.default)(_context = (0, _map.default)(_context2 = _fs.default.readdirSync(MODELS_PATH)).call(_context2, file => {
+    const modelNames = _fs.default.readdirSync(MODELS_PATH).map(file => {
       if (file !== 'index.js' && file !== 'datamodel.js') {
         return file.split('.')[0];
       }
-    })).call(_context, val => val);
-    (0, _forEach.default)(modelNames).call(modelNames, modelName => {
-      var _context3;
+    }).filter(val => val);
 
+    modelNames.forEach(modelName => {
       // which other models this model requires
       const thisModelRequires = []; // import statements
 
       modelImports.push(`import ${modelName} from 'src/models/${modelName}'`); // requireModel declarations
 
-      const schemaModel = (0, _find.default)(_context3 = datamodel.models).call(_context3, model => model.name === modelName);
+      const schemaModel = datamodel.models.find(model => model.name === modelName);
 
       if (schemaModel) {
-        var _context4;
-
-        (0, _forEach.default)(_context4 = schemaModel.fields).call(_context4, field => {
-          if (field.kind === 'object' && (0, _includes.default)(modelNames).call(modelNames, field.type)) {
+        schemaModel.fields.forEach(field => {
+          if (field.kind === 'object' && modelNames.includes(field.type)) {
             thisModelRequires.push(field.type);
           }
         });
         modelRequires[modelName] = thisModelRequires;
       }
     });
-    (0, _forEach.default)(modelImports).call(modelImports, modelImport => {
+    modelImports.forEach(modelImport => {
       indexLines.push(modelImport);
     });
     indexLines.push('');
 
-    for (const [name, requires] of (0, _entries.default)(modelRequires)) {
+    for (const [name, requires] of Object.entries(modelRequires)) {
       indexLines.push(`${name}.requiredModels = [${requires.join(', ')}]`);
     }
 

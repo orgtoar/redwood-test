@@ -1,21 +1,12 @@
 "use strict";
 
-var _context2;
-
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _forEachInstanceProperty2 = require("@babel/runtime-corejs3/core-js/instance/for-each");
-
-var _Object$keys = require("@babel/runtime-corejs3/core-js/object/keys");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 var _exportNames = {
   CheckboxField: true,
   ButtonField: true,
@@ -52,19 +43,13 @@ var _exportNames = {
   FormError: true
 };
 exports.Form = exports.FileField = exports.FieldError = exports.EmailField = exports.DatetimeLocalField = exports.DateField = exports.ColorField = exports.CheckboxField = exports.ButtonField = void 0;
-
-_Object$defineProperty(exports, "FormError", {
+Object.defineProperty(exports, "FormError", {
   enumerable: true,
   get: function () {
     return _FormError.default;
   }
 });
-
 exports.useRegister = exports.useErrorStyles = exports.WeekField = exports.UrlField = exports.TimeField = exports.TextField = exports.TextAreaField = exports.TelField = exports.SubmitField = exports.Submit = exports.ServerErrorsContext = exports.SelectField = exports.SearchField = exports.ResetField = exports.RangeField = exports.RadioField = exports.PasswordField = exports.NumberField = exports.MonthField = exports.Label = exports.InputField = exports.ImageField = exports.HiddenField = void 0;
-
-var _concat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/concat"));
-
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/extends"));
 
@@ -74,12 +59,11 @@ var _pascalcase = _interopRequireDefault(require("pascalcase"));
 
 var _reactHookForm = require("react-hook-form");
 
-_forEachInstanceProperty2(_context2 = _Object$keys(_reactHookForm)).call(_context2, function (key) {
+Object.keys(_reactHookForm).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
   if (key in exports && exports[key] === _reactHookForm[key]) return;
-
-  _Object$defineProperty(exports, key, {
+  Object.defineProperty(exports, key, {
     enumerable: true,
     get: function () {
       return _reactHookForm[key];
@@ -601,8 +585,6 @@ const DEFAULT_MESSAGES = {
  */
 
 const FieldError = _ref6 => {
-  var _context;
-
   let {
     name,
     ...rest
@@ -613,7 +595,7 @@ const FieldError = _ref6 => {
     }
   } = (0, _reactHookForm.useFormContext)();
   const validationError = (0, _reactHookForm.get)(errors, name);
-  const errorMessage = validationError && (validationError.message || (0, _concat.default)(_context = "".concat(name, " ")).call(_context, DEFAULT_MESSAGES[validationError.type]));
+  const errorMessage = validationError && (validationError.message || "".concat(name, " ").concat(DEFAULT_MESSAGES[validationError.type]));
   return validationError ? /*#__PURE__*/_react.default.createElement("span", rest, errorMessage) : null;
 };
 
@@ -821,7 +803,7 @@ const InputComponents = {};
  * Export those and we're good to go!
  */
 
-(0, _forEach.default)(INPUT_TYPES).call(INPUT_TYPES, type => {
+INPUT_TYPES.forEach(type => {
   InputComponents["".concat((0, _pascalcase.default)(type), "Field")] = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => /*#__PURE__*/_react.default.createElement(InputField, (0, _extends2.default)({
     ref: ref,
     type: type

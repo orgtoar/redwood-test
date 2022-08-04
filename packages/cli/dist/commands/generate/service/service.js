@@ -1,36 +1,29 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.scenarioFieldValue = exports.parseSchema = exports.handler = exports.files = exports.fieldsToUpdate = exports.fieldsToScenario = exports.fieldsToInput = exports.description = exports.defaults = exports.command = exports.builder = exports.buildStringifiedScenario = exports.buildScenario = void 0;
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _concat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/concat"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _parseInt2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/parse-int"));
+require("core-js/modules/esnext.iterator.filter.js");
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.iterator.for-each.js");
 
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
+require("core-js/modules/esnext.async-iterator.find.js");
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.iterator.find.js");
 
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
+require("core-js/modules/esnext.async-iterator.reduce.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
-
-var _values = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/values"));
-
-var _reduce = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/reduce"));
+require("core-js/modules/esnext.iterator.reduce.js");
 
 var _camelcase = _interopRequireDefault(require("camelcase"));
 
@@ -49,13 +42,11 @@ var _helpers = require("../helpers");
 const DEFAULT_SCENARIO_NAMES = ['one', 'two']; // parses the schema into scalar fields, relations and an array of foreign keys
 
 const parseSchema = async model => {
-  var _context;
-
   const schema = await (0, _schemaHelpers.getSchema)(model);
   const relations = {};
   let foreignKeys = []; // aggregate the plain String, Int and DateTime fields
 
-  let scalarFields = (0, _filter.default)(_context = schema.fields).call(_context, field => {
+  let scalarFields = schema.fields.filter(field => {
     if (field.relationFromFields) {
       // only build relations for those that are required
       if (field.isRequired && field.relationFromFields.length !== 0) {
@@ -65,7 +56,7 @@ const parseSchema = async model => {
         };
       }
 
-      foreignKeys = (0, _concat.default)(foreignKeys).call(foreignKeys, field.relationFromFields);
+      foreignKeys = foreignKeys.concat(field.relationFromFields);
     }
 
     return field.isRequired && !field.hasDefaultValue && // don't include fields that the database will default
@@ -83,7 +74,7 @@ exports.parseSchema = parseSchema;
 
 const scenarioFieldValue = field => {
   const randFloat = Math.random() * 10000000;
-  const randInt = (0, _parseInt2.default)(Math.random() * 10000000);
+  const randInt = parseInt(Math.random() * 10000000);
 
   switch (field.type) {
     case 'BigInt':
@@ -125,13 +116,13 @@ exports.scenarioFieldValue = scenarioFieldValue;
 const fieldsToScenario = async (scalarFields, relations, foreignKeys) => {
   const data = {}; // remove foreign keys from scalars
 
-  (0, _forEach.default)(scalarFields).call(scalarFields, field => {
-    if (!foreignKeys.length || !(0, _includes.default)(foreignKeys).call(foreignKeys, field.name)) {
+  scalarFields.forEach(field => {
+    if (!foreignKeys.length || !foreignKeys.includes(field.name)) {
       data[field.name] = scenarioFieldValue(field);
     }
   }); // add back in related models by name so they can be created with prisma create syntax
 
-  for (const [relationName, relData] of (0, _entries.default)(relations)) {
+  for (const [relationName, relData] of Object.entries(relations)) {
     const relationModelName = relData.type;
     const {
       scalarFields: relScalarFields,
@@ -161,11 +152,9 @@ const buildScenario = async model => {
   } = await parseSchema(model); // turn scalar fields into actual scenario data
 
   for (const name of DEFAULT_SCENARIO_NAMES) {
-    var _context2;
-
     standardScenario[scenarioModelName][name] = {};
     const scenarioData = await fieldsToScenario(scalarFields, relations, foreignKeys);
-    (0, _forEach.default)(_context2 = (0, _keys.default)(scenarioData)).call(_context2, key => {
+    Object.keys(scenarioData).forEach(key => {
       const value = scenarioData[key];
 
       if (value && typeof value === 'string' && value.match(/^\d+n$/)) {
@@ -184,7 +173,7 @@ exports.buildScenario = buildScenario;
 
 const buildStringifiedScenario = async model => {
   const scenario = await buildScenario(model);
-  return (0, _stringify.default)(scenario, (key, value) => typeof value === 'bigint' ? value.toString() : typeof value === 'string' && value.match(/^\d+n$/) ? Number(value.substr(0, value.length - 1)) : value);
+  return JSON.stringify(scenario, (key, value) => typeof value === 'bigint' ? value.toString() : typeof value === 'string' && value.match(/^\d+n$/) ? Number(value.substr(0, value.length - 1)) : value);
 }; // outputs fields necessary to create an object in the test file
 
 
@@ -197,15 +186,15 @@ const fieldsToInput = async model => {
   } = await parseSchema(model);
   const modelName = (0, _camelcase.default)((0, _rwPluralize.singularize)(model));
   let inputObj = {};
-  (0, _forEach.default)(scalarFields).call(scalarFields, field => {
-    if ((0, _includes.default)(foreignKeys).call(foreignKeys, field.name)) {
+  scalarFields.forEach(field => {
+    if (foreignKeys.includes(field.name)) {
       inputObj[field.name] = `scenario.${modelName}.two.${field.name}`;
     } else {
       inputObj[field.name] = scenarioFieldValue(field);
     }
   });
 
-  if ((0, _keys.default)(inputObj).length > 0) {
+  if (Object.keys(inputObj).length > 0) {
     return inputObj;
   } else {
     return false;
@@ -224,7 +213,7 @@ const fieldsToUpdate = async model => {
   const modelName = (0, _camelcase.default)((0, _rwPluralize.singularize)(model));
   let field, newValue, fieldName; // find an editable scalar field, ideally one that isn't a foreign key
 
-  field = (0, _find.default)(scalarFields).call(scalarFields, scalar => !(0, _includes.default)(foreignKeys).call(foreignKeys, scalar.name)); // no non-foreign keys, so just take the first one
+  field = scalarFields.find(scalar => !foreignKeys.includes(scalar.name)); // no non-foreign keys, so just take the first one
 
   if (!field) {
     field = scalarFields[0];
@@ -235,10 +224,10 @@ const fieldsToUpdate = async model => {
     return false;
   }
 
-  if ((0, _includes.default)(foreignKeys).call(foreignKeys, field.name)) {
+  if (foreignKeys.includes(field.name)) {
     // no scalar fields, change a relation field instead
     // { post: { foreignKey: [ 'postId' ], type: "Post" }, tag: { foreignKey: [ 'tagId' ], type: "Post" } }
-    fieldName = (0, _values.default)(relations)[0].foreignKey;
+    fieldName = Object.values(relations)[0].foreignKey;
     newValue = `scenario.${modelName}.two.${field.name}`;
   } else {
     fieldName = field.name; // change scalar fields
@@ -375,7 +364,7 @@ const files = async ({
   // }
 
 
-  return (0, _reduce.default)(files).call(files, (acc, [outputPath, content]) => {
+  return files.reduce((acc, [outputPath, content]) => {
     if (!typescript) {
       content = (0, _lib.transformTSToJS)(outputPath, content);
       outputPath = outputPath.replace('.ts', '.js');
@@ -403,13 +392,11 @@ const defaults = { ..._generate.yargsDefaults,
 exports.defaults = defaults;
 
 const builder = yargs => {
-  var _context3;
-
   yargs.positional('name', {
     description: 'Name of the service',
     type: 'string'
   }).epilogue(`Also see the ${(0, _terminalLink.default)('Redwood CLI Reference', 'https://redwoodjs.com/docs/cli-commands#generate-service')}`);
-  (0, _forEach.default)(_context3 = (0, _entries.default)(defaults)).call(_context3, ([option, config]) => {
+  Object.entries(defaults).forEach(([option, config]) => {
     yargs.option(option, config);
   });
 };

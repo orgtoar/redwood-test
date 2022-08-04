@@ -1,16 +1,9 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.mockSignedWebhook = exports.mockHttpEvent = exports.mockContext = void 0;
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
 
 var _webhooks = require("@redwoodjs/api/webhooks");
 
@@ -40,7 +33,7 @@ const mockHttpEvent = ({
     headers[signatureHeader.toLocaleLowerCase()] = signature;
   }
 
-  const payloadAsString = typeof payload === 'string' ? payload : (0, _stringify.default)(payload);
+  const payloadAsString = typeof payload === 'string' ? payload : JSON.stringify(payload);
   const body = isBase64Encoded ? Buffer.from(payloadAsString || '').toString('base64') : payloadAsString;
   return {
     body,
@@ -86,7 +79,7 @@ const mockSignedWebhook = ({
   secret,
   ...others
 }) => {
-  const payloadAsString = typeof payload === 'string' ? payload : (0, _stringify.default)(payload);
+  const payloadAsString = typeof payload === 'string' ? payload : JSON.stringify(payload);
   const signature = (0, _webhooks.signPayload)(signatureType, {
     payload: payloadAsString,
     secret

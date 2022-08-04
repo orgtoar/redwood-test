@@ -1,28 +1,15 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.validate = validate;
 exports.validateUniqueness = validateUniqueness;
 exports.validateWith = void 0;
-
-var _assign = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/assign"));
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
-var _isArray = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/array/is-array"));
-
-var _isInteger = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/number/is-integer"));
-
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
 
 var _client = require("@prisma/client");
 
@@ -42,7 +29,7 @@ const VALIDATORS = {
     const absenceOptions = {
       allowEmptyString: false
     };
-    (0, _assign.default)(absenceOptions, options);
+    Object.assign(absenceOptions, options);
 
     if (value === '') {
       if (!absenceOptions.allowEmptyString) {
@@ -66,7 +53,7 @@ const VALIDATORS = {
       acceptedValues = [true];
     }
 
-    if (!(0, _includes.default)(acceptedValues).call(acceptedValues, value)) {
+    if (!acceptedValues.includes(value)) {
       validationError('acceptance', name, options);
     }
   },
@@ -89,9 +76,9 @@ const VALIDATORS = {
   // { exclusion: ['foo', 'bar'] }
   // { exclusion: { in: ['foo','bar'], message: '...' } }
   exclusion: (value, name, options) => {
-    const exclusionList = (0, _isArray.default)(options) && options || options.in || [];
+    const exclusionList = Array.isArray(options) && options || options.in || [];
 
-    if ((0, _includes.default)(exclusionList).call(exclusionList, value)) {
+    if (exclusionList.includes(value)) {
       validationError('exclusion', name, options);
     }
   },
@@ -115,9 +102,9 @@ const VALIDATORS = {
   // { inclusion: ['foo', 'bar'] }
   // { inclusion: { in: ['foo','bar'], message: '...' } }
   inclusion: (value, name, options) => {
-    const inclusionList = (0, _isArray.default)(options) && options || options.in || [];
+    const inclusionList = Array.isArray(options) && options || options.in || [];
 
-    if (!(0, _includes.default)(inclusionList).call(inclusionList, value)) {
+    if (!inclusionList.includes(value)) {
       validationError('inclusion', name, options);
     }
   },
@@ -185,7 +172,7 @@ const VALIDATORS = {
     if (typeof options === 'boolean') {
       return;
     } else {
-      if (options.integer && !(0, _isInteger.default)(value)) {
+      if (options.integer && !Number.isInteger(value)) {
         validationError('integerNumericality', name, options);
       }
 
@@ -260,7 +247,7 @@ const VALIDATORS = {
       allowUndefined: false,
       allowEmptyString: true
     };
-    (0, _assign.default)(presenceOptions, options);
+    Object.assign(presenceOptions, options);
 
     if (!presenceOptions.allowNull && value === null || !presenceOptions.allowUndefined && value === undefined || !presenceOptions.allowEmptyString && value === '') {
       validationError('presence', name, options);
@@ -273,7 +260,7 @@ const VALIDATORS = {
 const fieldsToString = fields => {
   const output = [];
 
-  for (const [key, _value] of (0, _entries.default)(fields)) {
+  for (const [key, _value] of Object.entries(fields)) {
     output.push(key);
   }
 
@@ -303,7 +290,7 @@ function validate(value, labelOrRecipe, recipe) {
     validationRecipe = recipe;
   }
 
-  for (const [validator, options] of (0, _entries.default)(validationRecipe)) {
+  for (const [validator, options] of Object.entries(validationRecipe)) {
     if (typeof options === 'undefined') {
       continue;
     }

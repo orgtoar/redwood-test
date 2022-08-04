@@ -1,20 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.SplashPage = void 0;
-
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -89,7 +80,7 @@ const SplashPage = _ref => {
     className: "pages-title"
   }, "List of Pages by path:"), /*#__PURE__*/_react.default.createElement("ul", {
     className: "pages-list"
-  }, (0, _map.default)(routes).call(routes, (route, index) => {
+  }, routes.map((route, index) => {
     if (route.type.name !== 'Route' || route.props.notfound) {
       return;
     }
@@ -286,7 +277,7 @@ const useVersion = () => {
           headers: {
             'content-type': 'application/json'
           },
-          body: (0, _stringify.default)({
+          body: JSON.stringify({
             query: 'query RedwoodVersion { redwood { version } }'
           })
         });

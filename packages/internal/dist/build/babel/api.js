@@ -1,18 +1,19 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.registerApiSideBabelHook = exports.prebuildApiFile = exports.getApiSideDefaultBabelConfig = exports.getApiSideBabelPresets = exports.getApiSideBabelPlugins = exports.getApiSideBabelConfigPath = void 0;
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -35,9 +36,7 @@ const getApiSideBabelPresets = ({
 } = {
   presetEnv: false
 }) => {
-  var _context;
-
-  return (0, _filter.default)(_context = ['@babel/preset-typescript', // Preset-env is required when we are not doing the transpilation with esbuild
+  return ['@babel/preset-typescript', // Preset-env is required when we are not doing the transpilation with esbuild
   presetEnv && ['@babel/preset-env', {
     targets: {
       node: TARGETS_NODE
@@ -51,7 +50,7 @@ const getApiSideBabelPresets = ({
     exclude: [// Remove class-properties from preset-env, and include separately with loose
     // https://github.com/webpack/webpack/issues/9708
     '@babel/plugin-proposal-class-properties', '@babel/plugin-proposal-private-methods']
-  }]]).call(_context, Boolean);
+  }]].filter(Boolean);
 };
 
 exports.getApiSideBabelPresets = getApiSideBabelPresets;
@@ -61,8 +60,6 @@ const getApiSideBabelPlugins = ({
 } = {
   forJest: false
 }) => {
-  var _context2;
-
   const rwjsPaths = (0, _paths.getPaths)(); // Plugin shape: [ ["Target", "Options", "name"] ],
   // a custom "name" is supplied so that user's do not accidently overwrite
   // Redwood's own plugins when they specify their own.
@@ -71,7 +68,7 @@ const getApiSideBabelPlugins = ({
   //   .splice(0, 2)
   //   .join('.') // Gives '3.16' instead of '3.16.12'
 
-  const plugins = (0, _filter.default)(_context2 = [...(0, _common.getCommonPlugins)(), ['@babel/plugin-transform-typescript', undefined, 'rwjs-babel-typescript'], // [
+  const plugins = [...(0, _common.getCommonPlugins)(), ['@babel/plugin-transform-typescript', undefined, 'rwjs-babel-typescript'], // [
   //   'babel-plugin-polyfill-corejs3',
   //   {
   //     method: 'usage-global',
@@ -128,7 +125,7 @@ const getApiSideBabelPlugins = ({
       path: '@redwoodjs/graphql-server'
     }]
   }, 'rwjs-babel-auto-import'], // FIXME: `graphql-tag` is not working: https://github.com/redwoodjs/redwood/pull/3193
-  ['babel-plugin-graphql-tag', undefined, 'rwjs-babel-graphql-tag'], [require('../babelPlugins/babel-plugin-redwood-import-dir').default, undefined, 'rwjs-babel-glob-import-dir']]).call(_context2, Boolean);
+  ['babel-plugin-graphql-tag', undefined, 'rwjs-babel-graphql-tag'], [require('../babelPlugins/babel-plugin-redwood-import-dir').default, undefined, 'rwjs-babel-glob-import-dir']].filter(Boolean);
   return plugins;
 };
 

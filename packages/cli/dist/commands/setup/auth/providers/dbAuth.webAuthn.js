@@ -1,22 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.notes = exports.config = exports.apiPackages = void 0;
-
-_Object$defineProperty(exports, "task", {
+Object.defineProperty(exports, "task", {
   enumerable: true,
   get: function () {
     return _dbAuth.task;
   }
 });
-
 exports.webPackages = void 0;
 
 var _path = _interopRequireDefault(require("path"));

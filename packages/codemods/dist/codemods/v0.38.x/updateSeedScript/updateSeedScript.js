@@ -1,16 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.updateSeedScript = void 0;
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -43,7 +38,7 @@ const updateSeedScript = async () => {
     seed: 'yarn rw exec seed'
   };
 
-  _fs.default.writeFileSync(rootPackageJSONPath, (0, _stringify.default)(rootPackageJSON, null, 2) + '\n');
+  _fs.default.writeFileSync(rootPackageJSONPath, JSON.stringify(rootPackageJSON, null, 2) + '\n');
   /**
    * Add `scripts/seed.{js,ts}` template.
    */

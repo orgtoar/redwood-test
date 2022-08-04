@@ -1,17 +1,14 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 require("core-js/modules/esnext.array.group-by.js");
 
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.Diagnostic_compare = Diagnostic_compare;
 exports.ExtendedDiagnostic_findRelevantQuickFixes = ExtendedDiagnostic_findRelevantQuickFixes;
 exports.ExtendedDiagnostic_format = ExtendedDiagnostic_format;
@@ -37,15 +34,9 @@ exports.Range_overlaps = Range_overlaps;
 exports.WorkspaceEdit_fromFileSet = WorkspaceEdit_fromFileSet;
 exports.err = err;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
-
-var _endsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/ends-with"));
-
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/keys"));
-
-var _keys2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.iterator.map.js");
 
 var _lineColumn = _interopRequireDefault(require("line-column"));
 
@@ -271,8 +262,8 @@ function ExtendedDiagnostic_is(x) {
 function ExtendedDiagnostic_groupByUri(ds) {
   const grouped = (0, _lodash.groupBy)(ds, d => d.uri);
   const dss = (0, _lodash.mapValues)(grouped, xds => {
-    const dd = (0, _map.default)(xds).call(xds, xd => xd.diagnostic);
-    return (0, _lodash.uniqBy)(dd, _stringify.default); // dedupe
+    const dd = xds.map(xd => xd.diagnostic);
+    return (0, _lodash.uniqBy)(dd, JSON.stringify); // dedupe
   });
   return dss;
 }
@@ -427,7 +418,7 @@ function ExtendedDiagnostic_format(d, opts) {
     base = (0, _URL.URL_file)(cwd);
   }
 
-  if (!(0, _endsWith.default)(base).call(base, '/')) {
+  if (!base.endsWith('/')) {
     base += '/';
   }
 
@@ -445,7 +436,7 @@ function ExtendedDiagnostic_format(d, opts) {
 function FileSet_fromTextDocuments(documents) {
   const files = {};
 
-  for (const uri of (0, _keys.default)(documents).call(documents)) {
+  for (const uri of documents.keys()) {
     files[uri] = documents.get(uri).getText();
   }
 
@@ -457,7 +448,7 @@ function WorkspaceEdit_fromFileSet(files, getExistingFileText) {
     documentChanges: []
   });
 
-  for (const uri of (0, _keys2.default)(files)) {
+  for (const uri of Object.keys(files)) {
     const content = files[uri];
 
     if (typeof content !== 'string') {

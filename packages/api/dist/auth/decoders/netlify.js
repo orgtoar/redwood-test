@@ -1,18 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.netlify = void 0;
-
-var _now = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/date/now"));
 
 var _jsonwebtoken = _interopRequireWildcard(require("jsonwebtoken"));
 
@@ -27,7 +20,7 @@ const netlify = (token, req) => {
     // So we simulate a verification
     const decodedToken = _jsonwebtoken.default.decode(token);
 
-    const nowTimestamp = Math.floor((0, _now.default)() / 1000);
+    const nowTimestamp = Math.floor(Date.now() / 1000);
 
     if (nowTimestamp >= decodedToken.exp) {
       throw new _jsonwebtoken.TokenExpiredError('jwt expired', new Date(decodedToken.exp * 1000));

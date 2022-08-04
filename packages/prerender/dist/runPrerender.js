@@ -1,28 +1,23 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.writePrerenderedHtmlFile = exports.runPrerender = exports.PrerenderGqlError = void 0;
 
 var _interopRequireWildcard2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/interopRequireWildcard"));
 
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
+require("core-js/modules/esnext.async-iterator.some.js");
 
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _some = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/some"));
-
-var _values = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/values"));
+require("core-js/modules/esnext.iterator.some.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -66,13 +61,11 @@ class PrerenderGqlError {
 exports.PrerenderGqlError = PrerenderGqlError;
 
 async function recursivelyRender(App, renderPath, gqlHandler, queryCache) {
-  var _context, _context2;
-
   // Execute all gql queries we haven't already fetched
-  await _promise.default.all((0, _map.default)(_context = (0, _entries.default)(queryCache)).call(_context, async ([cacheKey, value]) => {
+  await Promise.all(Object.entries(queryCache).map(async ([cacheKey, value]) => {
     if (value.hasFetched) {
       // Already fetched this one; skip it!
-      return _promise.default.resolve('');
+      return Promise.resolve('');
     }
 
     const resultString = await (0, _graphql.executeQuery)(gqlHandler, value.query, value.variables);
@@ -81,7 +74,7 @@ async function recursivelyRender(App, renderPath, gqlHandler, queryCache) {
     if (result.errors) {
       var _result$errors$0$mess;
 
-      const message = (_result$errors$0$mess = result.errors[0].message) !== null && _result$errors$0$mess !== void 0 ? _result$errors$0$mess : (0, _stringify.default)(result.errors);
+      const message = (_result$errors$0$mess = result.errors[0].message) !== null && _result$errors$0$mess !== void 0 ? _result$errors$0$mess : JSON.stringify(result.errors);
       throw new PrerenderGqlError(message);
     }
 
@@ -100,12 +93,12 @@ async function recursivelyRender(App, renderPath, gqlHandler, queryCache) {
     queryCache: queryCache
   }, /*#__PURE__*/_react.default.createElement(App, null))));
 
-  if ((0, _some.default)(_context2 = (0, _values.default)(queryCache)).call(_context2, value => !value.hasFetched)) {
+  if (Object.values(queryCache).some(value => !value.hasFetched)) {
     // We found new queries that we haven't fetched yet. Execute all new
     // queries and render again
     return recursivelyRender(App, renderPath, gqlHandler, queryCache);
   } else {
-    return _promise.default.resolve(componentAsHtml);
+    return Promise.resolve(componentAsHtml);
   }
 }
 
@@ -149,7 +142,7 @@ const runPrerender = async ({
 
   const {
     default: App
-  } = await _promise.default.resolve(`${(0, _paths.getPaths)().web.app}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
+  } = await Promise.resolve(`${(0, _paths.getPaths)().web.app}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
   const componentAsHtml = await recursivelyRender(App, renderPath, gqlHandler, queryCache);
   const {
     helmet

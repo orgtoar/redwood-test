@@ -1,16 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = _default;
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
 
 var _path = _interopRequireDefault(require("path"));
 
@@ -54,7 +49,7 @@ function _default({
         } = state.file.opts; // the file where this import statement resides
         // We only operate in "userland," skip node_modules.
 
-        if (filename !== null && filename !== void 0 && (0, _includes.default)(filename).call(filename, '/node_modules/')) {
+        if (filename !== null && filename !== void 0 && filename.includes('/node_modules/')) {
           return;
         } // We only need this plugin in the module could not be found.
 
@@ -92,7 +87,7 @@ function _default({
           filename
         } = state.file.opts; // We only operate in "userland," skip node_modules.
 
-        if (filename !== null && filename !== void 0 && (0, _includes.default)(filename).call(filename, '/node_modules/')) {
+        if (filename !== null && filename !== void 0 && filename.includes('/node_modules/')) {
           return;
         } // We only need this plugin in the module could not be found.
 

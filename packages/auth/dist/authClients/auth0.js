@@ -1,16 +1,9 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.auth0 = void 0;
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
 
 // TODO: Map out this user properly.
 const auth0 = client => {
@@ -20,7 +13,7 @@ const auth0 = client => {
     restoreAuthState: async () => {
       var _global, _global$location, _global$location$sear, _global2, _global2$location, _global2$location$sea;
 
-      if ((_global = global) !== null && _global !== void 0 && (_global$location = _global.location) !== null && _global$location !== void 0 && (_global$location$sear = _global$location.search) !== null && _global$location$sear !== void 0 && (0, _includes.default)(_global$location$sear).call(_global$location$sear, 'code=') && (_global2 = global) !== null && _global2 !== void 0 && (_global2$location = _global2.location) !== null && _global2$location !== void 0 && (_global2$location$sea = _global2$location.search) !== null && _global2$location$sea !== void 0 && (0, _includes.default)(_global2$location$sea).call(_global2$location$sea, 'state=')) {
+      if ((_global = global) !== null && _global !== void 0 && (_global$location = _global.location) !== null && _global$location !== void 0 && (_global$location$sear = _global$location.search) !== null && _global$location$sear !== void 0 && _global$location$sear.includes('code=') && (_global2 = global) !== null && _global2 !== void 0 && (_global2$location = _global2.location) !== null && _global2$location !== void 0 && (_global2$location$sea = _global2$location.search) !== null && _global2$location$sea !== void 0 && _global2$location$sea.includes('state=')) {
         var _global3, _global3$location;
 
         const {

@@ -1,23 +1,10 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.URL_file = URL_file;
 exports.URL_toFile = URL_toFile;
-
-var _startsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/starts-with"));
-
-var _url = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/url"));
-
-var _indexOf = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/index-of"));
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
 
 var _path = require("path");
 
@@ -29,7 +16,7 @@ var _path = require("path");
  * @param filePath
  */
 function URL_file(filePath, ...parts) {
-  if ((0, _startsWith.default)(filePath).call(filePath, FILE_SCHEME)) {
+  if (filePath.startsWith(FILE_SCHEME)) {
     filePath = filePath.substr(FILE_SCHEME.length);
   }
 
@@ -37,7 +24,7 @@ function URL_file(filePath, ...parts) {
     filePath = (0, _path.join)(filePath, ...parts);
   }
 
-  return new _url.default(FILE_SCHEME + (0, _path.normalize)(filePath)).href;
+  return new URL(FILE_SCHEME + (0, _path.normalize)(filePath)).href;
 }
 /**
  *
@@ -51,7 +38,7 @@ function URL_toFile(uriOrFilePath, sep = _path.sep) {
     throw new Error('arg error');
   }
 
-  if ((0, _startsWith.default)(uriOrFilePath).call(uriOrFilePath, FILE_SCHEME)) {
+  if (uriOrFilePath.startsWith(FILE_SCHEME)) {
     return fileUriToPath(uriOrFilePath, sep);
   }
 
@@ -76,14 +63,12 @@ const FILE_SCHEME = 'file://';
  */
 
 function fileUriToPath(uri, sep = _path.sep) {
-  var _context;
-
   if (typeof uri !== 'string' || uri.length <= 7 || uri.substring(0, 7) !== FILE_SCHEME) {
     throw new TypeError('must pass in a file:// URI to convert to a file path');
   }
 
   const rest = decodeURIComponent(uri.substring(7));
-  const firstSlash = (0, _indexOf.default)(rest).call(rest, '/');
+  const firstSlash = rest.indexOf('/');
   let host = rest.substring(0, firstSlash);
   let path = rest.substring(firstSlash + 1); // 2.  Scheme Definition
   // As a special case, <host> can be the string "localhost" or the empty
@@ -110,7 +95,7 @@ function fileUriToPath(uri, sep = _path.sep) {
   // we insert an extra empty segment
   // this will result in an initial slash (unix style)
 
-  if (!(0, _includes.default)(_context = parts[0]).call(_context, ':')) {
+  if (!parts[0].includes(':')) {
     parts.unshift('');
   }
 

@@ -1,17 +1,9 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.dbAuth = void 0;
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
-
 const TOKEN_CACHE_TIME = 5000;
 let getTokenPromise;
 let lastTokenCheckAt = new Date('1970-01-01T00:00:00');
@@ -49,7 +41,7 @@ const dbAuth = function (client) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: (0, _stringify.default)({
+      body: JSON.stringify({
         username,
         method: 'forgotPassword'
       })
@@ -90,7 +82,7 @@ const dbAuth = function (client) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: (0, _stringify.default)({
+      body: JSON.stringify({
         username,
         password,
         method: 'login'
@@ -103,7 +95,7 @@ const dbAuth = function (client) {
     await resetAndFetch(global.RWJS_API_DBAUTH_URL, {
       credentials,
       method: 'POST',
-      body: (0, _stringify.default)({
+      body: JSON.stringify({
         method: 'logout'
       })
     });
@@ -117,7 +109,7 @@ const dbAuth = function (client) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: (0, _stringify.default)({ ...attributes,
+      body: JSON.stringify({ ...attributes,
         method: 'resetPassword'
       })
     });
@@ -131,7 +123,7 @@ const dbAuth = function (client) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: (0, _stringify.default)({ ...attributes,
+      body: JSON.stringify({ ...attributes,
         method: 'signup'
       })
     });
@@ -145,7 +137,7 @@ const dbAuth = function (client) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: (0, _stringify.default)({
+      body: JSON.stringify({
         resetToken,
         method: 'validateResetToken'
       })

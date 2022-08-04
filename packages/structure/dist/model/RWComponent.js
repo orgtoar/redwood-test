@@ -1,20 +1,45 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.RWComponent = void 0;
 
-var _set = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/set"));
+require("core-js/modules/esnext.set.add-all.js");
 
-var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
+require("core-js/modules/esnext.set.delete-all.js");
+
+require("core-js/modules/esnext.set.difference.js");
+
+require("core-js/modules/esnext.set.every.js");
+
+require("core-js/modules/esnext.set.filter.js");
+
+require("core-js/modules/esnext.set.find.js");
+
+require("core-js/modules/esnext.set.intersection.js");
+
+require("core-js/modules/esnext.set.is-disjoint-from.js");
+
+require("core-js/modules/esnext.set.is-subset-of.js");
+
+require("core-js/modules/esnext.set.is-superset-of.js");
+
+require("core-js/modules/esnext.set.join.js");
+
+require("core-js/modules/esnext.set.map.js");
+
+require("core-js/modules/esnext.set.reduce.js");
+
+require("core-js/modules/esnext.set.some.js");
+
+require("core-js/modules/esnext.set.symmetric-difference.js");
+
+require("core-js/modules/esnext.set.union.js");
 
 var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
 
@@ -46,7 +71,7 @@ let RWComponent = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)
 
   get exportedSymbols() {
     // KLUDGE!
-    const ss = new _set.default();
+    const ss = new Set();
 
     for (const d of this.sf.getDescendantsOfKind(tsm.SyntaxKind.VariableDeclaration)) {
       if (d.isExported()) {
@@ -57,5 +82,5 @@ let RWComponent = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)
     return ss;
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "hasDefaultExport", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "hasDefaultExport"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "stories", [_dec2], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "stories"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "exportedSymbols", [_dec3], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "exportedSymbols"), _class.prototype)), _class));
+}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "hasDefaultExport", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "hasDefaultExport"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "stories", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "stories"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "exportedSymbols", [_dec3], Object.getOwnPropertyDescriptor(_class.prototype, "exportedSymbols"), _class.prototype)), _class));
 exports.RWComponent = RWComponent;

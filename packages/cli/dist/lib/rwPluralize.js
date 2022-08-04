@@ -1,28 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.addSingularPlural = addSingularPlural;
 exports.isPlural = isPlural;
 exports.isSingular = isSingular;
 exports.pluralize = pluralize;
 exports.singularize = singularize;
 
-var _lastIndexOf = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/last-index-of"));
+require("core-js/modules/esnext.async-iterator.find.js");
 
-var _slice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/slice"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
-
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.iterator.find.js");
 
 var plurals = _interopRequireWildcard(require("pluralize"));
 
@@ -38,8 +31,8 @@ const mappings = {
 
 function lastWord(str) {
   const capitals = str.match(/[A-Z]/g);
-  const lastIndex = (0, _lastIndexOf.default)(str).call(str, capitals === null || capitals === void 0 ? void 0 : (0, _slice.default)(capitals).call(capitals, -1)[0]);
-  return lastIndex >= 0 ? (0, _slice.default)(str).call(str, lastIndex) : str;
+  const lastIndex = str.lastIndexOf(capitals === null || capitals === void 0 ? void 0 : capitals.slice(-1)[0]);
+  return lastIndex >= 0 ? str.slice(lastIndex) : str;
 }
 /**
  * Returns the plural form of the given word
@@ -57,7 +50,7 @@ function pluralize(word) {
 
 
   const singular = lastWord(word);
-  const base = (0, _slice.default)(word).call(word, 0, word.length - singular.length);
+  const base = word.slice(0, word.length - singular.length);
 
   if (mappings.toPlural[singular]) {
     return base + mappings.toPlural[singular];
@@ -78,7 +71,7 @@ function singularize(word) {
   }
 
   const plural = lastWord(word);
-  const base = (0, _slice.default)(word).call(word, 0, word.length - plural.length);
+  const base = word.slice(0, word.length - plural.length);
 
   if (mappings.toSingular[plural]) {
     return base + mappings.toSingular[plural];
@@ -132,9 +125,7 @@ function isSingular(word) {
 
 
 function addSingularPlural(singular, plural) {
-  var _context;
-
-  const existingPlural = (0, _find.default)(_context = (0, _keys.default)(mappings.toSingular)).call(_context, key => mappings.toSingular[key] === singular);
+  const existingPlural = Object.keys(mappings.toSingular).find(key => mappings.toSingular[key] === singular);
   delete mappings.toSingular[existingPlural];
   delete mappings.toPlural[existingPlural];
   mappings.toPlural[singular] = plural;

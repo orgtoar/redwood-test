@@ -1,24 +1,19 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.RWRoute = void 0;
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.async-iterator.find.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
-
-var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
+require("core-js/modules/esnext.iterator.find.js");
 
 var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
 
@@ -71,14 +66,12 @@ let RWRoute = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), 
   }
 
   get hasParameters() {
-    var _context;
-
     if (!this.path) {
       return false;
     } // KLUDGE: we need a good path parsing library here
 
 
-    return (0, _includes.default)(_context = this.path).call(_context, '{');
+    return this.path.includes('{');
   }
 
   get hasPrerender() {
@@ -121,13 +114,11 @@ let RWRoute = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), 
 
 
   get page() {
-    var _context2;
-
     if (!this.page_identifier_str) {
       return undefined;
     }
 
-    return (0, _find.default)(_context2 = this.parent.parent.pages).call(_context2, p => p.const_ === this.page_identifier_str);
+    return this.parent.parent.pages.find(p => p.const_ === this.page_identifier_str);
   }
   /**
    * <Route path="" page={THIS_IDENTIFIER}/>
@@ -387,7 +378,7 @@ let RWRoute = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), 
       path_parameter_type: pp.paramTypeRanges
     };
 
-    for (const style of (0, _keys.default)(xxx)) {
+    for (const style of Object.keys(xxx)) {
       for (const x of xxx[style]) {
         yield {
           kind: 'Decoration',
@@ -421,12 +412,12 @@ let RWRoute = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), 
       return undefined;
     }
 
-    if ((0, _includes.default)(path).call(path, '{')) {
+    if (path.includes('{')) {
       return undefined;
     }
 
     return `http://localhost:8910${path}`;
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "id", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "id"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "location", [_dec2], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "location"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "isPrivate", [_dec3], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "isPrivate"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "hasParameters", [_dec4], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "hasParameters"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "hasPrerender", [_dec5], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "hasPrerender"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "hasPreRenderInfo", [_dec6], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "hasPreRenderInfo"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "outlineLabel", [_dec7], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "outlineLabel"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "outlineDescription", [_dec8], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "outlineDescription"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "outlineLink", [_dec9], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "outlineLink"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "page", [_dec10], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "page"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "page_identifier", [_dec11], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "page_identifier"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "page_identifier_str", [_dec12], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "page_identifier_str"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "name", [_dec13], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "name"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "path_errorMessage", [_dec14], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "path_errorMessage"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "path", [_dec15], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "path"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "prerender", [_dec16], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "prerender"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "path_literal_node", [_dec17], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "path_literal_node"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "isNotFound", [_dec18], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "isNotFound"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "hasPathCollision", [_dec19], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "hasPathCollision"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "parsedPath", [_dec20], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "parsedPath"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "sampleLocalPreviewURL", [_dec21], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "sampleLocalPreviewURL"), _class.prototype)), _class));
+}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "id", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "id"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "location", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "location"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "isPrivate", [_dec3], Object.getOwnPropertyDescriptor(_class.prototype, "isPrivate"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "hasParameters", [_dec4], Object.getOwnPropertyDescriptor(_class.prototype, "hasParameters"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "hasPrerender", [_dec5], Object.getOwnPropertyDescriptor(_class.prototype, "hasPrerender"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "hasPreRenderInfo", [_dec6], Object.getOwnPropertyDescriptor(_class.prototype, "hasPreRenderInfo"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "outlineLabel", [_dec7], Object.getOwnPropertyDescriptor(_class.prototype, "outlineLabel"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "outlineDescription", [_dec8], Object.getOwnPropertyDescriptor(_class.prototype, "outlineDescription"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "outlineLink", [_dec9], Object.getOwnPropertyDescriptor(_class.prototype, "outlineLink"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "page", [_dec10], Object.getOwnPropertyDescriptor(_class.prototype, "page"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "page_identifier", [_dec11], Object.getOwnPropertyDescriptor(_class.prototype, "page_identifier"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "page_identifier_str", [_dec12], Object.getOwnPropertyDescriptor(_class.prototype, "page_identifier_str"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "name", [_dec13], Object.getOwnPropertyDescriptor(_class.prototype, "name"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "path_errorMessage", [_dec14], Object.getOwnPropertyDescriptor(_class.prototype, "path_errorMessage"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "path", [_dec15], Object.getOwnPropertyDescriptor(_class.prototype, "path"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "prerender", [_dec16], Object.getOwnPropertyDescriptor(_class.prototype, "prerender"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "path_literal_node", [_dec17], Object.getOwnPropertyDescriptor(_class.prototype, "path_literal_node"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "isNotFound", [_dec18], Object.getOwnPropertyDescriptor(_class.prototype, "isNotFound"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "hasPathCollision", [_dec19], Object.getOwnPropertyDescriptor(_class.prototype, "hasPathCollision"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "parsedPath", [_dec20], Object.getOwnPropertyDescriptor(_class.prototype, "parsedPath"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "sampleLocalPreviewURL", [_dec21], Object.getOwnPropertyDescriptor(_class.prototype, "sampleLocalPreviewURL"), _class.prototype)), _class));
 exports.RWRoute = RWRoute;

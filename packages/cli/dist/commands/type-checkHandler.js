@@ -1,18 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = void 0;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.iterator.map.js");
+
+require("core-js/modules/esnext.async-iterator.filter.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _path = _interopRequireDefault(require("path"));
 
@@ -44,7 +47,7 @@ const handler = async ({
   const typeCheck = async () => {
     let conclusiveExitCode = 0;
     const yarnVersion = await (0, _upgrade.getCmdMajorVersion)('yarn');
-    const tscForAllSides = (0, _map.default)(sides).call(sides, side => {
+    const tscForAllSides = sides.map(side => {
       const projectDir = _path.default.join((0, _lib.getPaths)().base, side); // -s flag to suppress error output from yarn. For example yarn doc link on non-zero status.
       // Since it'll be printed anyways after the whole execution.
 
@@ -65,10 +68,8 @@ const handler = async ({
       await result;
     } catch (err) {
       if (err.length) {
-        var _context;
-
         // Non-null exit codes
-        const exitCodes = (0, _filter.default)(_context = (0, _map.default)(err).call(err, e => e === null || e === void 0 ? void 0 : e.exitCode)).call(_context, Boolean);
+        const exitCodes = err.map(e => e === null || e === void 0 ? void 0 : e.exitCode).filter(Boolean);
         conclusiveExitCode = Math.max(...exitCodes);
       }
     }

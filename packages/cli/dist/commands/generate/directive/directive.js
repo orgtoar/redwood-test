@@ -1,18 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = exports.files = exports.description = exports.command = exports.builder = void 0;
 
-var _reduce = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/reduce"));
+require("core-js/modules/esnext.async-iterator.reduce.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.reduce.js");
+
+require("core-js/modules/esnext.async-iterator.filter.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _path = _interopRequireDefault(require("path"));
 
@@ -82,7 +85,7 @@ const files = ({
   // }
 
 
-  return (0, _reduce.default)(files).call(files, (acc, [outputPath, content]) => {
+  return files.reduce((acc, [outputPath, content]) => {
     const template = typescript ? content : (0, _lib.transformTSToJS)(outputPath, content);
     return {
       [outputPath]: template,
@@ -119,8 +122,6 @@ exports.description = description;
 exports.command = command;
 
 const handler = async args => {
-  var _context;
-
   const POST_RUN_INSTRUCTIONS = `Next steps...\n\n   ${_colors.default.warning('After modifying your directive, you can add it to your SDLs e.g.:')}
     ${_colors.default.info('// example todo.sdl.js')}
     ${_colors.default.info('# Option A: Add it to a field')}
@@ -154,7 +155,7 @@ const handler = async args => {
     directiveType = response.directiveType;
   }
 
-  const tasks = new _listr.default((0, _filter.default)(_context = [{
+  const tasks = new _listr.default([{
     title: 'Generating directive file ...',
     task: () => {
       return (0, _lib.writeFilesTask)(files({ ...args,
@@ -176,7 +177,7 @@ const handler = async args => {
     task: (_ctx, task) => {
       task.title = POST_RUN_INSTRUCTIONS;
     }
-  }]).call(_context, Boolean), {
+  }].filter(Boolean), {
     collapse: false
   });
 

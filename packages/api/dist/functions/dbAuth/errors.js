@@ -1,11 +1,8 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.WrongVerbError = exports.WebAuthnError = exports.UsernameRequiredError = exports.UsernameNotFoundError = exports.UsernameAndPasswordRequiredError = exports.UserNotFoundError = exports.UnknownAuthMethodError = exports.SessionDecryptionError = exports.ReusedPasswordError = exports.ResetTokenRequiredError = exports.ResetTokenInvalidError = exports.ResetTokenExpiredError = exports.PasswordRequiredError = exports.NotLoggedInError = exports.NoWebAuthnSessionError = exports.NoWebAuthnConfigError = exports.NoUserIdError = exports.NoSignupHandlerError = exports.NoSessionSecretError = exports.NoSessionExpirationError = exports.NoResetPasswordHandlerError = exports.NoLoginHandlerError = exports.NoForgotPasswordHandlerError = exports.MissingWebAuthnConfigError = exports.IncorrectPasswordError = exports.GenericError = exports.FlowNotEnabledError = exports.FieldRequiredError = exports.DuplicateUsernameError = exports.CsrfTokenMismatchError = void 0;
 
 class NoSessionSecretError extends Error {

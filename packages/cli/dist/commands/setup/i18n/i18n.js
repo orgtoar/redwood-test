@@ -1,20 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = exports.description = exports.command = exports.builder = void 0;
-
-var _reverse = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/reverse"));
-
-var _findIndex = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find-index"));
-
-var _splice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/splice"));
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -60,12 +51,10 @@ const i18nImportExist = appJS => {
 };
 
 const addI18nImport = appJS => {
-  var _context;
-
-  var content = (0, _reverse.default)(_context = appJS.toString().split('\n')).call(_context);
-  const index = (0, _findIndex.default)(content).call(content, value => /import/.test(value));
-  (0, _splice.default)(content).call(content, index, 0, "import './i18n'");
-  return (0, _reverse.default)(content).call(content).join(`\n`);
+  var content = appJS.toString().split('\n').reverse();
+  const index = content.findIndex(value => /import/.test(value));
+  content.splice(index, 0, "import './i18n'");
+  return content.reverse().join(`\n`);
 };
 
 const i18nConfigExists = () => {

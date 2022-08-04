@@ -1,11 +1,8 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.startMSW = exports.setupRequestHandlers = exports.registerHandler = exports.mockedUserMeta = exports.mockGraphQLQuery = exports.mockGraphQLMutation = exports.mockCurrentUser = void 0;
 
 var _msw = require("msw");

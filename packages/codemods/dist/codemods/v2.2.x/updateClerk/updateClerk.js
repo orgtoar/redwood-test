@@ -1,32 +1,31 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = transform;
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.for-each.js");
+
+require("core-js/modules/esnext.async-iterator.find.js");
+
+require("core-js/modules/esnext.iterator.find.js");
 
 function transform(file, api) {
-  var _context, _context2;
-
   const j = api.jscodeshift;
   const ast = j(file.source);
-  (0, _forEach.default)(_context = (0, _find.default)(ast).call(ast, j.ImportDeclaration, {
+  ast.find(j.ImportDeclaration, {
     source: {
       value: '@clerk/clerk-react'
     }
-  })).call(_context, importDeclaration => {
+  }).forEach(importDeclaration => {
     var _importDeclaration$va;
 
-    importDeclaration === null || importDeclaration === void 0 ? void 0 : (_importDeclaration$va = importDeclaration.value.specifiers) === null || _importDeclaration$va === void 0 ? void 0 : (0, _forEach.default)(_importDeclaration$va).call(_importDeclaration$va, specifier => {
+    importDeclaration === null || importDeclaration === void 0 ? void 0 : (_importDeclaration$va = importDeclaration.value.specifiers) === null || _importDeclaration$va === void 0 ? void 0 : _importDeclaration$va.forEach(specifier => {
       if (j.ImportSpecifier.check(specifier) && specifier.imported.name === 'withClerk') {
         // Found `withClerk` import. Now I want to replace that with a
         // `ClerkLoaded` import instead
@@ -38,17 +37,15 @@ function transform(file, api) {
   });
   let comments = []; // Remove old RW Clerk components
 
-  (0, _forEach.default)(_context2 = (0, _find.default)(ast).call(ast, j.VariableDeclaration)).call(_context2, variableDeclaration => {
-    var _context3;
-
-    if ((0, _find.default)(_context3 = variableDeclaration.value.declarations).call(_context3, declaration => {
+  ast.find(j.VariableDeclaration).forEach(variableDeclaration => {
+    if (variableDeclaration.value.declarations.find(declaration => {
       return j.VariableDeclarator.check(declaration) && j.Identifier.check(declaration.id) && (declaration.id.name === 'ClerkAuthProvider' || declaration.id.name === 'ClerkAuthConsumer');
     })) {
       comments = [...comments, ...(variableDeclaration.value.comments || [])];
       j(variableDeclaration).remove();
     }
   });
-  const appVariableDeclaration = (0, _find.default)(ast).call(ast, j.VariableDeclaration, {
+  const appVariableDeclaration = ast.find(j.VariableDeclaration, {
     declarations: [{
       id: {
         name: 'App'

@@ -1,36 +1,31 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.webIndexDoesExist = exports.isProviderSupported = exports.handler = exports.files = exports.description = exports.command = exports.builder = exports.apiSrcDoesExist = exports.addConfigToApp = exports.addApiConfig = void 0;
 
 var _interopRequireWildcard2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/interopRequireWildcard"));
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _reduce = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/reduce"));
+require("core-js/modules/esnext.iterator.filter.js");
 
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
+require("core-js/modules/esnext.async-iterator.reduce.js");
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.iterator.reduce.js");
 
-var _assign = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/assign"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
-
-var _indexOf = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/index-of"));
+require("core-js/modules/esnext.iterator.for-each.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -61,35 +56,27 @@ const WEBAUTHN_SUPPORTED_PROVIDERS = ['dbAuth'];
 
 const getWebAppPath = () => (0, _lib.getPaths)().web.app;
 
-const getSupportedProviders = () => {
-  var _context, _context2;
+const getSupportedProviders = () => _fs.default.readdirSync(_path.default.resolve(__dirname, 'providers')).map(file => _path.default.basename(file, '.js')).filter(file => file !== 'README.md');
 
-  return (0, _filter.default)(_context = (0, _map.default)(_context2 = _fs.default.readdirSync(_path.default.resolve(__dirname, 'providers'))).call(_context2, file => _path.default.basename(file, '.js'))).call(_context, file => file !== 'README.md');
-};
+const getTemplates = () => _fs.default.readdirSync(_path.default.resolve(__dirname, 'templates')).reduce((templates, file) => {
+  if (file === 'auth.ts.template') {
+    return { ...templates,
+      base: [_path.default.resolve(__dirname, 'templates', file)]
+    };
+  } else {
+    const provider = file.split('.')[0];
 
-const getTemplates = () => {
-  var _context3;
-
-  return (0, _reduce.default)(_context3 = _fs.default.readdirSync(_path.default.resolve(__dirname, 'templates'))).call(_context3, (templates, file) => {
-    if (file === 'auth.ts.template') {
-      return { ...templates,
-        base: [_path.default.resolve(__dirname, 'templates', file)]
+    if (templates[provider]) {
+      templates[provider].push(_path.default.resolve(__dirname, 'templates', file));
+      return { ...templates
       };
     } else {
-      const provider = file.split('.')[0];
-
-      if (templates[provider]) {
-        templates[provider].push(_path.default.resolve(__dirname, 'templates', file));
-        return { ...templates
-        };
-      } else {
-        return { ...templates,
-          [provider]: [_path.default.resolve(__dirname, 'templates', file)]
-        };
-      }
+      return { ...templates,
+        [provider]: [_path.default.resolve(__dirname, 'templates', file)]
+      };
     }
-  }, {});
-}; // returns the content of App.{js,tsx} with import statements added
+  }
+}, {}); // returns the content of App.{js,tsx} with import statements added
 
 
 const addWebImports = (content, imports) => {
@@ -117,10 +104,8 @@ const objectToComponentProps = (obj, options = {
 }) => {
   let props = [];
 
-  for (const [key, value] of (0, _entries.default)(obj)) {
-    var _context4;
-
-    if (!(0, _includes.default)(_context4 = options.exclude).call(_context4, key)) {
+  for (const [key, value] of Object.entries(obj)) {
+    if (!options.exclude.includes(key)) {
       if (key === 'client') {
         props.push(`${key}={${value}}`);
       } else {
@@ -134,10 +119,8 @@ const objectToComponentProps = (obj, options = {
 
 
 const addWebRender = (content, authProvider) => {
-  var _context5, _context6, _context7;
-
   const [_, newlineAndIndent, redwoodProviderOpen, redwoodProviderChildren, redwoodProviderClose] = content.match(/(\s+)(<RedwoodProvider.*?>)(.*)(<\/RedwoodProvider>)/s);
-  const redwoodProviderChildrenLines = (0, _map.default)(_context5 = redwoodProviderChildren.split('\n')).call(_context5, (line, index) => {
+  const redwoodProviderChildrenLines = redwoodProviderChildren.split('\n').map((line, index) => {
     return `${index === 0 ? '' : '  '}` + line;
   }); // Wrap with custom components e.g.
   // <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
@@ -145,8 +128,8 @@ const addWebRender = (content, authProvider) => {
   //     <ApolloInjector>
   //     <AuthProvider client={ethereum} type="ethereum">
 
-  const customRenderOpen = (0, _reduce.default)(_context6 = authProvider.render || []).call(_context6, (acc, component) => acc + newlineAndIndent + '  ' + `<${component}>`, '');
-  const customRenderClose = (0, _reduce.default)(_context7 = authProvider.render || []).call(_context7, (acc, component) => newlineAndIndent + '  ' + `</${component}>` + acc, '');
+  const customRenderOpen = (authProvider.render || []).reduce((acc, component) => acc + newlineAndIndent + '  ' + `<${component}>`, '');
+  const customRenderClose = (authProvider.render || []).reduce((acc, component) => newlineAndIndent + '  ' + `</${component}>` + acc, '');
   const props = objectToComponentProps(authProvider, {
     exclude: ['render']
   });
@@ -178,7 +161,7 @@ const removeOldAuthProvider = async content => {
   let oldAuthProvider;
 
   try {
-    oldAuthProvider = await _promise.default.resolve(`./providers/${currentAuthProvider}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
+    oldAuthProvider = await Promise.resolve(`./providers/${currentAuthProvider}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
   } catch (e) {
     throw new Error('Could not replace existing auth provider init');
   }
@@ -192,7 +175,7 @@ const removeOldAuthProvider = async content => {
 const checkAuthProviderExists = async () => {
   const content = _fs.default.readFileSync(getWebAppPath()).toString();
 
-  if ((0, _includes.default)(content).call(content, AUTH_PROVIDER_IMPORT)) {
+  if (content.includes(AUTH_PROVIDER_IMPORT)) {
     throw new Error('Existing auth provider found.\nUse --force to override existing provider.');
   }
 }; // the files to create to support auth
@@ -205,9 +188,9 @@ const files = ({
   const templates = getTemplates();
   let files = {}; // look for any templates for this provider
 
-  for (const [templateProvider, templateFiles] of (0, _entries.default)(templates)) {
+  for (const [templateProvider, templateFiles] of Object.entries(templates)) {
     if (provider === templateProvider) {
-      (0, _forEach.default)(templateFiles).call(templateFiles, templateFile => {
+      templateFiles.forEach(templateFile => {
         const shouldUseTemplate = webAuthn && templateFile.match(/\.webAuthn\./) || !webAuthn && !templateFile.match(/\.webAuthn\./);
 
         if (shouldUseTemplate) {
@@ -215,7 +198,7 @@ const files = ({
 
           const content = _fs.default.readFileSync(templateFile).toString();
 
-          files = (0, _assign.default)(files, {
+          files = Object.assign(files, {
             [outputPath]: (0, _project.isTypeScriptProject)() ? content : (0, _lib.transformTSToJS)(outputPath, content)
           });
         }
@@ -224,7 +207,7 @@ const files = ({
   } // if there are no provider-specific templates, just use the base auth one
 
 
-  if ((0, _keys.default)(files).length === 0) {
+  if (Object.keys(files).length === 0) {
     const content = _fs.default.readFileSync(templates.base[0]).toString();
 
     files = {
@@ -247,7 +230,7 @@ const addConfigToApp = async (config, force, options = {}) => {
   let content = _fs.default.readFileSync(webAppPath).toString(); // update existing AuthProvider if --force else add new AuthProvider
 
 
-  if ((0, _includes.default)(content).call(content, AUTH_PROVIDER_IMPORT) && force) {
+  if (content.includes(AUTH_PROVIDER_IMPORT) && force) {
     content = await removeOldAuthProvider(content);
     content = updateWebRender(content, config.authProvider);
   } else {
@@ -283,9 +266,7 @@ const addApiConfig = () => {
 exports.addApiConfig = addApiConfig;
 
 const isProviderSupported = provider => {
-  var _context8;
-
-  return (0, _indexOf.default)(_context8 = getSupportedProviders()).call(_context8, provider) !== -1;
+  return getSupportedProviders().indexOf(provider) !== -1;
 };
 
 exports.isProviderSupported = isProviderSupported;
@@ -327,8 +308,6 @@ const builder = yargs => {
 exports.builder = builder;
 
 const handler = async yargs => {
-  var _context9;
-
   const {
     provider,
     rwVersion,
@@ -339,7 +318,7 @@ const handler = async yargs => {
   let providerData; // check if api/src/lib/auth.js already exists and if so, ask the user to overwrite
 
   if (force === false) {
-    if (_fs.default.existsSync((0, _keys.default)(files(provider, yargs))[0])) {
+    if (_fs.default.existsSync(Object.keys(files(provider, yargs))[0])) {
       const forceResponse = await (0, _prompts.default)({
         type: 'confirm',
         name: 'answer',
@@ -353,7 +332,7 @@ const handler = async yargs => {
   // version of its provider
 
 
-  if (includeWebAuthn === null && (0, _includes.default)(WEBAUTHN_SUPPORTED_PROVIDERS).call(WEBAUTHN_SUPPORTED_PROVIDERS, provider)) {
+  if (includeWebAuthn === null && WEBAUTHN_SUPPORTED_PROVIDERS.includes(provider)) {
     const webAuthnResponse = await (0, _prompts.default)({
       type: 'confirm',
       name: 'answer',
@@ -364,12 +343,12 @@ const handler = async yargs => {
   }
 
   if (includeWebAuthn) {
-    providerData = await _promise.default.resolve(`./providers/${provider}.webAuthn`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
+    providerData = await Promise.resolve(`./providers/${provider}.webAuthn`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
   } else {
-    providerData = await _promise.default.resolve(`./providers/${provider}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
+    providerData = await Promise.resolve(`./providers/${provider}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
   }
 
-  const tasks = new _listr.default((0, _filter.default)(_context9 = [{
+  const tasks = new _listr.default([{
     title: 'Generating auth lib...',
     task: (_ctx, task) => {
       if (apiSrcDoesExist()) {
@@ -428,7 +407,7 @@ const handler = async yargs => {
     task: (_ctx, task) => {
       task.title = `One more thing...\n\n   ${providerData.notes.join('\n   ')}\n`;
     }
-  }]).call(_context9, Boolean), {
+  }].filter(Boolean), {
     collapse: false
   });
 

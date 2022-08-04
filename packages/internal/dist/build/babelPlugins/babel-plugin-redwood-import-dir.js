@@ -1,18 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = _default;
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _path = _interopRequireDefault(require("path"));
 
@@ -43,10 +42,8 @@ function _default({
     name: 'babel-plugin-redwood-import-dir',
     visitor: {
       ImportDeclaration(p, state) {
-        var _context, _context2, _context3, _context4;
-
         // This code will only run when we find an import statement that includes a `**`.
-        if (!(0, _includes.default)(_context = p.node.source.value).call(_context, '**')) {
+        if (!p.node.source.value.includes('**')) {
           return;
         }
 
@@ -59,11 +56,12 @@ function _default({
 
         const cwd = _path.default.dirname(state.file.opts.filename);
 
-        const dirFiles = (0, _filter.default)(_context2 = (0, _filter.default)(_context3 = (0, _filter.default)(_context4 = _fastGlob.default.sync(importGlob, {
+        const dirFiles = _fastGlob.default.sync(importGlob, {
           cwd
-        })).call(_context4, n => !(0, _includes.default)(n).call(n, '.test.')) // ignore `*.test.*` files.
-        ).call(_context3, n => !(0, _includes.default)(n).call(n, '.scenarios.')) // ignore `*.scenarios.*` files.
-        ).call(_context2, n => !(0, _includes.default)(n).call(n, '.d.ts'));
+        }).filter(n => !n.includes('.test.')) // ignore `*.test.*` files.
+        .filter(n => !n.includes('.scenarios.')) // ignore `*.scenarios.*` files.
+        .filter(n => !n.includes('.d.ts'));
+
         const staticGlob = importGlob.split('*')[0];
 
         const filePathToVarName = filePath => {

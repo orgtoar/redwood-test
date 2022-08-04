@@ -1,28 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.LogFormatter = void 0;
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.async-iterator.find.js");
 
-var _now = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/date/now"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
-
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
-
-var _parseInt2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/parse-int"));
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
-
-var _padStart = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/pad-start"));
+require("core-js/modules/esnext.iterator.find.js");
 
 var _chalk = _interopRequireDefault(require("chalk"));
 
@@ -47,7 +36,7 @@ const isObject = input => {
 };
 
 const isEmptyObject = object => {
-  return object && !(0, _keys.default)(object).length;
+  return object && !Object.keys(object).length;
 };
 
 const isPinoLog = log => {
@@ -118,8 +107,6 @@ const LogFormatter = () => {
   };
 
   const output = logData => {
-    var _context;
-
     const output = [];
 
     if (!logData.level) {
@@ -134,7 +121,7 @@ const LogFormatter = () => {
       logData.ns = '';
     }
 
-    output.push(formatDate(logData.time || (0, _now.default)()));
+    output.push(formatDate(logData.time || Date.now()));
     output.push(formatLevel(logData.level));
     output.push(formatNs(logData.ns));
     output.push(formatName(logData.name));
@@ -156,7 +143,7 @@ const LogFormatter = () => {
     const userAgent = logData.userAgent;
     const stack = logData.level === 'fatal' || logData.level === 'error' ? logData.stack || logData.err && logData.err.stack : null; // Output err if it has more keys than 'stack'
 
-    const err = (logData.level === 'fatal' || logData.level === 'error') && logData.err && (0, _find.default)(_context = (0, _keys.default)(logData.err)).call(_context, key => key !== 'stack') ? logData.err : null;
+    const err = (logData.level === 'fatal' || logData.level === 'error') && logData.err && Object.keys(logData.err).find(key => key !== 'stack') ? logData.err : null;
 
     if (method != null) {
       output.push(formatMethod(method));
@@ -211,18 +198,18 @@ const LogFormatter = () => {
       output.push(formatStack(stack));
     }
 
-    return (0, _filter.default)(output).call(output, noEmpty).join(' ');
+    return output.filter(noEmpty).join(' ');
   };
 
   const formatBundleSize = bundle => {
-    const bytes = (0, _parseInt2.default)(bundle, 10);
+    const bytes = parseInt(bundle, 10);
     const size = (0, _prettyBytes.default)(bytes).replace(/ /, '');
     return _chalk.default.gray(size);
   };
 
   const formatCustom = query => {
     if (!isEmptyObject(query)) {
-      return _chalk.default.white(newline + '🗒 Custom' + newline + (0, _stringify.default)(query, null, 2));
+      return _chalk.default.white(newline + '🗒 Custom' + newline + JSON.stringify(query, null, 2));
     }
 
     return;
@@ -230,19 +217,17 @@ const LogFormatter = () => {
 
   const formatData = data => {
     if (!isEmptyObject(data)) {
-      return _chalk.default.white(newline + '📦 Result Data' + newline + (0, _stringify.default)(data, null, 2));
+      return _chalk.default.white(newline + '📦 Result Data' + newline + JSON.stringify(data, null, 2));
     }
 
     return;
   };
 
   const formatDate = instant => {
-    var _context2, _context3, _context4;
-
     const date = new Date(instant);
-    const hours = (0, _padStart.default)(_context2 = date.getHours().toString()).call(_context2, 2, '0');
-    const minutes = (0, _padStart.default)(_context3 = date.getMinutes().toString()).call(_context3, 2, '0');
-    const seconds = (0, _padStart.default)(_context4 = date.getSeconds().toString()).call(_context4, 2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
     const prettyDate = hours + ':' + minutes + ':' + seconds;
     return _chalk.default.gray(prettyDate);
   };
@@ -252,7 +237,7 @@ const LogFormatter = () => {
     delete errorPropValue['message'];
     delete errorPropValue['stack'];
     delete errorPropValue['type'];
-    return _chalk.default.redBright(newline + newline + `🚨 ${errorType} Info` + newline + newline + (0, _stringify.default)(errorPropValue, null, 2) + newline);
+    return _chalk.default.redBright(newline + newline + `🚨 ${errorType} Info` + newline + newline + JSON.stringify(errorPropValue, null, 2) + newline);
   };
 
   const formatLevel = level => {
@@ -262,7 +247,7 @@ const LogFormatter = () => {
   };
 
   const formatLoadTime = elapsedTime => {
-    const elapsed = (0, _parseInt2.default)(elapsedTime, 10);
+    const elapsed = parseInt(elapsedTime, 10);
     const time = (0, _prettyMs.default)(elapsed);
     return _chalk.default.gray(time);
   };
@@ -332,7 +317,7 @@ const LogFormatter = () => {
 
   const formatQuery = query => {
     if (!isEmptyObject(query)) {
-      return _chalk.default.white(newline + '🔭 Query' + newline + (0, _stringify.default)(query, null, 2));
+      return _chalk.default.white(newline + '🔭 Query' + newline + JSON.stringify(query, null, 2));
     }
 
     return;
@@ -340,7 +325,7 @@ const LogFormatter = () => {
 
   const formatResponseCache = responseCache => {
     if (!isEmptyObject(responseCache)) {
-      return _chalk.default.white(newline + '💾 Response Cache' + newline + (0, _stringify.default)(responseCache, null, 2));
+      return _chalk.default.white(newline + '💾 Response Cache' + newline + JSON.stringify(responseCache, null, 2));
     }
 
     return;
@@ -357,7 +342,7 @@ const LogFormatter = () => {
 
   const formatTracing = data => {
     if (!isEmptyObject(data)) {
-      return _chalk.default.white(newline + '⏰ Timing' + newline + (0, _stringify.default)(data, null, 2));
+      return _chalk.default.white(newline + '⏰ Timing' + newline + JSON.stringify(data, null, 2));
     }
 
     return;

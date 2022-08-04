@@ -1,22 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = void 0;
-
-var _indexOf = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/index-of"));
-
-var _splice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/splice"));
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -41,22 +30,18 @@ const handler = async ({
 }) => {
   const rwjsPaths = (0, _index.getPaths)(); // Prisma only supports '--help', but Redwood CLI supports `prisma <command> help`
 
-  const helpIndex = (0, _indexOf.default)(commands).call(commands, 'help');
+  const helpIndex = commands.indexOf('help');
 
   if (helpIndex !== -1) {
     options.help = true;
-    (0, _splice.default)(commands).call(commands, helpIndex, 1);
+    commands.splice(helpIndex, 1);
   } // Automatically inject options for some commands.
 
 
   const hasHelpOption = options.help || options.h;
 
   if (!hasHelpOption) {
-    var _context;
-
-    if ((0, _includes.default)(_context = ['generate', 'introspect', 'db', 'migrate', 'studio', 'format']).call(_context, commands[0])) {
-      var _context2;
-
+    if (['generate', 'introspect', 'db', 'migrate', 'studio', 'format'].includes(commands[0])) {
       if (!_fs.default.existsSync(rwjsPaths.api.dbSchema)) {
         console.error();
         console.error(_colors.default.error('No Prisma Schema found.'));
@@ -67,7 +52,7 @@ const handler = async ({
 
       options.schema = `${rwjsPaths.api.dbSchema}`;
 
-      if ((0, _includes.default)(_context2 = ['seed', 'diff']).call(_context2, commands[1])) {
+      if (['seed', 'diff'].includes(commands[1])) {
         delete options.schema;
       }
     }
@@ -76,7 +61,7 @@ const handler = async ({
 
   const args = commands;
 
-  for (const [name, value] of (0, _entries.default)(options)) {
+  for (const [name, value] of Object.entries(options)) {
     // Allow both long and short form commands, e.g. --name and -n
     args.push(name.length > 1 ? `--${name}` : `-${name}`);
 

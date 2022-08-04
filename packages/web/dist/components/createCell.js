@@ -1,24 +1,15 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.createCell = createCell;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/extends"));
 
 var _react = _interopRequireDefault(require("react"));
-
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
-
-var _isArray = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/array/is-array"));
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
 
 var _graphql = require("../graphql");
 
@@ -85,7 +76,7 @@ var _GraphQLHooksProvider = require("./GraphQLHooksProvider");
  * ```
  */
 const dataField = data => {
-  return data[(0, _keys.default)(data)[0]];
+  return data[Object.keys(data)[0]];
 };
 
 const isDataNull = data => {
@@ -94,7 +85,7 @@ const isDataNull = data => {
 
 const isDataEmptyArray = data => {
   const field = dataField(data);
-  return (0, _isArray.default)(field) && field.length === 0;
+  return Array.isArray(field) && field.length === 0;
 };
 
 const isDataEmpty = data => {
@@ -163,7 +154,7 @@ function createCell(_ref) {
       let cacheKey;
 
       if (operationName) {
-        cacheKey = operationName + '_' + (0, _stringify.default)(variables);
+        cacheKey = operationName + '_' + JSON.stringify(variables);
       } else {
         const cellName = displayName === 'Cell' ? 'the cell' : displayName;
         throw new Error("The gql query in ".concat(cellName, " is missing an operation name. ") + 'Something like FindBlogPostQuery in ' + '`query FindBlogPostQuery($id: Int!)`');

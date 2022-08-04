@@ -1,11 +1,8 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.ValidationError = exports.UserInputError = exports.SyntaxError = exports.RedwoodGraphQLError = exports.PersistedQueryNotSupportedError = exports.PersistedQueryNotFoundError = exports.ForbiddenError = exports.AuthenticationError = void 0;
 
 var _common = require("@graphql-yoga/common");

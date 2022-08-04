@@ -1,11 +1,8 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.postgresDatabaseService = exports.mysqlDatabaseService = exports.flightcontrolConfig = exports.databaseEnvVariables = void 0;
 const flightcontrolConfig = {
   environments: [{

@@ -1,20 +1,17 @@
 "use strict";
 
-var _Object$defineProperty2 = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty2(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = void 0;
 
-var _defineProperty = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/define-property"));
+require("core-js/modules/esnext.async-iterator.find.js");
 
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.iterator.find.js");
 
 var _classPrivateFieldLooseBase2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/classPrivateFieldLooseBase"));
 
@@ -95,16 +92,14 @@ class RelationProxy {
 exports.default = RelationProxy;
 
 function _addHasManyRelations2(record, hasMany) {
-  for (const [name, options] of (0, _entries.default)(hasMany)) {
-    var _context;
-
+  for (const [name, options] of Object.entries(hasMany)) {
     // Property already defined from a previous usage, don't try to define again
     // eslint-disable-next-line
     if (record.hasOwnProperty(name)) {
       continue;
     }
 
-    const model = (0, _find.default)(_context = record.constructor.requiredModels).call(_context, requiredModel => {
+    const model = record.constructor.requiredModels.find(requiredModel => {
       return requiredModel.name === options.modelName;
     });
 
@@ -113,7 +108,7 @@ function _addHasManyRelations2(record, hasMany) {
       continue;
     }
 
-    (0, _defineProperty.default)(record, name, {
+    Object.defineProperty(record, name, {
       get() {
         if (options.foreignKey === null) {
           // implicit many-to-many
@@ -149,16 +144,14 @@ function _addHasManyRelations2(record, hasMany) {
 }
 
 function _addBelongsToRelations2(record, belongsTo) {
-  for (const [name, options] of (0, _entries.default)(belongsTo)) {
-    var _context2;
-
+  for (const [name, options] of Object.entries(belongsTo)) {
     // Property already defined from a previous usage, don't try to define again
     // eslint-disable-next-line
     if (record.hasOwnProperty(name)) {
       continue;
     }
 
-    const model = (0, _find.default)(_context2 = record.constructor.requiredModels).call(_context2, requiredModel => {
+    const model = record.constructor.requiredModels.find(requiredModel => {
       return requiredModel.name === options.modelName;
     });
 
@@ -167,7 +160,7 @@ function _addBelongsToRelations2(record, belongsTo) {
       continue;
     }
 
-    (0, _defineProperty.default)(record, name, {
+    Object.defineProperty(record, name, {
       async get() {
         return await model.findBy({
           [options.primaryKey]: record[options.foreignKey]
@@ -179,9 +172,9 @@ function _addBelongsToRelations2(record, belongsTo) {
   }
 }
 
-(0, _defineProperty.default)(RelationProxy, _addBelongsToRelations, {
+Object.defineProperty(RelationProxy, _addBelongsToRelations, {
   value: _addBelongsToRelations2
 });
-(0, _defineProperty.default)(RelationProxy, _addHasManyRelations, {
+Object.defineProperty(RelationProxy, _addHasManyRelations, {
   value: _addHasManyRelations2
 });

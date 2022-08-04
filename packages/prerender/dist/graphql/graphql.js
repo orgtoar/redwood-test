@@ -1,19 +1,12 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.executeQuery = executeQuery;
 exports.getGqlHandler = getGqlHandler;
-
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
 
 var _interopRequireWildcard2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/interopRequireWildcard"));
 
@@ -41,7 +34,7 @@ async function getGqlHandler() {
 
   const {
     handler
-  } = await _promise.default.resolve(`${gqlPath}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
+  } = await Promise.resolve(`${gqlPath}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
   return async operation => {
     return await handler(buildApiEvent(operation), buildContext());
   };
@@ -49,7 +42,7 @@ async function getGqlHandler() {
 
 function buildApiEvent(body) {
   return {
-    body: (0, _stringify.default)(body),
+    body: JSON.stringify(body),
     headers: {
       origin: 'http://localhost:8910',
       accept: '*/*',

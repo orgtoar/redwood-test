@@ -1,30 +1,13 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
+var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.DevFatalErrorPage = void 0;
-
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
-var _slice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/slice"));
-
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
-
-var _padStart = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/pad-start"));
-
-var _concat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/concat"));
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -47,8 +30,6 @@ if (/^[A-Z]:\\/.test(srcRoot)) {
 
 
 const DevFatalErrorPage = props => {
-  var _context;
-
   // Safety fallback
   if (!props.error) {
     return /*#__PURE__*/_react.default.createElement("h3", null, "Could not render the error page due to a missing error, please see the console for more details.");
@@ -79,7 +60,7 @@ const DevFatalErrorPage = props => {
     className: "error-message"
   }, prettyMessage(msg))), /*#__PURE__*/_react.default.createElement("div", {
     className: "error-stack"
-  }, (0, _map.default)(_context = stack.items).call(_context, (entry, i) => /*#__PURE__*/_react.default.createElement(StackEntry, {
+  }, stack.items.map((entry, i) => /*#__PURE__*/_react.default.createElement(StackEntry, {
     key: i,
     entry: entry,
     i: i,
@@ -92,12 +73,10 @@ const DevFatalErrorPage = props => {
 exports.DevFatalErrorPage = DevFatalErrorPage;
 
 function hideStackLine(fileReference) {
-  return fileReference.length === 1 || (0, _includes.default)(fileReference).call(fileReference, 'node_modules/react-dom');
+  return fileReference.length === 1 || fileReference.includes('node_modules/react-dom');
 }
 
 function StackEntry(_ref) {
-  var _context2, _context3;
-
   let {
     entry,
     i
@@ -126,7 +105,7 @@ function StackEntry(_ref) {
     end = maxLines;
   }
 
-  const lines = (0, _slice.default)(_context2 = sourceFile.lines).call(_context2, start, end);
+  const lines = sourceFile.lines.slice(start, end);
   const lineNumberWidth = String(start + lines.length).length;
   const highlightIndex = (line || 0) - start - 1;
   const onLastLine = highlightIndex === lines.length - 1;
@@ -141,44 +120,38 @@ function StackEntry(_ref) {
   }, props.children) : /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, props.children);
 
   const fileReference = !lines.length ? '[System]' : shortestPath(fileShort);
-  const rootClasses = (0, _filter.default)(_context3 = ['stack-entry', !(0, _includes.default)(fileReference).call(fileReference, 'node_modules') && 'rwfw', i === 0 && ' first', lines.length && 'clickable']).call(_context3, Boolean);
+  const rootClasses = ['stack-entry', !fileReference.includes('node_modules') && 'rwfw', i === 0 && ' first', lines.length && 'clickable'].filter(Boolean);
   return hideStackLine(fileReference) ? /*#__PURE__*/_react.default.createElement("div", null) : /*#__PURE__*/_react.default.createElement(LinkToVSCode, null, /*#__PURE__*/_react.default.createElement("div", {
     className: rootClasses.join(' ')
   }, /*#__PURE__*/_react.default.createElement("div", {
     className: "file"
   }, fileReference + ' in ' + entry.callee), expanded && !!lines.length && /*#__PURE__*/_react.default.createElement("div", {
     className: 'lines' + (onLastLine ? '.no-fade' : '')
-  }, (0, _map.default)(lines).call(lines, (text, i) => {
-    var _context4;
-
+  }, lines.map((text, i) => {
     return /*#__PURE__*/_react.default.createElement("div", {
       key: i,
       className: 'line' + (i === highlightIndex ? ' line-hili' : '')
     }, /*#__PURE__*/_react.default.createElement("span", {
       className: "line-number"
-    }, (0, _padStart.default)(_context4 = String(start + i + 1)).call(_context4, lineNumberWidth, ' ')), /*#__PURE__*/_react.default.createElement("span", {
+    }, String(start + i + 1).padStart(lineNumberWidth, ' ')), /*#__PURE__*/_react.default.createElement("span", {
       className: "line-text"
     }, i === highlightIndex ? renderHighlightedLine(text, column || 0) : text));
   }))));
 
   function renderHighlightedLine(text, column) {
-    const [before, after] = [(0, _slice.default)(text).call(text, 0, column - 1), (0, _slice.default)(text).call(text, column - 1)];
+    const [before, after] = [text.slice(0, column - 1), text.slice(column - 1)];
     return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, before, /*#__PURE__*/_react.default.createElement("strong", null, after));
   }
 
   function shouldHideEntry(entry, i) {
-    var _context5;
-
-    return (entry.thirdParty || entry['native'] || entry.hide || (0, _includes.default)(_context5 = entry.fileShort).call(_context5, 'node_modules')) && i !== 0;
+    return (entry.thirdParty || entry['native'] || entry.hide || entry.fileShort.includes('node_modules')) && i !== 0;
   }
 }
 
 function toVSCodeURL(entry) {
-  var _context6, _context7, _context8;
-
   // To account for folks using vscode-insiders etc
   const scheme = process.env.REDWOOD_ENV_EDITOR || 'vscode';
-  return (0, _concat.default)(_context6 = (0, _concat.default)(_context7 = (0, _concat.default)(_context8 = "".concat(scheme, "://file/")).call(_context8, entry.fileShort, ":")).call(_context7, entry.line, ":")).call(_context6, entry.column);
+  return "".concat(scheme, "://file/").concat(entry.fileShort, ":").concat(entry.line, ":").concat(entry.column);
 }
 
 function prettyMessage(msg) {
@@ -192,7 +165,7 @@ function ResponseRequest(props) {
   const [openResponse, setOpenResponse] = (0, _react.useState)(false);
   return /*#__PURE__*/_react.default.createElement("div", {
     className: "request-response"
-  }, props.error.mostRecentRequest ? /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h4", null, "Request: ", props.error.mostRecentRequest.operationName), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h5", null, "Variables:"), /*#__PURE__*/_react.default.createElement("code", null, /*#__PURE__*/_react.default.createElement("pre", null, (0, _stringify.default)(props.error.mostRecentRequest.variables, null, '  ')))), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h5", null, "Query:"), /*#__PURE__*/_react.default.createElement("code", null, /*#__PURE__*/_react.default.createElement("pre", {
+  }, props.error.mostRecentRequest ? /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h4", null, "Request: ", props.error.mostRecentRequest.operationName), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h5", null, "Variables:"), /*#__PURE__*/_react.default.createElement("code", null, /*#__PURE__*/_react.default.createElement("pre", null, JSON.stringify(props.error.mostRecentRequest.variables, null, '  ')))), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h5", null, "Query:"), /*#__PURE__*/_react.default.createElement("code", null, /*#__PURE__*/_react.default.createElement("pre", {
     onClick: () => setOpenQuery(!openQuery),
     className: openQuery ? 'open' : 'preview'
   }, props.error.mostRecentRequest.query)))) : null, props.error.mostRecentRequest ? /*#__PURE__*/_react.default.createElement("div", {
@@ -200,7 +173,7 @@ function ResponseRequest(props) {
   }, /*#__PURE__*/_react.default.createElement("h4", null, "Response"), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h5", null, "JSON:"), /*#__PURE__*/_react.default.createElement("code", null, /*#__PURE__*/_react.default.createElement("pre", {
     onClick: () => setOpenResponse(!openResponse),
     className: openResponse ? 'open' : 'preview'
-  }, (0, _stringify.default)(props.error.mostRecentResponse, null, '  '))))) : null);
+  }, JSON.stringify(props.error.mostRecentResponse, null, '  '))))) : null);
 }
 
 const css = "\nbody {\n  background-color: rgb(253, 248, 246) !important;\n  font-family: \"Open Sans\", system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif  !important;\n}\n\n.panic-overlay {\n  background-color: white;\n  padding: 0 2.5em;\n}\n\n.panic-overlay strong {\n  font-weight: bold;\n}\n\nmain.error-page nav {\n  display: flex;\n  flex-direction: row;\n  align: center;\n  justify-content: space-between;\n  padding: 1em 2.5em;\n}\n\nmain.error-page  nav h1 {\n  color: black;\n  margin: 0;\n  padding: 0;\n  font-size: 1.2em;\n  font-weight: 400;\n  opacity: 1;\n  color: rgb(191, 71, 34);\n}\n\nmain.error-page nav h1 a {\n  color: black;\n  text-decoration: underline;\n}\n\nmain.error-page nav div {\n  display: flex;\n  align-items: center;\n  line-height: 2em;\n}\n\nmain.error-page nav div a {\n  display: flex;\n  margin: 0 0.3em;\n}\n\nmain.error-page nav svg {\n  width: 24px;\n  height: 24px;\n  fill: rgb(191, 71, 34);\n}\n\nmain.error-page nav svg.discourse {\n  height: 20px;\n  width: 20px;\n}\n\nmain.error-page nav svg:hover {\n  fill: rgb(200, 32, 32);\n}\n\n.request-response div div code,\n.request-response div div pre {\n  background-color: transparent !important;\n}\n\n.panic-overlay a {\n  text-decoration: none;\n}\n\n.panic-overlay .error {\n  padding: 3em 0;\n}\n\n.panic-overlay .error-title {\n  display: flex;\n  align-items: stretch;\n}\n\n.panic-overlay .error-type {\n  min-height: 2.8em;\n  display: flex !important;\n  align-items: center;\n  padding: 0 1em;\n  background: rgb(195, 74, 37);\n  color: white;\n  margin-right: 2em;\n  white-space: nowrap;\n  text-align: center;\n}\n.panic-overlay .error-counter {\n  color: white;\n  opacity: 0.3;\n  position: absolute;\n  left: 0.8em;\n}\n.panic-overlay .error-message {\n  display: flex !important;\n  align-items: center;\n  font-weight: 300;\n  line-height: 1.1em;\n  font-size: 2.8em;\n  word-break: break-all;\n  white-space: pre-wrap;\n}\n.panic-overlay .error-stack {\n  margin-top: 2em;\n  white-space: pre;\n  padding-left: var(--left-pad);\n}\n\n.panic-overlay .stack-entry.clickable {\n  cursor: pointer;\n}\n\n.panic-overlay .stack-entry {\n  margin-left: 2.5em;\n}\n\n.panic-overlay .stack-entry.rwfw {\n  font-weight: bold;\n}\n\n.panic-overlay .stack-entry .file {\n  color: rgb(195, 74, 37, 0.8);\n}\n\n.panic-overlay .stack-entry.first .file {\n  font-weight: bold;\n  color: rgb(200, 47, 47);\n}\n\n.panic-overlay .file strong {\n  font-weight: normal;\n}\n.panic-overlay .file:before,\n.panic-overlay .more:before {\n  content: \"@ \";\n  opacity: 0.5;\n  margin-left: -1.25em;\n}\n.panic-overlay .more:before {\n  content: \"\u25B7 \";\n  opacity: 0.5;\n}\n.panic-overlay .more {\n  opacity: 0.25;\n  color: black;\n  font-size: 0.835em;\n  cursor: pointer;\n  text-align: center;\n  display: none;\n}\n.panic-overlay .more em {\n  font-style: normal;\n  font-weight: normal;\n  border-bottom: 1px dashed black;\n}\n.panic-overlay .collapsed .panic-overlay .more {\n  display: block;\n}\n.panic-overlay .lines, .request-response code {\n  color: rgb(187, 165, 165);\n  font-size: 0.835em;\n  margin-bottom: 2.5em;\n  padding: 2rem;\n  font-family: Menlo, Monaco, \"Courier New\", Courier, monospace;\n}\n.panic-overlay .lines:not(.panic-overlay .no-fade) {\n  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0));\n  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0));\n}\n.panic-overlay .line-number {\n  padding-right: 1.5em;\n  opacity: 0.5;\n}\n.panic-overlay .line-hili {\n  background: rgb(253, 248, 246);\n  color: #5f4545;\n}\n.panic-overlay .stack-entry:first-child .panic-overlay .line-hili strong {\n  text-decoration: underline wavy #ff0040;\n}\n.panic-overlay .line-hili em {\n  font-style: italic;\n  color: rgb(195, 74, 37);\n  font-size: 0.75em;\n  margin-left: 2em;\n  opacity: 0.25;\n  position: relative;\n  top: -0.115em;\n  white-space: nowrap;\n}\n.panic-overlay .line-hili em:before {\n  content: \"\u2190 \";\n}\n.panic-overlay .no-source {\n  font-style: italic;\n}\n\n.panic-overlay .request-response {\n  margin-top: 2rem;\n  display: flex;\n  flex-direction: row;\n}\n\n.panic-overlay .request-response > div {\n  flex: 1;\n}\n\n.panic-overlay .request-response .response {\n  margin-left: 2rem;\n}\n\n.panic-overlay .request-response h4 {\n  background-color: rgb(195, 74, 37);\n  color: white;\n  font-size: 1.5rem;\n  padding: 0.2rem 1rem;\n}\n\n.panic-overlay .request-response > div > div {\n  margin: 1rem 1rem;\n}\n\n.panic-overlay .request-response pre {\n  background-color: rgb(253, 248, 246);\n  padding: 1rem 1rem;\n  color: black;\n}\n\n.panic-overlay .request-response pre.open {\n  max-height: auto;\n}\n\n.panic-overlay .request-response pre.preview {\n  max-height: 13.5rem;\n  overflow-y: auto;\n\n  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0));\n  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0));\n}\n\n@media only screen and (max-width: 640px) {\n  .panic-overlay {\n    font-size: 15px;\n  }\n\n  .panic-overlay h1 {\n    margin: 40px 0;\n  }\n}\n@media only screen and (max-width: 500px) {\n  .panic-overlay {\n    font-size: 14px;\n  }\n\n  .panic-overlay h1 {\n    margin: 30px 0;\n  }\n}\n";

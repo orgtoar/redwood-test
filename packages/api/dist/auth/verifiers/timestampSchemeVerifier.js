@@ -1,16 +1,9 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = void 0;
-
-var _now = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/date/now"));
 
 var _crypto = require("crypto");
 
@@ -60,7 +53,7 @@ const getHmac = ({
 const createSignature = ({
   payload,
   secret = _common.DEFAULT_WEBHOOK_SECRET,
-  timestamp = (0, _now.default)()
+  timestamp = Date.now()
 }) => {
   const hmac = getHmac({
     secret
@@ -113,7 +106,7 @@ const verifySignature = ({
 
   const signedStamp = Number(match[1]);
   const signedPayload = match[2];
-  const timestamp = (_options$currentTimes = options === null || options === void 0 ? void 0 : options.currentTimestampOverride) !== null && _options$currentTimes !== void 0 ? _options$currentTimes : (0, _now.default)();
+  const timestamp = (_options$currentTimes = options === null || options === void 0 ? void 0 : options.currentTimestampOverride) !== null && _options$currentTimes !== void 0 ? _options$currentTimes : Date.now();
   const tolerance = (_options$tolerance = options === null || options === void 0 ? void 0 : options.tolerance) !== null && _options$tolerance !== void 0 ? _options$tolerance : _common.DEFAULT_TOLERANCE;
   const difference = Math.abs(timestamp - signedStamp);
 

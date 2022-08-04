@@ -1,32 +1,33 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = exports.files = exports.description = exports.defaults = exports.command = exports.builder = void 0;
 
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _indexOf = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/index-of"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.iterator.filter.js");
 
-var _reduce = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/reduce"));
+require("core-js/modules/esnext.async-iterator.find.js");
 
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
+require("core-js/modules/esnext.iterator.find.js");
 
-var _concat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/concat"));
+require("core-js/modules/esnext.async-iterator.reduce.js");
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.iterator.reduce.js");
+
+require("core-js/modules/esnext.async-iterator.for-each.js");
+
+require("core-js/modules/esnext.iterator.for-each.js");
 
 var _path = _interopRequireDefault(require("path"));
 
@@ -83,7 +84,7 @@ const missingIdConsoleMessage = () => {
 };
 
 const modelFieldToSDL = (field, required = true, types = {}) => {
-  if ((0, _entries.default)(types).length) {
+  if (Object.entries(types).length) {
     field.type = field.kind === 'object' ? idType(types[field.type]) : field.type;
   }
 
@@ -95,17 +96,13 @@ const modelFieldToSDL = (field, required = true, types = {}) => {
 };
 
 const querySDL = model => {
-  var _context;
-
-  return (0, _map.default)(_context = model.fields).call(_context, field => modelFieldToSDL(field));
+  return model.fields.map(field => modelFieldToSDL(field));
 };
 
 const inputSDL = (model, required, types = {}) => {
-  var _context2, _context3;
-
-  return (0, _map.default)(_context2 = (0, _filter.default)(_context3 = model.fields).call(_context3, field => {
-    return (0, _indexOf.default)(IGNORE_FIELDS_FOR_INPUT).call(IGNORE_FIELDS_FOR_INPUT, field.name) === -1 && field.kind !== 'object';
-  })).call(_context2, field => modelFieldToSDL(field, required, types));
+  return model.fields.filter(field => {
+    return IGNORE_FIELDS_FOR_INPUT.indexOf(field.name) === -1 && field.kind !== 'object';
+  }).map(field => modelFieldToSDL(field, required, types));
 }; // creates the CreateInput type (all fields are required)
 
 
@@ -119,13 +116,11 @@ const updateInputSDL = (model, types = {}) => {
 };
 
 const idType = (model, crud) => {
-  var _context4;
-
   if (!crud) {
     return undefined;
   }
 
-  const idField = (0, _find.default)(_context4 = model.fields).call(_context4, field => field.isId);
+  const idField = model.fields.find(field => field.isId);
 
   if (!idField) {
     missingIdConsoleMessage();
@@ -136,21 +131,19 @@ const idType = (model, crud) => {
 };
 
 const sdlFromSchemaModel = async (name, crud) => {
-  var _context5, _context6, _context7, _context8, _context9, _context10;
-
   const model = await (0, _schemaHelpers.getSchema)(name); // get models for user-defined types referenced
 
-  const types = (0, _reduce.default)(_context5 = await _promise.default.all((0, _map.default)(_context6 = (0, _filter.default)(_context7 = model.fields).call(_context7, field => field.kind === 'object')).call(_context6, async field => {
+  const types = (await Promise.all(model.fields.filter(field => field.kind === 'object').map(async field => {
     const model = await (0, _schemaHelpers.getSchema)(field.type);
     return model;
-  }))).call(_context5, (acc, cur) => ({ ...acc,
+  }))).reduce((acc, cur) => ({ ...acc,
     [cur.name]: cur
   }), {}); // Get enum definition and fields from user-defined types
 
-  const enums = (0, _reduce.default)(_context8 = await _promise.default.all((0, _map.default)(_context9 = (0, _filter.default)(_context10 = model.fields).call(_context10, field => field.kind === 'enum')).call(_context9, async field => {
+  const enums = (await Promise.all(model.fields.filter(field => field.kind === 'enum').map(async field => {
     const enumDef = await (0, _schemaHelpers.getEnum)(field.type);
     return enumDef;
-  }))).call(_context8, (acc, curr) => (0, _concat.default)(acc).call(acc, curr), []);
+  }))).reduce((acc, curr) => acc.concat(curr), []);
   return {
     query: querySDL(model).join('\n    '),
     createInput: createInputSDL(model, types).join('\n    '),
@@ -224,8 +217,6 @@ const description = 'Generate a GraphQL schema and service component based on a 
 exports.description = description;
 
 const builder = yargs => {
-  var _context11;
-
   yargs.positional('model', {
     description: 'Model to generate the sdl for',
     type: 'string'
@@ -234,7 +225,7 @@ const builder = yargs => {
     type: 'boolean'
   }).epilogue(`Also see the ${(0, _terminalLink.default)('Redwood CLI Reference', 'https://redwoodjs.com/docs/cli-commands#generate-sdl')}`); // Merge default options in
 
-  (0, _forEach.default)(_context11 = (0, _entries.default)(defaults)).call(_context11, ([option, config]) => {
+  Object.entries(defaults).forEach(([option, config]) => {
     yargs.option(option, config);
   });
 }; // TODO: Add --dry-run command
@@ -254,14 +245,12 @@ const handler = async ({
   }
 
   try {
-    var _context12;
-
     const {
       name
     } = await (0, _schemaHelpers.verifyModelName)({
       name: model
     });
-    const tasks = new _listr.default((0, _filter.default)(_context12 = [{
+    const tasks = new _listr.default([{
       title: 'Generating SDL files...',
       task: async () => {
         const f = await files({
@@ -277,7 +266,7 @@ const handler = async ({
     }, {
       title: `Generating types ...`,
       task: _generate.generate
-    }]).call(_context12, Boolean), {
+    }].filter(Boolean), {
       collapse: false,
       exitOnError: true
     });

@@ -1,16 +1,9 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = _default;
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
 
 var _path = require("path");
 
@@ -45,15 +38,13 @@ function _default({
     name: 'babel-plugin-redwood-prerender-media-imports',
     visitor: {
       ImportDeclaration(p, state) {
-        var _context;
-
         const importPath = p.node.source.value;
         const ext = (0, _path.extname)(importPath);
         const options = { ...defaultOptions,
           ...state.opts
         };
 
-        if (ext && (0, _includes.default)(_context = options.extensions).call(_context, ext)) {
+        if (ext && options.extensions.includes(ext)) {
           const importConstName = getVariableName(p);
           const webpackManifestKey = `static/media/${(0, _path.basename)(p.node.source.value)}`;
           const copiedAssetPath = webpackManifest[webpackManifestKey]; // If webpack has copied it over, use the path from the asset manifest

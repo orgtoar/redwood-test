@@ -1,28 +1,19 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.printHeaders = exports.handler = exports.getOutputPath = exports.generatePayload = exports.description = exports.command = exports.builder = void 0;
 
+require("core-js/modules/esnext.async-iterator.filter.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
+
 var _interopRequireWildcard2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/interopRequireWildcard"));
-
-var _parseInt2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/parse-int"));
-
-var _now = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/date/now"));
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
-
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
-
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
-
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -50,11 +41,11 @@ var _project = require("../../../lib/project");
 
 // tests if id, which is always a string from cli, is actually a number or uuid
 const isNumeric = id => {
-  return /^\d+$/.test((0, _parseInt2.default)(id));
+  return /^\d+$/.test(parseInt(id));
 };
 
 const getExpiryTime = expiry => {
-  return expiry ? (0, _now.default)() + expiry * 60 * 1000 : (0, _now.default)() + 3600 * 1000;
+  return expiry ? Date.now() + expiry * 60 * 1000 : Date.now() + 3600 * 1000;
 };
 
 const getDBAuthHeader = userId => {
@@ -66,9 +57,9 @@ const getDBAuthHeader = userId => {
     throw new Error('dbAuth requires a SESSION_SECRET environment variable that is used to encrypt session cookies. Use `yarn rw g secret` to create one, then add to your `.env` file. DO NOT check this variable in your version control system!!');
   }
 
-  const id = isNumeric(userId) ? (0, _parseInt2.default)(userId) : userId;
+  const id = isNumeric(userId) ? parseInt(userId) : userId;
 
-  const cookie = _cryptoJs.default.AES.encrypt((0, _stringify.default)({
+  const cookie = _cryptoJs.default.AES.encrypt(JSON.stringify({
     id
   }) + ';' + (0, _uuid.v4)(), process.env.SESSION_SECRET).toString();
 
@@ -174,7 +165,7 @@ const printHeaders = async () => {
     throw new Error('Must run yarn rw setup graphiql <provider> to generate headers before viewing');
   }
 
-  const script = await _promise.default.resolve(`${srcPath}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
+  const script = await Promise.resolve(`${srcPath}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
   await script.default();
 };
 
@@ -186,7 +177,7 @@ exports.description = description;
 
 const builder = yargs => {
   yargs.positional('provider', {
-    choices: (0, _keys.default)(supportedProviders),
+    choices: Object.keys(supportedProviders),
     description: 'Auth provider used',
     type: 'string'
   }).option('id', {
@@ -219,10 +210,8 @@ const handler = async ({
   expiry,
   view
 }) => {
-  var _context;
-
   let payload;
-  const tasks = new _listr.default((0, _filter.default)(_context = [{
+  const tasks = new _listr.default([{
     title: 'Generating graphiql header...',
     task: () => {
       payload = generatePayload(provider, id, token, expiry);
@@ -233,10 +222,10 @@ const handler = async ({
       const fileName = token || provider === 'dbAuth' ? 'graphiql-token.ts.template' : 'graphiql-mock.ts.template';
       const content = (0, _lib.generateTemplate)(_path.default.join(__dirname, 'templates', fileName), {
         name: 'graphiql',
-        payload: (0, _stringify.default)(payload),
+        payload: JSON.stringify(payload),
         env: supportedProviders[provider].env,
         provider,
-        expireTime: expiry ? new Date((0, _now.default)() + expiry * 60 * 1000) : new Date((0, _now.default)() + 3600 * 1000)
+        expireTime: expiry ? new Date(Date.now() + expiry * 60 * 1000) : new Date(Date.now() + 3600 * 1000)
       });
       const outputPath = getOutputPath();
       return (0, _lib.writeFilesTask)({
@@ -261,7 +250,7 @@ const handler = async ({
         await (0, _execa.default)('yarn', ['workspace', 'api', 'add', 'jsonwebtoken']);
       }
     }
-  }]).call(_context, Boolean), {
+  }].filter(Boolean), {
     collapse: false
   });
 

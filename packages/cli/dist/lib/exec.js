@@ -1,17 +1,12 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.configureBabel = configureBabel;
 exports.runScriptFunction = runScriptFunction;
-
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
 
 var _interopRequireWildcard2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/interopRequireWildcard"));
 
@@ -28,13 +23,13 @@ async function runScriptFunction({
   functionName,
   args
 }) {
-  const script = await _promise.default.resolve(`${scriptPath}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
+  const script = await Promise.resolve(`${scriptPath}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
   const returnValue = await script[functionName](args);
 
   try {
     const {
       db
-    } = await _promise.default.resolve(`${_path.default.join((0, _paths.getPaths)().api.lib, 'db')}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
+    } = await Promise.resolve(`${_path.default.join((0, _paths.getPaths)().api.lib, 'db')}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
     db.$disconnect();
   } catch (e) {// silence
   }

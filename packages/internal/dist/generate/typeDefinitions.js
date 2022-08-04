@@ -1,22 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.mirrorPathForDirectoryNamedModules = exports.mirrorPathForCell = exports.generateTypeDefs = exports.generateTypeDefTestMocks = exports.generateTypeDefScenarios = exports.generateTypeDefRouterRoutes = exports.generateTypeDefRouterPages = exports.generateTypeDefGlobalContext = exports.generateTypeDefGlobImports = exports.generateTypeDefCurrentUser = exports.generateMirrorDirectoryNamedModules = exports.generateMirrorDirectoryNamedModule = exports.generateMirrorCells = exports.generateMirrorCell = void 0;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _flat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/flat"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -67,10 +66,8 @@ const generateTypeDefs = async () => {
 exports.generateTypeDefs = generateTypeDefs;
 
 const generateMirrorDirectoryNamedModules = () => {
-  var _context;
-
   const rwjsPaths = (0, _paths.getPaths)();
-  return (0, _map.default)(_context = (0, _files.findDirectoryNamedModules)()).call(_context, p => generateMirrorDirectoryNamedModule(p, rwjsPaths));
+  return (0, _files.findDirectoryNamedModules)().map(p => generateMirrorDirectoryNamedModule(p, rwjsPaths));
 };
 
 exports.generateMirrorDirectoryNamedModules = generateMirrorDirectoryNamedModules;
@@ -103,10 +100,8 @@ const generateMirrorDirectoryNamedModule = (p, rwjsPaths = (0, _paths.getPaths)(
 exports.generateMirrorDirectoryNamedModule = generateMirrorDirectoryNamedModule;
 
 const generateMirrorCells = () => {
-  var _context2;
-
   const rwjsPaths = (0, _paths.getPaths)();
-  return (0, _map.default)(_context2 = (0, _files.findCells)()).call(_context2, p => generateMirrorCell(p, rwjsPaths));
+  return (0, _files.findCells)().map(p => generateMirrorCell(p, rwjsPaths));
 };
 
 exports.generateMirrorCells = generateMirrorCells;
@@ -163,7 +158,7 @@ exports.generateMirrorCell = generateMirrorCell;
 const writeTypeDefIncludeFile = (template, values = {}) => {
   const rwjsPaths = (0, _paths.getPaths)();
 
-  const typeDefPath = _path.default.join((0, _includes.default)(rwjsPaths.generated.types), template.replace('.template', ''));
+  const typeDefPath = _path.default.join(rwjsPaths.generated.types.includes, template.replace('.template', ''));
 
   const templateFilename = _path.default.join('templates', template);
 
@@ -172,10 +167,8 @@ const writeTypeDefIncludeFile = (template, values = {}) => {
 };
 
 const generateTypeDefRouterRoutes = () => {
-  var _context3;
-
   const ast = (0, _ast.fileToAst)((0, _paths.getPaths)().web.routes);
-  const routes = (0, _filter.default)(_context3 = (0, _jsx.getJsxElements)(ast, 'Route')).call(_context3, x => {
+  const routes = (0, _jsx.getJsxElements)(ast, 'Route').filter(x => {
     var _x$props, _x$props2;
 
     // All generated "routes" should have a "name" and "path" prop-value
@@ -210,9 +203,7 @@ const generateTypeDefScenarios = () => {
 exports.generateTypeDefScenarios = generateTypeDefScenarios;
 
 const generateTypeDefTestMocks = () => {
-  var _context4;
-
-  return (0, _flat.default)(_context4 = [writeTypeDefIncludeFile('api-test-globals.d.ts.template'), writeTypeDefIncludeFile('web-test-globals.d.ts.template')]).call(_context4);
+  return [writeTypeDefIncludeFile('api-test-globals.d.ts.template'), writeTypeDefIncludeFile('web-test-globals.d.ts.template')].flat();
 };
 
 exports.generateTypeDefTestMocks = generateTypeDefTestMocks;

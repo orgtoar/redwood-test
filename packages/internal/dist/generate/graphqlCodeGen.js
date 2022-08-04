@@ -1,24 +1,27 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.getResolverFnType = exports.generateTypeDefGraphQLWeb = exports.generateTypeDefGraphQLApi = void 0;
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.for-each.js");
 
-var _reduce = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/reduce"));
+require("core-js/modules/esnext.async-iterator.map.js");
+
+require("core-js/modules/esnext.iterator.map.js");
+
+require("core-js/modules/esnext.async-iterator.reduce.js");
+
+require("core-js/modules/esnext.iterator.reduce.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -143,14 +146,12 @@ function getPluginConfig() {
   let prismaModels = {};
 
   try {
-    var _context;
-
     // Extract the models from the prisma client and use those to
     // set up internal redirects for the return values in resolvers.
     const localPrisma = require('@prisma/client');
 
     prismaModels = localPrisma.ModelName;
-    (0, _forEach.default)(_context = (0, _keys.default)(prismaModels)).call(_context, key => {
+    Object.keys(prismaModels).forEach(key => {
       prismaModels[key] = `@prisma/client#${key} as Prisma${key}`;
     }); // This isn't really something you'd put in the GraphQL API, so
     // we can skip the model.
@@ -223,12 +224,12 @@ function getCodegenOptions(documents, config, extraPlugins) {
     typescript: {
       enumsAsTypes: true
     }
-  }, ...(0, _map.default)(extraPlugins).call(extraPlugins, plugin => ({
+  }, ...extraPlugins.map(plugin => ({
     [plugin.name]: plugin.options
   }))];
   const pluginMap = {
     typescript: typescriptPlugin,
-    ...(0, _reduce.default)(extraPlugins).call(extraPlugins, (acc, cur) => ({ ...acc,
+    ...extraPlugins.reduce((acc, cur) => ({ ...acc,
       [cur.name]: cur.codegenPlugin
     }), {})
   };

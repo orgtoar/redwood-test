@@ -1,24 +1,21 @@
 "use strict";
 
-var _Object$defineProperty2 = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty2(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = void 0;
 
-var _defineProperty = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/define-property"));
+require("core-js/modules/esnext.async-iterator.find.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.iterator.find.js");
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.iterator.for-each.js");
 
 var _classPrivateFieldLooseBase2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/classPrivateFieldLooseBase"));
 
@@ -42,27 +39,27 @@ var _parseAttributes = /*#__PURE__*/(0, _classPrivateFieldLooseKey2.default)("pa
 // other models it belongs to or has many of.
 class Reflection {
   constructor(_model) {
-    (0, _defineProperty.default)(this, _parseAttributes, {
+    Object.defineProperty(this, _parseAttributes, {
       value: _parseAttributes2
     });
-    (0, _defineProperty.default)(this, _parseBelongsTo, {
+    Object.defineProperty(this, _parseBelongsTo, {
       value: _parseBelongsTo2
     });
-    (0, _defineProperty.default)(this, _parseHasMany, {
+    Object.defineProperty(this, _parseHasMany, {
       value: _parseHasMany2
     });
-    (0, _defineProperty.default)(this, _schemaForModel, {
+    Object.defineProperty(this, _schemaForModel, {
       value: _schemaForModel2
     });
-    (0, _defineProperty.default)(this, _hasMany, {
+    Object.defineProperty(this, _hasMany, {
       writable: true,
       value: null
     });
-    (0, _defineProperty.default)(this, _belongsTo, {
+    Object.defineProperty(this, _belongsTo, {
       writable: true,
       value: null
     });
-    (0, _defineProperty.default)(this, _attributes, {
+    Object.defineProperty(this, _attributes, {
       writable: true,
       value: null
     });
@@ -99,9 +96,7 @@ class Reflection {
 exports.default = Reflection;
 
 function _schemaForModel2(name = this.model.name) {
-  var _context;
-
-  return (0, _find.default)(_context = this.model.schema.models).call(_context, model => model.name === name);
+  return this.model.schema.models.find(model => model.name === name);
 }
 
 function _parseHasMany2() {
@@ -110,14 +105,12 @@ function _parseHasMany2() {
   const selfSchema = (0, _classPrivateFieldLooseBase2.default)(this, _schemaForModel)[_schemaForModel]();
 
   (0, _classPrivateFieldLooseBase2.default)(this, _hasMany)[_hasMany] = {};
-  selfSchema === null || selfSchema === void 0 ? void 0 : (_selfSchema$fields = selfSchema.fields) === null || _selfSchema$fields === void 0 ? void 0 : (0, _forEach.default)(_selfSchema$fields).call(_selfSchema$fields, field => {
+  selfSchema === null || selfSchema === void 0 ? void 0 : (_selfSchema$fields = selfSchema.fields) === null || _selfSchema$fields === void 0 ? void 0 : _selfSchema$fields.forEach(field => {
     if (field.isList) {
-      var _context2;
-
       // get other side of relationship to determine foreign key name
       const otherSchema = (0, _classPrivateFieldLooseBase2.default)(this, _schemaForModel)[_schemaForModel](field.type);
 
-      const belongsTo = (0, _find.default)(_context2 = otherSchema.fields).call(_context2, field => field.type === this.model.name);
+      const belongsTo = otherSchema.fields.find(field => field.type === this.model.name);
       (0, _classPrivateFieldLooseBase2.default)(this, _hasMany)[_hasMany][field.name] = {
         modelName: field.type,
         referenceName: belongsTo.name,
@@ -135,7 +128,7 @@ function _parseBelongsTo2() {
   const selfSchema = (0, _classPrivateFieldLooseBase2.default)(this, _schemaForModel)[_schemaForModel]();
 
   (0, _classPrivateFieldLooseBase2.default)(this, _belongsTo)[_belongsTo] = {};
-  selfSchema === null || selfSchema === void 0 ? void 0 : (_selfSchema$fields2 = selfSchema.fields) === null || _selfSchema$fields2 === void 0 ? void 0 : (0, _forEach.default)(_selfSchema$fields2).call(_selfSchema$fields2, field => {
+  selfSchema === null || selfSchema === void 0 ? void 0 : (_selfSchema$fields2 = selfSchema.fields) === null || _selfSchema$fields2 === void 0 ? void 0 : _selfSchema$fields2.forEach(field => {
     var _field$relationFromFi;
 
     if ((_field$relationFromFi = field.relationFromFields) !== null && _field$relationFromFi !== void 0 && _field$relationFromFi.length) {
@@ -163,15 +156,13 @@ function _parseAttributes2() {
     (0, _classPrivateFieldLooseBase2.default)(this, _parseBelongsTo)[_parseBelongsTo]();
   }
 
-  selfSchema === null || selfSchema === void 0 ? void 0 : (_selfSchema$fields3 = selfSchema.fields) === null || _selfSchema$fields3 === void 0 ? void 0 : (0, _forEach.default)(_selfSchema$fields3).call(_selfSchema$fields3, field => {
-    var _context3, _context4;
-
+  selfSchema === null || selfSchema === void 0 ? void 0 : (_selfSchema$fields3 = selfSchema.fields) === null || _selfSchema$fields3 === void 0 ? void 0 : _selfSchema$fields3.forEach(field => {
     const {
       name,
       ...props
     } = field;
 
-    if (!(0, _includes.default)(_context3 = (0, _keys.default)((0, _classPrivateFieldLooseBase2.default)(this, _hasMany)[_hasMany])).call(_context3, name) && !(0, _includes.default)(_context4 = (0, _keys.default)((0, _classPrivateFieldLooseBase2.default)(this, _belongsTo)[_belongsTo])).call(_context4, name)) {
+    if (!Object.keys((0, _classPrivateFieldLooseBase2.default)(this, _hasMany)[_hasMany]).includes(name) && !Object.keys((0, _classPrivateFieldLooseBase2.default)(this, _belongsTo)[_belongsTo]).includes(name)) {
       (0, _classPrivateFieldLooseBase2.default)(this, _attributes)[_attributes][name] = props;
     }
   });

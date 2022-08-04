@@ -1,22 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = transform;
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.for-each.js");
+
+require("core-js/modules/esnext.async-iterator.find.js");
+
+require("core-js/modules/esnext.iterator.find.js");
 
 function transform(file, api) {
-  var _context3;
-
   const newPropertyName = {
     constraint: 'match',
     transform: 'parse'
@@ -70,9 +69,7 @@ function transform(file, api) {
           }}
         >
     */
-    (0, _forEach.default)(allParamTypeProperties).call(allParamTypeProperties, paramTypeProperty => {
-      var _context2;
-
+    allParamTypeProperties.forEach(paramTypeProperty => {
       // paramTypeProperty.value could be either ObjectExpression, Identifier
       if (paramTypeProperty.type === 'SpreadProperty' || paramTypeProperty.type === 'SpreadElement' || paramTypeProperty.type === 'ObjectMethod') {
         // We don't handle these other types.
@@ -88,13 +85,13 @@ function transform(file, api) {
           {
             // Even though we have the object but the key is referred as variable
             const paramTypeValueVar = paramTypeProperty.value.name;
-            const paramTypeValueDef = (0, _find.default)(ast).call(ast, j.VariableDeclarator, {
+            const paramTypeValueDef = ast.find(j.VariableDeclarator, {
               id: {
                 name: paramTypeValueVar
               }
             });
-            (0, _forEach.default)(paramTypeValueDef).call(paramTypeValueDef, valueDefNode => {
-              var _valueDefNode$value, _valueDefNode$value$i, _context;
+            paramTypeValueDef.forEach(valueDefNode => {
+              var _valueDefNode$value, _valueDefNode$value$i;
 
               if ((valueDefNode === null || valueDefNode === void 0 ? void 0 : (_valueDefNode$value = valueDefNode.value) === null || _valueDefNode$value === void 0 ? void 0 : (_valueDefNode$value$i = _valueDefNode$value.init) === null || _valueDefNode$value$i === void 0 ? void 0 : _valueDefNode$value$i.type) !== 'ObjectExpression') {
                 // Value must be object but doesn't seem to be case here.
@@ -102,7 +99,7 @@ function transform(file, api) {
               }
 
               const valueDefInit = valueDefNode.value.init;
-              (0, _forEach.default)(_context = valueDefInit.properties).call(_context, valueDefInitProperty => {
+              valueDefInit.properties.forEach(valueDefInitProperty => {
                 renameParamTypeKey(valueDefInitProperty);
               });
             });
@@ -111,7 +108,7 @@ function transform(file, api) {
 
         case 'ObjectExpression':
           // Value is an object
-          (0, _forEach.default)(_context2 = paramTypeProperty.value.properties).call(_context2, property => {
+          paramTypeProperty.value.properties.forEach(property => {
             renameParamTypeKey(property);
           });
           break;
@@ -119,21 +116,19 @@ function transform(file, api) {
     });
   };
 
-  (0, _forEach.default)(_context3 = (0, _find.default)(ast).call(ast, j.JSXElement, {
+  ast.find(j.JSXElement, {
     openingElement: {
       name: {
         name: 'Router'
       }
     }
-  })).call(_context3, routerElement => {
-    var _context4;
-
-    const paramTypeProp = (0, _find.default)(_context4 = j(routerElement.node.openingElement)).call(_context4, j.JSXAttribute, {
+  }).forEach(routerElement => {
+    const paramTypeProp = j(routerElement.node.openingElement).find(j.JSXAttribute, {
       name: {
         name: 'paramTypes'
       }
     });
-    (0, _forEach.default)(paramTypeProp).call(paramTypeProp, prop => {
+    paramTypeProp.forEach(prop => {
       var _prop$value, _prop$value$value;
 
       const paramTypeValue = prop === null || prop === void 0 ? void 0 : (_prop$value = prop.value) === null || _prop$value === void 0 ? void 0 : (_prop$value$value = _prop$value.value) === null || _prop$value$value === void 0 ? void 0 : _prop$value$value.expression; // get the value inside the jsx expression
@@ -145,12 +140,12 @@ function transform(file, api) {
           {
             // <R paramsTypes={myParamTypes}
             // Search the Routes file for variable declaration
-            const variableDefinitions = (0, _find.default)(ast).call(ast, j.VariableDeclarator, {
+            const variableDefinitions = ast.find(j.VariableDeclarator, {
               id: {
                 name: paramTypeValue.name
               }
             });
-            (0, _forEach.default)(variableDefinitions).call(variableDefinitions, varDef => {
+            variableDefinitions.forEach(varDef => {
               var _varDef$value, _varDef$value$init;
 
               const allParamTypeProperties = varDef === null || varDef === void 0 ? void 0 : (_varDef$value = varDef.value) === null || _varDef$value === void 0 ? void 0 : (_varDef$value$init = _varDef$value.init) === null || _varDef$value$init === void 0 ? void 0 : _varDef$value$init.properties; // safe to assume that this variable is an object declaration

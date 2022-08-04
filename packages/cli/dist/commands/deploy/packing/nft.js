@@ -1,18 +1,15 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = void 0;
 
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.map.js");
 
 var _path = _interopRequireDefault(require("path"));
 
@@ -37,7 +34,7 @@ function zipDirectory(source, out) {
 
   const stream = _fsExtra.default.createWriteStream(out);
 
-  return new _promise.default((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     archive.directory(source, false).on('error', err => reject(err)).pipe(stream);
     stream.on('close', () => resolve());
     archive.finalize();
@@ -70,7 +67,7 @@ async function packageSingleFunction(functionFile) {
   const functionEntryPromise = _fsExtra.default.outputFile(entryFilePath, content);
 
   copyPromises.push(functionEntryPromise);
-  await _promise.default.all(copyPromises);
+  await Promise.all(copyPromises);
   await _exports.zipDirectory(`${ZIPBALL_DIR}/${functionName}`, `${ZIPBALL_DIR}/${functionName}.zip`);
   await _fsExtra.default.remove(`${ZIPBALL_DIR}/${functionName}`);
   return;
@@ -78,7 +75,7 @@ async function packageSingleFunction(functionFile) {
 
 function nftPack() {
   const filesToBePacked = (0, _files.findApiDistFunctions)();
-  return _promise.default.all((0, _map.default)(filesToBePacked).call(filesToBePacked, _exports.packageSingleFunction));
+  return Promise.all(filesToBePacked.map(_exports.packageSingleFunction));
 } // We do this, so we can spy the functions in the test
 // It didn't make sense to separate into different files
 

@@ -1,18 +1,9 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.registerBabel = exports.getCommonPlugins = exports.RUNTIME_CORE_JS_VERSION = exports.CORE_JS_VERSION = void 0;
-
-var _slice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/slice"));
-
-var _context;
 
 const pkgJson = require('../../../package.json');
 
@@ -34,7 +25,7 @@ const registerBabel = options => {
 };
 
 exports.registerBabel = registerBabel;
-const CORE_JS_VERSION = (0, _slice.default)(_context = pkgJson.dependencies['core-js'].split('.')).call(_context, 0, 2).join('.'); // Produces: 3.12, instead of 3.12.1
+const CORE_JS_VERSION = pkgJson.dependencies['core-js'].split('.').slice(0, 2).join('.'); // Produces: 3.12, instead of 3.12.1
 
 exports.CORE_JS_VERSION = CORE_JS_VERSION;
 

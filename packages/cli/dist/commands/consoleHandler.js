@@ -1,24 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = void 0;
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _trim = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/trim"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.filter.js");
 
-var _reverse = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/reverse"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
+require("core-js/modules/esnext.iterator.map.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -43,17 +40,13 @@ const loadPrismaClient = replContext => {
 const consoleHistoryFile = _path.default.join(paths.generated.base, 'console_history');
 
 const persistConsoleHistory = r => {
-  var _context;
-
-  _fs.default.appendFileSync(consoleHistoryFile, (0, _filter.default)(_context = r.lines).call(_context, line => (0, _trim.default)(line).call(line)).join('\n') + '\n', 'utf8');
+  _fs.default.appendFileSync(consoleHistoryFile, r.lines.filter(line => line.trim()).join('\n') + '\n', 'utf8');
 };
 
 const loadConsoleHistory = async r => {
   try {
-    var _context2, _context3;
-
     const history = await _fs.default.promises.readFile(consoleHistoryFile, 'utf8');
-    (0, _map.default)(_context2 = (0, _reverse.default)(_context3 = history.split('\n')).call(_context3)).call(_context2, line => r.history.push(line));
+    history.split('\n').reverse().map(line => r.history.push(line));
   } catch (e) {// We can ignore this -- it just means the user doesn't have any history yet
   }
 };
@@ -82,7 +75,7 @@ const handler = () => {
       } else {
         // await the promise and either return the result or error.
         try {
-          callback(null, await _promise.default.resolve(result));
+          callback(null, await Promise.resolve(result));
         } catch (err) {
           callback(err);
         }

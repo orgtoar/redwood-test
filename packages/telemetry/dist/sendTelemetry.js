@@ -1,26 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.sendTelemetry = exports.sanitizeArgv = void 0;
 
-var _slice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/slice"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _indexOf = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/index-of"));
-
-var _parseInt2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/parse-int"));
-
-var _now = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/date/now"));
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
+require("core-js/modules/esnext.iterator.for-each.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -104,16 +95,14 @@ const getInfo = async (presets = {}) => {
 
 
 const sanitizeArgv = argv => {
-  const args = (0, _slice.default)(argv).call(argv, 2);
+  const args = argv.slice(2);
   const name = args[0];
   const sensativeCommand = SENSITIVE_ARG_POSITIONS[name];
 
   if (sensativeCommand) {
     // redact positional arguments
     if (sensativeCommand.positions) {
-      var _context;
-
-      (0, _forEach.default)(_context = sensativeCommand.positions).call(_context, (pos, index) => {
+      sensativeCommand.positions.forEach((pos, index) => {
         // only redact if the text in the given position is not a --flag
         if (args[pos] && !args[pos].match(/--/)) {
           args[pos] = sensativeCommand.redactWith[index];
@@ -123,10 +112,8 @@ const sanitizeArgv = argv => {
 
 
     if (sensativeCommand.options) {
-      var _context2;
-
-      (0, _forEach.default)(_context2 = sensativeCommand.options).call(_context2, (option, index) => {
-        const argIndex = (0, _indexOf.default)(args).call(args, option);
+      sensativeCommand.options.forEach((option, index) => {
+        const argIndex = args.indexOf(option);
 
         if (argIndex !== -1) {
           args[argIndex + 1] = sensativeCommand.redactWith[index];
@@ -141,18 +128,16 @@ const sanitizeArgv = argv => {
 exports.sanitizeArgv = sanitizeArgv;
 
 const buildPayload = async () => {
-  var _context3;
-
   let payload = {};
   let project;
 
-  const argv = require('yargs/yargs')((0, _slice.default)(_context3 = process.argv).call(_context3, 2)).argv;
+  const argv = require('yargs/yargs')(process.argv.slice(2)).argv;
 
   const rootDir = argv.root;
   payload = {
     type: argv.type || 'command',
     command: argv.argv ? sanitizeArgv(JSON.parse(argv.argv)) : '',
-    duration: argv.duration ? (0, _parseInt2.default)(argv.duration) : null,
+    duration: argv.duration ? parseInt(argv.duration) : null,
     uid: uniqueId(rootDir) || null,
     ci: _ciInfo.default.isCI,
     redwoodCi: !!process.env.REDWOOD_CI,
@@ -188,7 +173,7 @@ const buildPayload = async () => {
 const uniqueId = rootDir => {
   const telemetryCachePath = _path.default.join(rootDir || '/tmp', '.redwood', 'telemetry.txt');
 
-  const now = (0, _now.default)();
+  const now = Date.now();
   const expires = now - 24 * 60 * 60 * 1000; // one day
 
   let uuid;
@@ -221,7 +206,7 @@ const sendTelemetry = async () => {
 
     const response = await (0, _crossUndiciFetch.fetch)(telemetryUrl, {
       method: 'post',
-      body: (0, _stringify.default)(payload),
+      body: JSON.stringify(payload),
       headers: {
         'Content-Type': 'application/json'
       }

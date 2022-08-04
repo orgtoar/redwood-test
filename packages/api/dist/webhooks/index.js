@@ -1,46 +1,34 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-_Object$defineProperty(exports, "DEFAULT_WEBHOOK_SECRET", {
+Object.defineProperty(exports, "DEFAULT_WEBHOOK_SECRET", {
   enumerable: true,
   get: function () {
     return _verifiers.DEFAULT_WEBHOOK_SECRET;
   }
 });
-
 exports.DEFAULT_WEBHOOK_SIGNATURE_HEADER = void 0;
-
-_Object$defineProperty(exports, "SupportedVerifierTypes", {
+Object.defineProperty(exports, "SupportedVerifierTypes", {
   enumerable: true,
   get: function () {
     return _verifiers.SupportedVerifierTypes;
   }
 });
-
-_Object$defineProperty(exports, "VerifyOptions", {
+Object.defineProperty(exports, "VerifyOptions", {
   enumerable: true,
   get: function () {
     return _verifiers.VerifyOptions;
   }
 });
-
-_Object$defineProperty(exports, "WebhookVerificationError", {
+Object.defineProperty(exports, "WebhookVerificationError", {
   enumerable: true,
   get: function () {
     return _verifiers.WebhookVerificationError;
   }
 });
-
 exports.verifySignature = exports.verifyEvent = exports.signatureFromEvent = exports.signPayload = void 0;
-
-var _now = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/date/now"));
 
 var _verifiers = require("../auth/verifiers");
 
@@ -122,7 +110,7 @@ const verifyEvent = (type, {
   if (options !== null && options !== void 0 && options.eventTimestamp) {
     var _options$currentTimes, _options$tolerance;
 
-    const timestamp = (_options$currentTimes = options === null || options === void 0 ? void 0 : options.currentTimestampOverride) !== null && _options$currentTimes !== void 0 ? _options$currentTimes : (0, _now.default)();
+    const timestamp = (_options$currentTimes = options === null || options === void 0 ? void 0 : options.currentTimestampOverride) !== null && _options$currentTimes !== void 0 ? _options$currentTimes : Date.now();
     const difference = Math.abs(timestamp - (options === null || options === void 0 ? void 0 : options.eventTimestamp));
     const tolerance = (_options$tolerance = options === null || options === void 0 ? void 0 : options.tolerance) !== null && _options$tolerance !== void 0 ? _options$tolerance : _verifiers.DEFAULT_TOLERANCE;
 

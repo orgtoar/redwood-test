@@ -1,20 +1,25 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = _default;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.async-iterator.filter.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
+
+require("core-js/modules/esnext.async-iterator.find.js");
+
+require("core-js/modules/esnext.iterator.find.js");
 
 var _path = _interopRequireDefault(require("path"));
 
@@ -45,10 +50,8 @@ function _default({
 }, {
   useStaticImports = false
 }) {
-  var _context;
-
   // @NOTE: This var gets mutated inside the visitors
-  let pages = (0, _map.default)(_context = (0, _paths.processPagesDir)()).call(_context, withRelativeImports);
+  let pages = (0, _paths.processPagesDir)().map(withRelativeImports);
   return {
     name: 'babel-plugin-redwood-routes-auto-loader',
     visitor: {
@@ -56,32 +59,30 @@ function _default({
       // because when one is present, the user is requesting that the module be
       // included in the main bundle.
       ImportDeclaration(p) {
-        var _p$node$source, _context2;
+        var _p$node$source;
 
         if (pages.length === 0) {
           return;
         }
 
         const userImportRelativePath = getPathRelativeToSrc((0, _paths.importStatementPath)((_p$node$source = p.node.source) === null || _p$node$source === void 0 ? void 0 : _p$node$source.value));
-        const defaultSpecifier = (0, _filter.default)(_context2 = p.node.specifiers).call(_context2, specifiers => t.isImportDefaultSpecifier(specifiers))[0]; // Remove Page imports in prerender mode (see babel-preset)
+        const defaultSpecifier = p.node.specifiers.filter(specifiers => t.isImportDefaultSpecifier(specifiers))[0]; // Remove Page imports in prerender mode (see babel-preset)
         // This is to make sure that all the imported "Page modules" are normal imports
         // and not asynchronous ones.
         // But note that jest in a user's project does not enter this block, but our tests do
 
         if (useStaticImports) {
           // Match import paths, const name could be different
-          const pageThatUserImported = (0, _find.default)(pages).call(pages, page => {
+          const pageThatUserImported = pages.find(page => {
             return page.relativeImport === (0, _paths.ensurePosixPath)(userImportRelativePath);
           });
 
           if (pageThatUserImported) {
-            var _context3;
-
             // Update the import name, with the user's import name
             // So that the JSX name stays consistent
             pageThatUserImported.importName = defaultSpecifier.local.name; // Remove the default import for the page and leave all the others
 
-            p.node.specifiers = (0, _filter.default)(_context3 = p.node.specifiers).call(_context3, specifier => !t.isImportDefaultSpecifier(specifier));
+            p.node.specifiers = p.node.specifiers.filter(specifier => !t.isImportDefaultSpecifier(specifier));
           }
 
           return;
@@ -90,15 +91,13 @@ function _default({
         if (userImportRelativePath && defaultSpecifier) {
           // Remove the page from pages list, if it is already explicitly imported, so that we don't add loaders for these pages.
           // We use the path & defaultSpecifier because the const name could be anything
-          pages = (0, _filter.default)(pages).call(pages, page => !(page.relativeImport === (0, _paths.ensurePosixPath)(userImportRelativePath)));
+          pages = pages.filter(page => !(page.relativeImport === (0, _paths.ensurePosixPath)(userImportRelativePath)));
         }
       },
 
       Program: {
         enter() {
-          var _context4;
-
-          pages = (0, _map.default)(_context4 = (0, _paths.processPagesDir)()).call(_context4, withRelativeImports);
+          pages = (0, _paths.processPagesDir)().map(withRelativeImports);
         },
 
         exit(p) {

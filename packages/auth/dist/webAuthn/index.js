@@ -1,16 +1,9 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = void 0;
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
 
 var _browser = require("@simplewebauthn/browser");
 
@@ -99,7 +92,7 @@ const authenticate = async () => {
     xhr.withCredentials = true;
     xhr.open('POST', global.RWJS_API_DBAUTH_URL, false);
     xhr.setRequestHeader('content-type', 'application/json');
-    xhr.send((0, _stringify.default)({
+    xhr.send(JSON.stringify({
       method: 'webAuthnAuthenticate',
       ...browserResponse
     }));
@@ -160,7 +153,7 @@ const register = async () => {
     xhr.withCredentials = true;
     xhr.open('POST', global.RWJS_API_DBAUTH_URL, false);
     xhr.setRequestHeader('content-type', 'application/json');
-    xhr.send((0, _stringify.default)({
+    xhr.send(JSON.stringify({
       method: 'webAuthnRegister',
       ...regResponse
     }));

@@ -1,16 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.notes = exports.handler = exports.description = exports.command = exports.aliases = void 0;
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -51,7 +46,7 @@ const files = [{
 const prismaBinaryTargetAdditions = () => {
   const content = _fs.default.readFileSync((0, _lib.getPaths)().api.dbSchema).toString();
 
-  if (!(0, _includes.default)(content).call(content, 'rhel-openssl-1.0.x')) {
+  if (!content.includes('rhel-openssl-1.0.x')) {
     const result = content.replace(/binaryTargets =.*\n/, `binaryTargets = ["native", "rhel-openssl-1.0.x"]\n`);
 
     _fs.default.writeFileSync((0, _lib.getPaths)().api.dbSchema, result);

@@ -1,16 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.webServerHandler = exports.webCliOptions = exports.commonOptions = exports.bothServerHandler = exports.apiServerHandler = exports.apiCliOptions = void 0;
-
-var _now = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/date/now"));
 
 var _ansiColors = _interopRequireDefault(require("ansi-colors"));
 
@@ -88,7 +83,7 @@ const apiServerHandler = async options => {
     socket,
     apiRootPath
   } = options;
-  const tsApiServer = (0, _now.default)();
+  const tsApiServer = Date.now();
   process.stdout.write(_ansiColors.default.dim(_ansiColors.default.italic('Starting API Server...\n')));
   let fastify = (0, _fastify.default)(); // Import Server Functions.
 
@@ -98,7 +93,7 @@ const apiServerHandler = async options => {
     socket,
     fastify
   }).ready(() => {
-    console.log(_ansiColors.default.italic(_ansiColors.default.dim('Took ' + ((0, _now.default)() - tsApiServer) + ' ms')));
+    console.log(_ansiColors.default.italic(_ansiColors.default.dim('Took ' + (Date.now() - tsApiServer) + ' ms')));
     const on = socket ? socket : _ansiColors.default.magenta(`http://localhost:${port}${apiRootPath}`);
     console.log(`API listening on ${on}`);
 
@@ -119,7 +114,7 @@ const bothServerHandler = async options => {
     port,
     socket
   } = options;
-  const tsServer = (0, _now.default)();
+  const tsServer = Date.now();
   process.stdout.write(_ansiColors.default.dim(_ansiColors.default.italic('Starting API and Web Servers...\n')));
   const apiRootPath = coerceRootPath((0, _config.getConfig)().web.apiUrl);
   let fastify = (0, _fastify.default)(); // Attach plugins
@@ -133,7 +128,7 @@ const bothServerHandler = async options => {
     socket,
     fastify
   }).ready(() => {
-    console.log(_ansiColors.default.italic(_ansiColors.default.dim('Took ' + ((0, _now.default)() - tsServer) + ' ms')));
+    console.log(_ansiColors.default.italic(_ansiColors.default.dim('Took ' + (Date.now() - tsServer) + ' ms')));
     const on = socket ? socket : _ansiColors.default.magenta(`http://localhost:${port}${apiRootPath}`);
 
     const webServer = _ansiColors.default.green(`http://localhost:${port}`);
@@ -161,7 +156,7 @@ const webServerHandler = async options => {
     socket,
     apiHost
   } = options;
-  const tsServer = (0, _now.default)();
+  const tsServer = Date.now();
   process.stdout.write(_ansiColors.default.dim(_ansiColors.default.italic('Starting Web Server...\n')));
   const apiUrl = (0, _config.getConfig)().web.apiUrl; // Construct the graphql url from apiUrl by default
   // But if apiGraphQLUrl is specified, use that instead
@@ -185,7 +180,7 @@ const webServerHandler = async options => {
     socket,
     fastify
   }).ready(() => {
-    console.log(_ansiColors.default.italic(_ansiColors.default.dim('Took ' + ((0, _now.default)() - tsServer) + ' ms')));
+    console.log(_ansiColors.default.italic(_ansiColors.default.dim('Took ' + (Date.now() - tsServer) + ' ms')));
 
     if (socket) {
       console.log(`Listening on ` + _ansiColors.default.magenta(`${socket}`));

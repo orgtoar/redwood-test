@@ -1,18 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.advanced_path_parser = advanced_path_parser;
 
-var _matchAll = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/match-all"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.map.js");
+
+var _matchAll = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/match-all"));
 
 /**
  * A route path parser with positional information.
@@ -20,8 +19,6 @@ var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instan
  * @param route
  */
 function advanced_path_parser(route) {
-  var _context, _context2;
-
   const paramRanges = [];
   const paramTypeRanges = [];
 
@@ -36,8 +33,8 @@ function advanced_path_parser(route) {
     }
   }
 
-  const punctuationIndexes = (0, _map.default)(_context = [...(0, _matchAll.default)(route).call(route, /[{}:]/g)]).call(_context, x => x.index);
-  const slashIndexes = (0, _map.default)(_context2 = [...(0, _matchAll.default)(route).call(route, /[\/]/g)]).call(_context2, x => x.index);
+  const punctuationIndexes = [...(0, _matchAll.default)(route).call(route, /[{}:]/g)].map(x => x.index);
+  const slashIndexes = [...(0, _matchAll.default)(route).call(route, /[\/]/g)].map(x => x.index);
   return {
     punctuationIndexes,
     slashIndexes,

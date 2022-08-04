@@ -1,30 +1,47 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.formatError = exports.createGraphQLHandler = void 0;
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.async-iterator.find.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.iterator.find.js");
 
-var _url = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/url"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _isArray = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/array/is-array"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _fromEntries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/from-entries"));
+require("core-js/modules/esnext.map.delete-all.js");
 
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
+require("core-js/modules/esnext.map.emplace.js");
 
-var _map2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/map"));
+require("core-js/modules/esnext.map.every.js");
+
+require("core-js/modules/esnext.map.filter.js");
+
+require("core-js/modules/esnext.map.find.js");
+
+require("core-js/modules/esnext.map.find-key.js");
+
+require("core-js/modules/esnext.map.includes.js");
+
+require("core-js/modules/esnext.map.key-of.js");
+
+require("core-js/modules/esnext.map.map-keys.js");
+
+require("core-js/modules/esnext.map.map-values.js");
+
+require("core-js/modules/esnext.map.merge.js");
+
+require("core-js/modules/esnext.map.reduce.js");
+
+require("core-js/modules/esnext.map.some.js");
+
+require("core-js/modules/esnext.map.update.js");
 
 var _common = require("@graphql-yoga/common");
 
@@ -80,7 +97,7 @@ const formatError = (err, message) => {
     }
   }
 
-  if (err.originalError && !(0, _find.default)(allowErrors).call(allowErrors, allowedError => err.originalError instanceof allowedError)) {
+  if (err.originalError && !allowErrors.find(allowedError => err.originalError instanceof allowedError)) {
     return new _graphql.GraphQLError(message);
   }
 
@@ -139,7 +156,7 @@ const createGraphQLHandler = ({
     const projectDirectives = (0, _makeDirectives.makeDirectivesForPlugin)(directives);
 
     if (projectDirectives.length > 0) {
-      redwoodDirectivePlugins = (0, _map.default)(projectDirectives).call(projectDirectives, directive => (0, _useRedwoodDirective.useRedwoodDirective)(directive));
+      redwoodDirectivePlugins = projectDirectives.map(directive => (0, _useRedwoodDirective.useRedwoodDirective)(directive));
     }
 
     schema = (0, _makeMergedSchema.makeMergedSchema)({
@@ -219,7 +236,7 @@ const createGraphQLHandler = ({
     var _event$requestContext;
 
     const requestHeaders = new _crossUndiciFetch.Headers();
-    const supportsMultiValueHeaders = event.multiValueHeaders && (0, _keys.default)(event.multiValueHeaders).length > 0; // Avoid duplicating header values, because Yoga gets confused with CORS
+    const supportsMultiValueHeaders = event.multiValueHeaders && Object.keys(event.multiValueHeaders).length > 0; // Avoid duplicating header values, because Yoga gets confused with CORS
 
     if (supportsMultiValueHeaders) {
       for (const headerName in event.multiValueHeaders) {
@@ -242,14 +259,14 @@ const createGraphQLHandler = ({
     }
 
     const protocol = isDevEnv ? 'http' : 'https';
-    const requestUrl = new _url.default(event.path, protocol + '://' + (((_event$requestContext = event.requestContext) === null || _event$requestContext === void 0 ? void 0 : _event$requestContext.domainName) || 'localhost'));
+    const requestUrl = new URL(event.path, protocol + '://' + (((_event$requestContext = event.requestContext) === null || _event$requestContext === void 0 ? void 0 : _event$requestContext.domainName) || 'localhost'));
 
     if (event.multiValueQueryStringParameters) {
       for (const queryStringParam in event.multiValueQueryStringParameters) {
         const queryStringValues = event.multiValueQueryStringParameters[queryStringParam];
 
         if (queryStringValues) {
-          if ((0, _isArray.default)(queryStringValues)) {
+          if (Array.isArray(queryStringValues)) {
             for (const queryStringValue of queryStringValues) {
               requestUrl.searchParams.append(queryStringParam, queryStringValue);
             }
@@ -289,7 +306,7 @@ const createGraphQLHandler = ({
     let lambdaResponse; // @NOTE AWS types define that multiValueHeaders always exist, even as an empty object
     // But this isn't true on Vercel, it's just undefined.
 
-    const supportsMultiValueHeaders = event.multiValueHeaders && (0, _keys.default)(event.multiValueHeaders).length > 0;
+    const supportsMultiValueHeaders = event.multiValueHeaders && Object.keys(event.multiValueHeaders).length > 0;
 
     try {
       const request = buildRequestObject(event);
@@ -305,7 +322,7 @@ const createGraphQLHandler = ({
         body: await response.text(),
         statusCode: response.status,
         // Only supply headers if MVH aren't supported, otherwise it causes duplicated headers
-        headers: supportsMultiValueHeaders ? {} : (0, _fromEntries.default)(response.headers),
+        headers: supportsMultiValueHeaders ? {} : Object.fromEntries(response.headers),
         // Gets ignored if MVH isn't supported
         multiValueHeaders: convertToMultiValueHeaders(response.headers)
       };
@@ -313,7 +330,7 @@ const createGraphQLHandler = ({
       logger.error(e);
       onException && onException();
       lambdaResponse = {
-        body: (0, _stringify.default)({
+        body: JSON.stringify({
           error: 'GraphQL execution failed'
         }),
         statusCode: 200 // should be 500
@@ -349,7 +366,7 @@ const createGraphQLHandler = ({
 
     if ((0, _globalContext.getAsyncStoreInstance)()) {
       // This must be used when you're self-hosting RedwoodJS.
-      return (0, _globalContext.getAsyncStoreInstance)().run(new _map2.default(), execFn);
+      return (0, _globalContext.getAsyncStoreInstance)().run(new Map(), execFn);
     } else {
       // This is OK for AWS (Netlify/Vercel) because each Lambda request
       // is handled individually.

@@ -1,16 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.useLocation = exports.LocationProvider = exports.LocationContext = void 0;
-
-var _endsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/ends-with"));
 
 var _react = _interopRequireDefault(require("react"));
 
@@ -46,14 +41,14 @@ class LocationProvider extends _react.default.Component {
 
       switch (this.props.trailingSlashes) {
         case 'never':
-          if ((0, _endsWith.default)(pathname).call(pathname, '/')) {
+          if (pathname.endsWith('/')) {
             window.history.replaceState({}, '', pathname.substr(0, pathname.length - 1));
           }
 
           break;
 
         case 'always':
-          if (!(0, _endsWith.default)(pathname).call(pathname, '/')) {
+          if (!pathname.endsWith('/')) {
             window.history.replaceState({}, '', pathname + '/');
           }
 

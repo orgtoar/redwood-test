@@ -1,16 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.supabase = void 0;
-
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
 
 var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
 
@@ -22,9 +17,9 @@ const supabase = token => {
 
   try {
     const secret = process.env.SUPABASE_JWT_SECRET;
-    return _promise.default.resolve(_jsonwebtoken.default.verify(token, secret));
+    return Promise.resolve(_jsonwebtoken.default.verify(token, secret));
   } catch (error) {
-    return _promise.default.reject(error);
+    return Promise.reject(error);
   }
 };
 

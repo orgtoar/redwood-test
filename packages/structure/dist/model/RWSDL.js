@@ -1,20 +1,19 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.RWSDL = void 0;
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.async-iterator.find.js");
 
-var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.find.js");
 
 var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
 
@@ -81,9 +80,7 @@ let RWSDL = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), _d
   }
 
   get service() {
-    var _context;
-
-    return (0, _find.default)(_context = this.parent.services).call(_context, s => s.name === this.name);
+    return this.parent.services.find(s => s.name === this.name);
   }
 
   get name() {
@@ -126,5 +123,5 @@ let RWSDL = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), _d
     }
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "schemaStringNode", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "schemaStringNode"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "schemaString", [_dec2], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "schemaString"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "serviceFilePath", [_dec3], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "serviceFilePath"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "service", [_dec4], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "service"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "name", [_dec5], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "name"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "implementableFields", [_dec6], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "implementableFields"), _class.prototype)), _class));
+}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "schemaStringNode", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "schemaStringNode"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "schemaString", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "schemaString"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "serviceFilePath", [_dec3], Object.getOwnPropertyDescriptor(_class.prototype, "serviceFilePath"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "service", [_dec4], Object.getOwnPropertyDescriptor(_class.prototype, "service"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "name", [_dec5], Object.getOwnPropertyDescriptor(_class.prototype, "name"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "implementableFields", [_dec6], Object.getOwnPropertyDescriptor(_class.prototype, "implementableFields"), _class.prototype)), _class));
 exports.RWSDL = RWSDL;

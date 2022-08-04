@@ -1,20 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.redwoodjs_commands = exports.CommandsManager = void 0;
-
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
-
-var _startsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/starts-with"));
-
-var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
 
 var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
 
@@ -47,7 +38,7 @@ let CommandsManager = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.m
 
   get options() {
     return {
-      commands: (0, _keys.default)(redwoodjs_commands),
+      commands: Object.keys(redwoodjs_commands),
       workDoneProgress: true
     };
   }
@@ -68,7 +59,7 @@ let CommandsManager = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.m
 
 
   async command__cli(cmdString, cwd) {
-    var _cwd, _context, _context2;
+    var _cwd;
 
     const {
       vscodeWindowMethods,
@@ -87,7 +78,7 @@ let CommandsManager = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.m
 
     let cmd = new _RedwoodCommandString.RedwoodCommandString(cmdString !== null && cmdString !== void 0 ? cmdString : '...');
 
-    if ((0, _startsWith.default)(_context = cmd.processed).call(_context, 'dev --open') || (0, _startsWith.default)(_context2 = cmd.processed).call(_context2, 'storybook --open')) {
+    if (cmd.processed.startsWith('dev --open') || cmd.processed.startsWith('storybook --open')) {
       vscodeWindowMethods.showInformationMessage('not implemented yet: $ redwood ' + cmd.processed);
       return;
     }
@@ -153,5 +144,5 @@ let CommandsManager = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.m
     }
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "options", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "options"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "start", [_dec2], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "start"), _class.prototype)), _class));
+}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "options", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "options"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "start", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "start"), _class.prototype)), _class));
 exports.CommandsManager = CommandsManager;

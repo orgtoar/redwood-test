@@ -1,30 +1,27 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.relationsForModel = exports.pathName = exports.mapRouteParamTypeToTsType = exports.mapPrismaScalarToPagePropTsType = exports.intForeignKeysForModel = exports.forcePluralizeWord = exports.customOrDefaultTemplatePath = exports.createYargsForComponentGeneration = void 0;
 exports.removeGeneratorName = removeGeneratorName;
 exports.templateForComponentFile = void 0;
 
-var _startsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/starts-with"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _endsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/ends-with"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.iterator.for-each.js");
 
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -126,7 +123,7 @@ exports.templateForComponentFile = templateForComponentFile;
 const pathName = (path, name) => {
   let routePath = path;
 
-  if (path && (0, _startsWith.default)(path).call(path, '{') && (0, _endsWith.default)(path).call(path, '}')) {
+  if (path && path.startsWith('{') && path.endsWith('}')) {
     routePath = `/${(0, _paramCase.paramCase)(name)}/${path}`;
   }
 
@@ -141,10 +138,8 @@ exports.pathName = pathName;
 
 const appendPositionalsToCmd = (commandString, positionalsObj) => {
   // Add positionals like `page <name>` + ` [path]` if specified
-  if ((0, _keys.default)(positionalsObj).length > 0) {
-    var _context;
-
-    const positionalNames = (0, _map.default)(_context = (0, _keys.default)(positionalsObj)).call(_context, positionalName => `[${positionalName}]`).join(' '); // Note space after command is important
+  if (Object.keys(positionalsObj).length > 0) {
+    const positionalNames = Object.keys(positionalsObj).map(positionalName => `[${positionalName}]`).join(' '); // Note space after command is important
 
     return `${commandString} ${positionalNames}`;
   } else {
@@ -183,8 +178,6 @@ const createYargsForComponentGeneration = ({
     command: appendPositionalsToCmd(`${componentName} <name>`, positionalsObj),
     description: `Generate a ${componentName} component`,
     builder: yargs => {
-      var _context2, _context3;
-
       yargs.positional('name', {
         description: `Name of the ${componentName}`,
         type: 'string'
@@ -200,11 +193,11 @@ const createYargsForComponentGeneration = ({
         default: false
       }); // Add in passed in positionals
 
-      (0, _forEach.default)(_context2 = (0, _entries.default)(positionalsObj)).call(_context2, ([option, config]) => {
+      Object.entries(positionalsObj).forEach(([option, config]) => {
         yargs.positional(option, config);
       }); // Add in passed in options
 
-      (0, _forEach.default)(_context3 = (0, _entries.default)(optionsObj)).call(_context3, ([option, config]) => {
+      Object.entries(optionsObj).forEach(([option, config]) => {
         yargs.option(option, config);
       });
     },
@@ -246,9 +239,7 @@ const createYargsForComponentGeneration = ({
 exports.createYargsForComponentGeneration = createYargsForComponentGeneration;
 
 const relationsForModel = model => {
-  var _context4, _context5;
-
-  return (0, _map.default)(_context4 = (0, _filter.default)(_context5 = model.fields).call(_context5, f => f.relationName)).call(_context4, field => {
+  return model.fields.filter(f => f.relationName).map(field => {
     return field.name;
   });
 }; // Returns only relations that are of datatype Int
@@ -257,9 +248,7 @@ const relationsForModel = model => {
 exports.relationsForModel = relationsForModel;
 
 const intForeignKeysForModel = model => {
-  var _context6, _context7;
-
-  return (0, _map.default)(_context6 = (0, _filter.default)(_context7 = model.fields).call(_context7, f => f.name.match(/Id$/) && f.type === 'Int')).call(_context6, f => f.name);
+  return model.fields.filter(f => f.name.match(/Id$/) && f.type === 'Int').map(f => f.name);
 };
 /**
  * Adds "List" to the end of words we can't pluralize

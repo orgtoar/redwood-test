@@ -1,16 +1,15 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = updateJestConfig;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.map.js");
+
+require("core-js/modules/esnext.iterator.map.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -26,14 +25,12 @@ var _runTransform = _interopRequireDefault(require("../../../lib/runTransform"))
  * @typedef {[string, string, string]} JestConfigPaths
  */
 async function updateJestConfig() {
-  var _context;
-
   const rwPaths = (0, _getRWPaths.default)();
   /**
    * @type JestConfigPaths
    */
 
-  const jestConfigPaths = (0, _map.default)(_context = [[rwPaths.base, 'jest.config.js'], [rwPaths.api.base, 'jest.config.js'], [rwPaths.web.base, 'jest.config.js']]).call(_context, paths => _path.default.join(...paths));
+  const jestConfigPaths = [[rwPaths.base, 'jest.config.js'], [rwPaths.api.base, 'jest.config.js'], [rwPaths.web.base, 'jest.config.js']].map(paths => _path.default.join(...paths));
   const [rootJestConfigPath, ...apiWebJestConfigPaths] = jestConfigPaths;
   const tag = 'main';
 

@@ -1,18 +1,15 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.parseGqlQueryToAst = exports.parseDocumentAST = exports.listQueryTypeFieldsInProject = void 0;
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.for-each.js");
 
 var _codeFileLoader = require("@graphql-tools/code-file-loader");
 
@@ -35,10 +32,10 @@ const parseDocumentAST = document => {
   const operations = [];
   (0, _graphql.visit)(document, {
     OperationDefinition(node) {
-      var _context, _node$name;
+      var _node$name;
 
       const fields = [];
-      (0, _forEach.default)(_context = node.selectionSet.selections).call(_context, field => {
+      node.selectionSet.selections.forEach(field => {
         fields.push(getFields(field));
       });
       operations.push({
@@ -64,9 +61,9 @@ const getFields = field => {
     };
 
     const lookAtFieldNode = node => {
-      var _node$selectionSet, _context2;
+      var _node$selectionSet;
 
-      (_node$selectionSet = node.selectionSet) === null || _node$selectionSet === void 0 ? void 0 : (0, _forEach.default)(_context2 = _node$selectionSet.selections).call(_context2, subField => {
+      (_node$selectionSet = node.selectionSet) === null || _node$selectionSet === void 0 ? void 0 : _node$selectionSet.selections.forEach(subField => {
         switch (subField.kind) {
           case 'Field':
             obj[field.name.value].push(getFields(subField));
@@ -108,7 +105,7 @@ const listQueryTypeFieldsInProject = async () => {
     });
     const queryTypeFields = (_mergedSchema$getQuer = mergedSchema.getQueryType()) === null || _mergedSchema$getQuer === void 0 ? void 0 : _mergedSchema$getQuer.getFields(); // Return empty array if no schema found
 
-    return (0, _keys.default)(queryTypeFields !== null && queryTypeFields !== void 0 ? queryTypeFields : {});
+    return Object.keys(queryTypeFields !== null && queryTypeFields !== void 0 ? queryTypeFields : {});
   } catch (e) {
     console.error(e);
     return [];

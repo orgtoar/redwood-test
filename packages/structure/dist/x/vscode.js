@@ -1,13 +1,10 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.Command_cli = Command_cli;
 exports.Command_open = Command_open;
 exports.ProviderResult_normalize = ProviderResult_normalize;
@@ -16,19 +13,9 @@ exports.RemoteTreeDataProvider_publishOverLSPConnection = RemoteTreeDataProvider
 exports.TreeItemCollapsibleState2 = exports.TreeItem2Wrapper = void 0;
 exports.VSCodeWindowMethods_fromConnection = VSCodeWindowMethods_fromConnection;
 
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/keys"));
-
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
-
-var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
-
-var _setInterval2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/set-interval"));
-
-var _startsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/starts-with"));
-
-var _trim = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/trim"));
+require("core-js/modules/esnext.iterator.map.js");
 
 var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
 
@@ -76,7 +63,7 @@ class VSCodeWindowMethodsWrapper {
 
 }
 
-let TreeItem2Wrapper = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), _dec3 = (0, _decorators.lazy)(), _dec4 = (0, _decorators.lazy)(), _dec5 = (0, _decorators.memo)(), _dec6 = (0, _decorators.memo)(), _dec7 = (0, _decorators.memo)(_stringify.default), _dec8 = (0, _decorators.lazy)(), (_class = class TreeItem2Wrapper {
+let TreeItem2Wrapper = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), _dec3 = (0, _decorators.lazy)(), _dec4 = (0, _decorators.lazy)(), _dec5 = (0, _decorators.memo)(), _dec6 = (0, _decorators.memo)(), _dec7 = (0, _decorators.memo)(JSON.stringify), _dec8 = (0, _decorators.lazy)(), (_class = class TreeItem2Wrapper {
   constructor(item, parent, indexInParent = 0) {
     this.item = item;
     this.parent = parent;
@@ -90,7 +77,7 @@ let TreeItem2Wrapper = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.
       return [];
     }
 
-    return [...((_this$parent$keys = (_this$parent = this.parent) === null || _this$parent === void 0 ? void 0 : (0, _keys.default)(_this$parent)) !== null && _this$parent$keys !== void 0 ? _this$parent$keys : []), this.key];
+    return [...((_this$parent$keys = (_this$parent = this.parent) === null || _this$parent === void 0 ? void 0 : _this$parent.keys) !== null && _this$parent$keys !== void 0 ? _this$parent$keys : []), this.key];
   }
 
   get key() {
@@ -110,7 +97,7 @@ let TreeItem2Wrapper = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.
   }
 
   get id() {
-    return (0, _stringify.default)((0, _keys.default)(this));
+    return JSON.stringify(this.keys);
   }
 
   get collapsibleState() {
@@ -120,10 +107,10 @@ let TreeItem2Wrapper = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.
   }
 
   async children() {
-    var _this$item$children, _this$item, _context;
+    var _this$item$children, _this$item;
 
     const cs = await ProviderResult_normalize((_this$item$children = (_this$item = this.item).children) === null || _this$item$children === void 0 ? void 0 : _this$item$children.call(_this$item));
-    return (0, _map.default)(_context = cs !== null && cs !== void 0 ? cs : []).call(_context, (c, i) => new TreeItem2Wrapper(c, this, i));
+    return (cs !== null && cs !== void 0 ? cs : []).map((c, i) => new TreeItem2Wrapper(c, this, i));
   }
 
   async findChild(key) {
@@ -152,7 +139,7 @@ let TreeItem2Wrapper = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.
     };
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "keys", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "keys"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "key", [_dec2], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "key"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "id", [_dec3], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "id"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "collapsibleState", [_dec4], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "collapsibleState"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "children", [_dec5], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "children"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "findChild", [_dec6], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "findChild"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "findChildRec", [_dec7], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "findChildRec"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "serializableTreeItem", [_dec8], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "serializableTreeItem"), _class.prototype)), _class));
+}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "keys", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "keys"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "key", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "key"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "id", [_dec3], Object.getOwnPropertyDescriptor(_class.prototype, "id"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "collapsibleState", [_dec4], Object.getOwnPropertyDescriptor(_class.prototype, "collapsibleState"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "children", [_dec5], Object.getOwnPropertyDescriptor(_class.prototype, "children"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "findChild", [_dec6], Object.getOwnPropertyDescriptor(_class.prototype, "findChild"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "findChildRec", [_dec7], Object.getOwnPropertyDescriptor(_class.prototype, "findChildRec"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "serializableTreeItem", [_dec8], Object.getOwnPropertyDescriptor(_class.prototype, "serializableTreeItem"), _class.prototype)), _class));
 /**
  * https://microsoft.github.io/vscode-codicons/dist/codicon.html
  * plust a few extra icons provided by decoupled studio:
@@ -196,7 +183,7 @@ let RemoteTreeDataProviderImpl = (_dec9 = (0, _decorators.memo)(), (_class2 = cl
 
   lazyInit() {
     this.refresh();
-    (0, _setInterval2.default)(() => {
+    setInterval(() => {
       this.refresh();
 
       for (const l of this.listeners) {
@@ -238,7 +225,7 @@ let RemoteTreeDataProviderImpl = (_dec9 = (0, _decorators.memo)(), (_class2 = cl
       return [];
     }
 
-    const res = children === null || children === void 0 ? void 0 : (0, _map.default)(children).call(children, c => c.id); //console.log('--->', res)
+    const res = children === null || children === void 0 ? void 0 : children.map(c => c.id); //console.log('--->', res)
 
     return res;
   } //   getParent(id: string) {
@@ -247,7 +234,7 @@ let RemoteTreeDataProviderImpl = (_dec9 = (0, _decorators.memo)(), (_class2 = cl
   // ----- end TreeDataProvider impl
 
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class2.prototype, "lazyInit", [_dec9], (0, _getOwnPropertyDescriptor.default)(_class2.prototype, "lazyInit"), _class2.prototype)), _class2));
+}, ((0, _applyDecoratedDescriptor2.default)(_class2.prototype, "lazyInit", [_dec9], Object.getOwnPropertyDescriptor(_class2.prototype, "lazyInit"), _class2.prototype)), _class2));
 exports.RemoteTreeDataProviderImpl = RemoteTreeDataProviderImpl;
 
 function RemoteTreeDataProvider_publishOverLSPConnection(tdp, connection, methodPrefix) {
@@ -313,7 +300,7 @@ function Command_open(uriOrLocation) {
     range: undefined
   };
 
-  if ((0, _startsWith.default)(uri).call(uri, 'https') || (0, _startsWith.default)(uri).call(uri, 'http')) {
+  if (uri.startsWith('https') || uri.startsWith('http')) {
     return {
       command: 'vscode.open',
       arguments: [uri],
@@ -332,9 +319,9 @@ function Command_open(uriOrLocation) {
 }
 
 function Command_cli(cmd, title = 'run...') {
-  cmd = (0, _trim.default)(cmd).call(cmd);
+  cmd = cmd.trim();
 
-  if (!((0, _startsWith.default)(cmd).call(cmd, 'rw') || (0, _startsWith.default)(cmd).call(cmd, 'redwood'))) {
+  if (!(cmd.startsWith('rw') || cmd.startsWith('redwood'))) {
     cmd = 'redwood ' + cmd;
   }
 

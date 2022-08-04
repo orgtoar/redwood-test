@@ -1,23 +1,16 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.netlify = void 0;
-
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
 
 const netlify = client => {
   return {
     type: 'netlify',
     client,
     login: () => {
-      return new _promise.default((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         let autoClosedModal = false;
         client.open('login');
         client.on('login', user => {
@@ -33,14 +26,14 @@ const netlify = client => {
       });
     },
     logout: () => {
-      return new _promise.default((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         client.logout();
         client.on('logout', resolve);
         client.on('error', reject);
       });
     },
     signup: () => {
-      return new _promise.default((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         client.open('signup');
         client.on('close', () => {
           resolve(null);

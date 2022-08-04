@@ -1,16 +1,9 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.magicLink = void 0;
-
-var _now = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/date/now"));
 
 const magicLink = client => {
   let token;
@@ -44,8 +37,8 @@ const magicLink = client => {
       });
     },
     getToken: async () => {
-      if (!token || (0, _now.default)() > expireTime) {
-        expireTime = (0, _now.default)() + 10 * 60 * 1000; // now + 10 min
+      if (!token || Date.now() > expireTime) {
+        expireTime = Date.now() + 10 * 60 * 1000; // now + 10 min
 
         return token = await client.user.getIdToken();
       } else {

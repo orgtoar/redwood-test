@@ -1,22 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = exports.description = exports.command = exports.builder = exports.aliases = void 0;
 
-var _every = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/every"));
+require("core-js/modules/esnext.async-iterator.every.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.iterator.every.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -61,11 +56,7 @@ const tailwindImports = [// using outer double quotes and inner single quotes he
 // the way prettier wants it in the actual RW app where this will be used
 "@import 'tailwindcss/base';", "@import 'tailwindcss/components';", "@import 'tailwindcss/utilities';"];
 
-const tailwindImportsExist = indexCSS => {
-  var _context;
-
-  return (0, _every.default)(_context = (0, _map.default)(tailwindImports).call(tailwindImports, el => new RegExp(el))).call(_context, tailwindDirective => tailwindDirective.test(indexCSS));
-};
+const tailwindImportsExist = indexCSS => tailwindImports.map(el => new RegExp(el)).every(tailwindDirective => tailwindDirective.test(indexCSS));
 
 const tailwindImportsAndNotes = ['/**', ' * START --- SETUP TAILWINDCSS EDIT', ' *', ' * `yarn rw setup ui tailwindcss` placed these imports here', " * to inject Tailwind's styles into your CSS.", ' * For more information, see: https://tailwindcss.com/docs/installation#include-tailwind-in-your-css', ' */', ...tailwindImports, '/**', ' * END --- SETUP TAILWINDCSS EDIT', ' */\n'];
 
@@ -177,7 +168,7 @@ const handler = async ({
           recommendations: [...originalExtensionsJson.recommendations, ...recommendedVSCodeExtensions]
         };
 
-        _fs.default.writeFileSync(VS_CODE_EXTENSIONS_PATH, (0, _stringify.default)(newExtensionsJson, null, 2));
+        _fs.default.writeFileSync(VS_CODE_EXTENSIONS_PATH, JSON.stringify(newExtensionsJson, null, 2));
       }
     }
   }, {
@@ -192,7 +183,7 @@ const handler = async ({
 
       let newPrettierConfig = prettierConfig;
 
-      if ((0, _includes.default)(newPrettierConfig).call(newPrettierConfig, 'tailwindConfig: ')) {
+      if (newPrettierConfig.includes('tailwindConfig: ')) {
         if (force) {
           newPrettierConfig = newPrettierConfig.replace(/tailwindConfig: .*(,)?/, `tailwindConfig: './${tailwindConfigPath}',`);
         } else {
@@ -214,11 +205,11 @@ const handler = async ({
 
       let newPrettierConfig = prettierConfig;
 
-      if ((0, _includes.default)(newPrettierConfig).call(newPrettierConfig, 'plugins: [')) {
+      if (newPrettierConfig.includes('plugins: [')) {
         const pluginsMatch = newPrettierConfig.match(/plugins: \[[\sa-z\(\)'\-,]*]/);
         const matched = pluginsMatch && pluginsMatch[0];
 
-        if (matched && ((0, _includes.default)(matched).call(matched, "require('prettier-plugin-tailwindcss')") || (0, _includes.default)(matched).call(matched, 'require("prettier-plugin-tailwindcss")'))) {
+        if (matched && (matched.includes("require('prettier-plugin-tailwindcss')") || matched.includes('require("prettier-plugin-tailwindcss")'))) {
           task.skip('tailwindcss-plugin-prettier already required in plugins');
         } else {
           newPrettierConfig = newPrettierConfig.replace(/plugins: \[(\n\s+)*/, `plugins: [$1require('prettier-plugin-tailwindcss'),$1`);

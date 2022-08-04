@@ -1,20 +1,19 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.RWService = void 0;
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.async-iterator.find.js");
 
-var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.find.js");
 
 var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
 
@@ -54,9 +53,7 @@ let RWService = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)()
 
 
   get sdl() {
-    var _context;
-
-    return (0, _find.default)(_context = this.parent.sdls).call(_context, sdl => sdl.name === this.name);
+    return this.parent.sdls.find(sdl => sdl.name === this.name);
   }
 
   children() {
@@ -95,5 +92,5 @@ let RWService = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)()
     });
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "name", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "name"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "sdl", [_dec2], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "sdl"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "funcs", [_dec3], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "funcs"), _class.prototype)), _class));
+}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "name", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "name"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "sdl", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "sdl"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "funcs", [_dec3], Object.getOwnPropertyDescriptor(_class.prototype, "funcs"), _class.prototype)), _class));
 exports.RWService = RWService;

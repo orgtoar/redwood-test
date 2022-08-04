@@ -1,16 +1,15 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.tasks = exports.handler = exports.description = exports.command = exports.builder = void 0;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.map.js");
+
+require("core-js/modules/esnext.iterator.map.js");
 
 var _listr = _interopRequireDefault(require("listr"));
 
@@ -41,7 +40,7 @@ const removeRoutesWithSet = async ({
     path,
     nestScaffoldByModel
   });
-  const routeNames = (0, _map.default)(routes).call(routes, extractRouteName);
+  const routeNames = routes.map(extractRouteName);
   const pluralPascalName = (0, _pascalcase.default)((0, _rwPluralize.pluralize)(model));
   const layoutName = `${pluralPascalName}Layout`;
   return (0, _lib.removeRoutesFromRouterTask)(routeNames, layoutName);
@@ -68,10 +67,8 @@ const removeLayoutImport = ({
   model: name,
   path: scaffoldPath = ''
 }) => {
-  var _context;
-
   const pluralPascalName = (0, _pascalcase.default)((0, _rwPluralize.pluralize)(name));
-  const pascalScaffoldPath = scaffoldPath === '' ? scaffoldPath : (0, _map.default)(_context = scaffoldPath.split('/')).call(_context, _pascalcase.default).join('/') + '/';
+  const pascalScaffoldPath = scaffoldPath === '' ? scaffoldPath : scaffoldPath.split('/').map(_pascalcase.default).join('/') + '/';
   const layoutName = `${pluralPascalName}Layout`;
   const importLayout = `import ${pluralPascalName}Layout from 'src/layouts/${pascalScaffoldPath}${layoutName}'`;
   const routesPath = (0, _lib.getPaths)().web.routes;

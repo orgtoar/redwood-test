@@ -1,23 +1,16 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.checkSetupStatus = checkSetupStatus;
 exports.wrapWithChakraProvider = wrapWithChakraProvider;
 
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
-var _isArray = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/array/is-array"));
-
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.map.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -36,13 +29,9 @@ function objectToComponentProps(obj, options = {
 }) {
   let props = [];
 
-  for (const [key, value] of (0, _entries.default)(obj)) {
-    var _context;
-
-    if (!(0, _includes.default)(_context = options.exclude).call(_context, key)) {
-      var _context2;
-
-      if (options.raw === true || (0, _isArray.default)(options.raw) && (0, _includes.default)(_context2 = options.raw).call(_context2, key)) {
+  for (const [key, value] of Object.entries(obj)) {
+    if (!options.exclude.includes(key)) {
+      if (options.raw === true || Array.isArray(options.raw) && options.raw.includes(key)) {
         props.push(`${key}={${value}}`);
       } else {
         props.push(`${key}="${value}"`);
@@ -72,10 +61,8 @@ function wrapRootComponent(content, {
   before,
   after
 }) {
-  var _context3;
-
   const [, indent, redwoodApolloProvider] = content.match(/(\s+)(<RedwoodApolloProvider>.*<\/RedwoodApolloProvider>)/s);
-  const redwoodApolloProviderLines = (0, _map.default)(_context3 = redwoodApolloProvider.split('\n')).call(_context3, line => '  ' + line);
+  const redwoodApolloProviderLines = redwoodApolloProvider.split('\n').map(line => '  ' + line);
   const propsAsArray = objectToComponentProps(props, {
     raw: true
   });
@@ -101,7 +88,7 @@ function checkSetupStatus() {
 
   const content = _fs.default.readFileSync(webAppPath).toString();
 
-  return (0, _includes.default)(content).call(content, 'ChakraProvider') ? 'done' : 'todo';
+  return content.includes('ChakraProvider') ? 'done' : 'todo';
 }
 /**
  * @param [props] {ChakraProviderProps}

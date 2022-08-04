@@ -1,22 +1,13 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.Connection_suppressErrors = Connection_suppressErrors;
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _startsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/starts-with"));
-
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
+require("core-js/modules/esnext.iterator.map.js");
 
 /**
  * will monkey patch the connection object
@@ -28,8 +19,8 @@ var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/
  * @param conn
  */
 function Connection_suppressErrors(conn) {
-  for (const k of (0, _keys.default)(conn)) {
-    if (!(0, _startsWith.default)(k).call(k, 'on')) {
+  for (const k of Object.keys(conn)) {
+    if (!k.startsWith('on')) {
       continue;
     } // only onHover, onCodeLens, etc?
 
@@ -41,14 +32,14 @@ function Connection_suppressErrors(conn) {
     }
 
     conn[k] = (...args) => {
-      const args2 = (0, _map.default)(args).call(args, arg => typeof arg === 'function' ? with_catch2(arg, (e, fargs) => {
+      const args2 = args.map(arg => typeof arg === 'function' ? with_catch2(arg, (e, fargs) => {
         const data = {
           handler: k,
           handlerInstallParams: args,
           handlerExecParams: fargs,
           error: e + ''
         };
-        const dd = (0, _stringify.default)(data, null, 2);
+        const dd = JSON.stringify(data, null, 2);
         conn.console.error(dd);
         return null;
       }) : arg);

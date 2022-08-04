@@ -1,28 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.RWEnvHelper = void 0;
 
-var _startsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/starts-with"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
-
-var _from = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/array/from"));
-
-var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
-
-var _findIndex = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find-index"));
+require("core-js/modules/esnext.iterator.map.js");
 
 var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
 
@@ -113,7 +102,7 @@ let RWEnvHelper = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)
 
 
   env_default_merged_filtered(include) {
-    return (0, _lodash.pickBy)(this.env_default_merged, (_v, k) => (0, _startsWith.default)(k).call(k, 'REDWOOD_ENV_') || (include === null || include === void 0 ? void 0 : (0, _includes.default)(include).call(include, k)));
+    return (0, _lodash.pickBy)(this.env_default_merged, (_v, k) => k.startsWith('REDWOOD_ENV_') || (include === null || include === void 0 ? void 0 : include.includes(k)));
   }
 
   _dotenv(f) {
@@ -144,20 +133,18 @@ let RWEnvHelper = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)
   }
 
   get process_env_expressions() {
-    var _context, _context2;
-
     // TODO: make this async (this is globbing around quite a bit)
     const {
       pathHelper
     } = this.parent;
-    const api = (0, _map.default)(_context = (0, _process_env.process_env_findAll)(pathHelper.api.base)).call(_context, x => new ProcessDotEnvExpression(this, 'api', x.key, x.node));
-    const web = (0, _map.default)(_context2 = (0, _process_env.process_env_findAll)(pathHelper.web.base)).call(_context2, x => new ProcessDotEnvExpression(this, 'web', x.key, x.node));
-    const prisma = (0, _from.default)((0, _prisma.prisma_parseEnvExpressionsInFile)(pathHelper.api.dbSchema));
-    const pp = (0, _map.default)(prisma).call(prisma, x => new ProcessDotEnvExpression(this, 'prisma', x.key, x.location));
+    const api = (0, _process_env.process_env_findAll)(pathHelper.api.base).map(x => new ProcessDotEnvExpression(this, 'api', x.key, x.node));
+    const web = (0, _process_env.process_env_findAll)(pathHelper.web.base).map(x => new ProcessDotEnvExpression(this, 'web', x.key, x.node));
+    const prisma = Array.from((0, _prisma.prisma_parseEnvExpressionsInFile)(pathHelper.api.dbSchema));
+    const pp = prisma.map(x => new ProcessDotEnvExpression(this, 'prisma', x.key, x.location));
     return [...api, ...web, ...pp];
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "id", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "id"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "env", [_dec2], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "env"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "env_defaults", [_dec3], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "env_defaults"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "api_prisma_env", [_dec4], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "api_prisma_env"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "env_default_merged", [_dec5], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "env_default_merged"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "env_available_to_api", [_dec6], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "env_available_to_api"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "env_available_to_web", [_dec7], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "env_available_to_web"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "process_env_expressions", [_dec8], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "process_env_expressions"), _class.prototype)), _class));
+}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "id", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "id"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "env", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "env"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "env_defaults", [_dec3], Object.getOwnPropertyDescriptor(_class.prototype, "env_defaults"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "api_prisma_env", [_dec4], Object.getOwnPropertyDescriptor(_class.prototype, "api_prisma_env"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "env_default_merged", [_dec5], Object.getOwnPropertyDescriptor(_class.prototype, "env_default_merged"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "env_available_to_api", [_dec6], Object.getOwnPropertyDescriptor(_class.prototype, "env_available_to_api"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "env_available_to_web", [_dec7], Object.getOwnPropertyDescriptor(_class.prototype, "env_available_to_web"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "process_env_expressions", [_dec8], Object.getOwnPropertyDescriptor(_class.prototype, "process_env_expressions"), _class.prototype)), _class));
 /**
  * An occurence of process.env somewhere in the codebase
  */
@@ -240,7 +227,7 @@ let ProcessDotEnvExpression = (_dec9 = (0, _decorators.lazy)(), _dec10 = (0, _de
     const file = (0, _path.join)(this.parent.parent.projectRoot, x);
     const content = (0, _fsExtra.readFileSync)(file).toString();
     const lines = content.split('\n');
-    const index = (0, _findIndex.default)(lines).call(lines, l => (0, _startsWith.default)(l).call(l, this.key + '='));
+    const index = lines.findIndex(l => l.startsWith(this.key + '='));
     return {
       uri: (0, _URL.URL_file)(file),
       range: _vscodeLanguageserver.Range.create(index, 0, index, lines[index].length)
@@ -354,4 +341,4 @@ ${snippet}
     }
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class2.prototype, "id", [_dec9], (0, _getOwnPropertyDescriptor.default)(_class2.prototype, "id"), _class2.prototype), (0, _applyDecoratedDescriptor2.default)(_class2.prototype, "side", [_dec10], (0, _getOwnPropertyDescriptor.default)(_class2.prototype, "side"), _class2.prototype), (0, _applyDecoratedDescriptor2.default)(_class2.prototype, "location", [_dec11], (0, _getOwnPropertyDescriptor.default)(_class2.prototype, "location"), _class2.prototype), (0, _applyDecoratedDescriptor2.default)(_class2.prototype, "value_definition_file_basename", [_dec12], (0, _getOwnPropertyDescriptor.default)(_class2.prototype, "value_definition_file_basename"), _class2.prototype), (0, _applyDecoratedDescriptor2.default)(_class2.prototype, "value_definition_location", [_dec13], (0, _getOwnPropertyDescriptor.default)(_class2.prototype, "value_definition_location"), _class2.prototype), (0, _applyDecoratedDescriptor2.default)(_class2.prototype, "value_as_available", [_dec14], (0, _getOwnPropertyDescriptor.default)(_class2.prototype, "value_as_available"), _class2.prototype)), _class2));
+}, ((0, _applyDecoratedDescriptor2.default)(_class2.prototype, "id", [_dec9], Object.getOwnPropertyDescriptor(_class2.prototype, "id"), _class2.prototype), (0, _applyDecoratedDescriptor2.default)(_class2.prototype, "side", [_dec10], Object.getOwnPropertyDescriptor(_class2.prototype, "side"), _class2.prototype), (0, _applyDecoratedDescriptor2.default)(_class2.prototype, "location", [_dec11], Object.getOwnPropertyDescriptor(_class2.prototype, "location"), _class2.prototype), (0, _applyDecoratedDescriptor2.default)(_class2.prototype, "value_definition_file_basename", [_dec12], Object.getOwnPropertyDescriptor(_class2.prototype, "value_definition_file_basename"), _class2.prototype), (0, _applyDecoratedDescriptor2.default)(_class2.prototype, "value_definition_location", [_dec13], Object.getOwnPropertyDescriptor(_class2.prototype, "value_definition_location"), _class2.prototype), (0, _applyDecoratedDescriptor2.default)(_class2.prototype, "value_as_available", [_dec14], Object.getOwnPropertyDescriptor(_class2.prototype, "value_as_available"), _class2.prototype)), _class2));

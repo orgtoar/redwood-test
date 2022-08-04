@@ -1,40 +1,63 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.writeFilesTask = exports.writeFile = exports.usingVSCode = exports.transformTSToJS = exports.saveRemoteFileToDisk = exports.runCommandTask = exports.removeRoutesFromRouterTask = exports.readFile = exports.prettify = exports.prettierOptions = exports.nameVariants = exports.graphFunctionDoesExist = exports.getPaths = exports.getInstalledRedwoodVersion = exports.getGraphqlPath = exports.getDefaultArgs = exports.getConfig = exports.generateTemplate = exports.existsAnyExtensionSync = exports.deleteFilesTask = exports.deleteFile = exports.cleanupEmptyDirsTask = exports.bytes = exports.asyncForEach = exports.addScaffoldImport = exports.addRoutesToRouterTask = exports._getPaths = void 0;
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _some = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/some"));
+require("core-js/modules/esnext.set.add-all.js");
 
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
+require("core-js/modules/esnext.set.delete-all.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.set.difference.js");
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.set.every.js");
 
-var _set = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/set"));
+require("core-js/modules/esnext.set.filter.js");
 
-var _concat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/concat"));
+require("core-js/modules/esnext.set.find.js");
 
-var _slice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/slice"));
+require("core-js/modules/esnext.set.intersection.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.set.is-disjoint-from.js");
 
-var _reduce = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/reduce"));
+require("core-js/modules/esnext.set.is-subset-of.js");
 
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
+require("core-js/modules/esnext.set.is-superset-of.js");
+
+require("core-js/modules/esnext.set.join.js");
+
+require("core-js/modules/esnext.set.map.js");
+
+require("core-js/modules/esnext.set.reduce.js");
+
+require("core-js/modules/esnext.set.some.js");
+
+require("core-js/modules/esnext.set.symmetric-difference.js");
+
+require("core-js/modules/esnext.set.union.js");
+
+require("core-js/modules/esnext.async-iterator.for-each.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.for-each.js");
+
+require("core-js/modules/esnext.async-iterator.filter.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
+
+require("core-js/modules/esnext.async-iterator.reduce.js");
+
+require("core-js/modules/esnext.iterator.reduce.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -160,9 +183,9 @@ const SUPPORTED_EXTENSIONS = ['.js', '.ts', '.tsx'];
 const deleteFile = file => {
   const extension = _path.default.extname(file);
 
-  if ((0, _includes.default)(SUPPORTED_EXTENSIONS).call(SUPPORTED_EXTENSIONS, extension)) {
+  if (SUPPORTED_EXTENSIONS.includes(extension)) {
     const baseFile = getBaseFile(file);
-    (0, _forEach.default)(SUPPORTED_EXTENSIONS).call(SUPPORTED_EXTENSIONS, ext => {
+    SUPPORTED_EXTENSIONS.forEach(ext => {
       const f = baseFile + ext;
 
       if (_fs.default.existsSync(f)) {
@@ -181,9 +204,9 @@ const getBaseFile = file => file.replace(/\.\w*$/, '');
 const existsAnyExtensionSync = file => {
   const extension = _path.default.extname(file);
 
-  if ((0, _includes.default)(SUPPORTED_EXTENSIONS).call(SUPPORTED_EXTENSIONS, extension)) {
+  if (SUPPORTED_EXTENSIONS.includes(extension)) {
     const baseFile = getBaseFile(file);
-    return (0, _some.default)(SUPPORTED_EXTENSIONS).call(SUPPORTED_EXTENSIONS, ext => _fs.default.existsSync(baseFile + ext));
+    return SUPPORTED_EXTENSIONS.some(ext => _fs.default.existsSync(baseFile + ext));
   }
 
   return _fs.default.existsSync(file);
@@ -225,7 +248,7 @@ const saveRemoteFileToDisk = (url, localPath, {
     throw new Error(`${localPath} already exists.`);
   }
 
-  const downloadPromise = new _promise.default((resolve, reject) => _https.default.get(url, response => {
+  const downloadPromise = new Promise((resolve, reject) => _https.default.get(url, response => {
     if (response.statusCode === 200) {
       response.pipe(_fs.default.createWriteStream(localPath));
       resolve();
@@ -340,12 +363,10 @@ const transformTSToJS = (filename, content) => {
 exports.transformTSToJS = transformTSToJS;
 
 const writeFilesTask = (files, options) => {
-  var _context;
-
   const {
     base
   } = getPaths();
-  return new _listr.default((0, _map.default)(_context = (0, _keys.default)(files)).call(_context, file => {
+  return new _listr.default(Object.keys(files).map(file => {
     const contents = files[file];
     return {
       title: `...waiting to write file \`./${_path.default.relative(base, file)}\`...`,
@@ -363,12 +384,10 @@ const writeFilesTask = (files, options) => {
 exports.writeFilesTask = writeFilesTask;
 
 const deleteFilesTask = files => {
-  var _context2;
-
   const {
     base
   } = getPaths();
-  return new _listr.default([...(0, _map.default)(_context2 = (0, _keys.default)(files)).call(_context2, file => {
+  return new _listr.default([...Object.keys(files).map(file => {
     return {
       title: `Destroying \`./${_path.default.relative(base, getBaseFile(file))}\`...`,
       skip: () => !existsAnyExtensionSync(file) && `File doesn't exist`,
@@ -389,16 +408,14 @@ const deleteFilesTask = files => {
 exports.deleteFilesTask = deleteFilesTask;
 
 const cleanupEmptyDirsTask = files => {
-  var _context3;
-
   const {
     base
   } = getPaths();
-  const endDirs = (0, _map.default)(_context3 = (0, _keys.default)(files)).call(_context3, file => _path.default.dirname(file));
-  const uniqueEndDirs = [...new _set.default(endDirs)]; // get the additional path directories not at the end of the path
+  const endDirs = Object.keys(files).map(file => _path.default.dirname(file));
+  const uniqueEndDirs = [...new Set(endDirs)]; // get the additional path directories not at the end of the path
 
   const pathDirs = [];
-  (0, _forEach.default)(uniqueEndDirs).call(uniqueEndDirs, dir => {
+  uniqueEndDirs.forEach(dir => {
     const relDir = _path.default.relative(base, dir);
 
     const splitDir = relDir.split(_path.default.sep);
@@ -411,8 +428,8 @@ const cleanupEmptyDirsTask = files => {
       splitDir.pop();
     }
   });
-  const uniqueDirs = (0, _concat.default)(uniqueEndDirs).call(uniqueEndDirs, [...new _set.default(pathDirs)]);
-  return new _listr.default((0, _map.default)(uniqueDirs).call(uniqueDirs, dir => {
+  const uniqueDirs = uniqueEndDirs.concat([...new Set(pathDirs)]);
+  return new _listr.default(uniqueDirs.map(dir => {
     return {
       title: `Removing empty \`./${_path.default.relative(base, dir)}\`...`,
       task: () => _fs.default.rmdirSync(dir),
@@ -435,8 +452,8 @@ exports.cleanupEmptyDirsTask = cleanupEmptyDirsTask;
 
 const wrapWithSet = (routesContent, layout, routes, newLineAndIndent) => {
   const [_, indentOne, indentTwo] = routesContent.match(/([ \t]*)<Router.*?>[^<]*[\r\n]+([ \t]+)/) || ['', 0, 2];
-  const oneLevelIndent = (0, _slice.default)(indentTwo).call(indentTwo, 0, indentTwo.length - indentOne.length);
-  const newRoutesWithExtraIndent = (0, _map.default)(routes).call(routes, route => oneLevelIndent + route);
+  const oneLevelIndent = indentTwo.slice(0, indentTwo.length - indentOne.length);
+  const newRoutesWithExtraIndent = routes.map(route => oneLevelIndent + route);
   return [`<Set wrap={${layout}}>`, ...newRoutesWithExtraIndent, `</Set>`].join(newLineAndIndent);
 };
 /**
@@ -447,7 +464,7 @@ const wrapWithSet = (routesContent, layout, routes, newLineAndIndent) => {
 const addRoutesToRouterTask = (routes, layout) => {
   const redwoodPaths = getPaths();
   const routesContent = readFile(redwoodPaths.web.routes).toString();
-  let newRoutes = (0, _filter.default)(routes).call(routes, route => !routesContent.match(route));
+  let newRoutes = routes.filter(route => !routesContent.match(route));
 
   if (newRoutes.length) {
     const [routerStart, routerParams, newLineAndIndent] = routesContent.match(/\s*<Router(.*?)>(\s*)/);
@@ -456,7 +473,7 @@ const addRoutesToRouterTask = (routes, layout) => {
       // newRoutes will be something like:
       // ['<Route path="/foo" page={FooPage} name="foo"/>']
       // and we need to replace `path="/foo"` with `path="/foo/"`
-      newRoutes = (0, _map.default)(newRoutes).call(newRoutes, route => route.replace(/ path="(.+?)" /, ' path="$1/" '));
+      newRoutes = newRoutes.map(route => route.replace(/ path="(.+?)" /, ' path="$1/" '));
     }
 
     const routesBatch = layout ? wrapWithSet(routesContent, layout, newRoutes, newLineAndIndent) : newRoutes.join(newLineAndIndent);
@@ -512,7 +529,7 @@ const removeEmtpySet = (routesContent, layout) => {
 const removeRoutesFromRouterTask = (routes, layout) => {
   const redwoodPaths = getPaths();
   const routesContent = readFile(redwoodPaths.web.routes).toString();
-  const newRoutesContent = (0, _reduce.default)(routes).call(routes, (content, route) => {
+  const newRoutesContent = routes.reduce((content, route) => {
     const matchRouteByName = new RegExp(`\\s*<Route[^>]*name="${route}"[^>]*/>`);
     return content.replace(matchRouteByName, '');
   }, routesContent);
@@ -527,7 +544,7 @@ exports.removeRoutesFromRouterTask = removeRoutesFromRouterTask;
 const runCommandTask = async (commands, {
   verbose
 }) => {
-  const tasks = new _listr.default((0, _map.default)(commands).call(commands, ({
+  const tasks = new _listr.default(commands.map(({
     title,
     cmd,
     args,
@@ -566,9 +583,7 @@ const runCommandTask = async (commands, {
 exports.runCommandTask = runCommandTask;
 
 const getDefaultArgs = builder => {
-  var _context4;
-
-  return (0, _reduce.default)(_context4 = (0, _entries.default)(builder)).call(_context4, (options, [optionName, optionConfig]) => {
+  return Object.entries(builder).reduce((options, [optionName, optionConfig]) => {
     // If a default is defined use it
     options[optionName] = optionConfig.default;
     return options;

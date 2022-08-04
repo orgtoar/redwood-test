@@ -1,20 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = exports.description = exports.command = exports.builder = void 0;
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -43,9 +44,7 @@ const EXCLUDE_GENERATORS = ['dataMigration', 'dbAuth', 'generator', 'script', 's
 const copyGenerator = (name, {
   force
 }) => {
-  var _context;
-
-  const side = (0, _includes.default)(_context = SIDE_MAP['web']).call(_context, name) ? 'web' : 'api';
+  const side = SIDE_MAP['web'].includes(name) ? 'web' : 'api';
 
   const from = _path.default.join(__dirname, '../../generate', name, 'templates');
 
@@ -65,14 +64,13 @@ const copyGenerator = (name, {
 
 
 const builder = yargs => {
-  var _context2, _context3;
-
-  const availableGenerators = (0, _map.default)(_context2 = (0, _filter.default)(_context3 = _fs.default.readdirSync(_path.default.join(__dirname, '../../generate'), {
+  const availableGenerators = _fs.default.readdirSync(_path.default.join(__dirname, '../../generate'), {
     withFileTypes: true
-  })).call(_context3, dir => dir.isDirectory() && !dir.name.match(/__/))).call(_context2, dir => dir.name);
+  }).filter(dir => dir.isDirectory() && !dir.name.match(/__/)).map(dir => dir.name);
+
   yargs.positional('name', {
     description: 'Name of the generator to copy templates from',
-    choices: (0, _filter.default)(availableGenerators).call(availableGenerators, dir => !(0, _includes.default)(EXCLUDE_GENERATORS).call(EXCLUDE_GENERATORS, dir))
+    choices: availableGenerators.filter(dir => !EXCLUDE_GENERATORS.includes(dir))
   }).option('force', {
     alias: 'f',
     default: false,

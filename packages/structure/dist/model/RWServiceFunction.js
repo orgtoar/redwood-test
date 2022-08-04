@@ -1,22 +1,19 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.RWServiceFunction = void 0;
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.async-iterator.find.js");
 
-var _sort = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/sort"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
+require("core-js/modules/esnext.iterator.find.js");
 
 var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
 
@@ -55,7 +52,7 @@ let RWServiceFunction = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators
   get sdlField() {
     var _this$parent$sdl, _this$parent$sdl$impl;
 
-    return (_this$parent$sdl = this.parent.sdl) === null || _this$parent$sdl === void 0 ? void 0 : (_this$parent$sdl$impl = _this$parent$sdl.implementableFields) === null || _this$parent$sdl$impl === void 0 ? void 0 : (0, _find.default)(_this$parent$sdl$impl).call(_this$parent$sdl$impl, f => f.name === this.name);
+    return (_this$parent$sdl = this.parent.sdl) === null || _this$parent$sdl === void 0 ? void 0 : (_this$parent$sdl$impl = _this$parent$sdl.implementableFields) === null || _this$parent$sdl$impl === void 0 ? void 0 : _this$parent$sdl$impl.find(f => f.name === this.name);
   }
 
   get parameterNames() {
@@ -76,13 +73,11 @@ let RWServiceFunction = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators
 
   *diagnostics() {
     if (this.sdlField) {
-      var _context, _context2;
-
       // this service function is implementing a field
       // parameter names should match
-      const p1 = (0, _sort.default)(_context = this.sdlField.argumentNames).call(_context).join(' '); //?
+      const p1 = this.sdlField.argumentNames.sort().join(' '); //?
 
-      const p2 = (0, _sort.default)(_context2 = this.parameterNames).call(_context2).join(' '); //?
+      const p2 = this.parameterNames.sort().join(' '); //?
 
       if (p1 !== p2) {
         var _this$node$getParamet;
@@ -116,5 +111,5 @@ let RWServiceFunction = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators
     }
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "id", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "id"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "sdlField", [_dec2], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "sdlField"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "parameterNames", [_dec3], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "parameterNames"), _class.prototype)), _class));
+}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "id", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "id"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "sdlField", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "sdlField"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "parameterNames", [_dec3], Object.getOwnPropertyDescriptor(_class.prototype, "parameterNames"), _class.prototype)), _class));
 exports.RWServiceFunction = RWServiceFunction;

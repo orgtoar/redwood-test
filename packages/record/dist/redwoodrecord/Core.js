@@ -1,32 +1,17 @@
 "use strict";
 
-var _Object$defineProperty2 = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty2(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = void 0;
 
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
-
-var _defineProperty = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/define-property"));
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
-
-var _assign = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/assign"));
-
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.iterator.map.js");
 
 var _classPrivateFieldLooseBase2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/classPrivateFieldLooseBase"));
 
@@ -116,7 +101,7 @@ class Core {
       where: attributes,
       ...options
     });
-    return _promise.default.all((0, _map.default)(records).call(records, async record => {
+    return Promise.all(records.map(async record => {
       return await this.build(record);
     }));
   } ///////////////////////////////
@@ -129,7 +114,7 @@ class Core {
   // Public instance methods
   ////////////////////////////
   constructor() {
-    (0, _defineProperty.default)(this, _attributes, {
+    Object.defineProperty(this, _attributes, {
       writable: true,
       value: {}
     });
@@ -170,7 +155,7 @@ class Core {
 
 
   async save(options = {}) {
-    const saveAttributes = JSON.parse((0, _stringify.default)(this.attributes));
+    const saveAttributes = JSON.parse(JSON.stringify(this.attributes));
 
     try {
       let newAttributes;
@@ -203,7 +188,7 @@ class Core {
   }
 
   async update(attributes = {}, options = {}) {
-    (0, _classPrivateFieldLooseBase2.default)(this, _attributes)[_attributes] = (0, _assign.default)((0, _classPrivateFieldLooseBase2.default)(this, _attributes)[_attributes], attributes);
+    (0, _classPrivateFieldLooseBase2.default)(this, _attributes)[_attributes] = Object.assign((0, _classPrivateFieldLooseBase2.default)(this, _attributes)[_attributes], attributes);
     return await this.save(options);
   } ////////////////////////////
   // Private instance methods
@@ -215,9 +200,7 @@ class Core {
 
 
   _createPropertiesForAttributes() {
-    for (const [name, value] of (0, _entries.default)(this.attributes)) {
-      var _context, _context2;
-
+    for (const [name, value] of Object.entries(this.attributes)) {
       // Has attribute already been created on this instance?
       // eslint-disable-next-line
       if (this.hasOwnProperty(name)) {
@@ -225,7 +208,7 @@ class Core {
       } // Is this a relationship attribute?
 
 
-      if (value && typeof value === 'object' && ((0, _includes.default)(_context = (0, _keys.default)(value)).call(_context, 'create') || (0, _includes.default)(_context2 = (0, _keys.default)(value)).call(_context2, 'connect'))) {
+      if (value && typeof value === 'object' && (Object.keys(value).includes('create') || Object.keys(value).includes('connect'))) {
         continue;
       }
 
@@ -235,7 +218,7 @@ class Core {
 
 
   _createPropertyForAttribute(name) {
-    (0, _defineProperty.default)(this, name, {
+    Object.defineProperty(this, name, {
       get() {
         return this._attributeGetter(name);
       },

@@ -1,24 +1,21 @@
 "use strict";
 
-var _context;
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _forEachInstanceProperty = require("@babel/runtime-corejs3/core-js/instance/for-each");
+require("core-js/modules/esnext.iterator.for-each.js");
 
-var _Object$keys = require("@babel/runtime-corejs3/core-js/object/keys");
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
 var _runPrerender = require("./runPrerender");
 
-_forEachInstanceProperty(_context = _Object$keys(_runPrerender)).call(_context, function (key) {
+Object.keys(_runPrerender).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (key in exports && exports[key] === _runPrerender[key]) return;
-
-  _Object$defineProperty(exports, key, {
+  Object.defineProperty(exports, key, {
     enumerable: true,
     get: function () {
       return _runPrerender[key];

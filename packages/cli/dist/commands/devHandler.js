@@ -1,22 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = void 0;
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.filter.js");
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.async-iterator.map.js");
+
+require("core-js/modules/esnext.iterator.map.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -47,11 +46,9 @@ const handler = async ({
   watchNodeModules = process.env.RWJS_WATCH_NODE_MODULES === '1',
   apiDebugPort
 }) => {
-  var _context, _context2;
-
   const rwjsPaths = (0, _lib.getPaths)();
 
-  if ((0, _includes.default)(side).call(side, 'api')) {
+  if (side.includes('api')) {
     try {
       await (0, _generatePrismaClient.generatePrismaClient)({
         verbose: false,
@@ -71,7 +68,7 @@ const handler = async ({
     }
   }
 
-  if ((0, _includes.default)(side).call(side, 'web')) {
+  if (side.includes('web')) {
     try {
       await (0, _dev.shutdownPort)((0, _config.getConfig)().web.port);
     } catch (e) {
@@ -86,7 +83,7 @@ const handler = async ({
     // Passed in flag takes precedence
     if (apiDebugPort) {
       return `--debug-port ${apiDebugPort}`;
-    } else if ((0, _includes.default)(_process.argv).call(_process.argv, '--apiDebugPort')) {
+    } else if (_process.argv.includes('--apiDebugPort')) {
       return `--debug-port ${defaultApiDebugPort}`;
     }
 
@@ -126,11 +123,11 @@ const handler = async ({
 
   const {
     result
-  } = (0, _concurrently.default)((0, _filter.default)(_context = (0, _map.default)(_context2 = (0, _keys.default)(jobs)).call(_context2, job => {
-    if ((0, _includes.default)(side).call(side, job) || job === 'gen') {
+  } = (0, _concurrently.default)(Object.keys(jobs).map(job => {
+    if (side.includes(job) || job === 'gen') {
       return jobs[job];
     }
-  })).call(_context, job => job && job.runWhen()), {
+  }).filter(job => job && job.runWhen()), {
     prefix: '{name} |',
     timestampFormat: 'HH:mm:ss'
   });

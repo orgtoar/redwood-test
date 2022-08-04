@@ -1,20 +1,13 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.generateGraphQLSchema = void 0;
-
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -48,7 +41,7 @@ const generateGraphQLSchema = async () => {
     convertExtensions: true,
     includeSources: true,
     cwd: (0, _paths.getPaths)().api.src,
-    schema: (0, _keys.default)(schemaPointerMap),
+    schema: Object.keys(schemaPointerMap),
     generates: {
       [(0, _paths.getPaths)().generated.schema]: {
         plugins: ['schema-ast']
@@ -74,7 +67,7 @@ const generateGraphQLSchema = async () => {
       console.error('Schema loading failed.', e.message);
       console.error('');
 
-      if (name && (0, _includes.default)(schemaPrisma).call(schemaPrisma, `model ${name}`)) {
+      if (name && schemaPrisma.includes(`model ${name}`)) {
         // Not all SDLs need to be backed by a DB model, but if they are we can
         // provide a more helpful error message
         console.error([`  ${_chalk.default.bgYellow(` ${_chalk.default.black.bold('Heads up')} `)}`, '', _chalk.default.yellow(`  It looks like you have a ${name} model in your Prisma schema.`), _chalk.default.yellow(`  If it's part of a relation, you may have to generate SDL or scaffolding for ${name} too.`), _chalk.default.yellow(`  So, if you haven't done that yet, ignore this error message and run the SDL or scaffold generator for ${name} now.`), '', _chalk.default.yellow(`  See the ${(0, _terminalLink.default)('Troubleshooting Generators', 'https://redwoodjs.com/docs/schema-relations#troubleshooting-generators')} section in our docs for more help.`), ''].join('\n'));

@@ -1,16 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.XMethodsManager = void 0;
-
-var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
 
 var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
 
@@ -57,5 +52,5 @@ let XMethodsManager = (_dec = (0, _decorators.memo)(), (_class = class XMethodsM
     });
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "start", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "start"), _class.prototype)), _class));
+}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "start", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "start"), _class.prototype)), _class));
 exports.XMethodsManager = XMethodsManager;

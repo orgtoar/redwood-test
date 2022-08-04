@@ -1,18 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = exports.description = exports.command = exports.builder = void 0;
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
-var _slice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/slice"));
 
 var _path = _interopRequireDefault(require("path"));
 
@@ -25,8 +18,6 @@ var _apiServer = require("@redwoodjs/api-server");
 var _config = require("@redwoodjs/internal/dist/config");
 
 var _lib = require("../../lib");
-
-var _context, _context2;
 
 const command = 'render <side>';
 exports.command = command;
@@ -55,7 +46,7 @@ const builder = yargs => {
 
 exports.builder = builder;
 
-if ((0, _includes.default)(_context = (0, _slice.default)(_context2 = process.argv).call(_context2, 2)).call(_context, 'api')) {
+if (process.argv.slice(2).includes('api')) {
   process.env.REDWOOD_DISABLE_TELEMETRY = 1;
 }
 

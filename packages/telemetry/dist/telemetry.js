@@ -1,16 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.timedTelemetry = exports.telemetryMiddleware = exports.errorTelemetry = void 0;
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
 
 var _child_process = require("child_process");
 
@@ -39,7 +34,7 @@ const timedTelemetry = async (argv, options, func) => {
   const start = new Date();
   const result = await func.call(void 0);
   const duration = new Date().getTime() - start.getTime();
-  spawnProcess('--argv', (0, _stringify.default)(argv), '--duration', duration.toString(), '--type', (0, _stringify.default)(options.type));
+  spawnProcess('--argv', JSON.stringify(argv), '--duration', duration.toString(), '--type', JSON.stringify(options.type));
   return result;
 }; // Returns 'Windows_NT' on Windows.
 // See https://nodejs.org/docs/latest-v12.x/api/os.html#os_os_type.
@@ -55,7 +50,7 @@ const errorTelemetry = async (argv, error) => {
     return;
   }
 
-  spawnProcess('--argv', (0, _stringify.default)(argv), '--error', (0, _stringify.default)(error));
+  spawnProcess('--argv', JSON.stringify(argv), '--error', JSON.stringify(error));
 }; // used as yargs middleware when any command is invoked
 
 
@@ -68,7 +63,7 @@ const telemetryMiddleware = async () => {
     return;
   }
 
-  spawnProcess('--argv', (0, _stringify.default)(process.argv));
+  spawnProcess('--argv', JSON.stringify(process.argv));
 };
 
 exports.telemetryMiddleware = telemetryMiddleware;

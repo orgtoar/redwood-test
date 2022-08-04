@@ -1,24 +1,19 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.RedwoodApolloProvider = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
-
 var apolloClient = _interopRequireWildcard(require("@apollo/client"));
 
-var _context2 = require("@apollo/client/link/context");
+var _context = require("@apollo/client/link/context");
 
 var _printer = require("graphql/language/printer");
 
@@ -77,8 +72,6 @@ const ApolloProviderWithFetchConfig = _ref => {
     mostRecentResponse: undefined
   };
   const updateDataApolloLink = new ApolloLink((operation, forward) => {
-    var _context;
-
     const {
       operationName,
       query,
@@ -89,12 +82,12 @@ const ApolloProviderWithFetchConfig = _ref => {
     data.mostRecentRequest.operationKind = query === null || query === void 0 ? void 0 : query.kind.toString();
     data.mostRecentRequest.variables = variables;
     data.mostRecentRequest.query = query && (0, _printer.print)(operation.query);
-    return (0, _map.default)(_context = forward(operation)).call(_context, result => {
+    return forward(operation).map(result => {
       data.mostRecentResponse = result;
       return result;
     });
   });
-  const withToken = (0, _context2.setContext)(async () => {
+  const withToken = (0, _context.setContext)(async () => {
     const token = await getToken();
     return {
       token

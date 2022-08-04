@@ -1,19 +1,14 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.Icon = void 0;
 exports.outlineToJSON = outlineToJSON;
 
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.map.js");
 
 let Icon;
 exports.Icon = Icon;
@@ -50,7 +45,7 @@ async function outlineToJSON(item) {
   }
 
   const cs = item.children ? await item.children() : [];
-  const css = await _promise.default.all((0, _map.default)(cs).call(cs, outlineToJSON));
+  const css = await Promise.all(cs.map(outlineToJSON));
   return { ...item,
     children: css
   };

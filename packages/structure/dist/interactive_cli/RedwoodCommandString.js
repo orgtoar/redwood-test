@@ -1,22 +1,15 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.RedwoodCommandString = void 0;
 
-var _endsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/ends-with"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _trim = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/trim"));
-
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
-
-var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
+require("core-js/modules/esnext.iterator.map.js");
 
 var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
 
@@ -38,8 +31,6 @@ let RedwoodCommandString = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorat
    * ex: "generate page Foo /foo"
    */
   constructor(original) {
-    var _context, _context2;
-
     this.original = original;
     this.isComplete = true;
     this.processed = void 0;
@@ -49,14 +40,14 @@ let RedwoodCommandString = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorat
       throw new Error('redwood command must be a string');
     }
 
-    if ((0, _endsWith.default)(_context = (0, _trim.default)(v).call(v)).call(_context, '...')) {
+    if (v.trim().endsWith('...')) {
       this.isComplete = false;
       const pp = v.split('...');
       pp.pop();
       v = pp.join('');
     }
 
-    const parts = (0, _map.default)(_context2 = (0, _trim.default)(v).call(v).split(' ')).call(_context2, s => (0, _trim.default)(s).call(s));
+    const parts = v.trim().split(' ').map(s => s.trim());
 
     if (parts[0] === 'yarn') {
       parts.shift();
@@ -97,5 +88,5 @@ let RedwoodCommandString = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorat
     return true;
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "parsed", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "parsed"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "isInterceptable", [_dec2], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "isInterceptable"), _class.prototype)), _class));
+}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "parsed", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "parsed"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "isInterceptable", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "isInterceptable"), _class.prototype)), _class));
 exports.RedwoodCommandString = RedwoodCommandString;

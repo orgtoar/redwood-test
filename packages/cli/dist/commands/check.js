@@ -1,16 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = exports.description = exports.command = exports.aliases = void 0;
-
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
 
 var _interopRequireWildcard2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/interopRequireWildcard"));
 
@@ -29,7 +24,7 @@ const handler = async () => {
   const {
     printDiagnostics,
     DiagnosticSeverity
-  } = await _promise.default.resolve().then(() => (0, _interopRequireWildcard2.default)(require('@redwoodjs/structure')));
+  } = await Promise.resolve().then(() => (0, _interopRequireWildcard2.default)(require('@redwoodjs/structure')));
   printDiagnostics((0, _lib.getPaths)().base, {
     getSeverityLabel: severity => {
       if (severity === DiagnosticSeverity.Error) {

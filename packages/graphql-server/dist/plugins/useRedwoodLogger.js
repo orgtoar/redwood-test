@@ -1,20 +1,19 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.useRedwoodLogger = void 0;
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.iterator.for-each.js");
+
+require("core-js/modules/esnext.async-iterator.find.js");
+
+require("core-js/modules/esnext.iterator.find.js");
 
 var _common = require("@graphql-yoga/common");
 
@@ -39,9 +38,7 @@ const logResult = (loggerConfig, envelopLogger, operationName) => ({
   const options = {};
 
   if (result !== null && result !== void 0 && result.errors && (result === null || result === void 0 ? void 0 : result.errors.length) > 0) {
-    var _context;
-
-    (0, _forEach.default)(_context = result.errors).call(_context, error => {
+    result.errors.forEach(error => {
       if (error.originalError && (error.originalError instanceof _errors.AuthenticationError || error.originalError instanceof _errors.ForbiddenError)) {
         var _error$extensions;
 
@@ -142,7 +139,7 @@ const useRedwoodLogger = loggerConfig => {
       return ({
         result
       }) => {
-        (0, _forEach.default)(result).call(result, item => {
+        result.forEach(item => {
           item.message && envelopLogger.error(item.message);
         });
       };
@@ -151,13 +148,13 @@ const useRedwoodLogger = loggerConfig => {
     onExecute({
       args
     }) {
-      var _context2, _rootOperation$name;
+      var _rootOperation$name;
 
       const options = {};
-      const rootOperation = (0, _find.default)(_context2 = args.document.definitions).call(_context2, o => o.kind === _graphql.Kind.OPERATION_DEFINITION);
+      const rootOperation = args.document.definitions.find(o => o.kind === _graphql.Kind.OPERATION_DEFINITION);
       const operationName = args.operationName || ((_rootOperation$name = rootOperation.name) === null || _rootOperation$name === void 0 ? void 0 : _rootOperation$name.value) || 'Anonymous Operation';
 
-      if (excludeOperations !== null && excludeOperations !== void 0 && (0, _includes.default)(excludeOperations).call(excludeOperations, operationName)) {
+      if (excludeOperations !== null && excludeOperations !== void 0 && excludeOperations.includes(operationName)) {
         return;
       }
 

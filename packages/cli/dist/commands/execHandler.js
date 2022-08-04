@@ -1,16 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = void 0;
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.for-each.js");
 
 var _path = _interopRequireDefault(require("path"));
 
@@ -33,10 +34,8 @@ var _exec = require("../lib/exec");
 var _generatePrismaClient = require("../lib/generatePrismaClient");
 
 const printAvailableScriptsToConsole = () => {
-  var _context;
-
   console.log('Available scripts:');
-  (0, _forEach.default)(_context = (0, _files.findScripts)()).call(_context, scriptPath => {
+  (0, _files.findScripts)().forEach(scriptPath => {
     const {
       name
     } = _path.default.parse(scriptPath);

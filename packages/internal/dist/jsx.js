@@ -1,20 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.getJsxElements = void 0;
 
-var _concat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/concat"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.iterator.filter.js");
+
+require("core-js/modules/esnext.async-iterator.for-each.js");
+
+require("core-js/modules/esnext.iterator.for-each.js");
 
 var _traverse = _interopRequireDefault(require("@babel/traverse"));
 
@@ -34,7 +35,7 @@ const getJsxElements = (ast, name) => {
 
         if ((path === null || path === void 0 ? void 0 : (_path$parentPath = path.parentPath) === null || _path$parentPath === void 0 ? void 0 : (_path$parentPath$pare = _path$parentPath.parentPath) === null || _path$parentPath$pare === void 0 ? void 0 : _path$parentPath$pare.type) === 'JSXElement') {
           const element = reduceJsxElement([], path.parentPath.parentPath.node);
-          elements = (0, _concat.default)(elements).call(elements, element);
+          elements = elements.concat(element);
         }
       }
     }
@@ -50,9 +51,7 @@ const getJsxElements = (ast, name) => {
 exports.getJsxElements = getJsxElements;
 
 const getJsxAttributes = jsxElement => {
-  var _context;
-
-  return (0, _filter.default)(_context = jsxElement.openingElement.attributes).call(_context, ({
+  return jsxElement.openingElement.attributes.filter(({
     type
   }) => type === 'JSXAttribute');
 };
@@ -99,9 +98,7 @@ const reduceJsxElement = (oldNode, currentNode) => {
   }
 
   if ('children' in currentNode) {
-    var _context2;
-
-    (0, _forEach.default)(_context2 = currentNode.children).call(_context2, node => oldNode.length > 0 ? reduceJsxElement(element.children, node) : reduceJsxElement(oldNode, node));
+    currentNode.children.forEach(node => oldNode.length > 0 ? reduceJsxElement(element.children, node) : reduceJsxElement(oldNode, node));
   }
 
   return oldNode;

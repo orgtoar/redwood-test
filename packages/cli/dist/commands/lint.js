@@ -1,16 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = exports.description = exports.command = exports.builder = void 0;
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -45,10 +46,8 @@ const handler = async ({
   fix
 }) => {
   try {
-    var _context;
-
     const pathString = path === null || path === void 0 ? void 0 : path.join(' ');
-    const result = await (0, _execa.default)('yarn eslint', (0, _filter.default)(_context = [fix && '--fix', !pathString && _fs.default.existsSync((0, _lib.getPaths)().web.src) && 'web/src', !pathString && _fs.default.existsSync((0, _lib.getPaths)().api.src) && 'api/src', pathString]).call(_context, Boolean), {
+    const result = await (0, _execa.default)('yarn eslint', [fix && '--fix', !pathString && _fs.default.existsSync((0, _lib.getPaths)().web.src) && 'web/src', !pathString && _fs.default.existsSync((0, _lib.getPaths)().api.src) && 'api/src', pathString].filter(Boolean), {
       cwd: (0, _lib.getPaths)().base,
       shell: true,
       stdio: 'inherit'

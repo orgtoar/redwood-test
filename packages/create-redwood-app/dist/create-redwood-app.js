@@ -8,19 +8,15 @@
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _splice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/splice"));
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
-
-var _now = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/date/now"));
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _child_process = require("child_process");
 
@@ -123,20 +119,18 @@ const createProjectTasks = ({
       }
     },
     task: () => {
-      return new _promise.default((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         const {
           engines
         } = require(_path.default.join(templateDir, 'package.json')); // this checks all engine requirements, including Node.js and Yarn
 
 
         (0, _checkNodeVersion.default)(engines, (_error, result) => {
-          var _context, _context2;
-
           if (result.isSatisfied) {
             return resolve();
           }
 
-          const logStatements = (0, _map.default)(_context = (0, _filter.default)(_context2 = (0, _keys.default)(result.versions)).call(_context2, name => !result.versions[name].isSatisfied)).call(_context, name => {
+          const logStatements = Object.keys(result.versions).filter(name => !result.versions[name].isSatisfied).map(name => {
             const {
               version,
               wanted
@@ -229,9 +223,9 @@ const sendTelemetry = ({
   if (telemetry) {
     const command = process.argv; // make command show 'create redwood-app [path] --flags'
 
-    (0, _splice.default)(command).call(command, 2, 0, 'create', 'redwood-app');
+    command.splice(2, 0, 'create', 'redwood-app');
     command[4] = '[path]';
-    let args = ['--root', newAppDir, '--argv', (0, _stringify.default)(command), '--duration', (0, _now.default)() - startTime, '--rwVersion', _package.version];
+    let args = ['--root', newAppDir, '--argv', JSON.stringify(command), '--duration', Date.now() - startTime, '--rwVersion', _package.version];
 
     if (error) {
       args = [...args, '--error', `"${error}"`];
@@ -246,7 +240,7 @@ const sendTelemetry = ({
   }
 };
 
-const startTime = (0, _now.default)();
+const startTime = Date.now();
 new _listr.default([{
   title: 'Creating Redwood app',
   task: () => new _listr.default(createProjectTasks({
@@ -280,12 +274,10 @@ new _listr.default([{
   collapse: false,
   exitOnError: true
 }).run().then(() => {
-  var _context3;
-
   sendTelemetry() // zOMG the semicolon below is a real Prettier thing. What??
   // https://prettier.io/docs/en/rationale.html#semicolons
   ;
-  (0, _map.default)(_context3 = ['', style.success('Thanks for trying out Redwood!'), '', ` ⚡️ ${style.redwood('Get up and running fast with this Quick Start guide')}: https://redwoodjs.com/docs/quick-start`, '', style.header('Join the Community'), '', `${style.redwood(' ❖ Join our Forums')}: https://community.redwoodjs.com`, `${style.redwood(' ❖ Join our Chat')}: https://discord.gg/redwoodjs`, '', style.header('Get some help'), '', `${style.redwood(' ❖ Get started with the Tutorial')}: https://redwoodjs.com/docs/tutorial`, `${style.redwood(' ❖ Read the Documentation')}: https://redwoodjs.com/docs`, '', style.header('Stay updated'), '', `${style.redwood(' ❖ Sign up for our Newsletter')}: https://www.redwoodjs.com/newsletter`, `${style.redwood(' ❖ Follow us on Twitter')}: https://twitter.com/redwoodjs`, '', `${style.header(`Become a Contributor`)} ${style.love('❤')}`, '', `${style.redwood(' ❖ Learn how to get started')}: https://redwoodjs.com/docs/contributing`, `${style.redwood(' ❖ Find a Good First Issue')}: https://redwoodjs.com/good-first-issue`, '', `${style.header(`Fire it up!`)} 🚀`, '', `${style.redwood(` > ${style.green(`cd ${targetDir}`)}`)}`, `${style.redwood(` > ${style.green(`yarn rw dev`)}`)}`, '']).call(_context3, item => console.log(item));
+  ['', style.success('Thanks for trying out Redwood!'), '', ` ⚡️ ${style.redwood('Get up and running fast with this Quick Start guide')}: https://redwoodjs.com/docs/quick-start`, '', style.header('Join the Community'), '', `${style.redwood(' ❖ Join our Forums')}: https://community.redwoodjs.com`, `${style.redwood(' ❖ Join our Chat')}: https://discord.gg/redwoodjs`, '', style.header('Get some help'), '', `${style.redwood(' ❖ Get started with the Tutorial')}: https://redwoodjs.com/docs/tutorial`, `${style.redwood(' ❖ Read the Documentation')}: https://redwoodjs.com/docs`, '', style.header('Stay updated'), '', `${style.redwood(' ❖ Sign up for our Newsletter')}: https://www.redwoodjs.com/newsletter`, `${style.redwood(' ❖ Follow us on Twitter')}: https://twitter.com/redwoodjs`, '', `${style.header(`Become a Contributor`)} ${style.love('❤')}`, '', `${style.redwood(' ❖ Learn how to get started')}: https://redwoodjs.com/docs/contributing`, `${style.redwood(' ❖ Find a Good First Issue')}: https://redwoodjs.com/good-first-issue`, '', `${style.header(`Fire it up!`)} 🚀`, '', `${style.redwood(` > ${style.green(`cd ${targetDir}`)}`)}`, `${style.redwood(` > ${style.green(`yarn rw dev`)}`)}`, ''].map(item => console.log(item));
 }).catch(e => {
   console.log();
   console.log(e);

@@ -1,20 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = exports.files = exports.description = exports.command = exports.builder = void 0;
 
-var _reduce = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/reduce"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
+require("core-js/modules/esnext.iterator.for-each.js");
 
 var _path = _interopRequireDefault(require("path"));
 
@@ -83,7 +80,7 @@ const files = ({
     outputFiles.push(scenarioFile);
   }
 
-  return (0, _reduce.default)(outputFiles).call(outputFiles, (acc, [outputPath, content]) => {
+  return outputFiles.reduce((acc, [outputPath, content]) => {
     const template = generateTypescript ? content : (0, _lib.transformTSToJS)(outputPath, content);
     return {
       [outputPath]: template,
@@ -103,14 +100,12 @@ const description = 'Generate a Function'; // This could be built using createYa
 exports.description = description;
 
 const builder = yargs => {
-  var _context;
-
   yargs.positional('name', {
     description: 'Name of the Function',
     type: 'string'
   }).epilogue(`Also see the ${(0, _terminalLink.default)('Redwood CLI Reference', 'https://redwoodjs.com/docs/cli-commands#generate-function')}`); // Add default options, includes '--typescript', '--javascript', '--force', ...
 
-  (0, _forEach.default)(_context = (0, _entries.default)(_generate.yargsDefaults)).call(_context, ([option, config]) => {
+  Object.entries(_generate.yargsDefaults).forEach(([option, config]) => {
     yargs.option(option, config);
   });
 }; // This could be built using createYargsForComponentGeneration;

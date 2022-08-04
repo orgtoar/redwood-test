@@ -1,18 +1,14 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-_Object$defineProperty(exports, "getDirectiveName", {
+Object.defineProperty(exports, "getDirectiveName", {
   enumerable: true,
   get: function () {
     return _graphqlServer.getDirectiveName;
   }
 });
-
 exports.mockRedwoodDirective = void 0;
 
 var _graphqlServer = require("@redwoodjs/graphql-server");

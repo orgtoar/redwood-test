@@ -1,18 +1,9 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.firebase = void 0;
-
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
-
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
 
 // @TODO: Firebase doesn't export a list of providerIds they use
 // But I found them here: https://github.com/firebase/firebase-js-sdk/blob/a5768b0aa7d7ce732279931aa436e988c9f36487/packages/rules-unit-testing/src/api/index.ts
@@ -29,9 +20,7 @@ const applyProviderOptions = (provider, options) => {
   }
 
   if (options.scopes) {
-    var _context;
-
-    (0, _forEach.default)(_context = options.scopes).call(_context, scope => provider.addScope(scope));
+    options.scopes.forEach(scope => provider.addScope(scope));
   }
 
   return provider;
@@ -67,7 +56,7 @@ const firebase = _ref => {
     restoreAuthState: () => {
       // The first firing of onAuthStateChange indicates that firebase auth has
       // loaded and the state is ready to be read. Unsubscribe after this first firing.
-      return new _promise.default((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         const unsubscribe = auth.onAuthStateChanged(user => {
           unsubscribe();
           resolve(user);

@@ -1,20 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.RWProject = void 0;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
+require("core-js/modules/esnext.async-iterator.filter.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
 
@@ -116,15 +117,13 @@ let RWProject = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)()
   }
 
   async prismaDMMFModelNames() {
-    var _context;
-
     const dmmf = await this.prismaDMMF();
 
     if (!dmmf) {
       return [];
     }
 
-    return (0, _map.default)(_context = dmmf.datamodel.models).call(_context, m => m.name);
+    return dmmf.datamodel.models.map(m => m.name);
   }
 
   get redwoodTOML() {
@@ -140,9 +139,7 @@ let RWProject = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)()
   }
 
   get pages() {
-    var _context2;
-
-    return (0, _map.default)(_context2 = this.processPagesDir).call(_context2, p => new _RWPage.RWPage(p.const, p.path, this));
+    return this.processPagesDir.map(p => new _RWPage.RWPage(p.const, p.path, this));
   }
 
   get router() {
@@ -164,37 +161,27 @@ let RWProject = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)()
   }
 
   get services() {
-    var _context3, _context4;
-
     // TODO: what is the official logic?
     // TODO: Support both `/services/todos/todos.js` AND `/services/todos.js`
-    return (0, _map.default)(_context3 = (0, _filter.default)(_context4 = this.host.globSync(this.pathHelper.api.services + allFilesGlob)).call(_context4, _path2.followsDirNameConvention)).call(_context3, x => new _RWService.RWService(x, this));
+    return this.host.globSync(this.pathHelper.api.services + allFilesGlob).filter(_path2.followsDirNameConvention).map(x => new _RWService.RWService(x, this));
   }
 
   get sdls() {
-    var _context5;
-
-    return (0, _map.default)(_context5 = this.host.globSync(this.pathHelper.api.graphql + '/**/*.sdl.{js,ts}')).call(_context5, x => new _RWSDL.RWSDL(x, this));
+    return this.host.globSync(this.pathHelper.api.graphql + '/**/*.sdl.{js,ts}').map(x => new _RWSDL.RWSDL(x, this));
   }
 
   get layouts() {
-    var _context6, _context7, _context8;
-
     // TODO: what is the official logic?
-    return (0, _map.default)(_context6 = (0, _filter.default)(_context7 = (0, _filter.default)(_context8 = this.host.globSync(this.pathHelper.web.layouts + allFilesGlob)).call(_context8, _path2.followsDirNameConvention)).call(_context7, _path2.isLayoutFileName)).call(_context6, x => new _RWLayout.RWLayout(x, this));
+    return this.host.globSync(this.pathHelper.web.layouts + allFilesGlob).filter(_path2.followsDirNameConvention).filter(_path2.isLayoutFileName).map(x => new _RWLayout.RWLayout(x, this));
   }
 
   get functions() {
-    var _context9;
-
     // TODO: what is the official logic?
-    return (0, _map.default)(_context9 = this.host.globSync(this.pathHelper.api.functions + allFilesGlob)).call(_context9, x => new _RWFunction.RWFunction(x, this));
+    return this.host.globSync(this.pathHelper.api.functions + allFilesGlob).map(x => new _RWFunction.RWFunction(x, this));
   }
 
   get components() {
-    var _context10;
-
-    return (0, _map.default)(_context10 = this.host.globSync(this.pathHelper.web.components + allFilesGlob)).call(_context10, file => {
+    return this.host.globSync(this.pathHelper.web.components + allFilesGlob).map(file => {
       if ((0, _path2.isCellFileName)(file)) {
         const possibleCell = new _RWCell.RWCell(file, this);
         return possibleCell.isCell ? possibleCell : new _RWComponent.RWComponent(file, this);
@@ -219,14 +206,12 @@ let RWProject = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)()
 
 
   get cells() {
-    var _context11, _context12;
-
-    return (0, _filter.default)(_context11 = (0, _map.default)(_context12 = this.host.globSync(this.pathHelper.web.base + '/**/*Cell.{js,jsx,tsx}')).call(_context12, file => new _RWCell.RWCell(file, this))).call(_context11, file => file.isCell);
+    return this.host.globSync(this.pathHelper.web.base + '/**/*Cell.{js,jsx,tsx}').map(file => new _RWCell.RWCell(file, this)).filter(file => file.isCell);
   }
 
   get envHelper() {
     return new _RWEnvHelper.RWEnvHelper(this);
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "id", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "id"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "pathHelper", [_dec2], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "pathHelper"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "isTypeScriptProject", [_dec3], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "isTypeScriptProject"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "prismaDMMF", [_dec4], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "prismaDMMF"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "prismaDMMFModelNames", [_dec5], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "prismaDMMFModelNames"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "redwoodTOML", [_dec6], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "redwoodTOML"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "processPagesDir", [_dec7], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "processPagesDir"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "pages", [_dec8], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "pages"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "router", [_dec9], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "router"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "defaultNotFoundPageFilePath", [_dec10], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "defaultNotFoundPageFilePath"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "services", [_dec11], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "services"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "sdls", [_dec12], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "sdls"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "layouts", [_dec13], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "layouts"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "functions", [_dec14], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "functions"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "components", [_dec15], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "components"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "sides", [_dec16], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "sides"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "mocks", [_dec17], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "mocks"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "cells", [_dec18], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "cells"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "envHelper", [_dec19], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "envHelper"), _class.prototype)), _class));
+}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "id", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "id"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "pathHelper", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "pathHelper"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "isTypeScriptProject", [_dec3], Object.getOwnPropertyDescriptor(_class.prototype, "isTypeScriptProject"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "prismaDMMF", [_dec4], Object.getOwnPropertyDescriptor(_class.prototype, "prismaDMMF"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "prismaDMMFModelNames", [_dec5], Object.getOwnPropertyDescriptor(_class.prototype, "prismaDMMFModelNames"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "redwoodTOML", [_dec6], Object.getOwnPropertyDescriptor(_class.prototype, "redwoodTOML"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "processPagesDir", [_dec7], Object.getOwnPropertyDescriptor(_class.prototype, "processPagesDir"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "pages", [_dec8], Object.getOwnPropertyDescriptor(_class.prototype, "pages"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "router", [_dec9], Object.getOwnPropertyDescriptor(_class.prototype, "router"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "defaultNotFoundPageFilePath", [_dec10], Object.getOwnPropertyDescriptor(_class.prototype, "defaultNotFoundPageFilePath"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "services", [_dec11], Object.getOwnPropertyDescriptor(_class.prototype, "services"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "sdls", [_dec12], Object.getOwnPropertyDescriptor(_class.prototype, "sdls"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "layouts", [_dec13], Object.getOwnPropertyDescriptor(_class.prototype, "layouts"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "functions", [_dec14], Object.getOwnPropertyDescriptor(_class.prototype, "functions"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "components", [_dec15], Object.getOwnPropertyDescriptor(_class.prototype, "components"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "sides", [_dec16], Object.getOwnPropertyDescriptor(_class.prototype, "sides"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "mocks", [_dec17], Object.getOwnPropertyDescriptor(_class.prototype, "mocks"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "cells", [_dec18], Object.getOwnPropertyDescriptor(_class.prototype, "cells"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "envHelper", [_dec19], Object.getOwnPropertyDescriptor(_class.prototype, "envHelper"), _class.prototype)), _class));
 exports.RWProject = RWProject;

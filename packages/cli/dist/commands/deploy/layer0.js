@@ -1,20 +1,19 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.ERR_MESSAGE_NOT_INITIALIZED = exports.ERR_MESSAGE_MISSING_CLI = void 0;
 exports.buildErrorMessage = buildErrorMessage;
 exports.handler = exports.description = exports.command = exports.builder = void 0;
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.async-iterator.reduce.js");
 
-var _reduce = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/reduce"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.reduce.js");
 
 var _path = _interopRequireDefault(require("path"));
 
@@ -49,7 +48,7 @@ const builder = async yargs => {
     default: false
   };
   yargs // allow Layer0 CLI options to pass through
-  .options(layer0Builder).group((0, _keys.default)((0, _omit.default)(layer0Builder, ['skip-init'])), 'Layer0 deploy options:');
+  .options(layer0Builder).group(Object.keys((0, _omit.default)(layer0Builder, ['skip-init'])), 'Layer0 deploy options:');
 };
 
 exports.builder = builder;
@@ -61,8 +60,6 @@ const execaOptions = {
 };
 
 const handler = async args => {
-  var _context;
-
   const {
     builder: layer0Builder
   } = require('@layer0/cli/commands/deploy');
@@ -90,7 +87,7 @@ const handler = async args => {
 
   await (0, _helpers.deployHandler)(args); // construct args for deploy command
 
-  const deployArgs = (0, _reduce.default)(_context = (0, _keys.default)(layer0Builder)).call(_context, (acc, key) => {
+  const deployArgs = Object.keys(layer0Builder).reduce((acc, key) => {
     if (args[key]) {
       acc.push(`--${key}=${args[key]}`);
     }

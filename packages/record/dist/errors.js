@@ -1,11 +1,8 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.RedwoodRecordUncaughtError = exports.RedwoodRecordNullAttributeError = exports.RedwoodRecordNotFoundError = exports.RedwoodRecordMissingRequiredModelError = exports.RedwoodRecordMissingAttributeError = exports.RedwoodRecordError = void 0;
 
 var _api = require("@redwoodjs/api");

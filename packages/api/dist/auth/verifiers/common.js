@@ -1,13 +1,10 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.verifierLookup = exports.WebhookVerificationError = exports.WebhookSignError = exports.VERIFICATION_SIGN_MESSAGE = exports.VERIFICATION_ERROR_MESSAGE = exports.DEFAULT_WEBHOOK_SECRET = exports.DEFAULT_TOLERANCE = void 0;
 
 var _base64Sha1Verifier = _interopRequireDefault(require("./base64Sha1Verifier"));

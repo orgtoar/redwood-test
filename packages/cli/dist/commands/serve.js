@@ -1,16 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.description = exports.command = exports.builder = void 0;
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -49,12 +44,12 @@ const builder = yargs => {
     // Make sure the relevant side has been built, before serving
     const positionalArgs = argv._;
 
-    if ((0, _includes.default)(positionalArgs).call(positionalArgs, 'web') && !_fs.default.existsSync(_path.default.join((0, _lib.getPaths)().web.dist), 'index.html')) {
+    if (positionalArgs.includes('web') && !_fs.default.existsSync(_path.default.join((0, _lib.getPaths)().web.dist), 'index.html')) {
       console.error(_colors.default.error('\n Please run `yarn rw build web` before trying to serve web. \n'));
       process.exit(1);
     }
 
-    if ((0, _includes.default)(positionalArgs).call(positionalArgs, 'api') && !_fs.default.existsSync(_path.default.join((0, _lib.getPaths)().api.dist))) {
+    if (positionalArgs.includes('api') && !_fs.default.existsSync(_path.default.join((0, _lib.getPaths)().api.dist))) {
       console.error(_colors.default.error('\n Please run `yarn rw build api` before trying to serve api. \n'));
       process.exit(1);
     }

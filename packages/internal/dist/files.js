@@ -1,22 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.isPageFile = exports.isGraphQLSchemaFile = exports.isFileInsideFolder = exports.isDirectoryNamedModuleFile = exports.isCellFile = exports.isApiFunction = exports.findWebFiles = exports.findScripts = exports.findPrerenderedHtml = exports.findPages = exports.findGraphQLSchemas = exports.findDirectoryNamedModules = exports.findCells = exports.findApiServerFunctions = exports.findApiFiles = exports.findApiDistFunctions = void 0;
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _endsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/ends-with"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _findIndex = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find-index"));
-
-var _startsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/starts-with"));
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _path = _interopRequireDefault(require("path"));
 
@@ -33,7 +28,7 @@ const findCells = (cwd = (0, _paths.getPaths)().web.src) => {
     ignore: ['node_modules']
   });
 
-  return (0, _filter.default)(modules).call(modules, isCellFile);
+  return modules.filter(isCellFile);
 };
 
 exports.findCells = findCells;
@@ -45,14 +40,12 @@ const findPages = (cwd = (0, _paths.getPaths)().web.pages) => {
     ignore: ['node_modules']
   });
 
-  return (0, _filter.default)(modules).call(modules, isPageFile);
+  return modules.filter(isPageFile);
 };
 
 exports.findPages = findPages;
 
 const findDirectoryNamedModules = (cwd = (0, _paths.getPaths)().base) => {
-  var _context;
-
   const modules = _fastGlob.default.sync('**/src/**/*.{ts,js,jsx,tsx}', {
     cwd,
     absolute: true,
@@ -61,18 +54,16 @@ const findDirectoryNamedModules = (cwd = (0, _paths.getPaths)().base) => {
   // but they get their own special type mirror file, so ignore them.
 
 
-  return (0, _filter.default)(_context = (0, _filter.default)(modules).call(modules, isDirectoryNamedModuleFile)).call(_context, p => !isCellFile(p));
+  return modules.filter(isDirectoryNamedModuleFile).filter(p => !isCellFile(p));
 };
 
 exports.findDirectoryNamedModules = findDirectoryNamedModules;
 
 const findGraphQLSchemas = (cwd = (0, _paths.getPaths)().api.graphql) => {
-  var _context2;
-
-  return (0, _filter.default)(_context2 = _fastGlob.default.sync('**/*.sdl.{ts,js}', {
+  return _fastGlob.default.sync('**/*.sdl.{ts,js}', {
     cwd,
     absolute: true
-  })).call(_context2, isGraphQLSchemaFile);
+  }).filter(isGraphQLSchemaFile);
 };
 
 exports.findGraphQLSchemas = findGraphQLSchemas;
@@ -111,7 +102,7 @@ const findApiServerFunctions = (cwd = (0, _paths.getPaths)().api.functions) => {
     ignore: ignoreApiFiles
   });
 
-  return (0, _filter.default)(files).call(files, f => isApiFunction(f, cwd));
+  return files.filter(f => isApiFunction(f, cwd));
 };
 
 exports.findApiServerFunctions = findApiServerFunctions;
@@ -146,7 +137,7 @@ const isCellFile = p => {
   } // A Cell must be a directory named module.
 
 
-  if (!(0, _endsWith.default)(dir).call(dir, name)) {
+  if (!dir.endsWith(name)) {
     return false;
   }
 
@@ -158,8 +149,8 @@ const isCellFile = p => {
 
 
   const exports = (0, _ast.getNamedExports)(ast);
-  const exportedQUERY = (0, _findIndex.default)(exports).call(exports, v => v.name === 'QUERY') !== -1;
-  const exportedSuccess = (0, _findIndex.default)(exports).call(exports, v => v.name === 'Success') !== -1;
+  const exportedQUERY = exports.findIndex(v => v.name === 'QUERY') !== -1;
+  const exportedSuccess = exports.findIndex(v => v.name === 'Success') !== -1;
 
   if (!exportedQUERY && !exportedSuccess) {
     return false;
@@ -186,7 +177,7 @@ const isPageFile = p => {
   } = _path.default.parse(p); // A page must end with "Page.{jsx,js,tsx}".
 
 
-  if (!(0, _endsWith.default)(name).call(name, 'Page')) {
+  if (!name.endsWith('Page')) {
     return false;
   } // A page should be in the `web/src/pages` directory.
 
@@ -213,7 +204,7 @@ const isDirectoryNamedModuleFile = p => {
     name
   } = _path.default.parse(p);
 
-  return (0, _endsWith.default)(dir).call(dir, name);
+  return dir.endsWith(name);
 };
 
 exports.isDirectoryNamedModuleFile = isDirectoryNamedModuleFile;
@@ -227,7 +218,7 @@ const isGraphQLSchemaFile = p => {
 
   const ast = (0, _ast.fileToAst)(p);
   const exports = (0, _ast.getNamedExports)(ast);
-  return (0, _findIndex.default)(exports).call(exports, v => v.name === 'schema') !== -1;
+  return exports.findIndex(v => v.name === 'schema') !== -1;
 };
 /**
  * The following patterns are supported for api functions:
@@ -271,7 +262,7 @@ const isFileInsideFolder = (filePath, folderPath) => {
 
   const relativePathFromFolder = _path.default.relative(folderPath, dir);
 
-  if (!relativePathFromFolder || (0, _startsWith.default)(relativePathFromFolder).call(relativePathFromFolder, '..') || _path.default.isAbsolute(relativePathFromFolder)) {
+  if (!relativePathFromFolder || relativePathFromFolder.startsWith('..') || _path.default.isAbsolute(relativePathFromFolder)) {
     return false;
   } else {
     return true;

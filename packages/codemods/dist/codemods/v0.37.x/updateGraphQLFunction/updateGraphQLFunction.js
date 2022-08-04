@@ -1,26 +1,25 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = transform;
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.for-each.js");
+
+require("core-js/modules/esnext.async-iterator.find.js");
+
+require("core-js/modules/esnext.iterator.find.js");
 
 function transform(file, api) {
-  var _context, _context2;
-
   const j = api.jscodeshift;
   const ast = j(file.source); // STEP 1: Update imports
 
-  (0, _forEach.default)(_context = (0, _find.default)(ast).call(ast, j.ImportDeclaration)).call(_context, path => {
+  ast.find(j.ImportDeclaration).forEach(path => {
     // 1. Updates import statement to be
     // import { createGraphqlServer } from '@redwoodjs/graphqlserver'
     if (path.value.source.value === '@redwoodjs/api') {
@@ -35,14 +34,12 @@ function transform(file, api) {
     }
   }); // STEP 2: Remove makeMergedSchema, pass in directives, sdls and services
 
-  (0, _forEach.default)(_context2 = (0, _find.default)(ast).call(ast, j.CallExpression, {
+  ast.find(j.CallExpression, {
     callee: {
       name: 'createGraphQLHandler'
     }
-  })).call(_context2, path => {
-    var _context3;
-
-    const schemaProp = (0, _find.default)(_context3 = j(path.node)).call(_context3, j.ObjectProperty, {
+  }).forEach(path => {
+    const schemaProp = j(path.node).find(j.ObjectProperty, {
       key: {
         name: 'schema'
       }

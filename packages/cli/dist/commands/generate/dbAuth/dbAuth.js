@@ -1,20 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = exports.files = exports.description = exports.command = exports.builder = void 0;
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _reduce = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/reduce"));
+require("core-js/modules/esnext.iterator.for-each.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -43,8 +40,6 @@ const description = 'Generate Login, Signup and Forgot Password pages for dbAuth
 exports.description = description;
 
 const builder = yargs => {
-  var _context;
-
   yargs.option('skip-forgot', {
     description: 'Skip generating the Forgot Password page',
     type: 'boolean',
@@ -68,7 +63,7 @@ const builder = yargs => {
     type: 'boolean'
   }).epilogue(`Also see the ${(0, _terminalLink.default)('Redwood CLI Reference', 'https://redwoodjs.com/docs/authentication#self-hosted-auth-installation-and-setup')}`); // Merge generator defaults in
 
-  (0, _forEach.default)(_context = (0, _entries.default)(_generate.yargsDefaults)).call(_context, ([option, config]) => {
+  Object.entries(_generate.yargsDefaults).forEach(([option, config]) => {
     yargs.option(option, config);
   });
 };
@@ -145,7 +140,7 @@ const files = ({
     files.push([scaffoldOutputPath, scaffoldTemplate]);
   }
 
-  return (0, _reduce.default)(files).call(files, (acc, [outputPath, content]) => {
+  return files.reduce((acc, [outputPath, content]) => {
     let template = content;
 
     if (outputPath.match(/\.[jt]sx?/) && !typescript) {

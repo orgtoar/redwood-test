@@ -1,20 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.resolveFile = exports.processPagesDir = exports.importStatementPath = exports.getPaths = exports.getConfigPath = exports.getBaseDirFromFile = exports.getBaseDir = exports.ensurePosixPath = void 0;
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
-
 var _replaceAll = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/replace-all"));
+
+require("core-js/modules/esnext.async-iterator.map.js");
+
+require("core-js/modules/esnext.iterator.map.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -175,7 +172,7 @@ const getPaths = (BASE_DIR = getBaseDir()) => {
     }
   };
 
-  _fs.default.mkdirSync((0, _includes.default)(paths.generated.types), {
+  _fs.default.mkdirSync(paths.generated.types.includes, {
     recursive: true
   });
 
@@ -202,7 +199,7 @@ const processPagesDir = (webPagesDir = getPaths().web.pages) => {
     ignore: ['node_modules']
   });
 
-  return (0, _map.default)(pagePaths).call(pagePaths, pagePath => {
+  return pagePaths.map(pagePath => {
     const p = _path.default.parse(pagePath);
 
     const importName = p.dir.replace(/\//g, '');

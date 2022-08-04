@@ -1,32 +1,23 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.DbAuthHandler = void 0;
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _trim = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/trim"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _flat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/flat"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
-
-var _assign = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/assign"));
-
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
-
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _base64url = _interopRequireDefault(require("base64url"));
 
@@ -181,12 +172,10 @@ class DbAuthHandler {
     }
 
     try {
-      var _context;
-
       const method = this._getAuthMethod(); // get the auth method the incoming request is trying to call
 
 
-      if (!(0, _includes.default)(_context = DbAuthHandler.METHODS).call(_context, method)) {
+      if (!DbAuthHandler.METHODS.includes(method)) {
         return this._buildResponseWithCorsHeaders(this._notFound(), corsHeaders);
       } // make sure it's using the correct verb, GET vs POST
 
@@ -224,7 +213,7 @@ class DbAuthHandler {
       username
     } = this.params; // was the username sent in at all?
 
-    if (!username || (0, _trim.default)(username).call(username) === '') {
+    if (!username || username.trim() === '') {
       var _this$options$forgotP3, _this$options$forgotP4;
 
       throw new DbAuthError.UsernameRequiredError(((_this$options$forgotP3 = this.options.forgotPassword) === null || _this$options$forgotP3 === void 0 ? void 0 : (_this$options$forgotP4 = _this$options$forgotP3.errors) === null || _this$options$forgotP4 === void 0 ? void 0 : _this$options$forgotP4.usernameRequired) || `Username is required`);
@@ -267,7 +256,7 @@ class DbAuthHandler {
 
 
       const response = await this.options.forgotPassword.handler(this._sanitizeUser(user));
-      return [response ? (0, _stringify.default)(response) : '', { ...this._deleteSessionHeader
+      return [response ? JSON.stringify(response) : '', { ...this._deleteSessionHeader
       }];
     } else {
       var _this$options$forgotP5, _this$options$forgotP6;
@@ -324,8 +313,6 @@ class DbAuthHandler {
   }
 
   async resetPassword() {
-    var _context2, _context3;
-
     const {
       enabled = true
     } = this.options.resetPassword;
@@ -341,14 +328,14 @@ class DbAuthHandler {
       resetToken
     } = this.params; // is the resetToken present?
 
-    if (resetToken == null || (0, _trim.default)(_context2 = String(resetToken)).call(_context2) === '') {
+    if (resetToken == null || String(resetToken).trim() === '') {
       var _this$options$resetPa3, _this$options$resetPa4;
 
       throw new DbAuthError.ResetTokenRequiredError((_this$options$resetPa3 = this.options.resetPassword) === null || _this$options$resetPa3 === void 0 ? void 0 : (_this$options$resetPa4 = _this$options$resetPa3.errors) === null || _this$options$resetPa4 === void 0 ? void 0 : _this$options$resetPa4.resetTokenRequired);
     } // is password present?
 
 
-    if (password == null || (0, _trim.default)(_context3 = String(password)).call(_context3) === '') {
+    if (password == null || String(password).trim() === '') {
       throw new DbAuthError.PasswordRequiredError();
     }
 
@@ -408,7 +395,7 @@ class DbAuthHandler {
       return this._loginResponse(user, 201);
     } else {
       const message = userOrMessage;
-      return [(0, _stringify.default)({
+      return [JSON.stringify({
         message
       }), {}, {
         statusCode: 201
@@ -417,24 +404,20 @@ class DbAuthHandler {
   }
 
   async validateResetToken() {
-    var _context4;
-
     // is token present at all?
-    if (this.params.resetToken == null || (0, _trim.default)(_context4 = String(this.params.resetToken)).call(_context4) === '') {
+    if (this.params.resetToken == null || String(this.params.resetToken).trim() === '') {
       var _this$options$resetPa7, _this$options$resetPa8;
 
       throw new DbAuthError.ResetTokenRequiredError((_this$options$resetPa7 = this.options.resetPassword) === null || _this$options$resetPa7 === void 0 ? void 0 : (_this$options$resetPa8 = _this$options$resetPa7.errors) === null || _this$options$resetPa8 === void 0 ? void 0 : _this$options$resetPa8.resetTokenRequired);
     }
 
     const user = await this._findUserByToken(this.params.resetToken);
-    return [(0, _stringify.default)(this._sanitizeUser(user)), { ...this._deleteSessionHeader
+    return [JSON.stringify(this._sanitizeUser(user)), { ...this._deleteSessionHeader
     }];
   } // browser submits WebAuthn credentials
 
 
   async webAuthnAuthenticate() {
-    var _context5;
-
     const {
       verifyAuthenticationResponse
     } = require('@simplewebauthn/server');
@@ -506,7 +489,7 @@ class DbAuthHandler {
 
     const [, loginHeaders] = this._loginResponse(user);
 
-    const cookies = (0, _flat.default)(_context5 = [this._webAuthnCookie(jsonBody.rawId, this.webAuthnExpiresDate), loginHeaders['set-cookie']]).call(_context5);
+    const cookies = [this._webAuthnCookie(jsonBody.rawId, this.webAuthnExpiresDate), loginHeaders['set-cookie']].flat();
     return [verified, {
       'set-cookie': cookies
     }];
@@ -557,7 +540,7 @@ class DbAuthHandler {
     });
     const someOptions = {
       timeout: webAuthnOptions.timeout || 60000,
-      allowCredentials: (0, _map.default)(credentials).call(credentials, cred => ({
+      allowCredentials: credentials.map(cred => ({
         id: _base64url.default.toBuffer(cred[webAuthnOptions.credentialFields.id]),
         type: 'public-key',
         transports: cred[webAuthnOptions.credentialFields.transports] ? JSON.parse(cred[webAuthnOptions.credentialFields.transports]) : DbAuthHandler.AVAILABLE_WEBAUTHN_TRANSPORTS
@@ -600,7 +583,7 @@ class DbAuthHandler {
     // of this prop if `undefined` means to allow any authenticator)
 
     if (webAuthnOptions.type && webAuthnOptions.type !== 'any') {
-      options.authenticatorSelection = (0, _assign.default)(options.authenticatorSelection || {}, {
+      options.authenticatorSelection = Object.assign(options.authenticatorSelection || {}, {
         authenticatorAttachment: webAuthnOptions.type
       });
     }
@@ -663,7 +646,7 @@ class DbAuthHandler {
             [this.options.webAuthn.credentialFields.id]: plainCredentialId,
             [this.options.webAuthn.credentialFields.userId]: user[this.options.authFields.id],
             [this.options.webAuthn.credentialFields.publicKey]: credentialPublicKey,
-            [this.options.webAuthn.credentialFields.transports]: jsonBody.transports ? (0, _stringify.default)(jsonBody.transports) : null,
+            [this.options.webAuthn.credentialFields.transports]: jsonBody.transports ? JSON.stringify(jsonBody.transports) : null,
             [this.options.webAuthn.credentialFields.counter]: counter
           }
         });
@@ -747,7 +730,7 @@ class DbAuthHandler {
 
 
   _sanitizeUser(user) {
-    const sanitized = JSON.parse((0, _stringify.default)(user));
+    const sanitized = JSON.parse(JSON.stringify(user));
     delete sanitized[this.options.authFields.hashedPassword];
     delete sanitized[this.options.authFields.salt];
     return sanitized;
@@ -774,13 +757,11 @@ class DbAuthHandler {
     expires = 'now',
     options = {}
   }) {
-    var _context6, _context7;
-
     const cookieOptions = { ...this.options.cookie,
       ...options
     } || { ...options
     };
-    const meta = (0, _filter.default)(_context6 = (0, _map.default)(_context7 = (0, _keys.default)(cookieOptions)).call(_context7, key => {
+    const meta = Object.keys(cookieOptions).map(key => {
       const optionValue = cookieOptions[key]; // Convert the options to valid cookie string
 
       if (optionValue === true) {
@@ -790,7 +771,7 @@ class DbAuthHandler {
       } else {
         return `${key}=${optionValue}`;
       }
-    })).call(_context6, v => v);
+    }).filter(v => v);
     const expiresAt = expires === 'now' ? DbAuthHandler.PAST_EXPIRES_DATE : expires;
     meta.push(`Expires=${expiresAt}`);
     return meta;
@@ -804,7 +785,7 @@ class DbAuthHandler {
 
 
   _createSessionHeader(data, csrfToken) {
-    const session = (0, _stringify.default)(data) + ';' + csrfToken;
+    const session = JSON.stringify(data) + ';' + csrfToken;
 
     const encrypted = this._encrypt(session);
 
@@ -871,10 +852,8 @@ class DbAuthHandler {
 
 
   async _verifyUser(username, password) {
-    var _context8, _context9;
-
     // do we have all the query params we need to check the user?
-    if (!username || (0, _trim.default)(_context8 = username.toString()).call(_context8) === '' || !password || (0, _trim.default)(_context9 = password.toString()).call(_context9) === '') {
+    if (!username || username.toString().trim() === '' || !password || password.toString().trim() === '') {
       var _this$options$login2, _this$options$login2$;
 
       throw new DbAuthError.UsernameAndPasswordRequiredError((_this$options$login2 = this.options.login) === null || _this$options$login2 === void 0 ? void 0 : (_this$options$login2$ = _this$options$login2.errors) === null || _this$options$login2$ === void 0 ? void 0 : _this$options$login2$.usernameOrPasswordMissing);
@@ -998,12 +977,12 @@ class DbAuthHandler {
 
 
   _getAuthMethod() {
-    var _this$event$queryStri, _context10;
+    var _this$event$queryStri;
 
     // try getting it from the query string, /.redwood/functions/auth?method=[methodName]
     let methodName = (_this$event$queryStri = this.event.queryStringParameters) === null || _this$event$queryStri === void 0 ? void 0 : _this$event$queryStri.method;
 
-    if (!(0, _includes.default)(_context10 = DbAuthHandler.METHODS).call(_context10, methodName) && this.params) {
+    if (!DbAuthHandler.METHODS.includes(methodName) && this.params) {
       // try getting it from the body in JSON: { method: [methodName] }
       try {
         methodName = this.params.method;
@@ -1018,7 +997,7 @@ class DbAuthHandler {
 
   _validateField(name, value) {
     // check for presense
-    if (!value || (0, _trim.default)(value).call(value) === '') {
+    if (!value || value.trim() === '') {
       var _this$options$signup4, _this$options$signup5;
 
       throw new DbAuthError.FieldRequiredError(name, (_this$options$signup4 = this.options.signup) === null || _this$options$signup4 === void 0 ? void 0 : (_this$options$signup5 = _this$options$signup4.errors) === null || _this$options$signup5 === void 0 ? void 0 : _this$options$signup5.fieldMissing);
@@ -1044,7 +1023,7 @@ class DbAuthHandler {
   }
 
   _logoutResponse(response) {
-    return [response ? (0, _stringify.default)(response) : '', { ...this._deleteSessionHeader
+    return [response ? JSON.stringify(response) : '', { ...this._deleteSessionHeader
     }];
   }
 
@@ -1053,7 +1032,7 @@ class DbAuthHandler {
   }) {
     return {
       statusCode: options.statusCode,
-      body: typeof body === 'string' ? body : (0, _stringify.default)(body),
+      body: typeof body === 'string' ? body : JSON.stringify(body),
       headers: {
         'Content-Type': 'application/json',
         ...headers
@@ -1070,7 +1049,7 @@ class DbAuthHandler {
   _badRequest(message) {
     return {
       statusCode: 400,
-      body: (0, _stringify.default)({
+      body: JSON.stringify({
         error: message
       }),
       headers: {

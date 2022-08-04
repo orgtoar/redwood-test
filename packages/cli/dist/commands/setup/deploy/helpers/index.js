@@ -1,28 +1,29 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.updateApiURLTask = exports.printSetupNotes = exports.preRequisiteCheckTask = exports.addToGitIgnoreTask = exports.addToDotEnvTask = exports.addPackagesTask = exports.addFilesTask = void 0;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _trim = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/trim"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _startsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/starts-with"));
+require("core-js/modules/esnext.iterator.filter.js");
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _every = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/every"));
+require("core-js/modules/esnext.iterator.for-each.js");
+
+require("core-js/modules/esnext.async-iterator.every.js");
+
+require("core-js/modules/esnext.iterator.every.js");
 
 var _child_process = require("child_process");
 
@@ -82,7 +83,7 @@ exports.updateApiURLTask = updateApiURLTask;
 const preRequisiteCheckTask = preRequisites => {
   return {
     title: 'Checking pre-requisites',
-    task: () => new _listr.default((0, _map.default)(preRequisites).call(preRequisites, preReq => {
+    task: () => new _listr.default(preRequisites.map(preReq => {
       return {
         title: preReq.title,
         task: async () => {
@@ -116,8 +117,8 @@ const addPackagesTask = ({
   side = 'project',
   devDependency = false
 }) => {
-  const packagesWithSameRWVersion = (0, _map.default)(packages).call(packages, pkg => {
-    if ((0, _includes.default)(pkg).call(pkg, '@redwoodjs')) {
+  const packagesWithSameRWVersion = packages.map(pkg => {
+    if (pkg.includes('@redwoodjs')) {
       return `${pkg}@${(0, _lib.getInstalledRedwoodVersion)()}`;
     } else {
       return pkg;
@@ -126,15 +127,11 @@ const addPackagesTask = ({
   let installCommand; // if web,api
 
   if (side !== 'project') {
-    var _context;
-
-    installCommand = ['yarn', (0, _filter.default)(_context = ['workspace', side, 'add', devDependency && '--dev', ...packagesWithSameRWVersion]).call(_context, Boolean)];
+    installCommand = ['yarn', ['workspace', side, 'add', devDependency && '--dev', ...packagesWithSameRWVersion].filter(Boolean)];
   } else {
-    var _context2, _context3;
-
     const stdout = (0, _child_process.execSync)('yarn --version');
-    const yarnVersion = (0, _trim.default)(_context2 = stdout.toString()).call(_context2);
-    installCommand = ['yarn', (0, _filter.default)(_context3 = [(0, _startsWith.default)(yarnVersion).call(yarnVersion, '1') && '-W', 'add', devDependency && '--dev', ...packagesWithSameRWVersion]).call(_context3, Boolean)];
+    const yarnVersion = stdout.toString().trim();
+    installCommand = ['yarn', [yarnVersion.startsWith('1') && '-W', 'add', devDependency && '--dev', ...packagesWithSameRWVersion].filter(Boolean)];
   }
 
   return {
@@ -166,7 +163,7 @@ const addFilesTask = ({
     title: `${title}...`,
     task: () => {
       let fileNameToContentMap = {};
-      (0, _forEach.default)(files).call(files, fileData => {
+      files.forEach(fileData => {
         fileNameToContentMap[fileData.path] = fileData.content;
       });
       return (0, _lib.writeFilesTask)(fileNameToContentMap, {
@@ -193,7 +190,7 @@ const addToGitIgnoreTask = ({
 
       const content = _fs.default.readFileSync(gitIgnore).toString();
 
-      if ((0, _every.default)(paths).call(paths, item => (0, _includes.default)(content).call(content, item))) {
+      if (paths.every(item => content.includes(item))) {
         task.skip('.gitignore already includes the additions.');
       }
 
@@ -219,7 +216,7 @@ const addToDotEnvTask = ({
 
       const content = _fs.default.readFileSync(env).toString();
 
-      if ((0, _every.default)(lines).call(lines, line => (0, _includes.default)(content).call(content, line.split('=')[0]))) {
+      if (lines.every(line => content.includes(line.split('=')[0]))) {
         task.skip('.env already includes the additions.');
       }
 

@@ -1,24 +1,21 @@
 "use strict";
 
-var _context, _context2;
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _forEachInstanceProperty = require("@babel/runtime-corejs3/core-js/instance/for-each");
+require("core-js/modules/esnext.iterator.for-each.js");
 
-var _Object$keys = require("@babel/runtime-corejs3/core-js/object/keys");
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
 var _types = require("./types");
 
-_forEachInstanceProperty(_context = _Object$keys(_types)).call(_context, function (key) {
+Object.keys(_types).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (key in exports && exports[key] === _types[key]) return;
-
-  _Object$defineProperty(exports, key, {
+  Object.defineProperty(exports, key, {
     enumerable: true,
     get: function () {
       return _types[key];
@@ -28,11 +25,10 @@ _forEachInstanceProperty(_context = _Object$keys(_types)).call(_context, functio
 
 var _outline = require("./outline");
 
-_forEachInstanceProperty(_context2 = _Object$keys(_outline)).call(_context2, function (key) {
+Object.keys(_outline).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (key in exports && exports[key] === _outline[key]) return;
-
-  _Object$defineProperty(exports, key, {
+  Object.defineProperty(exports, key, {
     enumerable: true,
     get: function () {
       return _outline[key];

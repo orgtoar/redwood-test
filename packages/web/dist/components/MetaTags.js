@@ -1,16 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.MetaTags = void 0;
-
-var _isArray = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/array/is-array"));
 
 var _react = _interopRequireDefault(require("react"));
 
@@ -94,7 +89,7 @@ const MetaTags = props => {
     content: ogContentUrl
   })), robots && /*#__PURE__*/_react.default.createElement(_index.Head, null, /*#__PURE__*/_react.default.createElement("meta", {
     name: "robots",
-    content: (0, _isArray.default)(robots) ? robots.join(', ') : robots
+    content: Array.isArray(robots) ? robots.join(', ') : robots
   })), children);
 };
 

@@ -1,17 +1,16 @@
 #!/usr/bin/env node
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.run = exports.generate = void 0;
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _paths = require("../paths");
 
@@ -20,11 +19,9 @@ var _graphqlSchema = require("./graphqlSchema");
 var _typeDefinitions = require("./typeDefinitions");
 
 const generate = async () => {
-  var _context;
-
   const schemaPath = await (0, _graphqlSchema.generateGraphQLSchema)();
   const typeDefsPaths = await (0, _typeDefinitions.generateTypeDefs)();
-  return (0, _filter.default)(_context = [schemaPath, ...typeDefsPaths]).call(_context, x => typeof x === 'string');
+  return [schemaPath, ...typeDefsPaths].filter(x => typeof x === 'string');
 };
 
 exports.generate = generate;

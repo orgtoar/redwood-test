@@ -1,19 +1,16 @@
 "use strict";
 
-var _context, _context2;
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _forEachInstanceProperty = require("@babel/runtime-corejs3/core-js/instance/for-each");
-
-var _Object$keys = require("@babel/runtime-corejs3/core-js/object/keys");
+require("core-js/modules/esnext.iterator.for-each.js");
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 var _exportNames = {
   Core: true,
   Reflection: true,
@@ -21,36 +18,31 @@ var _exportNames = {
   ValidationMixin: true,
   RedwoodRecord: true
 };
-
-_Object$defineProperty(exports, "Core", {
+Object.defineProperty(exports, "Core", {
   enumerable: true,
   get: function () {
     return _Core.default;
   }
 });
-
-_Object$defineProperty(exports, "RedwoodRecord", {
+Object.defineProperty(exports, "RedwoodRecord", {
   enumerable: true,
   get: function () {
     return _RedwoodRecord.default;
   }
 });
-
-_Object$defineProperty(exports, "Reflection", {
+Object.defineProperty(exports, "Reflection", {
   enumerable: true,
   get: function () {
     return _Reflection.default;
   }
 });
-
-_Object$defineProperty(exports, "RelationProxy", {
+Object.defineProperty(exports, "RelationProxy", {
   enumerable: true,
   get: function () {
     return _RelationProxy.default;
   }
 });
-
-_Object$defineProperty(exports, "ValidationMixin", {
+Object.defineProperty(exports, "ValidationMixin", {
   enumerable: true,
   get: function () {
     return _ValidationMixin.default;
@@ -59,12 +51,11 @@ _Object$defineProperty(exports, "ValidationMixin", {
 
 var _errors = require("./errors");
 
-_forEachInstanceProperty(_context = _Object$keys(_errors)).call(_context, function (key) {
+Object.keys(_errors).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
   if (key in exports && exports[key] === _errors[key]) return;
-
-  _Object$defineProperty(exports, key, {
+  Object.defineProperty(exports, key, {
     enumerable: true,
     get: function () {
       return _errors[key];
@@ -84,12 +75,11 @@ var _RedwoodRecord = _interopRequireDefault(require("./redwoodrecord/RedwoodReco
 
 var _parse = require("./tasks/parse");
 
-_forEachInstanceProperty(_context2 = _Object$keys(_parse)).call(_context2, function (key) {
+Object.keys(_parse).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
   if (key in exports && exports[key] === _parse[key]) return;
-
-  _Object$defineProperty(exports, key, {
+  Object.defineProperty(exports, key, {
     enumerable: true,
     get: function () {
       return _parse[key];

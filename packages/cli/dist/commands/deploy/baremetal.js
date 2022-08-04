@@ -1,26 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.verifyServerConfig = exports.verifyConfig = exports.throwMissingConfig = exports.serverConfigWithDefaults = exports.rollbackTasks = exports.parseConfig = exports.maintenanceTasks = exports.lifecycleTask = exports.handler = exports.execaOptions = exports.description = exports.deployTasks = exports.commands = exports.commandWithLifecycleEvents = exports.command = exports.builder = exports.DEFAULT_SERVER_CONFIG = void 0;
 
-var _parseInt2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/parse-int"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _indexOf = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/index-of"));
-
-var _flat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/flat"));
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
-
-var _concat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/concat"));
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -266,25 +257,23 @@ exports.maintenanceTasks = maintenanceTasks;
 const rollbackTasks = (count, ssh, serverConfig) => {
   let rollbackCount = 1;
 
-  if ((0, _parseInt2.default)(count) === count) {
+  if (parseInt(count) === count) {
     rollbackCount = count;
   }
 
   const tasks = [{
     title: `Rolling back ${rollbackCount} release(s)...`,
     task: async () => {
-      var _context;
-
       const currentLink = (await sshExec(ssh, serverConfig.path, 'readlink', ['-f', 'current'])).stdout.split('/').pop();
-      const dirs = (0, _filter.default)(_context = (await sshExec(ssh, serverConfig.path, 'ls', ['-t'])).stdout.split('\n')).call(_context, dirs => !dirs.match(/current/));
-      const deployedIndex = (0, _indexOf.default)(dirs).call(dirs, currentLink);
+      const dirs = (await sshExec(ssh, serverConfig.path, 'ls', ['-t'])).stdout.split('\n').filter(dirs => !dirs.match(/current/));
+      const deployedIndex = dirs.indexOf(currentLink);
       const rollbackIndex = deployedIndex + rollbackCount;
 
       if (dirs[rollbackIndex]) {
         console.info('Setting symlink');
         await symlinkCurrentCommand(dirs[rollbackIndex], ssh, serverConfig.path);
       } else {
-        throw new Error(`Cannot rollback ${rollbackCount} release(s): ${dirs.length - (0, _indexOf.default)(dirs).call(dirs, currentLink) - 1} previous release(s) available`);
+        throw new Error(`Cannot rollback ${rollbackCount} release(s): ${dirs.length - dirs.indexOf(currentLink) - 1} previous release(s) available`);
       }
     }
   }];
@@ -338,22 +327,18 @@ const commandWithLifecycleEvents = ({
   skip,
   command
 }) => {
-  var _context2;
-
   const tasks = [];
   tasks.push(lifecycleTask('before', name, skip, config));
   tasks.push({ ...command,
     skip: () => skip
   });
   tasks.push(lifecycleTask('after', name, skip, config));
-  return (0, _filter.default)(_context2 = (0, _flat.default)(tasks).call(tasks)).call(_context2, t => t);
+  return tasks.flat().filter(t => t);
 };
 
 exports.commandWithLifecycleEvents = commandWithLifecycleEvents;
 
 const deployTasks = (yargs, ssh, serverConfig, serverLifecycle) => {
-  var _context3;
-
   const cmdPath = _path.default.join(serverConfig.path, yargs.releaseDir);
 
   const config = {
@@ -492,20 +477,18 @@ const deployTasks = (yargs, ssh, serverConfig, serverLifecycle) => {
       }
     }
   }));
-  return (0, _filter.default)(_context3 = (0, _flat.default)(tasks).call(tasks)).call(_context3, e => e);
+  return tasks.flat().filter(e => e);
 }; // merges additional lifecycle events into an existing object
 
 
 exports.deployTasks = deployTasks;
 
 const mergeLifecycleEvents = (lifecycle, other) => {
-  let lifecycleCopy = JSON.parse((0, _stringify.default)(lifecycle));
+  let lifecycleCopy = JSON.parse(JSON.stringify(lifecycle));
 
   for (const hook of LIFECYCLE_HOOKS) {
     for (const key in other[hook]) {
-      var _context4;
-
-      lifecycleCopy[hook][key] = (0, _concat.default)(_context4 = lifecycleCopy[hook][key] || []).call(_context4, other[hook][key]);
+      lifecycleCopy[hook][key] = (lifecycleCopy[hook][key] || []).concat(other[hook][key]);
     }
   }
 
@@ -566,11 +549,11 @@ const commands = (yargs, ssh) => {
     });
 
     if (yargs.maintenance) {
-      tasks = (0, _concat.default)(tasks).call(tasks, maintenanceTasks(yargs.maintenance, ssh, serverConfig));
+      tasks = tasks.concat(maintenanceTasks(yargs.maintenance, ssh, serverConfig));
     } else if (yargs.rollback) {
-      tasks = (0, _concat.default)(tasks).call(tasks, rollbackTasks(yargs.rollback, ssh, serverConfig));
+      tasks = tasks.concat(rollbackTasks(yargs.rollback, ssh, serverConfig));
     } else {
-      tasks = (0, _concat.default)(tasks).call(tasks, deployTasks(yargs, ssh, serverConfig, serverLifecycle));
+      tasks = tasks.concat(deployTasks(yargs, ssh, serverConfig, serverLifecycle));
     }
 
     tasks.push({

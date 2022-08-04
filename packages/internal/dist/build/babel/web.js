@@ -1,22 +1,23 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.registerWebSideBabelHook = exports.prebuildWebFile = exports.getWebSideOverrides = exports.getWebSideDefaultBabelConfig = exports.getWebSideBabelPresets = exports.getWebSideBabelPlugins = exports.getWebSideBabelConfigPath = void 0;
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _isArray = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/array/is-array"));
+require("core-js/modules/esnext.iterator.filter.js");
+
+require("core-js/modules/esnext.async-iterator.for-each.js");
+
+require("core-js/modules/esnext.iterator.for-each.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -33,10 +34,8 @@ const getWebSideBabelPlugins = ({
 } = {
   forJest: false
 }) => {
-  var _context;
-
   const rwjsPaths = (0, _paths.getPaths)();
-  const plugins = (0, _filter.default)(_context = [...(0, _common.getCommonPlugins)(), // === Import path handling
+  const plugins = [...(0, _common.getCommonPlugins)(), // === Import path handling
   ['babel-plugin-module-resolver', {
     alias: {
       src: // Jest monorepo and multi project runner is not correctly determining
@@ -75,7 +74,7 @@ const getWebSideBabelPlugins = ({
       'convertStyleToAttrs']
     }
   }, 'rwjs-inline-svg'] // === Handling redwood "magic"
-  ]).call(_context, Boolean);
+  ].filter(Boolean);
   return plugins;
 };
 
@@ -86,9 +85,7 @@ const getWebSideOverrides = ({
 } = {
   staticImports: false
 }) => {
-  var _context2;
-
-  const overrides = (0, _filter.default)(_context2 = [{
+  const overrides = [{
     test: /.+Cell.(js|tsx)$/,
     plugins: [require('../babelPlugins/babel-plugin-redwood-cell').default]
   }, // Automatically import files in `./web/src/pages/*` in to
@@ -104,7 +101,7 @@ const getWebSideOverrides = ({
   process.env.NODE_ENV !== 'production' && {
     test: /.+Cell.mock.(js|ts)$/,
     plugins: [require('../babelPlugins/babel-plugin-redwood-mock-cell-data').default]
-  }]).call(_context2, Boolean);
+  }].filter(Boolean);
   return overrides;
 };
 
@@ -119,9 +116,9 @@ const getWebSideBabelPresets = () => {
 
     const userProjectConfig = require(getWebSideBabelConfigPath());
 
-    (_userProjectConfig$pr = userProjectConfig.presets) === null || _userProjectConfig$pr === void 0 ? void 0 : (0, _forEach.default)(_userProjectConfig$pr).call(_userProjectConfig$pr, preset => {
+    (_userProjectConfig$pr = userProjectConfig.presets) === null || _userProjectConfig$pr === void 0 ? void 0 : _userProjectConfig$pr.forEach(preset => {
       // If it isn't a preset with special config ignore it
-      if (!(0, _isArray.default)(preset)) {
+      if (!Array.isArray(preset)) {
         return;
       }
 

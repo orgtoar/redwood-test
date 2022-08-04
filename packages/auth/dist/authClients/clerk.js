@@ -1,16 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.clerk = void 0;
-
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
 
 var _interopRequireWildcard2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/interopRequireWildcard"));
 
@@ -33,7 +28,7 @@ const clerk = async client => {
   // We use the typescript dynamic import feature to pull in the react library only if clerk is needed.
   const {
     useUser: useClerkUser
-  } = await _promise.default.resolve().then(() => (0, _interopRequireWildcard2.default)(require('@clerk/clerk-react')));
+  } = await Promise.resolve().then(() => (0, _interopRequireWildcard2.default)(require('@clerk/clerk-react')));
   return {
     type: 'clerk',
     client,
@@ -68,7 +63,7 @@ const clerk = async client => {
 
 
       if (!clerk.client || clerk.session !== undefined) {
-        return new _promise.default(res => {
+        return new Promise(res => {
           clerk.addListener(msg => {
             if (msg.session !== undefined && msg.client) {
               res();

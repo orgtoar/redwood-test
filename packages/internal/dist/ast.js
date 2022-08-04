@@ -1,18 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.hasDefaultExport = exports.getNamedExports = exports.getGqlQueries = exports.getCellGqlQuery = exports.fileToAst = void 0;
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
+
+require("core-js/modules/esnext.async-iterator.find.js");
+
+require("core-js/modules/esnext.iterator.find.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -31,13 +34,11 @@ var _files = require("./files");
 var _paths = require("./paths");
 
 const fileToAst = filePath => {
-  var _context;
-
   const code = _fs.default.readFileSync(filePath, 'utf-8'); // use jsx plugin for web files, because in JS, the .jsx extension is not used
 
 
   const isJsxFile = _path.default.extname(filePath).match(/[jt]sx$/) || (0, _files.isFileInsideFolder)(filePath, (0, _paths.getPaths)().web.base);
-  const plugins = (0, _filter.default)(_context = ['typescript', 'nullishCoalescingOperator', 'objectRestSpread', isJsxFile && 'jsx']).call(_context, Boolean);
+  const plugins = ['typescript', 'nullishCoalescingOperator', 'objectRestSpread', isJsxFile && 'jsx'].filter(Boolean);
 
   try {
     return (0, _parser.parse)(code, {
@@ -141,9 +142,7 @@ const getCellGqlQuery = ast => {
       node
     }) {
       if (node.exportKind === 'value' && _core.types.isVariableDeclaration(node.declaration)) {
-        var _context2;
-
-        const exportedQueryNode = (0, _find.default)(_context2 = node.declaration.declarations).call(_context2, d => {
+        const exportedQueryNode = node.declaration.declarations.find(d => {
           return _core.types.isIdentifier(d.id) && d.id.name === 'QUERY' && _core.types.isTaggedTemplateExpression(d.init);
         });
 

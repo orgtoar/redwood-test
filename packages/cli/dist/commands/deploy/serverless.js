@@ -1,22 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.preRequisites = exports.handler = exports.description = exports.deployCommands = exports.command = exports.builder = exports.buildCommands = exports.aliases = void 0;
 
+require("core-js/modules/esnext.async-iterator.map.js");
+
+require("core-js/modules/esnext.iterator.map.js");
+
 var _interopRequireWildcard2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/interopRequireWildcard"));
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
-
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -98,13 +93,13 @@ const buildCommands = ({
     command: ['yarn', ['rw', 'build', ...sides]]
   }, {
     title: 'Packing Functions...',
-    enabled: () => (0, _includes.default)(sides).call(sides, 'api'),
+    enabled: () => sides.includes('api'),
     task: async () => {
       // Dynamically import this function
       // because its dependencies are only installed when `rw setup deploy serverless` is run
       const {
         nftPack
-      } = (await _promise.default.resolve().then(() => (0, _interopRequireWildcard2.default)(require('./packing/nft')))).default;
+      } = (await Promise.resolve().then(() => (0, _interopRequireWildcard2.default)(require('./packing/nft')))).default;
       await nftPack();
     }
   }];
@@ -119,7 +114,7 @@ const deployCommands = ({
   packOnly
 }) => {
   const slsStage = stage ? ['--stage', stage] : [];
-  return (0, _map.default)(sides).call(sides, side => {
+  return sides.map(side => {
     return {
       title: `Deploying ${side}....`,
       task: async () => {
@@ -155,15 +150,13 @@ const loadDotEnvForStage = dotEnvPath => {
 };
 
 const handler = async yargs => {
-  var _context, _context2, _context3;
-
   const rwjsPaths = (0, _lib.getPaths)();
 
   const dotEnvPath = _path.default.join(rwjsPaths.base, `.env.${yargs.stage}`); // Make sure .env.staging, .env.production, etc are loaded based on the --stage flag
 
 
   loadDotEnvForStage(dotEnvPath);
-  const tasks = new _listr.default([...(0, _map.default)(_context = preRequisites(yargs)).call(_context, mapCommandsToListr), ...(0, _map.default)(_context2 = buildCommands(yargs)).call(_context2, mapCommandsToListr), ...(0, _map.default)(_context3 = deployCommands(yargs)).call(_context3, mapCommandsToListr)], {
+  const tasks = new _listr.default([...preRequisites(yargs).map(mapCommandsToListr), ...buildCommands(yargs).map(mapCommandsToListr), ...deployCommands(yargs).map(mapCommandsToListr)], {
     exitOnError: true,
     renderer: yargs.verbose && _listrVerboseRenderer.default
   });
@@ -172,8 +165,6 @@ const handler = async yargs => {
     await tasks.run();
 
     if (yargs.firstRun) {
-      var _context4;
-
       const SETUP_MARKER = _chalk.default.bgBlue(_chalk.default.black('First Setup '));
 
       console.log();
@@ -203,21 +194,19 @@ const handler = async yargs => {
         loadDotEnvForStage(dotEnvPath);
       }
 
-      if ((0, _includes.default)(_context4 = yargs.sides).call(_context4, 'web')) {
-        var _context5, _context6;
-
+      if (yargs.sides.includes('web')) {
         console.log();
         console.log(SETUP_MARKER, 'Deploying web side with updated API_URL');
         console.log(SETUP_MARKER, 'First deploys can take a good few minutes...');
         console.log();
         const webDeployTasks = new _listr.default([// Rebuild web with the new API_URL
-        ...(0, _map.default)(_context5 = buildCommands({ ...yargs,
+        ...buildCommands({ ...yargs,
           sides: ['web'],
           firstRun: false
-        })).call(_context5, mapCommandsToListr), ...(0, _map.default)(_context6 = deployCommands({ ...yargs,
+        }).map(mapCommandsToListr), ...deployCommands({ ...yargs,
           sides: ['web'],
           firstRun: false
-        })).call(_context6, mapCommandsToListr)], {
+        }).map(mapCommandsToListr)], {
           exitOnError: true,
           renderer: yargs.verbose && _listrVerboseRenderer.default
         }); // Deploy the web side now that the API_URL has been configured

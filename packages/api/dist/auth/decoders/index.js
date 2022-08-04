@@ -1,16 +1,9 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.decodeToken = void 0;
-
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
 
 var _auth = require("./auth0");
 
@@ -60,7 +53,7 @@ const decodeToken = async (type, token, req) => {
     // Make this a warning, instead of a hard error
     // Allow users to have multiple custom types if they choose to
     if (process.env.NODE_ENV === 'development') {
-      console.warn(`The auth type "${type}" is not officially supported, we currently support: ${(0, _keys.default)(typesToDecoders).join(', ')}`);
+      console.warn(`The auth type "${type}" is not officially supported, we currently support: ${Object.keys(typesToDecoders).join(', ')}`);
       console.warn('Please ensure you have handlers for your custom auth in getCurrentUser in src/lib/auth.{js,ts}');
     }
   } // If the auth provider is unknown, it is the developer's

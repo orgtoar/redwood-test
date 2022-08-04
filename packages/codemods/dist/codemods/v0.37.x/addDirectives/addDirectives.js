@@ -1,16 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.addDirectives = void 0;
-
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -53,12 +48,12 @@ const addDirectives = async () => {
 
   _fs.default.mkdirSync(rwPaths.api.directives);
 
-  for (const [dir, filenamesToUrls] of (0, _entries.default)(dirs)) {
+  for (const [dir, filenamesToUrls] of Object.entries(dirs)) {
     _fs.default.mkdirSync(dir);
 
     const isTSProject = _fastGlob.default.sync('api/tsconfig.json').length > 0 || _fastGlob.default.sync('web/tsconfig.json').length > 0;
 
-    for (const [filename, url] of (0, _entries.default)(filenamesToUrls)) {
+    for (const [filename, url] of Object.entries(filenamesToUrls)) {
       const res = await (0, _crossUndiciFetch.fetch)(url);
       const text = await res.text();
 

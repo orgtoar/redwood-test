@@ -1,22 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.process_env_findAll = process_env_findAll;
 exports.process_env_findInFile = process_env_findInFile;
 exports.process_env_findInFile2 = process_env_findInFile2;
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _path = require("path");
 
@@ -39,7 +38,7 @@ function process_env_findAll(dir) {
 }
 
 function process_env_findInFile(filePath, text) {
-  if (!(0, _includes.default)(text).call(text, 'process.env')) {
+  if (!text.includes('process.env')) {
     return [];
   }
 
@@ -51,9 +50,7 @@ function process_env_findInFile(filePath, text) {
 }
 
 function process_env_findInFile2(sf) {
-  var _context;
-
-  const penvs = (0, _filter.default)(_context = sf.getDescendantsOfKind(tsm.SyntaxKind.PropertyAccessExpression)).call(_context, is_process_env);
+  const penvs = sf.getDescendantsOfKind(tsm.SyntaxKind.PropertyAccessExpression).filter(is_process_env);
   return (0, _Array.iter)(function* () {
     for (const penv of penvs) {
       const node = penv.getParent();

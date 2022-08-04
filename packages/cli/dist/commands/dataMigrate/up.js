@@ -1,32 +1,23 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = exports.description = exports.command = exports.builder = void 0;
 
 var _interopRequireWildcard2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/interopRequireWildcard"));
 
-var _sort = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/sort"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _parseInt2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/parse-int"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
-
-var _values = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/values"));
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -48,9 +39,9 @@ var _colors = _interopRequireDefault(require("../../lib/colors"));
 
 // sorts migrations by date, oldest first
 const sortMigrations = migrations => {
-  return (0, _sort.default)(migrations).call(migrations, (a, b) => {
-    const aVersion = (0, _parseInt2.default)((0, _keys.default)(a)[0]);
-    const bVersion = (0, _parseInt2.default)((0, _keys.default)(b)[0]);
+  return migrations.sort((a, b) => {
+    const aVersion = parseInt(Object.keys(a)[0]);
+    const bVersion = parseInt(Object.keys(b)[0]);
 
     if (aVersion > bVersion) {
       return 1;
@@ -67,8 +58,6 @@ const sortMigrations = migrations => {
 const SUPPORTED_EXTENSIONS = ['.js', '.ts']; // Return the list of migrations that haven't run against the database yet
 
 const getMigrations = async db => {
-  var _context, _context2;
-
   const basePath = _path.default.join((0, _lib.getPaths)().api.dataMigrations);
 
   if (!_fs.default.existsSync(basePath)) {
@@ -76,20 +65,21 @@ const getMigrations = async db => {
   } // gets all migrations present in the app
 
 
-  const files = (0, _map.default)(_context = (0, _filter.default)(_context2 = _fs.default.readdirSync(basePath)).call(_context2, m => (0, _includes.default)(SUPPORTED_EXTENSIONS).call(SUPPORTED_EXTENSIONS, _path.default.extname(m)))).call(_context, m => {
+  const files = _fs.default.readdirSync(basePath).filter(m => SUPPORTED_EXTENSIONS.includes(_path.default.extname(m))).map(m => {
     return {
       [m.split('-')[0]]: _path.default.join(basePath, m)
     };
   }); // gets all migration versions that have already run against the database
+
 
   const ranMigrations = await db.rW_DataMigration.findMany({
     orderBy: {
       version: 'asc'
     }
   });
-  const ranVersions = (0, _map.default)(ranMigrations).call(ranMigrations, migration => migration.version.toString());
-  const unrunMigrations = (0, _filter.default)(files).call(files, migration => {
-    return !(0, _includes.default)(ranVersions).call(ranVersions, (0, _keys.default)(migration)[0]);
+  const ranVersions = ranMigrations.map(migration => migration.version.toString());
+  const unrunMigrations = files.filter(migration => {
+    return !ranVersions.includes(Object.keys(migration)[0]);
   });
   return sortMigrations(unrunMigrations);
 }; // adds data for completed migrations to the DB
@@ -131,7 +121,7 @@ const report = counters => {
 };
 
 const runScript = async (db, scriptPath) => {
-  const script = await _promise.default.resolve(`${scriptPath}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
+  const script = await Promise.resolve(`${scriptPath}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
   const startedAt = new Date();
   await script.default({
     db
@@ -174,9 +164,9 @@ const handler = async () => {
     skipped: 0,
     error: 0
   };
-  const migrationTasks = (0, _map.default)(migrations).call(migrations, migration => {
-    const version = (0, _keys.default)(migration)[0];
-    const migrationPath = (0, _values.default)(migration)[0];
+  const migrationTasks = migrations.map(migration => {
+    const version = Object.keys(migration)[0];
+    const migrationPath = Object.values(migration)[0];
 
     const migrationName = _path.default.basename(migrationPath, '.js');
 

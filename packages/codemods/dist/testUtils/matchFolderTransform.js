@@ -1,16 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.matchFolderTransform = void 0;
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.for-each.js");
 
 var _path = _interopRequireDefault(require("path"));
 
@@ -66,7 +67,7 @@ const matchFolderTransform = async (transformFunction, fixtureName, {
 
   expect(transformedPaths).toEqual(expectedPaths); // Step 4: Check contents of each file
 
-  (0, _forEach.default)(transformedPaths).call(transformedPaths, transformedFile => {
+  transformedPaths.forEach(transformedFile => {
     const actualPath = _path.default.join(tempDir, transformedFile);
 
     const expectedPath = _path.default.join(fixtureOutputDir, transformedFile);

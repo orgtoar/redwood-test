@@ -1,46 +1,38 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-_Object$defineProperty(exports, "DefaultHost", {
+Object.defineProperty(exports, "DefaultHost", {
   enumerable: true,
   get: function () {
     return _hosts.DefaultHost;
   }
 });
-
-_Object$defineProperty(exports, "DiagnosticSeverity", {
+Object.defineProperty(exports, "DiagnosticSeverity", {
   enumerable: true,
   get: function () {
     return _vscodeLanguageserverTypes2.DiagnosticSeverity;
   }
 });
-
-_Object$defineProperty(exports, "Host", {
+Object.defineProperty(exports, "Host", {
   enumerable: true,
   get: function () {
     return _hosts.Host;
   }
 });
-
-_Object$defineProperty(exports, "RWProject", {
+Object.defineProperty(exports, "RWProject", {
   enumerable: true,
   get: function () {
     return _model.RWProject;
   }
 });
-
-_Object$defineProperty(exports, "URL_file", {
+Object.defineProperty(exports, "URL_file", {
   enumerable: true,
   get: function () {
     return _URL.URL_file;
   }
 });
-
 exports.getProject = getProject;
 exports.printDiagnostics = printDiagnostics;
 

@@ -3,11 +3,11 @@
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-var _slice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/slice"));
+require("core-js/modules/esnext.async-iterator.some.js");
 
-var _some = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/some"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.iterator.some.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -21,7 +21,7 @@ var _terminalLink = _interopRequireDefault(require("terminal-link"));
 
 var _paths = require("@redwoodjs/internal/dist/paths");
 
-var _process$env$RWJS_CWD, _context;
+var _process$env$RWJS_CWD;
 
 const config = new _index.default('@redwoodjs/cli');
 const RWFW_PATH = process.env.RWFW_PATH || process.env.RW_PATH || config.get('RWFW_PATH');
@@ -45,10 +45,10 @@ config.set('RWFW_PATH', absRwFwPath); // Execute the commands in the Redwood Fra
 const projectPath = _path.default.dirname((0, _paths.getConfigPath)((_process$env$RWJS_CWD = process.env.RWJS_CWD) !== null && _process$env$RWJS_CWD !== void 0 ? _process$env$RWJS_CWD : process.cwd()));
 
 console.log('Redwood Framework Tools Path:', (0, _terminalLink.default)(absRwFwPath, absRwFwPath));
-let command = (0, _slice.default)(_context = process.argv).call(_context, 2);
+let command = process.argv.slice(2);
 const helpCommands = ['help', '--help'];
 
-if (!command.length || (0, _some.default)(command).call(command, cmd => (0, _includes.default)(helpCommands).call(helpCommands, cmd))) {
+if (!command.length || command.some(cmd => helpCommands.includes(cmd))) {
   command = ['run'];
 }
 

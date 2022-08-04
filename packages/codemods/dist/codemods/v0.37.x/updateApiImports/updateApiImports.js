@@ -1,50 +1,75 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = transform;
 
-var _set = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/set"));
+require("core-js/modules/esnext.set.add-all.js");
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.set.delete-all.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.set.difference.js");
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.set.every.js");
+
+require("core-js/modules/esnext.set.filter.js");
+
+require("core-js/modules/esnext.set.find.js");
+
+require("core-js/modules/esnext.set.intersection.js");
+
+require("core-js/modules/esnext.set.is-disjoint-from.js");
+
+require("core-js/modules/esnext.set.is-subset-of.js");
+
+require("core-js/modules/esnext.set.is-superset-of.js");
+
+require("core-js/modules/esnext.set.join.js");
+
+require("core-js/modules/esnext.set.map.js");
+
+require("core-js/modules/esnext.set.reduce.js");
+
+require("core-js/modules/esnext.set.some.js");
+
+require("core-js/modules/esnext.set.symmetric-difference.js");
+
+require("core-js/modules/esnext.set.union.js");
+
+require("core-js/modules/esnext.async-iterator.for-each.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.for-each.js");
+
+require("core-js/modules/esnext.async-iterator.find.js");
+
+require("core-js/modules/esnext.iterator.find.js");
 
 const apiExports = ['DbAuthHandler', 'dbAuthSession', 'getAuthProviderHeader', 'getAuthenticationContext', 'parseAuthorizationHeader', 'parseJWT', 'prismaVersion', 'redwoodVersion'];
 
 function transform(file, api) {
-  var _context;
-
   const j = api.jscodeshift;
   const ast = j(file.source);
-  const apiSpecifiers = new _set.default();
-  const graphqlServerSpecifiers = new _set.default(); // Find all named import statements from '@redwoodjs/api'.
+  const apiSpecifiers = new Set();
+  const graphqlServerSpecifiers = new Set(); // Find all named import statements from '@redwoodjs/api'.
   // Seprate their specifiers.
 
-  (0, _forEach.default)(_context = (0, _find.default)(ast).call(ast, j.ImportDeclaration, {
+  ast.find(j.ImportDeclaration, {
     source: {
       value: '@redwoodjs/api'
     }
-  })).call(_context, importDeclaration => {
-    var _context2;
-
+  }).forEach(importDeclaration => {
     const {
       specifiers
     } = importDeclaration.node;
-    specifiers === null || specifiers === void 0 ? void 0 : (0, _forEach.default)(_context2 = specifiers).call(_context2, specifier => {
+    specifiers === null || specifiers === void 0 ? void 0 : specifiers.forEach(specifier => {
       const {
         name
       } = specifier.imported;
 
-      if ((0, _includes.default)(apiExports).call(apiExports, name)) {
+      if (apiExports.includes(name)) {
         apiSpecifiers.add(name);
       } else {
         graphqlServerSpecifiers.add(name);
@@ -54,11 +79,11 @@ function transform(file, api) {
   }); // Insert new import declarations at the top.
 
   if (apiSpecifiers.size) {
-    (0, _find.default)(ast).call(ast, j.Program).get('body', 0).insertBefore(`import { ${[...apiSpecifiers].join(', ')} } from '@redwoodjs/api'`);
+    ast.find(j.Program).get('body', 0).insertBefore(`import { ${[...apiSpecifiers].join(', ')} } from '@redwoodjs/api'`);
   }
 
   if (graphqlServerSpecifiers.size) {
-    (0, _find.default)(ast).call(ast, j.Program).get('body', 0).insertBefore(`import { ${[...graphqlServerSpecifiers].join(', ')} } from '@redwoodjs/graphql-server'`);
+    ast.find(j.Program).get('body', 0).insertBefore(`import { ${[...graphqlServerSpecifiers].join(', ')} } from '@redwoodjs/graphql-server'`);
   }
 
   return ast.toSource();

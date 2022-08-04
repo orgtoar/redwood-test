@@ -1,28 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.AuthProvider = exports.AuthContext = void 0;
-
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
-
-var _concat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/concat"));
-
-var _isArray = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/array/is-array"));
-
-var _some = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/some"));
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -33,16 +16,16 @@ const AuthContext = /*#__PURE__*/_react.default.createContext({
   isAuthenticated: false,
   userMetadata: null,
   currentUser: null,
-  logIn: () => _promise.default.resolve(),
-  logOut: () => _promise.default.resolve(),
-  signUp: () => _promise.default.resolve(),
-  getToken: () => _promise.default.resolve(null),
-  getCurrentUser: () => _promise.default.resolve(null),
+  logIn: () => Promise.resolve(),
+  logOut: () => Promise.resolve(),
+  signUp: () => Promise.resolve(),
+  getToken: () => Promise.resolve(null),
+  getCurrentUser: () => Promise.resolve(null),
   hasRole: () => true,
-  reauthenticate: () => _promise.default.resolve(),
-  forgotPassword: () => _promise.default.resolve(),
-  resetPassword: () => _promise.default.resolve(),
-  validateResetToken: () => _promise.default.resolve(),
+  reauthenticate: () => Promise.resolve(),
+  forgotPassword: () => Promise.resolve(),
+  resetPassword: () => Promise.resolve(),
+  validateResetToken: () => Promise.resolve(),
   hasError: false
 });
 
@@ -124,7 +107,7 @@ const AuthProvider = props => {
         'auth-provider': client.type,
         authorization: "Bearer ".concat(token)
       },
-      body: (0, _stringify.default)({
+      body: JSON.stringify({
         query: 'query __REDWOOD__AUTH_GET_CURRENT_USER { redwood { currentUser } }'
       })
     });
@@ -137,9 +120,7 @@ const AuthProvider = props => {
       } = await response.json();
       return data === null || data === void 0 ? void 0 : (_data$redwood = data.redwood) === null || _data$redwood === void 0 ? void 0 : _data$redwood.currentUser;
     } else {
-      var _context;
-
-      throw new Error((0, _concat.default)(_context = "Could not fetch current user: ".concat(response.statusText, " (")).call(_context, response.status, ")"));
+      throw new Error("Could not fetch current user: ".concat(response.statusText, " (").concat(response.status, ")"));
     }
   }, [rwClientPromise, getToken]);
   const reauthenticate = (0, _react.useCallback)(async () => {
@@ -196,23 +177,23 @@ const AuthProvider = props => {
         if (typeof currentUser.roles === 'string') {
           // rolesToCheck is a string, currentUser.roles is a string
           return currentUser.roles === rolesToCheck;
-        } else if ((0, _isArray.default)(currentUser.roles)) {
+        } else if (Array.isArray(currentUser.roles)) {
           var _currentUser$roles;
 
           // rolesToCheck is a string, currentUser.roles is an array
-          return (_currentUser$roles = currentUser.roles) === null || _currentUser$roles === void 0 ? void 0 : (0, _some.default)(_currentUser$roles).call(_currentUser$roles, allowedRole => rolesToCheck === allowedRole);
+          return (_currentUser$roles = currentUser.roles) === null || _currentUser$roles === void 0 ? void 0 : _currentUser$roles.some(allowedRole => rolesToCheck === allowedRole);
         }
       }
 
-      if ((0, _isArray.default)(rolesToCheck)) {
-        if ((0, _isArray.default)(currentUser.roles)) {
+      if (Array.isArray(rolesToCheck)) {
+        if (Array.isArray(currentUser.roles)) {
           var _currentUser$roles2;
 
           // rolesToCheck is an array, currentUser.roles is an array
-          return (_currentUser$roles2 = currentUser.roles) === null || _currentUser$roles2 === void 0 ? void 0 : (0, _some.default)(_currentUser$roles2).call(_currentUser$roles2, allowedRole => (0, _includes.default)(rolesToCheck).call(rolesToCheck, allowedRole));
+          return (_currentUser$roles2 = currentUser.roles) === null || _currentUser$roles2 === void 0 ? void 0 : _currentUser$roles2.some(allowedRole => rolesToCheck.includes(allowedRole));
         } else if (typeof currentUser.roles === 'string') {
           // rolesToCheck is an array, currentUser.roles is a string
-          return (0, _some.default)(rolesToCheck).call(rolesToCheck, allowedRole => (currentUser === null || currentUser === void 0 ? void 0 : currentUser.roles) === allowedRole);
+          return rolesToCheck.some(allowedRole => (currentUser === null || currentUser === void 0 ? void 0 : currentUser.roles) === allowedRole);
         }
       }
     }

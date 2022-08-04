@@ -1,30 +1,29 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.detectPrerenderRoutes = void 0;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.iterator.map.js");
+
+require("core-js/modules/esnext.async-iterator.filter.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _paths = require("@redwoodjs/internal/dist/paths");
 
 var _structure = require("@redwoodjs/structure");
 
 const detectPrerenderRoutes = () => {
-  var _context;
-
   const rwProject = (0, _structure.getProject)((0, _paths.getPaths)().base);
   const routes = rwProject.getRouter().routes;
-  const prerenderRoutes = (0, _map.default)(_context = (0, _filter.default)(routes).call(routes, route => route.prerender) // only select routes with prerender prop
-  ).call(_context, route => {
+  const prerenderRoutes = routes.filter(route => route.prerender) // only select routes with prerender prop
+  .map(route => {
     var _route$page;
 
     return {

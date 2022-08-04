@@ -1,16 +1,15 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.prebuildWebFiles = exports.cleanWebBuild = void 0;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.map.js");
+
+require("core-js/modules/esnext.iterator.map.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -39,7 +38,7 @@ exports.cleanWebBuild = cleanWebBuild;
 
 const prebuildWebFiles = (srcFiles, flags) => {
   const rwjsPaths = (0, _paths.getPaths)();
-  return (0, _map.default)(srcFiles).call(srcFiles, srcPath => {
+  return srcFiles.map(srcPath => {
     const relativePathFromSrc = _path.default.relative(rwjsPaths.base, srcPath);
 
     const dstPath = _path.default.join(rwjsPaths.generated.prebuild, relativePathFromSrc).replace(/\.(ts)$/, '.js');

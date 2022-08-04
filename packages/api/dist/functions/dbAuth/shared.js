@@ -1,20 +1,19 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.webAuthnSession = exports.getSession = exports.extractCookie = exports.decryptSession = exports.dbAuthSession = void 0;
 
-var _trim = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/trim"));
+require("core-js/modules/esnext.async-iterator.find.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.find.js");
 
 var _cryptoJs = _interopRequireDefault(require("crypto-js"));
 
@@ -43,7 +42,7 @@ const extractCookie = event => {
 exports.extractCookie = extractCookie;
 
 const decryptSession = text => {
-  if (!text || (0, _trim.default)(text).call(text) === '') {
+  if (!text || text.trim() === '') {
     return [];
   }
 
@@ -62,24 +61,20 @@ const decryptSession = text => {
 exports.decryptSession = decryptSession;
 
 const getSession = text => {
-  var _context2;
-
   if (typeof text === 'undefined' || text === null) {
     return null;
   }
 
   const cookies = text.split(';');
-  const sessionCookie = (0, _find.default)(cookies).call(cookies, cook => {
-    var _context;
-
-    return (0, _trim.default)(_context = cook.split('=')[0]).call(_context) === 'session';
+  const sessionCookie = cookies.find(cook => {
+    return cook.split('=')[0].trim() === 'session';
   });
 
   if (!sessionCookie || sessionCookie === 'session=') {
     return null;
   }
 
-  return (0, _trim.default)(_context2 = sessionCookie.split('=')[1]).call(_context2);
+  return sessionCookie.split('=')[1].trim();
 }; // Convenience function to get session, decrypt, and return session data all
 // at once. Accepts the `event` argument from a Lambda function call.
 
@@ -98,23 +93,19 @@ const dbAuthSession = event => {
 exports.dbAuthSession = dbAuthSession;
 
 const webAuthnSession = event => {
-  var _context3, _context5;
-
   if (!event.headers.cookie) {
     return null;
   }
 
-  const webAuthnCookie = (0, _find.default)(_context3 = event.headers.cookie.split(';')).call(_context3, cook => {
-    var _context4;
-
-    return (0, _trim.default)(_context4 = cook.split('=')[0]).call(_context4) === 'webAuthn';
+  const webAuthnCookie = event.headers.cookie.split(';').find(cook => {
+    return cook.split('=')[0].trim() === 'webAuthn';
   });
 
   if (!webAuthnCookie || webAuthnCookie === 'webAuthn=') {
     return null;
   }
 
-  return (0, _trim.default)(_context5 = webAuthnCookie.split('=')[1]).call(_context5);
+  return webAuthnCookie.split('=')[1].trim();
 };
 
 exports.webAuthnSession = webAuthnSession;

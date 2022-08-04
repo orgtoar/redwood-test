@@ -1,18 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = exports.files = exports.description = exports.command = exports.builder = void 0;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _reduce = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/reduce"));
+require("core-js/modules/esnext.iterator.map.js");
+
+require("core-js/modules/esnext.async-iterator.reduce.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.reduce.js");
 
 var _pascalcase = _interopRequireDefault(require("pascalcase"));
 
@@ -51,7 +54,7 @@ const files = async ({
   try {
     model = await (0, _schemaHelpers.getSchema)((0, _pascalcase.default)((0, _rwPluralize.singularize)(cellName)));
     idType = (0, _utils.getIdType)(model);
-    mockIdValues = idType === 'String' ? (0, _map.default)(mockIdValues).call(mockIdValues, value => `'${value}'`) : mockIdValues;
+    mockIdValues = idType === 'String' ? mockIdValues.map(value => `'${value}'`) : mockIdValues;
   } catch {
     // Eat error so that the destroy cell generator doesn't raise an error
     // when trying to find prisma query engine in test runs.
@@ -125,7 +128,7 @@ const files = async ({
   // }
 
 
-  return (0, _reduce.default)(files).call(files, (acc, [outputPath, content]) => {
+  return files.reduce((acc, [outputPath, content]) => {
     const template = generateTypescript ? content : (0, _lib.transformTSToJS)(outputPath, content);
     return {
       [outputPath]: template,

@@ -1,23 +1,14 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.Route = Route;
 exports.Router = void 0;
 exports.isRoute = isRoute;
 exports.routes = void 0;
-
-var _some = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/some"));
-
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
-
-var _reduce = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/reduce"));
 
 var _react = _interopRequireDefault(require("react"));
 
@@ -137,7 +128,7 @@ const LocationAwareRouter = _ref3 => {
   } = _ref3;
   const location = (0, _location.useLocation)();
   const flatChildArray = (0, _util.flattenAll)(children);
-  const hasHomeRoute = (0, _some.default)(flatChildArray).call(flatChildArray, child => {
+  const hasHomeRoute = flatChildArray.some(child => {
     if (isRoute(child)) {
       return child.props.path === '/';
     }
@@ -149,7 +140,7 @@ const LocationAwareRouter = _ref3 => {
 
   const hasGeneratedRoutes = !(flatChildArray.length === 1 && isRoute(flatChildArray[0]) && flatChildArray[0].props.notfound);
   const shouldShowSplash = !hasHomeRoute && location.pathname === '/' || !hasGeneratedRoutes;
-  (0, _forEach.default)(flatChildArray).call(flatChildArray, child => {
+  flatChildArray.forEach(child => {
     if (isRoute(child)) {
       const {
         name,
@@ -265,9 +256,7 @@ function analyzeRouterTree(children, pathname, paramTypes) {
   }
 
   function analyzeRouterTreeInternal(children) {
-    var _context;
-
-    return (0, _reduce.default)(_context = _react.default.Children.toArray(children)).call(_context, (previousValue, child) => {
+    return _react.default.Children.toArray(children).reduce((previousValue, child) => {
       if (previousValue) {
         return previousValue;
       }

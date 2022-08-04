@@ -1,28 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.HostWithDocumentsStore = exports.FileNode = exports.BaseNode = void 0;
 
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _flat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/flat"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
-
-var _startsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/starts-with"));
-
-var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
 
@@ -44,7 +37,7 @@ var _URL = require("./x/URL");
 
 var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _class, _dec9, _dec10, _dec11, _dec12, _dec13, _dec14, _dec15, _class3;
 
-let BaseNode = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.memo)(), _dec3 = (0, _decorators.memo)(), _dec4 = (0, _decorators.memo)(), _dec5 = (0, _decorators.memo)(_stringify.default), _dec6 = (0, _decorators.memo)(_stringify.default), _dec7 = (0, _decorators.lazy)(), _dec8 = (0, _decorators.memo)(), (_class = class BaseNode {
+let BaseNode = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.memo)(), _dec3 = (0, _decorators.memo)(), _dec4 = (0, _decorators.memo)(), _dec5 = (0, _decorators.memo)(JSON.stringify), _dec6 = (0, _decorators.memo)(JSON.stringify), _dec7 = (0, _decorators.lazy)(), _dec8 = (0, _decorators.memo)(), (_class = class BaseNode {
   constructor() {
     this.exists = true;
   }
@@ -101,15 +94,13 @@ let BaseNode = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.memo)(),
     }
 
     try {
-      var _context;
-
       const d1 = await this._ideInfo();
-      const dd = await _promise.default.all((0, _map.default)(_context = await this._children()).call(_context, c => c.collectIDEInfo(uri)));
-      const d2 = (0, _flat.default)(dd).call(dd);
+      const dd = await Promise.all((await this._children()).map(c => c.collectIDEInfo(uri)));
+      const d2 = dd.flat();
       let all = [...d1, ...d2];
 
       if (uri) {
-        all = (0, _filter.default)(all).call(all, x => x.location.uri === uri);
+        all = all.filter(x => x.location.uri === uri);
       }
 
       return all;
@@ -133,15 +124,13 @@ let BaseNode = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.memo)(),
     }
 
     try {
-      var _context2;
-
       const d1 = await this._diagnostics();
-      const dd = await _promise.default.all((0, _map.default)(_context2 = await this._children()).call(_context2, c => c.collectDiagnostics(uri)));
-      const d2 = (0, _flat.default)(dd).call(dd);
+      const dd = await Promise.all((await this._children()).map(c => c.collectDiagnostics(uri)));
+      const d2 = dd.flat();
       let all = [...d1, ...d2];
 
       if (uri) {
-        all = (0, _filter.default)(all).call(all, x => x.uri === uri);
+        all = all.filter(x => x.uri === uri);
       }
 
       return all;
@@ -169,7 +158,7 @@ let BaseNode = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.memo)(),
       return false;
     }
 
-    if ((0, _startsWith.default)(uri).call(uri, this.id)) {
+    if (uri.startsWith(this.id)) {
       return false;
     }
 
@@ -208,7 +197,7 @@ let BaseNode = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.memo)(),
       return this;
     }
 
-    if ((0, _startsWith.default)(id).call(id, this.id)) {
+    if (id.startsWith(this.id)) {
       for (const c of await this._children()) {
         // depth first search by default
         const cc = await c.findNode(id);
@@ -222,7 +211,7 @@ let BaseNode = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.memo)(),
     return undefined;
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "host", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "host"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "_children", [_dec2], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "_children"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "_diagnostics", [_dec3], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "_diagnostics"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "_ideInfo", [_dec4], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "_ideInfo"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "collectIDEInfo", [_dec5], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "collectIDEInfo"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "collectDiagnostics", [_dec6], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "collectDiagnostics"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "closestContainingUri", [_dec7], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "closestContainingUri"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "findNode", [_dec8], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "findNode"), _class.prototype)), _class));
+}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "host", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "host"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "_children", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "_children"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "_diagnostics", [_dec3], Object.getOwnPropertyDescriptor(_class.prototype, "_diagnostics"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "_ideInfo", [_dec4], Object.getOwnPropertyDescriptor(_class.prototype, "_ideInfo"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "collectIDEInfo", [_dec5], Object.getOwnPropertyDescriptor(_class.prototype, "collectIDEInfo"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "collectDiagnostics", [_dec6], Object.getOwnPropertyDescriptor(_class.prototype, "collectDiagnostics"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "closestContainingUri", [_dec7], Object.getOwnPropertyDescriptor(_class.prototype, "closestContainingUri"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "findNode", [_dec8], Object.getOwnPropertyDescriptor(_class.prototype, "findNode"), _class.prototype)), _class));
 exports.BaseNode = BaseNode;
 let FileNode = (_dec9 = (0, _decorators.lazy)(), _dec10 = (0, _decorators.lazy)(), _dec11 = (0, _decorators.lazy)(), _dec12 = (0, _decorators.lazy)(), _dec13 = (0, _decorators.lazy)(), _dec14 = (0, _decorators.lazy)(), _dec15 = (0, _decorators.lazy)(), (_class3 = class FileNode extends BaseNode {
   get uri() {
@@ -265,7 +254,7 @@ let FileNode = (_dec9 = (0, _decorators.lazy)(), _dec10 = (0, _decorators.lazy)(
     return (0, _path.basename)(this.filePath);
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class3.prototype, "uri", [_dec9], (0, _getOwnPropertyDescriptor.default)(_class3.prototype, "uri"), _class3.prototype), (0, _applyDecoratedDescriptor2.default)(_class3.prototype, "id", [_dec10], (0, _getOwnPropertyDescriptor.default)(_class3.prototype, "id"), _class3.prototype), (0, _applyDecoratedDescriptor2.default)(_class3.prototype, "text", [_dec11], (0, _getOwnPropertyDescriptor.default)(_class3.prototype, "text"), _class3.prototype), (0, _applyDecoratedDescriptor2.default)(_class3.prototype, "fileExists", [_dec12], (0, _getOwnPropertyDescriptor.default)(_class3.prototype, "fileExists"), _class3.prototype), (0, _applyDecoratedDescriptor2.default)(_class3.prototype, "sf", [_dec13], (0, _getOwnPropertyDescriptor.default)(_class3.prototype, "sf"), _class3.prototype), (0, _applyDecoratedDescriptor2.default)(_class3.prototype, "basenameNoExt", [_dec14], (0, _getOwnPropertyDescriptor.default)(_class3.prototype, "basenameNoExt"), _class3.prototype), (0, _applyDecoratedDescriptor2.default)(_class3.prototype, "basename", [_dec15], (0, _getOwnPropertyDescriptor.default)(_class3.prototype, "basename"), _class3.prototype)), _class3));
+}, ((0, _applyDecoratedDescriptor2.default)(_class3.prototype, "uri", [_dec9], Object.getOwnPropertyDescriptor(_class3.prototype, "uri"), _class3.prototype), (0, _applyDecoratedDescriptor2.default)(_class3.prototype, "id", [_dec10], Object.getOwnPropertyDescriptor(_class3.prototype, "id"), _class3.prototype), (0, _applyDecoratedDescriptor2.default)(_class3.prototype, "text", [_dec11], Object.getOwnPropertyDescriptor(_class3.prototype, "text"), _class3.prototype), (0, _applyDecoratedDescriptor2.default)(_class3.prototype, "fileExists", [_dec12], Object.getOwnPropertyDescriptor(_class3.prototype, "fileExists"), _class3.prototype), (0, _applyDecoratedDescriptor2.default)(_class3.prototype, "sf", [_dec13], Object.getOwnPropertyDescriptor(_class3.prototype, "sf"), _class3.prototype), (0, _applyDecoratedDescriptor2.default)(_class3.prototype, "basenameNoExt", [_dec14], Object.getOwnPropertyDescriptor(_class3.prototype, "basenameNoExt"), _class3.prototype), (0, _applyDecoratedDescriptor2.default)(_class3.prototype, "basename", [_dec15], Object.getOwnPropertyDescriptor(_class3.prototype, "basename"), _class3.prototype)), _class3));
 exports.FileNode = FileNode;
 
 class HostWithDocumentsStore {

@@ -1,16 +1,13 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.getOutline = getOutline;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.map.js");
+
+require("core-js/modules/esnext.iterator.map.js");
 
 var _URL = require("../x/URL");
 
@@ -60,11 +57,7 @@ function _router(project) {
     label: 'Routes.js',
     ...resourceUriAndCommandFor(router.uri),
     iconPath: 'globe',
-    children: () => {
-      var _context;
-
-      return (0, _map.default)(_context = router.routes).call(_context, _router_route);
-    },
+    children: () => router.routes.map(_router_route),
     menu: {
       kind: 'group',
       add: (0, _vscode.Command_cli)('rw generate page ...'),
@@ -92,11 +85,7 @@ function _pages(project) {
   return {
     label: 'pages',
     iconPath: 'globe',
-    children: () => {
-      var _context2;
-
-      return (0, _map.default)(_context2 = project.pages).call(_context2, _pages_page);
-    },
+    children: () => project.pages.map(_pages_page),
     menu: {
       kind: 'group',
       add: (0, _vscode.Command_cli)('rw generate page ...'),
@@ -198,24 +187,20 @@ function _schema(project) {
     ...resourceUriAndCommandFor(project.pathHelper.api.dbSchema),
 
     async children() {
-      var _context3;
-
       const dmmf = await project.prismaDMMF();
 
       if (!dmmf) {
         return [];
       }
 
-      const models = (0, _map.default)(_context3 = dmmf.datamodel.models).call(_context3, model => {
+      const models = dmmf.datamodel.models.map(model => {
         return {
           label: model.name,
           iconPath: 'database',
 
           // TODO: location for models and fields
           children() {
-            var _context4;
-
-            const fields = (0, _map.default)(_context4 = model.fields).call(_context4, f => ({
+            const fields = model.fields.map(f => ({
               label: f.name,
               iconPath: 'symbol-field',
               description: `${f.type}`
@@ -255,7 +240,7 @@ function _rwcli_command_group(...opts) {
     key: 'rw-cli-commands',
     tooltip: 'Redwood.js CLI commands',
     iconPath: 'terminal',
-    children: () => (0, _map.default)(opts).call(opts, _rwcli_command),
+    children: () => opts.map(_rwcli_command),
     menu: {
       kind: 'withDoc',
       doc: (0, _vscode.Command_open)('https://redwoodjs.com/docs/cli-commands')
@@ -279,7 +264,7 @@ function _rwcli_command(opts) {
 }
 
 function fromFiles(fileNodes) {
-  return (0, _map.default)(fileNodes).call(fileNodes, fromFile);
+  return fileNodes.map(fromFile);
 }
 
 function fromFile(fileNode) {

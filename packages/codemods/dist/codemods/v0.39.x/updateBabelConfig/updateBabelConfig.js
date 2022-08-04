@@ -1,18 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.removeBabelConfig = exports.default = void 0;
-
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -36,7 +29,7 @@ const removeBabelConfig = async () => {
     const rootConfig = require(rootBabelConfigPath); // If the rootConfig is the default, we can remove it
 
 
-    if ((0, _keys.default)(rootConfig).length === 1 && ((_rootConfig$presets = rootConfig.presets) === null || _rootConfig$presets === void 0 ? void 0 : _rootConfig$presets[0]) === '@redwoodjs/core/config/babel-preset') {
+    if (Object.keys(rootConfig).length === 1 && ((_rootConfig$presets = rootConfig.presets) === null || _rootConfig$presets === void 0 ? void 0 : _rootConfig$presets[0]) === '@redwoodjs/core/config/babel-preset') {
       console.log('Removing root babel.config.js');
 
       _fs.default.rmSync(rootBabelConfigPath);
@@ -52,7 +45,7 @@ const removeBabelConfig = async () => {
     const webConfig = require(webBabelRcPath); // If its the default .babelrc.js
 
 
-    if ((0, _keys.default)(webConfig).length === 1 && webConfig.extends === '../babel.config.js') {
+    if (Object.keys(webConfig).length === 1 && webConfig.extends === '../babel.config.js') {
       console.log('Removing web .babelrc.js');
 
       _fs.default.rmSync(webBabelRcPath);
@@ -66,7 +59,7 @@ const removeBabelConfig = async () => {
           extends: _ignore,
           ...otherConfig
         } = webConfig;
-        const newConfig = `module.exports = ${(0, _stringify.default)(otherConfig)}`;
+        const newConfig = `module.exports = ${JSON.stringify(otherConfig)}`;
 
         _fs.default.writeFileSync(webBabelConfigPath, (0, _prettify.default)(newConfig));
       }

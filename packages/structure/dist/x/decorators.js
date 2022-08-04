@@ -1,26 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-_Object$defineProperty(exports, "debounce", {
+Object.defineProperty(exports, "debounce", {
   enumerable: true,
   get: function () {
     return _lodashDecorators.Debounce;
   }
 });
-
-_Object$defineProperty(exports, "lazy", {
+Object.defineProperty(exports, "lazy", {
   enumerable: true,
   get: function () {
     return _lazyGetDecorator.LazyGetter;
   }
 });
-
-_Object$defineProperty(exports, "memo", {
+Object.defineProperty(exports, "memo", {
   enumerable: true,
   get: function () {
     return _lodashDecorators.Memoize;

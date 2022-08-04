@@ -1,15 +1,12 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.createNamedContext = void 0;
 exports.flattenAll = flattenAll;
 exports.flattenSearchParams = flattenSearchParams;
@@ -20,34 +17,6 @@ exports.normalizePage = normalizePage;
 exports.validatePath = exports.replaceParams = exports.parseSearch = exports.paramsForRoute = void 0;
 
 var _matchAll = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/match-all"));
-
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
-
-var _slice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/slice"));
-
-var _reduce = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/reduce"));
-
-var _urlSearchParams = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/url-search-params"));
-
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/keys"));
-
-var _startsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/starts-with"));
-
-var _indexOf = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/index-of"));
-
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
-
-var _concat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/concat"));
-
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
-
-var _keys2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
-var _flatMap = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/flat-map"));
-
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -76,18 +45,16 @@ const createNamedContext = (name, defaultValue) => {
 exports.createNamedContext = createNamedContext;
 
 const paramsForRoute = route => {
-  var _context;
-
   // Match the strings between `{` and `}`.
   const params = [...(0, _matchAll.default)(route).call(route, /\{([^}]+)\}/g)];
-  return (0, _map.default)(_context = (0, _map.default)(params).call(params, match => match[1])).call(_context, match => {
+  return params.map(match => match[1]).map(match => {
     const parts = match.split(':'); // Normalize the name
 
     let name = parts[0];
 
-    if ((0, _slice.default)(name).call(name, -3) === '...') {
+    if (name.slice(-3) === '...') {
       // Globs have their ellipsis removed
-      name = (0, _slice.default)(name).call(name, 0, -3);
+      name = name.slice(0, -3);
     } // Determine the type
 
 
@@ -95,7 +62,7 @@ const paramsForRoute = route => {
 
     if (!type) {
       // Strings and Globs are implicit in the syntax
-      type = (0, _slice.default)(match).call(match, -3) === '...' ? 'Glob' : 'String';
+      type = match.slice(-3) === '...' ? 'Glob' : 'String';
     }
 
     return [name, type, "{".concat(match, "}")];
@@ -146,8 +113,6 @@ const coreParamTypes = {
  *  => { match: true, params: { id: 7 }}
  */
 const matchPath = (route, pathname, paramTypes) => {
-  var _context2;
-
   // Get the names and the transform types for the given route.
   const routeParams = paramsForRoute(route);
   const allParamTypes = { ...coreParamTypes,
@@ -176,8 +141,8 @@ const matchPath = (route, pathname, paramTypes) => {
   } // Map extracted values to their param name, casting the value if needed
 
 
-  const providedParams = (0, _slice.default)(_context2 = matches[0]).call(_context2, 1);
-  const params = (0, _reduce.default)(providedParams).call(providedParams, (acc, value, index) => {
+  const providedParams = matches[0].slice(1);
+  const params = providedParams.reduce((acc, value, index) => {
     const [name, transformName] = routeParams[index];
     const typeInfo = allParamTypes[transformName];
     let transformedValue = value;
@@ -212,10 +177,8 @@ const matchPath = (route, pathname, paramTypes) => {
 exports.matchPath = matchPath;
 
 const parseSearch = search => {
-  var _context3;
-
-  const searchParams = new _urlSearchParams.default(search);
-  return (0, _reduce.default)(_context3 = [...(0, _keys.default)(searchParams).call(searchParams)]).call(_context3, (params, key) => ({ ...params,
+  const searchParams = new URLSearchParams(search);
+  return [...searchParams.keys()].reduce((params, key) => ({ ...params,
     [key]: searchParams.get(key)
   }), {});
 };
@@ -230,11 +193,11 @@ exports.parseSearch = parseSearch;
 
 const validatePath = path => {
   // Check that path begins with a slash.
-  if (!(0, _startsWith.default)(path).call(path, '/')) {
+  if (!path.startsWith('/')) {
     throw new Error("Route path does not begin with a slash: \"".concat(path, "\""));
   }
 
-  if ((0, _indexOf.default)(path).call(path, ' ') >= 0) {
+  if (path.indexOf(' ') >= 0) {
     throw new Error("Route path contains spaces: \"".concat(path, "\""));
   } // Check for duplicate named params.
 
@@ -268,32 +231,26 @@ const validatePath = path => {
 exports.validatePath = validatePath;
 
 const replaceParams = function (route) {
-  var _context5;
-
   let args = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   const params = paramsForRoute(route);
   let path = route; // Replace all params in the route with their values
 
-  (0, _forEach.default)(params).call(params, param => {
+  params.forEach(param => {
     const [name, _type, match] = param;
     const value = args[name];
 
     if (value !== undefined) {
       path = path.replace(match, value);
     } else {
-      var _context4;
-
-      throw new Error((0, _concat.default)(_context4 = "Missing parameter '".concat(name, "' for route '")).call(_context4, route, "' when generating a navigation URL."));
+      throw new Error("Missing parameter '".concat(name, "' for route '").concat(route, "' when generating a navigation URL."));
     }
   });
-  const paramNames = (0, _map.default)(params).call(params, param => param[0]);
-  const extraArgKeys = (0, _filter.default)(_context5 = (0, _keys2.default)(args)).call(_context5, x => !(0, _includes.default)(paramNames).call(paramNames, x)); // Prepare any unnamed params to be be appended as search params.
+  const paramNames = params.map(param => param[0]);
+  const extraArgKeys = Object.keys(args).filter(x => !paramNames.includes(x)); // Prepare any unnamed params to be be appended as search params.
 
   const queryParams = [];
-  (0, _forEach.default)(extraArgKeys).call(extraArgKeys, key => {
-    var _context6;
-
-    queryParams.push((0, _concat.default)(_context6 = "".concat(key, "=")).call(_context6, args[key]));
+  extraArgKeys.forEach(key => {
+    queryParams.push("".concat(key, "=").concat(args[key]));
   }); // Append any unnamed params as search params.
 
   if (queryParams.length) {
@@ -312,7 +269,7 @@ function isReactElement(node) {
 function flattenAll(children) {
   const childrenArray = _react.Children.toArray(children);
 
-  return (0, _flatMap.default)(childrenArray).call(childrenArray, child => {
+  return childrenArray.flatMap(child => {
     if (isReactElement(child) && child.props.children) {
       return [child, ...flattenAll(child.props.children)];
     }
@@ -341,7 +298,7 @@ function flattenAll(children) {
 function flattenSearchParams(queryString) {
   const searchParams = [];
 
-  for (const [key, value] of (0, _entries.default)(parseSearch(queryString))) {
+  for (const [key, value] of Object.entries(parseSearch(queryString))) {
     searchParams.push({
       [key]: value
     });

@@ -1,18 +1,13 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.RWCell = void 0;
-
-var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
 
 var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
 
@@ -140,5 +135,5 @@ let RWCell = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), _
     }
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "isCell", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "isCell"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "queryStringNode", [_dec2], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "queryStringNode"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "queryString", [_dec3], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "queryString"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "queryAst", [_dec4], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "queryAst"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "queryOperationName", [_dec5], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "queryOperationName"), _class.prototype)), _class));
+}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "isCell", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "isCell"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "queryStringNode", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "queryStringNode"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "queryString", [_dec3], Object.getOwnPropertyDescriptor(_class.prototype, "queryString"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "queryAst", [_dec4], Object.getOwnPropertyDescriptor(_class.prototype, "queryAst"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "queryOperationName", [_dec5], Object.getOwnPropertyDescriptor(_class.prototype, "queryOperationName"), _class.prototype)), _class));
 exports.RWCell = RWCell;

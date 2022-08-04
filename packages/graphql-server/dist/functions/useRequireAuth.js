@@ -1,16 +1,37 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.useRequireAuth = void 0;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/map"));
+require("core-js/modules/esnext.map.delete-all.js");
+
+require("core-js/modules/esnext.map.emplace.js");
+
+require("core-js/modules/esnext.map.every.js");
+
+require("core-js/modules/esnext.map.filter.js");
+
+require("core-js/modules/esnext.map.find.js");
+
+require("core-js/modules/esnext.map.find-key.js");
+
+require("core-js/modules/esnext.map.includes.js");
+
+require("core-js/modules/esnext.map.key-of.js");
+
+require("core-js/modules/esnext.map.map-keys.js");
+
+require("core-js/modules/esnext.map.map-values.js");
+
+require("core-js/modules/esnext.map.merge.js");
+
+require("core-js/modules/esnext.map.reduce.js");
+
+require("core-js/modules/esnext.map.some.js");
+
+require("core-js/modules/esnext.map.update.js");
 
 var _api = require("@redwoodjs/api");
 
@@ -48,7 +69,7 @@ const useRequireAuth = ({
 
     if ((0, _globalContext.getAsyncStoreInstance)()) {
       // This must be used when you're self-hosting RedwoodJS.
-      return (0, _globalContext.getAsyncStoreInstance)().run(new _map.default(), authEnrichedFunction);
+      return (0, _globalContext.getAsyncStoreInstance)().run(new Map(), authEnrichedFunction);
     } else {
       // This is OK for AWS (Netlify/Vercel) because each Lambda request
       // is handled individually.

@@ -1,20 +1,23 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.transpileApi = exports.prebuildApiFiles = exports.cleanApiBuild = exports.buildApi = void 0;
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
+
+require("core-js/modules/esnext.async-iterator.map.js");
+
+require("core-js/modules/esnext.iterator.map.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -31,13 +34,11 @@ var _paths = require("../paths");
 var _api = require("./babel/api");
 
 const buildApi = () => {
-  var _context;
-
   // TODO: Be smarter about caching and invalidating files,
   // but right now we just delete everything.
   cleanApiBuild();
   const srcFiles = (0, _files.findApiFiles)();
-  const prebuiltFiles = (0, _filter.default)(_context = prebuildApiFiles(srcFiles)).call(_context, path => path !== undefined);
+  const prebuiltFiles = prebuildApiFiles(srcFiles).filter(path => path !== undefined);
   return transpileApi(prebuiltFiles);
 };
 
@@ -58,7 +59,7 @@ exports.cleanApiBuild = cleanApiBuild;
 const prebuildApiFiles = srcFiles => {
   const rwjsPaths = (0, _paths.getPaths)();
   const plugins = (0, _api.getApiSideBabelPlugins)();
-  return (0, _map.default)(srcFiles).call(srcFiles, srcPath => {
+  return srcFiles.map(srcPath => {
     const relativePathFromSrc = _path.default.relative(rwjsPaths.base, srcPath);
 
     const dstPath = _path.default.join(rwjsPaths.generated.prebuild, relativePathFromSrc).replace(/\.(ts)$/, '.js');

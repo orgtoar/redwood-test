@@ -1,20 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = exports.files = exports.description = exports.command = exports.builder = void 0;
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.iterator.for-each.js");
+
+require("core-js/modules/esnext.async-iterator.filter.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -65,14 +66,12 @@ const description = 'Generate a data migration';
 exports.description = description;
 
 const builder = yargs => {
-  var _context;
-
   yargs.positional('name', {
     description: 'A descriptor of what this data migration does',
     type: 'string'
   }).epilogue(`Also see the ${(0, _terminalLink.default)('Redwood CLI Reference', 'https://redwoodjs.com/docs/cli-commands#generate-datamigration')}`); // Merge generator defaults in
 
-  (0, _forEach.default)(_context = (0, _entries.default)(_generate.yargsDefaults)).call(_context, ([option, config]) => {
+  Object.entries(_generate.yargsDefaults).forEach(([option, config]) => {
     yargs.option(option, config);
   });
 };
@@ -80,9 +79,7 @@ const builder = yargs => {
 exports.builder = builder;
 
 const handler = async args => {
-  var _context2;
-
-  const tasks = new _listr.default((0, _filter.default)(_context2 = [{
+  const tasks = new _listr.default([{
     title: 'Generating data migration file...',
     task: () => {
       return (0, _lib.writeFilesTask)(files(args));
@@ -92,7 +89,7 @@ const handler = async args => {
     task: (_ctx, task) => {
       task.title = POST_RUN_INSTRUCTIONS;
     }
-  }]).call(_context2, Boolean), {
+  }].filter(Boolean), {
     collapse: false
   });
 

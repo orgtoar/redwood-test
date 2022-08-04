@@ -1,36 +1,29 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.makeMergedSchema = void 0;
+
+require("core-js/modules/esnext.async-iterator.reduce.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.reduce.js");
 
 require("core-js/modules/es.object.has-own.js");
 
-var _reduce = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/reduce"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.iterator.filter.js");
 
-var _fill = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/fill"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
-
-var _indexOf = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/index-of"));
-
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
-
-var _startsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/starts-with"));
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
-var _values = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/values"));
+require("core-js/modules/esnext.iterator.map.js");
 
 var _merge = require("@graphql-tools/merge");
 
@@ -46,31 +39,27 @@ const mapFieldsToService = ({
   fields = {},
   resolvers: unmappedResolvers,
   services
-}) => {
-  var _context;
-
-  return (0, _reduce.default)(_context = (0, _keys.default)(fields)).call(_context, (resolvers, name) => {
-    // Does the function already exist in the resolvers from the schema definition?
-    if (resolvers !== null && resolvers !== void 0 && resolvers[name]) {
-      return resolvers;
-    } // Does a function exist in the service?
-
-
-    if (services !== null && services !== void 0 && services[name]) {
-      return { ...resolvers,
-        // Map the arguments from GraphQL to an ordinary function a service would
-        // expect.
-        [name]: (root, args, context, info) => services[name](args, {
-          root,
-          context,
-          info
-        })
-      };
-    }
-
+}) => Object.keys(fields).reduce((resolvers, name) => {
+  // Does the function already exist in the resolvers from the schema definition?
+  if (resolvers !== null && resolvers !== void 0 && resolvers[name]) {
     return resolvers;
-  }, unmappedResolvers);
-};
+  } // Does a function exist in the service?
+
+
+  if (services !== null && services !== void 0 && services[name]) {
+    return { ...resolvers,
+      // Map the arguments from GraphQL to an ordinary function a service would
+      // expect.
+      [name]: (root, args, context, info) => services[name](args, {
+        root,
+        context,
+        info
+      })
+    };
+  }
+
+  return resolvers;
+}, unmappedResolvers);
 /**
  *
  * @param types on Union type: i.e for union Media =  Book | Movie, parameter = [Book, Movie]
@@ -81,7 +70,7 @@ const mapFieldsToService = ({
 
 const resolveUnionType = types => ({
   __resolveType(obj) {
-    var _context2, _maxIntersectionType$, _maxIntersectionType;
+    var _maxIntersectionType$, _maxIntersectionType;
 
     // if obj has __typename, check that first to resolve type, otherwise, look for largest intersection
     if (Object.hasOwn(obj, '__typename')) {
@@ -92,16 +81,14 @@ const resolveUnionType = types => ({
       }
     }
 
-    const fieldIntersections = (0, _fill.default)(_context2 = new Array(types.length)).call(_context2, 0);
+    const fieldIntersections = new Array(types.length).fill(0);
     let maxIntersectionFields = 0;
     let maxIntersectionType;
     let maxIntersectionIdx = 0;
 
     for (let i = 0; i < types.length; i++) {
-      var _context3;
-
       const type = types[i];
-      const fieldIntersection = (0, _filter.default)(_context3 = (0, _keys.default)(type.getFields())).call(_context3, field => field in obj);
+      const fieldIntersection = Object.keys(type.getFields()).filter(field => field in obj);
       fieldIntersections[i] = fieldIntersection.length; // update max intersection fields, type and index
 
       if (fieldIntersection.length > maxIntersectionFields) {
@@ -112,7 +99,7 @@ const resolveUnionType = types => ({
     } // If the maxIntersection fields is not unique, we are unable to determine type
 
 
-    if ((0, _indexOf.default)(fieldIntersections).call(fieldIntersections, maxIntersectionFields, maxIntersectionIdx + 1) !== -1) {
+    if (fieldIntersections.indexOf(maxIntersectionFields, maxIntersectionIdx + 1) !== -1) {
       throw Error('Unable to resolve correct type for union. Try adding unique fields to each type or __typename to each resolver');
     }
 
@@ -132,28 +119,24 @@ const mergeResolversWithServices = ({
   resolvers,
   services
 }) => {
-  var _context4, _context5, _context6, _context7, _context8, _context9, _context10, _context11;
-
-  const mergedServices = (0, _lodash.default)({}, ...(0, _map.default)(_context4 = (0, _keys.default)(services)).call(_context4, name => services[name])); // Get a list of types that have fields.
+  const mergedServices = (0, _lodash.default)({}, ...Object.keys(services).map(name => services[name])); // Get a list of types that have fields.
   // TODO: Figure out if this would interfere with other types: Interface types, etc.`
 
-  const typesWithFields = (0, _filter.default)(_context5 = (0, _map.default)(_context6 = (0, _filter.default)(_context7 = (0, _filter.default)(_context8 = (0, _keys.default)(schema.getTypeMap())).call(_context8, name => !(0, _startsWith.default)(name).call(name, '_'))).call(_context7, name => typeof schema.getType(name).getFields !== 'undefined')).call(_context6, name => {
+  const typesWithFields = Object.keys(schema.getTypeMap()).filter(name => !name.startsWith('_')).filter(name => typeof schema.getType(name).getFields !== 'undefined').map(name => {
     return schema.getType(name);
-  })).call(_context5, type => type !== undefined && type !== null); // gets union types, which does not have fields but has types. i.e union Media = Book | Movie
+  }).filter(type => type !== undefined && type !== null); // gets union types, which does not have fields but has types. i.e union Media = Book | Movie
 
-  const unionTypes = (0, _filter.default)(_context9 = (0, _map.default)(_context10 = (0, _filter.default)(_context11 = (0, _keys.default)(schema.getTypeMap())).call(_context11, name => typeof schema.getType(name).getTypes !== 'undefined')).call(_context10, name => {
+  const unionTypes = Object.keys(schema.getTypeMap()).filter(name => typeof schema.getType(name).getTypes !== 'undefined').map(name => {
     return schema.getType(name);
-  })).call(_context9, type => type !== undefined && type !== null);
-  const mappedResolvers = (0, _reduce.default)(typesWithFields).call(typesWithFields, (acc, type) => {
-    var _context12;
-
+  }).filter(type => type !== undefined && type !== null);
+  const mappedResolvers = typesWithFields.reduce((acc, type) => {
     // Services export Query and Mutation field resolvers as named exports,
     // but other GraphQLObjectTypes are exported as an object that are named
     // after the type.
     // Example: export const MyType = { field: () => {} }
     let servicesForType = mergedServices;
 
-    if (!(0, _includes.default)(_context12 = ['Query', 'Mutation']).call(_context12, type.name)) {
+    if (!['Query', 'Mutation'].includes(type.name)) {
       servicesForType = mergedServices === null || mergedServices === void 0 ? void 0 : mergedServices[type.name];
     }
 
@@ -165,7 +148,7 @@ const mergeResolversWithServices = ({
       })
     };
   }, {});
-  const mappedUnionResolvers = (0, _reduce.default)(unionTypes).call(unionTypes, (acc, type) => {
+  const mappedUnionResolvers = unionTypes.reduce((acc, type) => {
     return { ...acc,
       [type.name]: resolveUnionType(type.getTypes())
     };
@@ -176,13 +159,9 @@ const mergeResolversWithServices = ({
   }, v => typeof v === 'undefined');
 };
 
-const mergeResolvers = schemas => {
-  var _context13;
-
-  return (0, _lodash2.default)((0, _lodash.default)({}, ...[rootGqlSchema.resolvers, ...(0, _map.default)(_context13 = (0, _values.default)(schemas)).call(_context13, ({
-    resolvers
-  }) => resolvers)]), v => typeof v === 'undefined');
-};
+const mergeResolvers = schemas => (0, _lodash2.default)((0, _lodash.default)({}, ...[rootGqlSchema.resolvers, ...Object.values(schemas).map(({
+  resolvers
+}) => resolvers)]), v => typeof v === 'undefined');
 /**
  * Merge GraphQL typeDefs and resolvers into a single schema.
  *
@@ -224,12 +203,10 @@ const makeMergedSchema = ({
   schemaOptions = {},
   directives
 }) => {
-  var _context14;
-
-  const sdlSchemas = (0, _map.default)(_context14 = (0, _values.default)(sdls)).call(_context14, ({
+  const sdlSchemas = Object.values(sdls).map(({
     schema
   }) => schema);
-  const typeDefs = mergeTypes([rootGqlSchema.schema, ...(0, _map.default)(directives).call(directives, directive => directive.schema), // pick out schemas from directives
+  const typeDefs = mergeTypes([rootGqlSchema.schema, ...directives.map(directive => directive.schema), // pick out schemas from directives
   ...sdlSchemas // pick out the schemas from sdls
   ], {
     all: true

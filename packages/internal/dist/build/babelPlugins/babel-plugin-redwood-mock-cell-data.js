@@ -1,18 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = _default;
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.async-iterator.find.js");
 
-var _startsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/starts-with"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.find.js");
 
 var _path = _interopRequireDefault(require("path"));
 
@@ -52,8 +51,6 @@ function _default({
       },
 
       ExportNamedDeclaration(p, state) {
-        var _context;
-
         // This converts a standard export into a "mockGraphQLQuery" by automatically:
         // Determining the query operation name for `QUERY` and,
         // wrapping the exported data in `afterQuery`
@@ -119,10 +116,8 @@ function _default({
 
         const dir = URL_file(_path.default.dirname(state.file.opts.filename));
         const project = getProject((0, _paths.getBaseDirFromFile)(filename));
-        const cell = (0, _find.default)(_context = project.cells).call(_context, path => {
-          var _context2;
-
-          return (0, _startsWith.default)(_context2 = path.uri).call(_context2, dir);
+        const cell = project.cells.find(path => {
+          return path.uri.startsWith(dir);
         });
 
         if (!cell || !(cell !== null && cell !== void 0 && cell.filePath)) {

@@ -1,18 +1,43 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.command_builder = command_builder;
 
-var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
+require("core-js/modules/esnext.set.add-all.js");
 
-var _set = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/set"));
+require("core-js/modules/esnext.set.delete-all.js");
+
+require("core-js/modules/esnext.set.difference.js");
+
+require("core-js/modules/esnext.set.every.js");
+
+require("core-js/modules/esnext.set.filter.js");
+
+require("core-js/modules/esnext.set.find.js");
+
+require("core-js/modules/esnext.set.intersection.js");
+
+require("core-js/modules/esnext.set.is-disjoint-from.js");
+
+require("core-js/modules/esnext.set.is-subset-of.js");
+
+require("core-js/modules/esnext.set.is-superset-of.js");
+
+require("core-js/modules/esnext.set.join.js");
+
+require("core-js/modules/esnext.set.map.js");
+
+require("core-js/modules/esnext.set.reduce.js");
+
+require("core-js/modules/esnext.set.some.js");
+
+require("core-js/modules/esnext.set.symmetric-difference.js");
+
+require("core-js/modules/esnext.set.union.js");
 
 var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
 
@@ -145,7 +170,7 @@ let CommandBuilder = (_dec = (0, _decorators.memo)(), _dec2 = (0, _decorators.me
     return (_this$args$5 = this.args[2]) !== null && _this$args$5 !== void 0 ? _this$args$5 : breakIfNull(await this.prompts.model('Choose Model to Scaffold...'));
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "buildCommand", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "buildCommand"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "buildCommandString", [_dec2], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "buildCommandString"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "args", [_dec3], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "args"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "arg_command", [_dec4], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "arg_command"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "arg_generate_type", [_dec5], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "arg_generate_type"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "arg_db_operation", [_dec6], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "arg_db_operation"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "arg_generate_sdl_modelName", [_dec7], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "arg_generate_sdl_modelName"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "arg_generate_scaffold_modelName", [_dec8], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "arg_generate_scaffold_modelName"), _class.prototype)), _class));
+}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "buildCommand", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "buildCommand"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "buildCommandString", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "buildCommandString"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "args", [_dec3], Object.getOwnPropertyDescriptor(_class.prototype, "args"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "arg_command", [_dec4], Object.getOwnPropertyDescriptor(_class.prototype, "arg_command"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "arg_generate_type", [_dec5], Object.getOwnPropertyDescriptor(_class.prototype, "arg_generate_type"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "arg_db_operation", [_dec6], Object.getOwnPropertyDescriptor(_class.prototype, "arg_db_operation"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "arg_generate_sdl_modelName", [_dec7], Object.getOwnPropertyDescriptor(_class.prototype, "arg_generate_sdl_modelName"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "arg_generate_scaffold_modelName", [_dec8], Object.getOwnPropertyDescriptor(_class.prototype, "arg_generate_scaffold_modelName"), _class.prototype)), _class));
 /**
  * A set of specialized prompt helpers
  * that wrap around the UI methods and sometimes queries the RWProject
@@ -211,7 +236,7 @@ class PromptHelper {
       return;
     }
 
-    return new _set.default(opts);
+    return new Set(opts);
   }
 
   async generate_type() {

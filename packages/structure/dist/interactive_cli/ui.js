@@ -1,18 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.CLIUI = void 0;
 exports.UIPickItem_normalize = UIPickItem_normalize;
 exports.VSCodeWindowUI = void 0;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.map.js");
+
+require("core-js/modules/esnext.iterator.map.js");
 
 var _enquirer = _interopRequireDefault(require("enquirer"));
 
@@ -39,7 +38,7 @@ class VSCodeWindowUI {
   }
 
   async pickOne(items, msg) {
-    const items2 = (0, _map.default)(items).call(items, UIPickItem_normalize);
+    const items2 = items.map(UIPickItem_normalize);
     const res = await this.w.showQuickPick(items2, {
       placeHolder: msg
     });
@@ -47,12 +46,12 @@ class VSCodeWindowUI {
   }
 
   async pickMany(items, msg) {
-    const items2 = (0, _map.default)(items).call(items, UIPickItem_normalize);
+    const items2 = items.map(UIPickItem_normalize);
     const res = await this.w.showQuickPick(items2, {
       placeHolder: msg,
       canPickMany: true
     });
-    return res === null || res === void 0 ? void 0 : (0, _map.default)(res).call(res, r => r.label);
+    return res === null || res === void 0 ? void 0 : res.map(r => r.label);
   }
 
 }
@@ -74,23 +73,23 @@ class CLIUI {
   }
 
   async pickOne(items, msg) {
-    const items2 = (0, _map.default)(items).call(items, UIPickItem_normalize);
+    const items2 = items.map(UIPickItem_normalize);
     const res = await _enquirer.default.prompt({
       type: 'select',
       name: 'x',
       message: msg,
-      choices: (0, _map.default)(items2).call(items2, i => i.label)
+      choices: items2.map(i => i.label)
     });
     return res['x'];
   }
 
   async pickMany(items, msg) {
-    const items2 = (0, _map.default)(items).call(items, UIPickItem_normalize);
+    const items2 = items.map(UIPickItem_normalize);
     const res = await _enquirer.default.prompt({
       type: 'multiselect',
       name: 'x',
       message: msg,
-      choices: (0, _map.default)(items2).call(items2, i => i.label)
+      choices: items2.map(i => i.label)
     });
     return res['x'];
   }

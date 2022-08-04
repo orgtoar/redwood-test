@@ -1,26 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.verifySignature = exports.default = void 0;
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
-
-var _slice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/slice"));
 
 var _crypto = require("crypto");
 
 var _common = require("./common");
 
 function toNormalizedJsonString(payload) {
-  return (0, _stringify.default)(payload).replace(/[^\\]\\u[\da-f]{4}/g, s => {
-    return (0, _slice.default)(s).call(s, 0, 3) + (0, _slice.default)(s).call(s, 3).toUpperCase();
+  return JSON.stringify(payload).replace(/[^\\]\\u[\da-f]{4}/g, s => {
+    return s.slice(0, 3) + s.slice(3).toUpperCase();
   });
 }
 

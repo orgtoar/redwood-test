@@ -1,16 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.verifyAuth0Token = exports.auth0 = void 0;
-
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
 
 var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
 
@@ -38,7 +33,7 @@ var _jwksRsa = _interopRequireDefault(require("jwks-rsa"));
  *
  */
 const verifyAuth0Token = bearerToken => {
-  return new _promise.default((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const {
       AUTH0_DOMAIN,
       AUTH0_AUDIENCE

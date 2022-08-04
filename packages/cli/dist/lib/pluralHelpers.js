@@ -1,18 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.validatePlural = exports.isWordPluralizable = exports.ensureUniquePlural = void 0;
-
-var _trim = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/trim"));
-
-var _slice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/slice"));
 
 var _prompts = _interopRequireDefault(require("prompts"));
 
@@ -25,7 +18,7 @@ const isWordPluralizable = word => {
 exports.isWordPluralizable = isWordPluralizable;
 
 const validatePlural = (plural, singular) => {
-  const trimmedPlural = (0, _trim.default)(plural).call(plural);
+  const trimmedPlural = plural.trim();
 
   if (trimmedPlural === singular) {
     return 'Plural can not be same as singular.';
@@ -64,7 +57,7 @@ const ensureUniquePlural = async ({
   const destroyMessage = `Cannot determine the plural of "${model}" originally used to generate ` + 'the files. \n' + 'To continue, the destroy command requires the plural form:';
   const promptMessage = isDestroyer ? destroyMessage : generateMessage; // News => Newses; Equipment => Equipments
 
-  const initialPlural = (0, _slice.default)(model).call(model, -1) === 's' ? `${model}es` : `${model}s`;
+  const initialPlural = model.slice(-1) === 's' ? `${model}es` : `${model}s`;
   const promptResult = await (0, _prompts.default)({
     type: 'text',
     name: 'plural',
@@ -75,7 +68,7 @@ const ensureUniquePlural = async ({
   // default input is cleared using option+backspace
   // eslint-disable-next-line no-control-regex
 
-  const pluralToUse = (_promptResult$plural = promptResult.plural) === null || _promptResult$plural === void 0 ? void 0 : (0, _trim.default)(_promptResult$plural).call(_promptResult$plural).replace(/\u0017/g, '');
+  const pluralToUse = (_promptResult$plural = promptResult.plural) === null || _promptResult$plural === void 0 ? void 0 : _promptResult$plural.trim().replace(/\u0017/g, '');
 
   if (!pluralToUse) {
     throw Error('Plural name must not be empty');

@@ -1,18 +1,17 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = void 0;
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -52,8 +51,6 @@ const handler = async ({
   prisma = true,
   prerender
 }) => {
-  var _context;
-
   const rwjsPaths = (0, _lib.getPaths)();
 
   if (performance) {
@@ -82,7 +79,7 @@ const handler = async ({
     return;
   }
 
-  const tasks = (0, _filter.default)(_context = [(0, _includes.default)(side).call(side, 'api') && prisma && {
+  const tasks = [side.includes('api') && prisma && {
     title: 'Generating Prisma Client...',
     task: async () => {
       const {
@@ -95,10 +92,10 @@ const handler = async ({
         cwd: rwjsPaths.api.base
       });
     }
-  }, (0, _includes.default)(side).call(side, 'api') && {
+  }, side.includes('api') && {
     title: 'Verifying graphql schema...',
     task: _validateSchema.loadAndValidateSdls
-  }, (0, _includes.default)(side).call(side, 'api') && {
+  }, side.includes('api') && {
     title: 'Building API...',
     task: () => {
       const {
@@ -114,13 +111,13 @@ const handler = async ({
         console.warn(warnings);
       }
     }
-  }, (0, _includes.default)(side).call(side, 'web') && {
+  }, side.includes('web') && {
     // Clean web
     title: 'Cleaning Web...',
     task: () => {
       _rimraf.default.sync(rwjsPaths.web.dist);
     }
-  }, (0, _includes.default)(side).call(side, 'web') && {
+  }, side.includes('web') && {
     title: 'Building Web...',
     task: async () => {
       await (0, _execa.default)(`yarn cross-env NODE_ENV=production webpack --config ${require.resolve('@redwoodjs/core/config/webpack.production.js')}`, {
@@ -134,7 +131,7 @@ const handler = async ({
 
       _fs.default.copyFileSync(indexHtmlPath, _path.default.join((0, _lib.getPaths)().web.dist, '200.html'));
     }
-  }, (0, _includes.default)(side).call(side, 'web') && prerender && {
+  }, side.includes('web') && prerender && {
     title: 'Prerendering Web...',
     task: async () => {
       const prerenderRoutes = (0, _detection.detectPrerenderRoutes)();
@@ -149,7 +146,7 @@ const handler = async ({
 
       });
     }
-  }]).call(_context, Boolean);
+  }].filter(Boolean);
   const jobs = new _listr.default(tasks, {
     renderer: verbose && _listrVerboseRenderer.default
   });

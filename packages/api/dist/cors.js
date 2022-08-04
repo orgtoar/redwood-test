@@ -1,22 +1,9 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.createCorsContext = createCorsContext;
-
-var _isArray = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/array/is-array"));
-
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
-var _fromEntries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/from-entries"));
-
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/entries"));
 
 var _crossUndiciFetch = require("cross-undici-fetch");
 
@@ -29,7 +16,7 @@ function createCorsContext(cors) {
     if (cors.methods) {
       if (typeof cors.methods === 'string') {
         corsHeaders.set('access-control-allow-methods', cors.methods);
-      } else if ((0, _isArray.default)(cors.methods)) {
+      } else if (Array.isArray(cors.methods)) {
         corsHeaders.set('access-control-allow-methods', cors.methods.join(','));
       }
     }
@@ -37,7 +24,7 @@ function createCorsContext(cors) {
     if (cors.allowedHeaders) {
       if (typeof cors.allowedHeaders === 'string') {
         corsHeaders.set('access-control-allow-headers', cors.allowedHeaders);
-      } else if ((0, _isArray.default)(cors.allowedHeaders)) {
+      } else if (Array.isArray(cors.allowedHeaders)) {
         corsHeaders.set('access-control-allow-headers', cors.allowedHeaders.join(','));
       }
     }
@@ -45,7 +32,7 @@ function createCorsContext(cors) {
     if (cors.exposedHeaders) {
       if (typeof cors.exposedHeaders === 'string') {
         corsHeaders.set('access-control-expose-headers', cors.exposedHeaders);
-      } else if ((0, _isArray.default)(cors.exposedHeaders)) {
+      } else if (Array.isArray(cors.exposedHeaders)) {
         corsHeaders.set('access-control-expose-headers', cors.exposedHeaders.join(','));
       }
     }
@@ -69,13 +56,11 @@ function createCorsContext(cors) {
       const requestCorsHeaders = new _crossUndiciFetch.Headers(corsHeaders);
 
       if (cors && cors.origin) {
-        var _context;
-
         const requestOrigin = eventHeaders.get('origin');
 
         if (typeof cors.origin === 'string') {
           requestCorsHeaders.set('access-control-allow-origin', cors.origin);
-        } else if (requestOrigin && (typeof cors.origin === 'boolean' || (0, _isArray.default)(cors.origin) && requestOrigin && (0, _includes.default)(_context = cors.origin).call(_context, requestOrigin))) {
+        } else if (requestOrigin && (typeof cors.origin === 'boolean' || Array.isArray(cors.origin) && requestOrigin && cors.origin.includes(requestOrigin))) {
           requestCorsHeaders.set('access-control-allow-origin', requestOrigin);
         }
 
@@ -86,7 +71,7 @@ function createCorsContext(cors) {
         }
       }
 
-      return (0, _fromEntries.default)((0, _entries.default)(requestCorsHeaders).call(requestCorsHeaders));
+      return Object.fromEntries(requestCorsHeaders.entries());
     }
 
   };

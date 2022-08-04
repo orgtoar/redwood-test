@@ -1,22 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.routes = exports.paramVariants = exports.handler = exports.files = exports.description = exports.command = exports.builder = void 0;
 
-var _slice = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/slice"));
+require("core-js/modules/esnext.async-iterator.reduce.js");
 
-var _reduce = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/reduce"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _trim = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/trim"));
+require("core-js/modules/esnext.iterator.reduce.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _child_process = require("child_process");
 
@@ -62,10 +61,10 @@ const mapRouteParamTypeToDefaultValue = paramType => {
 };
 
 const paramVariants = path => {
-  var _path$match, _context, _context2;
+  var _path$match;
 
   const param = path === null || path === void 0 ? void 0 : (_path$match = path.match(/(\{[\w:]+\})/)) === null || _path$match === void 0 ? void 0 : _path$match[1];
-  const paramName = param === null || param === void 0 ? void 0 : (0, _slice.default)(_context = param.replace(/:[^}]+/, '')).call(_context, 1, -1);
+  const paramName = param === null || param === void 0 ? void 0 : param.replace(/:[^}]+/, '').slice(1, -1);
 
   if (param === undefined) {
     return {
@@ -79,7 +78,7 @@ const paramVariants = path => {
   } // set paramType param includes type (e.g. {id:Int}), else use string
 
 
-  const routeParamType = param !== null && param !== void 0 && param.match(/:/) ? param === null || param === void 0 ? void 0 : (0, _slice.default)(_context2 = param.replace(/[^:]+/, '')).call(_context2, 1, -1) : 'String';
+  const routeParamType = param !== null && param !== void 0 && param.match(/:/) ? param === null || param === void 0 ? void 0 : param.replace(/[^:]+/, '').slice(1, -1) : 'String';
   const defaultValue = mapRouteParamTypeToDefaultValue(routeParamType);
   const defaultValueAsProp = routeParamType === 'String' ? `'${defaultValue}'` : defaultValue;
   return {
@@ -144,7 +143,7 @@ const files = ({
   // }
 
 
-  return (0, _reduce.default)(files).call(files, (acc, [outputPath, content]) => {
+  return files.reduce((acc, [outputPath, content]) => {
     const template = typescript ? content : (0, _lib.transformTSToJS)(outputPath, content);
     return {
       [outputPath]: template,
@@ -191,8 +190,6 @@ const handler = async ({
   stories,
   typescript = false
 }) => {
-  var _context4;
-
   const pageName = (0, _helpers.removeGeneratorName)(name, 'page');
 
   if (tests === undefined) {
@@ -210,12 +207,10 @@ const handler = async ({
     // As a workaround we try to detect when this has happened, and reverse
     // the action
     try {
-      var _context3;
-
       // `cygpath -m /` will return something like 'C:/Program Files/Git/\n'
-      const slashPath = (0, _trim.default)(_context3 = (0, _child_process.execSync)('cygpath -m /', {
+      const slashPath = (0, _child_process.execSync)('cygpath -m /', {
         stdio: ['ignore', 'pipe', 'ignore']
-      }).toString()).call(_context3); // `yarn rw g page home /` =>
+      }).toString().trim(); // `yarn rw g page home /` =>
       //   page === 'C:/Program Files/Git'
       // `yarn rw g page about /about` =>
       //   page === 'C:/Program Files/Git/about'
@@ -227,7 +222,7 @@ const handler = async ({
     }
   }
 
-  const tasks = new _listr.default((0, _filter.default)(_context4 = [{
+  const tasks = new _listr.default([{
     title: 'Generating page files...',
     task: async () => {
       path = (0, _helpers.pathName)(path, pageName);
@@ -259,7 +254,7 @@ const handler = async ({
     task: (ctx, task) => {
       task.title = `One more thing...\n\n` + `   ${_colors.default.warning('Page created! A note about <MetaTags>:')}\n\n` + `   At the top of your newly created page is a <MetaTags> component,\n` + `   which contains the title and description for your page, essential\n` + `   to good SEO. Check out this page for best practices: \n\n` + `   https://developers.google.com/search/docs/advanced/appearance/good-titles-snippets\n`;
     }
-  }]).call(_context4, Boolean), {
+  }].filter(Boolean), {
     collapse: false
   });
 

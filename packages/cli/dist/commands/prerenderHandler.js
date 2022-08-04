@@ -1,32 +1,33 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = exports.getTasks = void 0;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
+require("core-js/modules/esnext.iterator.for-each.js");
 
-var _flatMap = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/flat-map"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _flat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/flat"));
+require("core-js/modules/esnext.iterator.filter.js");
 
-var _repeat = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/repeat"));
+require("core-js/modules/esnext.async-iterator.flat-map.js");
 
-var _some = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/some"));
+require("core-js/modules/esnext.iterator.flat-map.js");
+
+require("core-js/modules/esnext.async-iterator.some.js");
+
+require("core-js/modules/esnext.iterator.some.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -126,11 +127,9 @@ async function expandRouteParameters(route) {
     });
 
     if (routeParameters) {
-      return (0, _map.default)(routeParameters).call(routeParameters, pathParamValues => {
-        var _context;
-
+      return routeParameters.map(pathParamValues => {
         let newPath = route.path;
-        (0, _forEach.default)(_context = (0, _entries.default)(pathParamValues)).call(_context, ([paramName, paramValue]) => {
+        Object.entries(pathParamValues).forEach(([paramName, paramValue]) => {
           newPath = newPath.replace(new RegExp(`{${paramName}:?[^}]*}`), paramValue);
         });
         return { ...route,
@@ -147,9 +146,7 @@ async function expandRouteParameters(route) {
 
 
 const getTasks = async (dryrun, routerPathFilter = null) => {
-  var _context2, _context3;
-
-  const prerenderRoutes = (0, _filter.default)(_context2 = (0, _detection.detectPrerenderRoutes)()).call(_context2, route => route.path);
+  const prerenderRoutes = (0, _detection.detectPrerenderRoutes)().filter(route => route.path);
 
   const indexHtmlPath = _path.default.join((0, _paths.getPaths)().web.dist, 'index.html');
 
@@ -166,8 +163,8 @@ const getTasks = async (dryrun, routerPathFilter = null) => {
   }
 
   (0, _exec.configureBabel)();
-  const expandedRouteParameters = await _promise.default.all((0, _map.default)(prerenderRoutes).call(prerenderRoutes, route => expandRouteParameters(route)));
-  const listrTasks = (0, _flatMap.default)(_context3 = (0, _flat.default)(expandedRouteParameters).call(expandedRouteParameters)).call(_context3, routeToPrerender => {
+  const expandedRouteParameters = await Promise.all(prerenderRoutes.map(route => expandRouteParameters(route)));
+  const listrTasks = expandedRouteParameters.flat().flatMap(routeToPrerender => {
     // Filter out routes that don't match the supplied routePathFilter
     if (routerPathFilter && routeToPrerender.path !== routerPathFilter) {
       return [];
@@ -199,12 +196,10 @@ const getTasks = async (dryrun, routerPathFilter = null) => {
             (0, _prerender.writePrerenderedHtmlFile)(outputHtmlPath, prerenderedHtml);
           }
         } catch (e) {
-          var _context4, _context5;
-
           console.log();
           console.log(_colors.default.warning('You can use `yarn rw prerender --dry-run` to debug'));
           console.log();
-          console.log(`${_colors.default.info((0, _repeat.default)(_context4 = '-').call(_context4, 10))} Error rendering path "${routeToPrerender.path}" ${_colors.default.info((0, _repeat.default)(_context5 = '-').call(_context5, 10))}`);
+          console.log(`${_colors.default.info('-'.repeat(10))} Error rendering path "${routeToPrerender.path}" ${_colors.default.info('-'.repeat(10))}`);
           (0, _telemetry.errorTelemetry)(process.argv, `Error prerendering: ${e.message}`);
           console.error(_colors.default.error(e.stack));
           console.log();
@@ -234,16 +229,14 @@ const diagnosticCheck = () => {
   }];
   console.log('Running diagnostic checks');
 
-  if ((0, _some.default)(checks).call(checks, checks => checks.failure)) {
-    var _context6, _context7, _context8;
-
+  if (checks.some(checks => checks.failure)) {
     console.error(_colors.default.error('node_modules are being duplicated in `./web` \n'));
     console.log('⚠️  Issues found: ');
-    console.log((0, _repeat.default)(_context6 = '-').call(_context6, 50));
-    (0, _forEach.default)(_context7 = (0, _filter.default)(checks).call(checks, check => check.failure)).call(_context7, (check, i) => {
+    console.log('-'.repeat(50));
+    checks.filter(check => check.failure).forEach((check, i) => {
       console.log(`${i + 1}. ${check.message}`);
     });
-    console.log((0, _repeat.default)(_context8 = '-').call(_context8, 50));
+    console.log('-'.repeat(50));
     console.log('Diagnostic check found issues. See the Redwood Forum link below for help:');
     console.log(_colors.default.underline('https://community.redwoodjs.com/search?q=duplicate%20package%20found'));
     console.log(); // Exit, no need to show other messages

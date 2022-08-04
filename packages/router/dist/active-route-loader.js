@@ -1,22 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.ActiveRouteLoader = void 0;
-
-var _setTimeout2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/set-timeout"));
-
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
-
-var _values = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/values"));
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -108,7 +97,7 @@ const ActiveRouteLoader = _ref => {
       // Consumers of the context can show a loading indicator
       // to signal to the user that something is happening.
 
-      loadingTimeout.current = (0, _setTimeout2.default)(() => {
+      loadingTimeout.current = setTimeout(() => {
         (0, _reactDom.unstable_batchedUpdates)(() => {
           setLoadingState(loadingState => ({ ...loadingState,
             [path]: {
@@ -166,9 +155,7 @@ const ActiveRouteLoader = _ref => {
           let existingPage = (_loadingState$path = loadingState[path]) === null || _loadingState$path === void 0 ? void 0 : _loadingState$path.page; // If path is different, try to find the existing page
 
           if (!existingPage) {
-            var _context;
-
-            const pageState = (0, _find.default)(_context = (0, _values.default)(loadingState)).call(_context, state => (state === null || state === void 0 ? void 0 : state.specName) === spec.name);
+            const pageState = Object.values(loadingState).find(state => (state === null || state === void 0 ? void 0 : state.specName) === spec.name);
             existingPage = pageState === null || pageState === void 0 ? void 0 : pageState.page;
           }
 

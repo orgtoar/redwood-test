@@ -1,15 +1,12 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = void 0;
 
 require("core-js/modules/esnext.async-iterator.filter.js");
@@ -18,17 +15,13 @@ require("core-js/modules/esnext.iterator.constructor.js");
 
 require("core-js/modules/esnext.iterator.filter.js");
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.async-iterator.flat-map.js");
 
-var _flatMap = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/flat-map"));
+require("core-js/modules/esnext.iterator.flat-map.js");
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _isArray = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/array/is-array"));
-
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
-
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.iterator.for-each.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -70,7 +63,7 @@ function isInMercurialRepository() {
 function isJestConfigFile(sides) {
   for (let side of sides) {
     try {
-      if ((0, _includes.default)(sides).call(sides, side)) {
+      if (sides.includes(side)) {
         const jestConfigExists = _fs.default.existsSync(_path.default.join(side, 'jest.config.js')) || _fs.default.existsSync(_path.default.join(side, 'jest.config.ts'));
 
         if (!jestConfigExists) {
@@ -92,23 +85,19 @@ const handler = async ({
   dbPush = true,
   ...others
 }) => {
-  var _context, _context5;
-
   const rwjsPaths = (0, _lib.getPaths)();
-  const forwardJestFlags = (0, _flatMap.default)(_context = (0, _keys.default)(others)).call(_context, flagName => {
-    var _context2;
-
-    if ((0, _includes.default)(_context2 = ['watch', 'collect-coverage', 'db-push', '$0', '_']).call(_context2, flagName)) {
+  const forwardJestFlags = Object.keys(others).flatMap(flagName => {
+    if (['watch', 'collect-coverage', 'db-push', '$0', '_'].includes(flagName)) {
       // filter out flags meant for the rw test command only
       return [];
     } else {
       // and forward on the other flags
       const flagValue = others[flagName];
 
-      if ((0, _isArray.default)(flagValue)) {
+      if (Array.isArray(flagValue)) {
         // jest does not collapse flags e.g. --coverageReporters=html --coverageReporters=text
         // so we pass it on. Yargs collapses these flags into an array of values
-        return (0, _flatMap.default)(flagValue).call(flagValue, val => {
+        return flagValue.flatMap(val => {
           return [flagName.length > 1 ? `--${flagName}` : `-${flagName}`, val];
         });
       } else {
@@ -117,18 +106,10 @@ const handler = async ({
     }
   }); // Only the side params
 
-  const sides = (0, _filter.default)(filterParams).call(filterParams, filterString => {
-    var _context3;
+  const sides = filterParams.filter(filterString => project.sides().includes(filterString)); // All the other params, apart from sides
 
-    return (0, _includes.default)(_context3 = project.sides()).call(_context3, filterString);
-  }); // All the other params, apart from sides
-
-  const jestFilterArgs = [...(0, _filter.default)(filterParams).call(filterParams, filterString => {
-    var _context4;
-
-    return !(0, _includes.default)(_context4 = project.sides()).call(_context4, filterString);
-  })];
-  const jestArgs = (0, _filter.default)(_context5 = [...jestFilterArgs, ...forwardJestFlags, collectCoverage ? '--collectCoverage' : null, '--passWithNoTests']).call(_context5, flagOrValue => flagOrValue !== null); // Filter out nulls, not booleans because user may have passed a --something false flag
+  const jestFilterArgs = [...filterParams.filter(filterString => !project.sides().includes(filterString))];
+  const jestArgs = [...jestFilterArgs, ...forwardJestFlags, collectCoverage ? '--collectCoverage' : null, '--passWithNoTests'].filter(flagOrValue => flagOrValue !== null); // Filter out nulls, not booleans because user may have passed a --something false flag
   // If the user wants to watch, set the proper watch flag based on what kind of repo this is
   // because of https://github.com/facebook/create-react-app/issues/5210
 
@@ -139,9 +120,7 @@ const handler = async ({
 
 
   if (!sides.length) {
-    var _context6;
-
-    (0, _forEach.default)(_context6 = project.sides()).call(_context6, side => sides.push(side));
+    project.sides().forEach(side => sides.push(side));
   }
 
   if (sides.length > 0) {
@@ -155,7 +134,7 @@ const handler = async ({
     const cacheDirDb = `file:${(0, _paths.ensurePosixPath)(rwjsPaths.generated.base)}/test.db`;
     const DATABASE_URL = process.env.TEST_DATABASE_URL || cacheDirDb;
 
-    if ((0, _includes.default)(sides).call(sides, 'api') && !dbPush) {
+    if (sides.includes('api') && !dbPush) {
       // @NOTE
       // DB push code now lives in packages/testing/config/jest/api/jest-preset.js
       process.env.SKIP_DB_PUSH = '1';

@@ -1,18 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.getFallbackIndexPath = exports.default = void 0;
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.for-each.js");
+
+require("core-js/modules/esnext.async-iterator.filter.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -41,13 +44,11 @@ const getFallbackIndexPath = () => {
 exports.getFallbackIndexPath = getFallbackIndexPath;
 
 const withWebServer = async (fastify, options) => {
-  var _context;
-
   const prerenderedFiles = (0, _files.findPrerenderedHtml)();
   const indexPath = getFallbackIndexPath(); // Serve prerendered HTML directly, instead of the index
 
-  (0, _forEach.default)(_context = (0, _filter.default)(prerenderedFiles).call(prerenderedFiles, filePath => filePath !== 'index.html') // remove index.html
-  ).call(_context, filePath => {
+  prerenderedFiles.filter(filePath => filePath !== 'index.html') // remove index.html
+  .forEach(filePath => {
     const pathName = filePath.split('.html')[0];
     fastify.get(`/${pathName}`, (_, reply) => {
       reply.header('Content-Type', 'text/html; charset=UTF-8');

@@ -1,26 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = exports.getCmdMajorVersion = exports.description = exports.command = exports.builder = void 0;
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.async-iterator.filter.js");
 
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _startsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/starts-with"));
+require("core-js/modules/esnext.iterator.filter.js");
 
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
-
-var _parseInt2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/parse-int"));
+require("core-js/modules/esnext.iterator.map.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -187,9 +182,7 @@ function updatePackageJsonVersion(pkgPath, version, {
   const pkg = JSON.parse(_fs.default.readFileSync(_path.default.join(pkgPath, 'package.json'), 'utf-8'));
 
   if (pkg.dependencies) {
-    for (const depName of (0, _filter.default)(_context = (0, _keys.default)(pkg.dependencies)).call(_context, x => (0, _startsWith.default)(x).call(x, '@redwoodjs/'))) {
-      var _context;
-
+    for (const depName of Object.keys(pkg.dependencies).filter(x => x.startsWith('@redwoodjs/'))) {
       if (verbose || dryRun) {
         console.log(` - ${depName}: ${pkg.dependencies[depName]} => ^${version}`);
       }
@@ -199,9 +192,7 @@ function updatePackageJsonVersion(pkgPath, version, {
   }
 
   if (pkg.devDependencies) {
-    for (const depName of (0, _filter.default)(_context2 = (0, _keys.default)(pkg.devDependencies)).call(_context2, x => (0, _startsWith.default)(x).call(x, '@redwoodjs/'))) {
-      var _context2;
-
+    for (const depName of Object.keys(pkg.devDependencies).filter(x => x.startsWith('@redwoodjs/'))) {
       if (verbose || dryRun) {
         console.log(` - ${depName}: ${pkg.devDependencies[depName]} => ^${version}`);
       }
@@ -211,7 +202,7 @@ function updatePackageJsonVersion(pkgPath, version, {
   }
 
   if (!dryRun) {
-    _fs.default.writeFileSync(_path.default.join(pkgPath, 'package.json'), (0, _stringify.default)(pkg, undefined, 2));
+    _fs.default.writeFileSync(_path.default.join(pkgPath, 'package.json'), JSON.stringify(pkg, undefined, 2));
   }
 }
 
@@ -221,7 +212,7 @@ function updateRedwoodDepsForAllSides(ctx, options) {
   }
 
   const updatePaths = [(0, _lib.getPaths)().base, (0, _lib.getPaths)().api.base, (0, _lib.getPaths)().web.base];
-  return new _listr.default((0, _map.default)(updatePaths).call(updatePaths, basePath => {
+  return new _listr.default(updatePaths.map(basePath => {
     const pkgJsonPath = _path.default.join(basePath, 'package.json');
 
     return {
@@ -263,7 +254,7 @@ const getCmdMajorVersion = async command => {
 
 
   const version = stdout.match(SEMVER_REGEX)[0];
-  return (0, _parseInt2.default)(version.split('.')[0]);
+  return parseInt(version.split('.')[0]);
 };
 
 exports.getCmdMajorVersion = getCmdMajorVersion;

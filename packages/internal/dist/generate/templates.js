@@ -1,16 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.writeTemplate = void 0;
-
-var _keys = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/keys"));
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -31,6 +26,6 @@ const writeTemplate = (templatePath, destination, templateValues = {}) => {
 exports.writeTemplate = writeTemplate;
 
 const templatized = (template, vars = {}) => {
-  const handler = new Function('vars', ['const tagged = ( ' + (0, _keys.default)(vars).join(', ') + ' ) =>', '`' + template + '`', 'return tagged(...Object.values(vars))'].join('\n'));
+  const handler = new Function('vars', ['const tagged = ( ' + Object.keys(vars).join(', ') + ' ) =>', '`' + template + '`', 'return tagged(...Object.values(vars))'].join('\n'));
   return handler(vars);
 };

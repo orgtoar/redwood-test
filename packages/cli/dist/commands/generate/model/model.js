@@ -1,24 +1,23 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.handler = exports.files = exports.description = exports.command = exports.builder = void 0;
 
 var _interopRequireWildcard2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/interopRequireWildcard"));
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
+require("core-js/modules/esnext.iterator.constructor.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.iterator.for-each.js");
 
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/promise"));
+require("core-js/modules/esnext.async-iterator.filter.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _path = _interopRequireDefault(require("path"));
 
@@ -58,13 +57,11 @@ const description = 'Generate a RedwoodRecord model';
 exports.description = description;
 
 const builder = yargs => {
-  var _context;
-
   yargs.positional('name', {
     description: 'Name of the model to create',
     type: 'string'
   }).epilogue(`Also see the ${(0, _terminalLink.default)('RedwoodRecord Reference', 'https://redwoodjs.com/docs/redwoodrecord')}`);
-  (0, _forEach.default)(_context = (0, _entries.default)(_generate.yargsDefaults)).call(_context, ([option, config]) => {
+  Object.entries(_generate.yargsDefaults).forEach(([option, config]) => {
     yargs.option(option, config);
   });
 };
@@ -75,9 +72,7 @@ const handler = async ({
   force,
   ...args
 }) => {
-  var _context2;
-
-  const tasks = new _listr.default((0, _filter.default)(_context2 = [{
+  const tasks = new _listr.default([{
     title: 'Generating model file...',
     task: () => {
       return (0, _lib.writeFilesTask)(files(args), {
@@ -89,10 +84,10 @@ const handler = async ({
     task: async () => {
       const {
         parseDatamodel
-      } = await _promise.default.resolve().then(() => (0, _interopRequireWildcard2.default)(require('@redwoodjs/record')));
+      } = await Promise.resolve().then(() => (0, _interopRequireWildcard2.default)(require('@redwoodjs/record')));
       await parseDatamodel();
     }
-  }]).call(_context2, Boolean), {
+  }].filter(Boolean), {
     collapse: false
   });
 

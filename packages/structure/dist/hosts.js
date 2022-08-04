@@ -1,18 +1,13 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
 var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.DefaultHost = void 0;
-
-var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
 
 var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
 
@@ -53,5 +48,5 @@ let DefaultHost = (_dec = (0, _decorators.lazy)(), (_class = class DefaultHost {
     return (0, _internal.getPaths)();
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "paths", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "paths"), _class.prototype)), _class));
+}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "paths", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "paths"), _class.prototype)), _class));
 exports.DefaultHost = DefaultHost;

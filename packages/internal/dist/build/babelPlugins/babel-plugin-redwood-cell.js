@@ -1,18 +1,13 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = _default;
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.iterator.map.js");
 
 var _path = require("path");
 
@@ -64,7 +59,7 @@ function _default({
           name = declaration === null || declaration === void 0 ? void 0 : (_declaration$id = declaration.id) === null || _declaration$id === void 0 ? void 0 : _declaration$id.name;
         }
 
-        if (name && (0, _includes.default)(EXPECTED_EXPORTS_FROM_CELL).call(EXPECTED_EXPORTS_FROM_CELL, name)) {
+        if (name && EXPECTED_EXPORTS_FROM_CELL.includes(name)) {
           exportNames.push(name);
         }
       },
@@ -74,7 +69,7 @@ function _default({
           // Validate that this file has exports which are "cell-like":
           // If the user is not exporting `QUERY` and has a default export then
           // it's likely not a cell.
-          if (hasDefaultExport && !(0, _includes.default)(exportNames).call(exportNames, 'QUERY')) {
+          if (hasDefaultExport && !exportNames.includes('QUERY')) {
             return;
           } // Insert at the top of the file:
           // + import { createCell } from '@redwoodjs/web'
@@ -83,7 +78,7 @@ function _default({
           path.node.body.unshift(t.importDeclaration([t.importSpecifier(t.identifier('createCell'), t.identifier('createCell'))], t.stringLiteral('@redwoodjs/web'))); // Insert at the bottom of the file:
           // + export default createCell({ QUERY?, Loading?, Succes?, Failure?, Empty?, beforeQuery?, isEmpty, afterQuery?, displayName? })
 
-          path.node.body.push(t.exportDefaultDeclaration(t.callExpression(t.identifier('createCell'), [t.objectExpression([...(0, _map.default)(exportNames).call(exportNames, name => t.objectProperty(t.identifier(name), t.identifier(name), false, true)),
+          path.node.body.push(t.exportDefaultDeclaration(t.callExpression(t.identifier('createCell'), [t.objectExpression([...exportNames.map(name => t.objectProperty(t.identifier(name), t.identifier(name), false, true)),
           /**
            * Add the `displayName` property
            * so we can name the Cell after the filename.

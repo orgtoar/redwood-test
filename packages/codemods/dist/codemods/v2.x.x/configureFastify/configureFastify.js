@@ -1,25 +1,24 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = transform;
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.for-each.js");
+
+require("core-js/modules/esnext.async-iterator.find.js");
+
+require("core-js/modules/esnext.iterator.find.js");
 
 function transform(file, api) {
-  var _context;
-
   const j = api.jscodeshift;
   const ast = j(file.source);
-  (0, _forEach.default)(_context = (0, _find.default)(ast).call(ast, j.AssignmentExpression)).call(_context, path => {
+  ast.find(j.AssignmentExpression).forEach(path => {
     const lhs = path.value.left;
     const rhs = path.value.right;
 

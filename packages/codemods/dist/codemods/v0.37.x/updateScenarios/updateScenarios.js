@@ -1,35 +1,34 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.default = transform;
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
+require("core-js/modules/esnext.async-iterator.for-each.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.for-each.js");
+
+require("core-js/modules/esnext.async-iterator.find.js");
+
+require("core-js/modules/esnext.iterator.find.js");
 
 function transform(file, api) {
-  var _context, _context2;
-
   const j = api.jscodeshift;
-  return (0, _forEach.default)(_context = (0, _find.default)(_context2 = j(file.source)).call(_context2, j.CallExpression, path => {
+  return j(file.source).find(j.CallExpression, path => {
     return path.callee.type === 'Identifier' && path.callee.name === 'defineScenario';
-  })).call(_context, scenarioPath => {
+  }).forEach(scenarioPath => {
     // The first argument is the definition.
     const scenarioDefinition = scenarioPath.value.arguments[0];
     const scenarioModels = scenarioDefinition.properties; // i.e. "user"
 
-    (0, _forEach.default)(scenarioModels).call(scenarioModels, model => {
+    scenarioModels.forEach(model => {
       const modelProps = model.value.properties; // "one", "two"
       // FYI - you can see what the name is in key.name
 
-      (0, _forEach.default)(modelProps).call(modelProps, modelProp => {
+      modelProps.forEach(modelProp => {
         const dataDef = modelProp.value; // this is {email:}
 
         modelProp.value = j.objectExpression([j.property('init', j.identifier('data'), dataDef)]);

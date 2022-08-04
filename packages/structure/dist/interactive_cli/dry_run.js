@@ -1,16 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.redwood_gen_dry_run = redwood_gen_dry_run;
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/json/stringify"));
 
 var _path = require("path");
 
@@ -109,8 +104,8 @@ function buildJS(fileOverrides = {}, proxyquireRequireStatement = 'proxyquire') 
   })
   `; // replace some placeholders in the template
 
-  js = js.replace(`{ FILE: "OVERRIDES" }`, (0, _stringify.default)(fileOverrides));
-  js = js.replace(`"__SEPARATOR__"`, (0, _stringify.default)(separator));
+  js = js.replace(`{ FILE: "OVERRIDES" }`, JSON.stringify(fileOverrides));
+  js = js.replace(`"__SEPARATOR__"`, JSON.stringify(separator));
   js = js.replace(`require("proxyquire")`, `require("${proxyquireRequireStatement}")`);
   return js;
 }

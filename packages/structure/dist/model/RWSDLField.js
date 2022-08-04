@@ -1,20 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.RWSDLField = void 0;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _find = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/find"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
+require("core-js/modules/esnext.async-iterator.find.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.find.js");
 
 var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
 
@@ -74,9 +75,9 @@ let RWSDLField = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(
   }
 
   get argumentNames() {
-    var _context, _this$field$arguments;
+    var _this$field$arguments;
 
-    return (0, _map.default)(_context = (_this$field$arguments = this.field.arguments) !== null && _this$field$arguments !== void 0 ? _this$field$arguments : []).call(_context, a => a.name.value);
+    return ((_this$field$arguments = this.field.arguments) !== null && _this$field$arguments !== void 0 ? _this$field$arguments : []).map(a => a.name.value);
   }
 
   *ideInfo() {
@@ -95,9 +96,9 @@ let RWSDLField = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(
 
 
   get impl() {
-    var _context2, _this$parent$service$, _this$parent$service;
+    var _this$parent$service$, _this$parent$service;
 
-    return (0, _find.default)(_context2 = (_this$parent$service$ = (_this$parent$service = this.parent.service) === null || _this$parent$service === void 0 ? void 0 : _this$parent$service.funcs) !== null && _this$parent$service$ !== void 0 ? _this$parent$service$ : []).call(_context2, f => f.name === this.name);
+    return ((_this$parent$service$ = (_this$parent$service = this.parent.service) === null || _this$parent$service === void 0 ? void 0 : _this$parent$service.funcs) !== null && _this$parent$service$ !== void 0 ? _this$parent$service$ : []).find(f => f.name === this.name);
   } // TODO: improve snippet
 
 
@@ -105,7 +106,7 @@ let RWSDLField = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(
     var _this$field$arguments2;
 
     const args = (_this$field$arguments2 = this.field.arguments) !== null && _this$field$arguments2 !== void 0 ? _this$field$arguments2 : [];
-    const params = (0, _map.default)(args).call(args, a => a.name.value).join(',');
+    const params = args.map(a => a.name.value).join(',');
     return `
 export const ${this.field.name.value} = ({${params}}) => {
   // TODO: implement
@@ -165,5 +166,5 @@ export const ${this.field.name.value} = ({${params}}) => {
     }
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "id", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "id"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "location", [_dec2], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "location"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "name", [_dec3], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "name"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "argumentNames", [_dec4], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "argumentNames"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "impl", [_dec5], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "impl"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "defaultImplSnippet", [_dec6], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "defaultImplSnippet"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "quickFix_addImplementation", [_dec7], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "quickFix_addImplementation"), _class.prototype)), _class));
+}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "id", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "id"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "location", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "location"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "name", [_dec3], Object.getOwnPropertyDescriptor(_class.prototype, "name"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "argumentNames", [_dec4], Object.getOwnPropertyDescriptor(_class.prototype, "argumentNames"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "impl", [_dec5], Object.getOwnPropertyDescriptor(_class.prototype, "impl"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "defaultImplSnippet", [_dec6], Object.getOwnPropertyDescriptor(_class.prototype, "defaultImplSnippet"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "quickFix_addImplementation", [_dec7], Object.getOwnPropertyDescriptor(_class.prototype, "quickFix_addImplementation"), _class.prototype)), _class));
 exports.RWSDLField = RWSDLField;

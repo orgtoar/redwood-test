@@ -1,20 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.RWLanguageServer = void 0;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.map.js");
 
-var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
+require("core-js/modules/esnext.iterator.map.js");
 
-var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
+require("core-js/modules/esnext.async-iterator.filter.js");
+
+require("core-js/modules/esnext.iterator.constructor.js");
+
+require("core-js/modules/esnext.iterator.filter.js");
 
 var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
 
@@ -136,9 +137,7 @@ let RWLanguageServer = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.
         uri
       }
     }) => {
-      var _context;
-
-      return (0, _map.default)(_context = await this.info(uri, 'DocumentLink')).call(_context, i => i.link);
+      return (await this.info(uri, 'DocumentLink')).map(i => i.link);
     });
     connection.onCodeAction(async ({
       context,
@@ -175,9 +174,7 @@ let RWLanguageServer = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.
         uri
       }
     }) => {
-      var _context2;
-
-      return (0, _map.default)(_context2 = await this.info(uri, 'CodeLens')).call(_context2, i => i.codeLens);
+      return (await this.info(uri, 'CodeLens')).map(i => i.codeLens);
     });
     connection.onHover(async ({
       textDocument: {
@@ -239,9 +236,7 @@ let RWLanguageServer = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.
   }
 
   async info(uri, kind) {
-    var _context3;
-
-    return (0, _filter.default)(_context3 = await this.collectIDEInfo(uri)).call(_context3, i => i.kind === kind);
+    return (await this.collectIDEInfo(uri)).filter(i => i.kind === kind);
   }
 
   get hasWorkspaceFolderCapability() {
@@ -250,5 +245,5 @@ let RWLanguageServer = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.
     return ((_this$initializeParam = this.initializeParams.capabilities.workspace) === null || _this$initializeParam === void 0 ? void 0 : _this$initializeParam.workspaceFolders) === true;
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "connection", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "connection"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "start", [_dec2], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "start"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "diagnostics", [_dec3], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "diagnostics"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "commands", [_dec4], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "commands"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "outline", [_dec5], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "outline"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "xmethods", [_dec6], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "xmethods"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "host", [_dec7], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "host"), _class.prototype)), _class));
+}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "connection", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "connection"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "start", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "start"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "diagnostics", [_dec3], Object.getOwnPropertyDescriptor(_class.prototype, "diagnostics"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "commands", [_dec4], Object.getOwnPropertyDescriptor(_class.prototype, "commands"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "outline", [_dec5], Object.getOwnPropertyDescriptor(_class.prototype, "outline"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "xmethods", [_dec6], Object.getOwnPropertyDescriptor(_class.prototype, "xmethods"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "host", [_dec7], Object.getOwnPropertyDescriptor(_class.prototype, "host"), _class.prototype)), _class));
 exports.RWLanguageServer = RWLanguageServer;

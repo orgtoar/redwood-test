@@ -1,16 +1,11 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.RWTOML = void 0;
-
-var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/get-own-property-descriptor"));
 
 var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
 
@@ -71,5 +66,5 @@ let RWTOML = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), (
 
   }
 
-}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "parsedTOML", [_dec], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "parsedTOML"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "web_includeEnvironmentVariables", [_dec2], (0, _getOwnPropertyDescriptor.default)(_class.prototype, "web_includeEnvironmentVariables"), _class.prototype)), _class));
+}, ((0, _applyDecoratedDescriptor2.default)(_class.prototype, "parsedTOML", [_dec], Object.getOwnPropertyDescriptor(_class.prototype, "parsedTOML"), _class.prototype), (0, _applyDecoratedDescriptor2.default)(_class.prototype, "web_includeEnvironmentVariables", [_dec2], Object.getOwnPropertyDescriptor(_class.prototype, "web_includeEnvironmentVariables"), _class.prototype)), _class));
 exports.RWTOML = RWTOML;

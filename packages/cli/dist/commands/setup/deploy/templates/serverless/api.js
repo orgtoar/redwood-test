@@ -1,24 +1,21 @@
 "use strict";
 
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-
 var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
 
-_Object$defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.SERVERLESS_API_YML = exports.PROJECT_NAME = void 0;
 
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/map"));
+require("core-js/modules/esnext.async-iterator.map.js");
+
+require("core-js/modules/esnext.iterator.map.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
 var _path = _interopRequireDefault(require("path"));
 
 var _lib = require("../../../../../lib");
-
-var _context;
 
 const PROJECT_NAME = _path.default.basename((0, _lib.getPaths)().base);
 
@@ -74,7 +71,7 @@ package:
     - "!node_modules/@prisma/engines/**"
 
 ${_fs.default.existsSync(_path.default.resolve((0, _lib.getPaths)().api.functions)) ? `functions:
-  ${(0, _map.default)(_context = _fs.default.readdirSync(_path.default.resolve((0, _lib.getPaths)().api.functions))).call(_context, file => {
+  ${_fs.default.readdirSync(_path.default.resolve((0, _lib.getPaths)().api.functions)).map(file => {
   const basename = _path.default.parse(file).name;
 
   return `${basename}:
