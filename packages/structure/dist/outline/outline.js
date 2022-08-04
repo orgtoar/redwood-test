@@ -106,13 +106,11 @@ function _pages(project) {
 }
 
 function _pages_page(page) {
-  var _page$route;
-
   return {
     id: page.id,
     label: page.basename,
     ...resourceUriAndCommandFor(page.uri),
-    description: (_page$route = page.route) === null || _page$route === void 0 ? void 0 : _page$route.path,
+    description: page.route?.path,
     children: () => [_rwcli_command_group({
       cmd: 'rw destroy page ' + page.basenameNoExt,
       tooltip: 'Delete page and related files'

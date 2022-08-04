@@ -135,7 +135,7 @@ const handler = async ({
     timestampFormat: 'HH:mm:ss'
   });
   result.catch(e => {
-    if (typeof (e === null || e === void 0 ? void 0 : e.message) !== 'undefined') {
+    if (typeof e?.message !== 'undefined') {
       (0, _telemetry.errorTelemetry)(process.argv, `Error concurrently starting sides: ${e.message}`);
       console.error(_colors.default.error(e.message));
       process.exit(1);

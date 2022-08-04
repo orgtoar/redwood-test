@@ -137,7 +137,7 @@ _forEachInstanceProperty(_context7 = _Object$keys(_cors)).call(_context7, functi
 // @NOTE: use require, to avoid messing around with tsconfig and nested output dirs
 const packageJson = require('../package.json');
 
-const prismaVersion = packageJson === null || packageJson === void 0 ? void 0 : packageJson.dependencies['@prisma/client'];
+const prismaVersion = packageJson?.dependencies['@prisma/client'];
 exports.prismaVersion = prismaVersion;
-const redwoodVersion = packageJson === null || packageJson === void 0 ? void 0 : packageJson.version;
+const redwoodVersion = packageJson?.version;
 exports.redwoodVersion = redwoodVersion;

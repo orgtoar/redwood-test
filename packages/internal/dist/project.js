@@ -28,8 +28,8 @@ const getTsConfigs = () => {
   const apiTsConfig = _fs.default.existsSync(apiTsConfigPath) ? (0, _typescript.parseConfigFileTextToJson)(apiTsConfigPath, _fs.default.readFileSync(apiTsConfigPath, 'utf-8')) : null;
   const webTsConfig = _fs.default.existsSync(webTsConfigPath) ? (0, _typescript.parseConfigFileTextToJson)(webTsConfigPath, _fs.default.readFileSync(webTsConfigPath, 'utf-8')) : null;
   return {
-    api: (apiTsConfig === null || apiTsConfig === void 0 ? void 0 : apiTsConfig.config) ?? null,
-    web: (webTsConfig === null || webTsConfig === void 0 ? void 0 : webTsConfig.config) ?? null
+    api: apiTsConfig?.config ?? null,
+    web: webTsConfig?.config ?? null
   };
 };
 

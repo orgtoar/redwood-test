@@ -68,7 +68,7 @@ const handler = async ({
         var _context;
 
         // Non-null exit codes
-        const exitCodes = (0, _filter.default)(_context = (0, _map.default)(err).call(err, e => e === null || e === void 0 ? void 0 : e.exitCode)).call(_context, Boolean);
+        const exitCodes = (0, _filter.default)(_context = (0, _map.default)(err).call(err, e => e?.exitCode)).call(_context, Boolean);
         conclusiveExitCode = Math.max(...exitCodes);
       }
     }
@@ -99,7 +99,7 @@ const handler = async ({
   } catch (e) {
     (0, _telemetry.errorTelemetry)(process.argv, e.message);
     console.log(_colors.default.error(e.message));
-    process.exit((e === null || e === void 0 ? void 0 : e.exitCode) || 1);
+    process.exit(e?.exitCode || 1);
   }
 };
 

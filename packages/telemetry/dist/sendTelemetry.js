@@ -68,8 +68,6 @@ const SENSITIVE_ARG_POSITIONS = {
 }; // gets diagnostic info and sanitizes by removing references to paths
 
 const getInfo = async (presets = {}) => {
-  var _info$System, _shell$path, _info$System2, _info$System2$OS, _info$System3, _info$System3$OS, _info$System4, _info$System4$Shell, _info$Binaries, _info$Binaries$Node, _info$Binaries2, _info$Binaries2$Yarn, _info$Binaries3, _info$Binaries3$npm, _info$IDEs, _info$IDEs$VSCode, _info$npmPackages$Re;
-
   const info = JSON.parse(await _envinfo.default.run({
     System: ['OS', 'Shell'],
     Binaries: ['Node', 'Yarn', 'npm'],
@@ -79,25 +77,25 @@ const getInfo = async (presets = {}) => {
     json: true
   })); // get shell name instead of path
 
-  const shell = (_info$System = info.System) === null || _info$System === void 0 ? void 0 : _info$System.Shell; // Windows doesn't always provide shell info, I guess
+  const shell = info.System?.Shell; // Windows doesn't always provide shell info, I guess
 
-  if (shell !== null && shell !== void 0 && (_shell$path = shell.path) !== null && _shell$path !== void 0 && _shell$path.match('/')) {
+  if (shell?.path?.match('/')) {
     info.System.Shell.name = info.System.Shell.path.split('/').pop();
-  } else if (shell !== null && shell !== void 0 && shell.path.match('\\')) {
+  } else if (shell?.path.match('\\')) {
     info.System.Shell.name = info.System.Shell.path.split('\\').pop();
   }
 
   const cpu = await _systeminformation.default.cpu();
   const mem = await _systeminformation.default.mem();
   return {
-    os: (_info$System2 = info.System) === null || _info$System2 === void 0 ? void 0 : (_info$System2$OS = _info$System2.OS) === null || _info$System2$OS === void 0 ? void 0 : _info$System2$OS.split(' ')[0],
-    osVersion: (_info$System3 = info.System) === null || _info$System3 === void 0 ? void 0 : (_info$System3$OS = _info$System3.OS) === null || _info$System3$OS === void 0 ? void 0 : _info$System3$OS.split(' ')[1],
-    shell: (_info$System4 = info.System) === null || _info$System4 === void 0 ? void 0 : (_info$System4$Shell = _info$System4.Shell) === null || _info$System4$Shell === void 0 ? void 0 : _info$System4$Shell.name,
-    nodeVersion: (_info$Binaries = info.Binaries) === null || _info$Binaries === void 0 ? void 0 : (_info$Binaries$Node = _info$Binaries.Node) === null || _info$Binaries$Node === void 0 ? void 0 : _info$Binaries$Node.version,
-    yarnVersion: (_info$Binaries2 = info.Binaries) === null || _info$Binaries2 === void 0 ? void 0 : (_info$Binaries2$Yarn = _info$Binaries2.Yarn) === null || _info$Binaries2$Yarn === void 0 ? void 0 : _info$Binaries2$Yarn.version,
-    npmVersion: (_info$Binaries3 = info.Binaries) === null || _info$Binaries3 === void 0 ? void 0 : (_info$Binaries3$npm = _info$Binaries3.npm) === null || _info$Binaries3$npm === void 0 ? void 0 : _info$Binaries3$npm.version,
-    vsCodeVersion: (_info$IDEs = info.IDEs) === null || _info$IDEs === void 0 ? void 0 : (_info$IDEs$VSCode = _info$IDEs.VSCode) === null || _info$IDEs$VSCode === void 0 ? void 0 : _info$IDEs$VSCode.version,
-    redwoodVersion: presets.redwoodVersion || ((_info$npmPackages$Re = info.npmPackages['@redwoodjs/core']) === null || _info$npmPackages$Re === void 0 ? void 0 : _info$npmPackages$Re.installed),
+    os: info.System?.OS?.split(' ')[0],
+    osVersion: info.System?.OS?.split(' ')[1],
+    shell: info.System?.Shell?.name,
+    nodeVersion: info.Binaries?.Node?.version,
+    yarnVersion: info.Binaries?.Yarn?.version,
+    npmVersion: info.Binaries?.npm?.version,
+    vsCodeVersion: info.IDEs?.VSCode?.version,
+    redwoodVersion: presets.redwoodVersion || info.npmPackages['@redwoodjs/core']?.installed,
     system: `${cpu.physicalCores}.${Math.round(mem.total / 1073741824)}`
   };
 }; // removes potentially sensative information from an array of argv strings

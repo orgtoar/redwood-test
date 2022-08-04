@@ -10,8 +10,6 @@ _Object$defineProperty(exports, "__esModule", {
 
 exports.default = _default;
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
 var _startsWith = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/starts-with"));
 
 var _indexOf = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/index-of"));
@@ -35,7 +33,7 @@ function _default({
         // We only operate in "userland" so skip node_modules.
         // Skip everything that's not a 'src/' alias import.
 
-        if (!filename || filename !== null && filename !== void 0 && (0, _includes.default)(filename).call(filename, '/node_modules/') || !(0, _startsWith.default)(value).call(value, 'src/')) {
+        if (!filename || filename?.includes('/node_modules/') || !(0, _startsWith.default)(value).call(value, 'src/')) {
           return;
         } // remove `src/` and create an absolute path
 
@@ -53,10 +51,8 @@ function _default({
       },
 
       ExportDeclaration(p, state) {
-        var _p$node;
-
         // @ts-expect-error `source` does exist
-        if (!(p !== null && p !== void 0 && (_p$node = p.node) !== null && _p$node !== void 0 && _p$node.source)) {
+        if (!p?.node?.source) {
           return;
         } // @ts-expect-error `source` does exist
 
@@ -68,7 +64,7 @@ function _default({
           filename
         } = state.file.opts;
 
-        if (!filename || filename !== null && filename !== void 0 && (0, _includes.default)(filename).call(filename, '/node_modules/') || !(0, _startsWith.default)(value).call(value, 'src/')) {
+        if (!filename || filename?.includes('/node_modules/') || !(0, _startsWith.default)(value).call(value, 'src/')) {
           return;
         } // remove `src/` and create an absolute path
 

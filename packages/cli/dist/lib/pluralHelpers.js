@@ -54,8 +54,6 @@ const ensureUniquePlural = async ({
   isDestroyer = false,
   forcePrompt = false
 }) => {
-  var _promptResult$plural;
-
   if (!forcePrompt && isWordPluralizable(model)) {
     return;
   }
@@ -75,7 +73,7 @@ const ensureUniquePlural = async ({
   // default input is cleared using option+backspace
   // eslint-disable-next-line no-control-regex
 
-  const pluralToUse = (_promptResult$plural = promptResult.plural) === null || _promptResult$plural === void 0 ? void 0 : (0, _trim.default)(_promptResult$plural).call(_promptResult$plural).replace(/\u0017/g, '');
+  const pluralToUse = promptResult.plural?.trim().replace(/\u0017/g, '');
 
   if (!pluralToUse) {
     throw Error('Plural name must not be empty');

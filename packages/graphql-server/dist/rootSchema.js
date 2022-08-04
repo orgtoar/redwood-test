@@ -62,7 +62,7 @@ const resolvers = {
       version: redwoodVersion,
       prismaVersion: prismaVersion,
       currentUser: (_args, context) => {
-        return context === null || context === void 0 ? void 0 : context.currentUser;
+        return context?.currentUser;
       }
     })
   }

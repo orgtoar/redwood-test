@@ -38,14 +38,12 @@ function transform(file, api) {
   const j = api.jscodeshift;
   const ast = j(file.source);
   (0, _forEach.default)(_context2 = (0, _find.default)(ast).call(ast, j.CallExpression, callExpression => {
-    var _callExpression$argum, _callExpression$argum2;
-
     const calleeName = callExpression.callee.name; // Find all calls to
     // `signPayload('timestampSchemeVerifier', ...)`
     // `verifyEvent('timestampSchemeVerifier', ...)`
     // `verifySignature('timestampSchemeVerifier', ...)`
 
-    return (calleeName === 'signPayload' || calleeName === 'verifyEvent' || calleeName === 'verifySignature') && ((_callExpression$argum = callExpression.arguments[0]) === null || _callExpression$argum === void 0 ? void 0 : _callExpression$argum.type) === 'StringLiteral' && ((_callExpression$argum2 = callExpression.arguments[0]) === null || _callExpression$argum2 === void 0 ? void 0 : _callExpression$argum2.value) === 'timestampSchemeVerifier';
+    return (calleeName === 'signPayload' || calleeName === 'verifyEvent' || calleeName === 'verifySignature') && callExpression.arguments[0]?.type === 'StringLiteral' && callExpression.arguments[0]?.value === 'timestampSchemeVerifier';
   })).call(_context2, ({
     node: callExpression
   }) => {

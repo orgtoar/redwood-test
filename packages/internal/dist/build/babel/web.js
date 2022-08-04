@@ -14,8 +14,6 @@ exports.registerWebSideBabelHook = exports.prebuildWebFile = exports.getWebSideO
 
 var _filter = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/filter"));
 
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
-
 var _isArray = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/array/is-array"));
 
 var _fs = _interopRequireDefault(require("fs"));
@@ -115,11 +113,9 @@ const getWebSideBabelPresets = () => {
   // And using extends doesn't work
 
   if (getWebSideBabelConfigPath()) {
-    var _userProjectConfig$pr;
-
     const userProjectConfig = require(getWebSideBabelConfigPath());
 
-    (_userProjectConfig$pr = userProjectConfig.presets) === null || _userProjectConfig$pr === void 0 ? void 0 : (0, _forEach.default)(_userProjectConfig$pr).call(_userProjectConfig$pr, preset => {
+    userProjectConfig.presets?.forEach(preset => {
       // If it isn't a preset with special config ignore it
       if (!(0, _isArray.default)(preset)) {
         return;

@@ -27,7 +27,7 @@ const ts2js = file => {
     retainLines: true
   });
 
-  if (result !== null && result !== void 0 && result.code) {
+  if (result?.code) {
     return (0, _prettify.default)(result.code);
   }
 

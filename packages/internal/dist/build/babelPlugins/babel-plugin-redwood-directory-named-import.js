@@ -10,8 +10,6 @@ _Object$defineProperty(exports, "__esModule", {
 
 exports.default = _default;
 
-var _includes = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/includes"));
-
 var _path = _interopRequireDefault(require("path"));
 
 var _paths = require("../../paths");
@@ -54,7 +52,7 @@ function _default({
         } = state.file.opts; // the file where this import statement resides
         // We only operate in "userland," skip node_modules.
 
-        if (filename !== null && filename !== void 0 && (0, _includes.default)(filename).call(filename, '/node_modules/')) {
+        if (filename?.includes('/node_modules/')) {
           return;
         } // We only need this plugin in the module could not be found.
 
@@ -77,10 +75,8 @@ function _default({
       },
 
       ExportDeclaration(p, state) {
-        var _p$node;
-
         // @ts-expect-error - TypeDef must be outdated.
-        if (!(p !== null && p !== void 0 && (_p$node = p.node) !== null && _p$node !== void 0 && _p$node.source)) {
+        if (!p?.node?.source) {
           return;
         } // @ts-expect-error - TypeDef must be outdated.
 
@@ -92,7 +88,7 @@ function _default({
           filename
         } = state.file.opts; // We only operate in "userland," skip node_modules.
 
-        if (filename !== null && filename !== void 0 && (0, _includes.default)(filename).call(filename, '/node_modules/')) {
+        if (filename?.includes('/node_modules/')) {
           return;
         } // We only need this plugin in the module could not be found.
 

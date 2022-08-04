@@ -94,9 +94,9 @@ function transform(file, api) {
               }
             });
             (0, _forEach.default)(paramTypeValueDef).call(paramTypeValueDef, valueDefNode => {
-              var _valueDefNode$value, _valueDefNode$value$i, _context;
+              var _context;
 
-              if ((valueDefNode === null || valueDefNode === void 0 ? void 0 : (_valueDefNode$value = valueDefNode.value) === null || _valueDefNode$value === void 0 ? void 0 : (_valueDefNode$value$i = _valueDefNode$value.init) === null || _valueDefNode$value$i === void 0 ? void 0 : _valueDefNode$value$i.type) !== 'ObjectExpression') {
+              if (valueDefNode?.value?.init?.type !== 'ObjectExpression') {
                 // Value must be object but doesn't seem to be case here.
                 return;
               }
@@ -134,13 +134,11 @@ function transform(file, api) {
       }
     });
     (0, _forEach.default)(paramTypeProp).call(paramTypeProp, prop => {
-      var _prop$value, _prop$value$value;
-
-      const paramTypeValue = prop === null || prop === void 0 ? void 0 : (_prop$value = prop.value) === null || _prop$value === void 0 ? void 0 : (_prop$value$value = _prop$value.value) === null || _prop$value$value === void 0 ? void 0 : _prop$value$value.expression; // get the value inside the jsx expression
+      const paramTypeValue = prop?.value?.value?.expression; // get the value inside the jsx expression
       // paramTypeValue is marked as 👉 . It could be even referenced as variable.
       // <Router paramTypes={👉 {}}
 
-      switch (paramTypeValue === null || paramTypeValue === void 0 ? void 0 : paramTypeValue.type) {
+      switch (paramTypeValue?.type) {
         case 'Identifier':
           {
             // <R paramsTypes={myParamTypes}
@@ -151,9 +149,7 @@ function transform(file, api) {
               }
             });
             (0, _forEach.default)(variableDefinitions).call(variableDefinitions, varDef => {
-              var _varDef$value, _varDef$value$init;
-
-              const allParamTypeProperties = varDef === null || varDef === void 0 ? void 0 : (_varDef$value = varDef.value) === null || _varDef$value === void 0 ? void 0 : (_varDef$value$init = _varDef$value.init) === null || _varDef$value$init === void 0 ? void 0 : _varDef$value$init.properties; // safe to assume that this variable is an object declaration
+              const allParamTypeProperties = varDef?.value?.init?.properties; // safe to assume that this variable is an object declaration
 
               mapToNewSyntax(allParamTypeProperties);
             });

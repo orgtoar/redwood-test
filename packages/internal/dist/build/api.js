@@ -65,7 +65,7 @@ const prebuildApiFiles = srcFiles => {
 
     const result = (0, _api.prebuildApiFile)(srcPath, dstPath, plugins);
 
-    if (!(result !== null && result !== void 0 && result.code)) {
+    if (!result?.code) {
       // TODO: Figure out a better way to return these programatically.
       console.warn('Error:', srcPath, 'could not prebuilt.');
       return undefined;
