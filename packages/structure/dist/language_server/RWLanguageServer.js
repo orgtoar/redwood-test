@@ -233,9 +233,9 @@ let RWLanguageServer = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.
   }
 
   async collectIDEInfo(uri) {
-    var _await$this$getProjec, _this$getProject2;
+    var _this$getProject2;
 
-    return (_await$this$getProjec = await ((_this$getProject2 = this.getProject()) === null || _this$getProject2 === void 0 ? void 0 : _this$getProject2.collectIDEInfo(uri))) !== null && _await$this$getProjec !== void 0 ? _await$this$getProjec : [];
+    return (await ((_this$getProject2 = this.getProject()) === null || _this$getProject2 === void 0 ? void 0 : _this$getProject2.collectIDEInfo(uri))) ?? [];
   }
 
   async info(uri, kind) {

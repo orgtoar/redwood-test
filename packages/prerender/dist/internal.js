@@ -35,10 +35,8 @@ const getRootHtmlPath = () => {
 exports.getRootHtmlPath = getRootHtmlPath;
 
 const registerShims = routerPath => {
-  var _rwjsConfig$web$apiGr;
-
   const rwjsConfig = (0, _config.getConfig)();
-  global.RWJS_API_GRAPHQL_URL = (_rwjsConfig$web$apiGr = rwjsConfig.web.apiGraphQLUrl) !== null && _rwjsConfig$web$apiGr !== void 0 ? _rwjsConfig$web$apiGr : `${rwjsConfig.web.apiUrl}graphql`;
+  global.RWJS_API_GRAPHQL_URL = rwjsConfig.web.apiGraphQLUrl ?? `${rwjsConfig.web.apiUrl}graphql`;
   global.__REDWOOD__APP_TITLE = rwjsConfig.web.title;
 
   global.__REDWOOD__USE_AUTH = () => ({

@@ -79,9 +79,7 @@ async function recursivelyRender(App, renderPath, gqlHandler, queryCache) {
     const result = JSON.parse(resultString);
 
     if (result.errors) {
-      var _result$errors$0$mess;
-
-      const message = (_result$errors$0$mess = result.errors[0].message) !== null && _result$errors$0$mess !== void 0 ? _result$errors$0$mess : (0, _stringify.default)(result.errors);
+      const message = result.errors[0].message ?? (0, _stringify.default)(result.errors);
       throw new PrerenderGqlError(message);
     }
 

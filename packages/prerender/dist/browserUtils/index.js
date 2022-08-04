@@ -12,9 +12,7 @@ var _react = require("react");
 
 /* Web side prerender utils, to be used on the browser */
 const isPrerendering = () => {
-  var _global$__REDWOOD__PR;
-
-  return (_global$__REDWOOD__PR = global.__REDWOOD__PRERENDERING) !== null && _global$__REDWOOD__PR !== void 0 ? _global$__REDWOOD__PR : false;
+  return global.__REDWOOD__PRERENDERING ?? false;
 };
 
 exports.isPrerendering = isPrerendering;

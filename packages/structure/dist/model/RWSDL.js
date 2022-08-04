@@ -105,9 +105,7 @@ let RWSDL = (_dec = (0, _decorators.lazy)(), _dec2 = (0, _decorators.lazy)(), _d
       for (const def of ast.definitions) {
         if (def.kind === 'ObjectTypeDefinition') {
           if (def.name.value === 'Query' || def.name.value === 'Mutation') {
-            for (const field of (_def$fields = def.fields) !== null && _def$fields !== void 0 ? _def$fields : []) {
-              var _def$fields;
-
+            for (const field of def.fields ?? []) {
               yield new _RWSDLField.RWSDLField(def, field, self);
             }
           }
