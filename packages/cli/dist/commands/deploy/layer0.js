@@ -1,6 +1,6 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8,12 +8,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.ERR_MESSAGE_NOT_INITIALIZED = exports.ERR_MESSAGE_MISSING_CLI = void 0;
 exports.buildErrorMessage = buildErrorMessage;
 exports.handler = exports.description = exports.command = exports.builder = void 0;
-
-require("core-js/modules/esnext.async-iterator.reduce.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.reduce.js");
 
 var _path = _interopRequireDefault(require("path"));
 

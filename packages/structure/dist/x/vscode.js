@@ -1,6 +1,6 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -13,11 +13,7 @@ exports.RemoteTreeDataProvider_publishOverLSPConnection = RemoteTreeDataProvider
 exports.TreeItemCollapsibleState2 = exports.TreeItem2Wrapper = void 0;
 exports.VSCodeWindowMethods_fromConnection = VSCodeWindowMethods_fromConnection;
 
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
-
-var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
+var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime/helpers/applyDecoratedDescriptor"));
 
 var _lodash = require("lodash");
 

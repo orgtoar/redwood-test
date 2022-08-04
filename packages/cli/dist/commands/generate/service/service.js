@@ -1,29 +1,11 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.scenarioFieldValue = exports.parseSchema = exports.handler = exports.files = exports.fieldsToUpdate = exports.fieldsToScenario = exports.fieldsToInput = exports.description = exports.defaults = exports.command = exports.builder = exports.buildStringifiedScenario = exports.buildScenario = void 0;
-
-require("core-js/modules/esnext.async-iterator.filter.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.filter.js");
-
-require("core-js/modules/esnext.async-iterator.for-each.js");
-
-require("core-js/modules/esnext.iterator.for-each.js");
-
-require("core-js/modules/esnext.async-iterator.find.js");
-
-require("core-js/modules/esnext.iterator.find.js");
-
-require("core-js/modules/esnext.async-iterator.reduce.js");
-
-require("core-js/modules/esnext.iterator.reduce.js");
 
 var _camelcase = _interopRequireDefault(require("camelcase"));
 

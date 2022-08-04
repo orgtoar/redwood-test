@@ -1,17 +1,13 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.resolveFile = exports.processPagesDir = exports.importStatementPath = exports.getPaths = exports.getConfigPath = exports.getBaseDirFromFile = exports.getBaseDir = exports.ensurePosixPath = void 0;
 
-var _replaceAll = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/replace-all"));
-
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
+var _replaceAll = _interopRequireDefault(require("core-js-pure/stable/instance/replace-all.js"));
 
 var _fs = _interopRequireDefault(require("fs"));
 

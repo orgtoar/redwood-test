@@ -1,31 +1,11 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.parseDatamodel = void 0;
-
-require("core-js/modules/esnext.async-iterator.filter.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.filter.js");
-
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
-
-require("core-js/modules/esnext.async-iterator.for-each.js");
-
-require("core-js/modules/esnext.iterator.for-each.js");
-
-require("core-js/modules/esnext.async-iterator.find.js");
-
-require("core-js/modules/esnext.iterator.find.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -36,6 +16,10 @@ var _sdk = require("@prisma/sdk");
 var esbuild = _interopRequireWildcard(require("esbuild"));
 
 var _paths = require("@redwoodjs/internal/dist/paths");
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 const DATAMODEL_PATH = _path.default.join((0, _paths.getPaths)().api.models, 'datamodel.js');
 

@@ -5,12 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.handler = exports.files = exports.description = exports.command = exports.builder = void 0;
 
-require("core-js/modules/esnext.async-iterator.reduce.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.reduce.js");
-
 var _lib = require("../../../lib");
 
 var _helpers = require("../helpers");

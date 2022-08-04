@@ -1,45 +1,13 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.command_builder = command_builder;
 
-require("core-js/modules/esnext.set.add-all.js");
-
-require("core-js/modules/esnext.set.delete-all.js");
-
-require("core-js/modules/esnext.set.difference.js");
-
-require("core-js/modules/esnext.set.every.js");
-
-require("core-js/modules/esnext.set.filter.js");
-
-require("core-js/modules/esnext.set.find.js");
-
-require("core-js/modules/esnext.set.intersection.js");
-
-require("core-js/modules/esnext.set.is-disjoint-from.js");
-
-require("core-js/modules/esnext.set.is-subset-of.js");
-
-require("core-js/modules/esnext.set.is-superset-of.js");
-
-require("core-js/modules/esnext.set.join.js");
-
-require("core-js/modules/esnext.set.map.js");
-
-require("core-js/modules/esnext.set.reduce.js");
-
-require("core-js/modules/esnext.set.some.js");
-
-require("core-js/modules/esnext.set.symmetric-difference.js");
-
-require("core-js/modules/esnext.set.union.js");
-
-var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/applyDecoratedDescriptor"));
+var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime/helpers/applyDecoratedDescriptor"));
 
 var _camelcase = _interopRequireDefault(require("camelcase"));
 

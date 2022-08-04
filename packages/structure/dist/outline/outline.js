@@ -5,10 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getOutline = getOutline;
 
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
-
 var _URL = require("../x/URL");
 
 var _vscode = require("../x/vscode");

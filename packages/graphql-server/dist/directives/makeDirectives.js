@@ -5,16 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.makeDirectivesForPlugin = exports.getDirectiveName = exports.createValidatorDirective = exports.createTransformerDirective = void 0;
 
-require("core-js/modules/esnext.async-iterator.flat-map.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.flat-map.js");
-
-require("core-js/modules/esnext.async-iterator.find.js");
-
-require("core-js/modules/esnext.iterator.find.js");
-
 var _useRedwoodDirective = require("../plugins/useRedwoodDirective");
 
 const makeDirectivesForPlugin = directiveGlobs => {

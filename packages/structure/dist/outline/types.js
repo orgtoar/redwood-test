@@ -5,11 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Icon = void 0;
 exports.outlineToJSON = outlineToJSON;
-
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
-
 let Icon;
 exports.Icon = Icon;
 

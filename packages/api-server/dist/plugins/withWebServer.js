@@ -1,21 +1,11 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.getFallbackIndexPath = exports.default = void 0;
-
-require("core-js/modules/esnext.async-iterator.for-each.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.for-each.js");
-
-require("core-js/modules/esnext.async-iterator.filter.js");
-
-require("core-js/modules/esnext.iterator.filter.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 

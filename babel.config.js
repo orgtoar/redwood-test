@@ -29,14 +29,14 @@ module.exports = {
   presets: [
     [
       '@babel/preset-env',
-      {
-        useBuiltIns: 'usage',
-        corejs: {
-          version: CORE_JS_VERSION,
-          // List of supported proposals: https://github.com/zloirock/core-js/blob/master/docs/2019-03-19-core-js-3-babel-and-a-look-into-the-future.md#ecmascript-proposals
-          proposals: true,
-        },
-      },
+      // {
+      //   useBuiltIns: 'usage',
+      //   corejs: {
+      //     version: CORE_JS_VERSION,
+      //     // List of supported proposals: https://github.com/zloirock/core-js/blob/master/docs/2019-03-19-core-js-3-babel-and-a-look-into-the-future.md#ecmascript-proposals
+      //     proposals: true,
+      //   },
+      // },
     ],
     '@babel/preset-react',
     '@babel/typescript',
@@ -54,14 +54,22 @@ module.exports = {
     ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
     [
       '@babel/plugin-transform-runtime',
+      // {
+      //   // https://babeljs.io/docs/en/babel-plugin-transform-runtime/#core-js-aliasing
+      //   // Setting the version here also requires `@babel/runtime-corejs3`
+      //   corejs: { version: 3, proposals: true },
+      //   // https://babeljs.io/docs/en/babel-plugin-transform-runtime/#version
+      //   // Transform-runtime assumes that @babel/runtime@7.0.0 is installed.
+      //   // Specifying the version can result in a smaller bundle size.
+      //   version: packageJSON.devDependencies['@babel/runtime-corejs3'],
+      // },
+    ],
+    [
+      'babel-plugin-polyfill-corejs3',
       {
-        // https://babeljs.io/docs/en/babel-plugin-transform-runtime/#core-js-aliasing
-        // Setting the version here also requires `@babel/runtime-corejs3`
-        corejs: { version: 3, proposals: true },
-        // https://babeljs.io/docs/en/babel-plugin-transform-runtime/#version
-        // Transform-runtime assumes that @babel/runtime@7.0.0 is installed.
-        // Specifying the version can result in a smaller bundle size.
-        version: packageJSON.devDependencies['@babel/runtime-corejs3'],
+        method: 'usage-pure',
+        shippedProposals: true,
+        version: CORE_JS_VERSION,
       },
     ],
   ],

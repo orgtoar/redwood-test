@@ -1,63 +1,11 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.writeFilesTask = exports.writeFile = exports.usingVSCode = exports.transformTSToJS = exports.saveRemoteFileToDisk = exports.runCommandTask = exports.removeRoutesFromRouterTask = exports.readFile = exports.prettify = exports.prettierOptions = exports.nameVariants = exports.graphFunctionDoesExist = exports.getPaths = exports.getInstalledRedwoodVersion = exports.getGraphqlPath = exports.getDefaultArgs = exports.getConfig = exports.generateTemplate = exports.existsAnyExtensionSync = exports.deleteFilesTask = exports.deleteFile = exports.cleanupEmptyDirsTask = exports.bytes = exports.asyncForEach = exports.addScaffoldImport = exports.addRoutesToRouterTask = exports._getPaths = void 0;
-
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
-
-require("core-js/modules/esnext.set.add-all.js");
-
-require("core-js/modules/esnext.set.delete-all.js");
-
-require("core-js/modules/esnext.set.difference.js");
-
-require("core-js/modules/esnext.set.every.js");
-
-require("core-js/modules/esnext.set.filter.js");
-
-require("core-js/modules/esnext.set.find.js");
-
-require("core-js/modules/esnext.set.intersection.js");
-
-require("core-js/modules/esnext.set.is-disjoint-from.js");
-
-require("core-js/modules/esnext.set.is-subset-of.js");
-
-require("core-js/modules/esnext.set.is-superset-of.js");
-
-require("core-js/modules/esnext.set.join.js");
-
-require("core-js/modules/esnext.set.map.js");
-
-require("core-js/modules/esnext.set.reduce.js");
-
-require("core-js/modules/esnext.set.some.js");
-
-require("core-js/modules/esnext.set.symmetric-difference.js");
-
-require("core-js/modules/esnext.set.union.js");
-
-require("core-js/modules/esnext.async-iterator.for-each.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.for-each.js");
-
-require("core-js/modules/esnext.async-iterator.filter.js");
-
-require("core-js/modules/esnext.iterator.filter.js");
-
-require("core-js/modules/esnext.async-iterator.reduce.js");
-
-require("core-js/modules/esnext.iterator.reduce.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -94,6 +42,10 @@ var _paths = require("@redwoodjs/internal/dist/paths");
 var _colors = _interopRequireDefault(require("./colors"));
 
 var _rwPluralize = require("./rwPluralize");
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 const asyncForEach = async (array, callback) => {
   for (let index = 0; index < array.length; index++) {

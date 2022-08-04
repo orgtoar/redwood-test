@@ -5,16 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = transform;
 
-require("core-js/modules/esnext.async-iterator.find.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.find.js");
-
-require("core-js/modules/esnext.async-iterator.for-each.js");
-
-require("core-js/modules/esnext.iterator.for-each.js");
-
 function renameTimestamp(j, optionsObject) {
   j(optionsObject).find(j.ObjectProperty, {
     key: {

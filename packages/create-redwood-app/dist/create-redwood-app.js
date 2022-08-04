@@ -6,17 +6,7 @@
 // `$ yarn create redwood-app ./path/to/new-project`
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
-
-require("core-js/modules/esnext.async-iterator.filter.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.filter.js");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 var _child_process = require("child_process");
 

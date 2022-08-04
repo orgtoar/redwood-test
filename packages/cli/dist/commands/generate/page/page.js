@@ -1,21 +1,11 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.routes = exports.paramVariants = exports.handler = exports.files = exports.description = exports.command = exports.builder = void 0;
-
-require("core-js/modules/esnext.async-iterator.reduce.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.reduce.js");
-
-require("core-js/modules/esnext.async-iterator.filter.js");
-
-require("core-js/modules/esnext.iterator.filter.js");
 
 var _child_process = require("child_process");
 

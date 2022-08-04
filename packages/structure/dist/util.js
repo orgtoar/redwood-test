@@ -1,13 +1,13 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.validateRoutePath = validateRoutePath;
 
-var _matchAll = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/match-all"));
+var _matchAll = _interopRequireDefault(require("core-js-pure/stable/instance/match-all.js"));
 
 function validateRoutePath(path) {
   // copied from https://github.com/redwoodjs/redwood/blob/master/packages/router/src/util.js

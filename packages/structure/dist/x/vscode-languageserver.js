@@ -5,10 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Connection_suppressErrors = Connection_suppressErrors;
 
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
-
 /**
  * will monkey patch the connection object
  * so that any errors thrown by subsequently installed handlers are caught and logged

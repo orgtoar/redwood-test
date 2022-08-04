@@ -5,20 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getJsxAttributeValue = void 0;
 
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
-
-require("core-js/modules/esnext.async-iterator.reduce.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.reduce.js");
-
-require("core-js/modules/esnext.async-iterator.filter.js");
-
-require("core-js/modules/esnext.iterator.filter.js");
-
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck This function was adapted from: https://github.com/gglnx/simplified-jsx-to-json/blob/master/index.js#L13
 const getJsxAttributeValue = expression => {

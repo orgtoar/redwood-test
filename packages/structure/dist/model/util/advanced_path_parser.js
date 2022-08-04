@@ -1,17 +1,13 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.advanced_path_parser = advanced_path_parser;
 
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
-
-var _matchAll = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/match-all"));
+var _matchAll = _interopRequireDefault(require("core-js-pure/stable/instance/match-all.js"));
 
 /**
  * A route path parser with positional information.

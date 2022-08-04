@@ -1,17 +1,11 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.isPageFile = exports.isGraphQLSchemaFile = exports.isFileInsideFolder = exports.isDirectoryNamedModuleFile = exports.isCellFile = exports.isApiFunction = exports.findWebFiles = exports.findScripts = exports.findPrerenderedHtml = exports.findPages = exports.findGraphQLSchemas = exports.findDirectoryNamedModules = exports.findCells = exports.findApiServerFunctions = exports.findApiFiles = exports.findApiDistFunctions = void 0;
-
-require("core-js/modules/esnext.async-iterator.filter.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.filter.js");
 
 var _path = _interopRequireDefault(require("path"));
 

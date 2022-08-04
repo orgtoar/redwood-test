@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 var _fs = _interopRequireDefault(require("fs"));
 

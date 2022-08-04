@@ -5,12 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.parseBody = exports.mergeMultiValueHeaders = void 0;
 
-require("core-js/modules/esnext.async-iterator.for-each.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.for-each.js");
-
 const parseBody = rawBody => {
   if (typeof rawBody === 'string') {
     return {

@@ -1,31 +1,11 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.webIndexDoesExist = exports.isProviderSupported = exports.handler = exports.files = exports.description = exports.command = exports.builder = exports.apiSrcDoesExist = exports.addConfigToApp = exports.addApiConfig = void 0;
-
-var _interopRequireWildcard2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/interopRequireWildcard"));
-
-require("core-js/modules/esnext.async-iterator.filter.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.filter.js");
-
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
-
-require("core-js/modules/esnext.async-iterator.reduce.js");
-
-require("core-js/modules/esnext.iterator.reduce.js");
-
-require("core-js/modules/esnext.async-iterator.for-each.js");
-
-require("core-js/modules/esnext.iterator.for-each.js");
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -46,6 +26,10 @@ var _lib = require("../../../lib");
 var _colors = _interopRequireDefault(require("../../../lib/colors"));
 
 var _project = require("../../../lib/project");
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 const AUTH_PROVIDER_IMPORT = `import { AuthProvider } from '@redwoodjs/auth'`;
 const OUTPUT_PATHS = {
@@ -161,7 +145,7 @@ const removeOldAuthProvider = async content => {
   let oldAuthProvider;
 
   try {
-    oldAuthProvider = await Promise.resolve(`./providers/${currentAuthProvider}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
+    oldAuthProvider = await Promise.resolve(`./providers/${currentAuthProvider}`).then(s => _interopRequireWildcard(require(s)));
   } catch (e) {
     throw new Error('Could not replace existing auth provider init');
   }
@@ -343,9 +327,9 @@ const handler = async yargs => {
   }
 
   if (includeWebAuthn) {
-    providerData = await Promise.resolve(`./providers/${provider}.webAuthn`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
+    providerData = await Promise.resolve(`./providers/${provider}.webAuthn`).then(s => _interopRequireWildcard(require(s)));
   } else {
-    providerData = await Promise.resolve(`./providers/${provider}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
+    providerData = await Promise.resolve(`./providers/${provider}`).then(s => _interopRequireWildcard(require(s)));
   }
 
   const tasks = new _listr.default([{

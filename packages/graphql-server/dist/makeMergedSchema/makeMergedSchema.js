@@ -1,29 +1,13 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
-
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.makeMergedSchema = void 0;
 
-require("core-js/modules/esnext.async-iterator.reduce.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.reduce.js");
-
-require("core-js/modules/es.object.has-own.js");
-
-require("core-js/modules/esnext.async-iterator.filter.js");
-
-require("core-js/modules/esnext.iterator.filter.js");
-
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
+var _hasOwn = _interopRequireDefault(require("core-js-pure/stable/object/has-own.js"));
 
 var _merge = require("@graphql-tools/merge");
 
@@ -34,6 +18,10 @@ var _lodash = _interopRequireDefault(require("lodash.merge"));
 var _lodash2 = _interopRequireDefault(require("lodash.omitby"));
 
 var rootGqlSchema = _interopRequireWildcard(require("../rootSchema"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 const mapFieldsToService = ({
   fields = {},
@@ -73,7 +61,7 @@ const resolveUnionType = types => ({
     var _maxIntersectionType$, _maxIntersectionType;
 
     // if obj has __typename, check that first to resolve type, otherwise, look for largest intersection
-    if (Object.hasOwn(obj, '__typename')) {
+    if ((0, _hasOwn.default)(obj, '__typename')) {
       for (const type of types) {
         if (type.name === obj['__typename']) {
           return type.name;

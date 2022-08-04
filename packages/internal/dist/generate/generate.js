@@ -6,12 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.run = exports.generate = void 0;
 
-require("core-js/modules/esnext.async-iterator.filter.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.filter.js");
-
 var _paths = require("../paths");
 
 var _graphqlSchema = require("./graphqlSchema");

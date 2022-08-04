@@ -1,21 +1,15 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 
-require("core-js/modules/esnext.async-iterator.find.js");
+var _classPrivateFieldLooseBase2 = _interopRequireDefault(require("@babel/runtime/helpers/classPrivateFieldLooseBase"));
 
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.find.js");
-
-var _classPrivateFieldLooseBase2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/classPrivateFieldLooseBase"));
-
-var _classPrivateFieldLooseKey2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/classPrivateFieldLooseKey"));
+var _classPrivateFieldLooseKey2 = _interopRequireDefault(require("@babel/runtime/helpers/classPrivateFieldLooseKey"));
 
 var _Reflection = _interopRequireDefault(require("./Reflection"));
 

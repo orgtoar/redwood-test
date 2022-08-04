@@ -9,12 +9,6 @@ exports.hasDirective = hasDirective;
 exports.isPromise = isPromise;
 exports.useRedwoodDirective = void 0;
 
-require("core-js/modules/esnext.async-iterator.find.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.find.js");
-
 var _utils = require("@graphql-tools/utils");
 
 var _graphql = require("graphql");

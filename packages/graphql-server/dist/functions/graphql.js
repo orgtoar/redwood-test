@@ -5,44 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.formatError = exports.createGraphQLHandler = void 0;
 
-require("core-js/modules/esnext.async-iterator.find.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.find.js");
-
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
-
-require("core-js/modules/esnext.map.delete-all.js");
-
-require("core-js/modules/esnext.map.emplace.js");
-
-require("core-js/modules/esnext.map.every.js");
-
-require("core-js/modules/esnext.map.filter.js");
-
-require("core-js/modules/esnext.map.find.js");
-
-require("core-js/modules/esnext.map.find-key.js");
-
-require("core-js/modules/esnext.map.includes.js");
-
-require("core-js/modules/esnext.map.key-of.js");
-
-require("core-js/modules/esnext.map.map-keys.js");
-
-require("core-js/modules/esnext.map.map-values.js");
-
-require("core-js/modules/esnext.map.merge.js");
-
-require("core-js/modules/esnext.map.reduce.js");
-
-require("core-js/modules/esnext.map.some.js");
-
-require("core-js/modules/esnext.map.update.js");
-
 var _common = require("@graphql-yoga/common");
 
 var _depthLimit = require("@envelop/depth-limit");

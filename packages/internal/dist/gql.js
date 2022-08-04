@@ -5,12 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.parseGqlQueryToAst = exports.parseDocumentAST = exports.listQueryTypeFieldsInProject = void 0;
 
-require("core-js/modules/esnext.async-iterator.for-each.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.for-each.js");
-
 var _codeFileLoader = require("@graphql-tools/code-file-loader");
 
 var _load = require("@graphql-tools/load");

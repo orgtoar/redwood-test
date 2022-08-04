@@ -1,17 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
-
-require("core-js/modules/esnext.async-iterator.some.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.some.js");
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 var _child_process = require("child_process");
 

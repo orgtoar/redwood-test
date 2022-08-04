@@ -1,6 +1,6 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8,10 +8,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.CLIUI = void 0;
 exports.UIPickItem_normalize = UIPickItem_normalize;
 exports.VSCodeWindowUI = void 0;
-
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
 
 var _enquirer = _interopRequireDefault(require("enquirer"));
 

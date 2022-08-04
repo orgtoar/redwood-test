@@ -5,16 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.detectPrerenderRoutes = void 0;
 
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
-
-require("core-js/modules/esnext.async-iterator.filter.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.filter.js");
-
 var _paths = require("@redwoodjs/internal/dist/paths");
 
 var _structure = require("@redwoodjs/structure");

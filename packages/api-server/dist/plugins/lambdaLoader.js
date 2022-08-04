@@ -1,15 +1,11 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.setLambdaFunctions = exports.loadFunctionsFromDist = exports.lambdaRequestHandler = exports.LAMBDA_FUNCTIONS = void 0;
-
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
 
 var _path = _interopRequireDefault(require("path"));
 

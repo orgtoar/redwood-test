@@ -1,19 +1,11 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.printHeaders = exports.handler = exports.getOutputPath = exports.generatePayload = exports.description = exports.command = exports.builder = void 0;
-
-require("core-js/modules/esnext.async-iterator.filter.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.filter.js");
-
-var _interopRequireWildcard2 = _interopRequireDefault(require("@babel/runtime-corejs3/helpers/interopRequireWildcard"));
 
 var _fs = _interopRequireDefault(require("fs"));
 
@@ -38,6 +30,10 @@ var _lib = require("../../../lib");
 var _colors = _interopRequireDefault(require("../../../lib/colors"));
 
 var _project = require("../../../lib/project");
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 // tests if id, which is always a string from cli, is actually a number or uuid
 const isNumeric = id => {
@@ -165,7 +161,7 @@ const printHeaders = async () => {
     throw new Error('Must run yarn rw setup graphiql <provider> to generate headers before viewing');
   }
 
-  const script = await Promise.resolve(`${srcPath}`).then(s => (0, _interopRequireWildcard2.default)(require(s)));
+  const script = await Promise.resolve(`${srcPath}`).then(s => _interopRequireWildcard(require(s)));
   await script.default();
 };
 

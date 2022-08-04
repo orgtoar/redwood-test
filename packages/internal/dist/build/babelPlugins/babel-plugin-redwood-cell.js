@@ -5,10 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = _default;
 
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
-
 var _path = require("path");
 
 // This wraps a file that has a suffix of `Cell` in Redwood's `createCell` higher

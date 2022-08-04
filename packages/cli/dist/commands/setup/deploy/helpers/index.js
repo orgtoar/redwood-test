@@ -1,29 +1,11 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.updateApiURLTask = exports.printSetupNotes = exports.preRequisiteCheckTask = exports.addToGitIgnoreTask = exports.addToDotEnvTask = exports.addPackagesTask = exports.addFilesTask = void 0;
-
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
-
-require("core-js/modules/esnext.async-iterator.filter.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.filter.js");
-
-require("core-js/modules/esnext.async-iterator.for-each.js");
-
-require("core-js/modules/esnext.iterator.for-each.js");
-
-require("core-js/modules/esnext.async-iterator.every.js");
-
-require("core-js/modules/esnext.iterator.every.js");
 
 var _child_process = require("child_process");
 

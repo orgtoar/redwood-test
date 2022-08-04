@@ -6,20 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.loadAndValidateSdls = exports.DIRECTIVE_REQUIRED_ERROR_MESSAGE = exports.DIRECTIVE_INVALID_ROLE_TYPES_ERROR_MESSAGE = void 0;
 exports.validateSchemaForDirectives = validateSchemaForDirectives;
 
-require("core-js/modules/esnext.async-iterator.for-each.js");
-
-require("core-js/modules/esnext.iterator.constructor.js");
-
-require("core-js/modules/esnext.iterator.for-each.js");
-
-require("core-js/modules/esnext.async-iterator.filter.js");
-
-require("core-js/modules/esnext.iterator.filter.js");
-
-require("core-js/modules/esnext.async-iterator.map.js");
-
-require("core-js/modules/esnext.iterator.map.js");
-
 var _codeFileLoader = require("@graphql-tools/code-file-loader");
 
 var _load = require("@graphql-tools/load");
