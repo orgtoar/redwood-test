@@ -71,7 +71,7 @@ export const paramVariants = (path) => {
 
   return {
     propParam: `{ ${paramName} }`,
-    propValueParam: `${paramName}={${defaultValueAsProp}} `, // used in story
+    propValueParam: `${paramName}={${defaultValueAsProp}}`, // used in story
     argumentParam: `{ ${paramName}: ${defaultValueAsProp} }`,
     paramName,
     paramValue: defaultValue,

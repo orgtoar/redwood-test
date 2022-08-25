@@ -1,8 +1,8 @@
-type ${singularPascalName}LayoutProps = {
+export interface Props {
   children?: React.ReactNode
 }
 
-const ${singularPascalName}Layout = ({ children }: ${singularPascalName}LayoutProps) => {
+const ${singularPascalName}Layout = ({ children }: Props) => {
   return <>{children}</>
 }
 

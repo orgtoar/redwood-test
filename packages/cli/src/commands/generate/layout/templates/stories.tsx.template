@@ -1,8 +1,9 @@
-import type { ComponentMeta, ComponentStory } from '@storybook/react'
+import type { ComponentMeta, Story } from '@storybook/react'
 
 import ${singularPascalName}Layout from './${pascalName}Layout'
+import type { Props } from './${pascalName}Layout'
 
-export const generated: ComponentStory<typeof ${singularPascalName}Layout> = (args) => {
+export const generated: Story<Props> = (args) => {
   return <${singularPascalName}Layout {...args} />
 }
 
