@@ -1,4 +1,4 @@
-import type { ComponentStory } from '@storybook/react'
+import type { ComponentMeta, ComponentStory } from '@storybook/react'
 
 import Author from './Author'
 
@@ -11,4 +11,7 @@ export const generated: ComponentStory<typeof Author> = (args) => {
   return <Author {...args} author={author} />
 }
 
-export default { title: 'Components/Author', component: Author }
+export default {
+  title: 'Components/Author',
+  component: Author,
+} as ComponentMeta<typeof Author>
