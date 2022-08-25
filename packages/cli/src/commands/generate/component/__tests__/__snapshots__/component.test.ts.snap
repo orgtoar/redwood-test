@@ -53,7 +53,10 @@ export const generated = (args) => {
   return <UserProfile {...args} />
 }
 
-export default { title: 'Components/UserProfile', component: UserProfile }
+export default {
+  title: 'Components/UserProfile',
+  component: UserProfile,
+}
 "
 `;
 
@@ -96,7 +99,10 @@ export const generated = (args) => {
   return <User {...args} />
 }
 
-export default { title: 'Components/User', component: User }
+export default {
+  title: 'Components/User',
+  component: User,
+}
 "
 `;
 
