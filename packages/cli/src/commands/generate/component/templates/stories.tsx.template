@@ -1,4 +1,4 @@
-import type { ComponentStory } from '@storybook/react'
+import type { ComponentMeta, ComponentStory } from '@storybook/react'
 
 import ${pascalName} from './${pascalName}'
 
@@ -6,4 +6,7 @@ export const generated: ComponentStory<typeof ${pascalName}> = (args) => {
   return <${pascalName} {...args} />
 }
 
-export default { title: 'Components/${pascalName}', component: ${pascalName} }
+export default {
+  title: 'Components/${pascalName}',
+  component: ${pascalName}
+} as ComponentMeta<typeof ${pascalName}>
