@@ -106,7 +106,7 @@ export const files = ({ name, tests, stories, typescript, ...rest }) => {
     extension: typescript ? '.stories.tsx' : '.stories.js',
     webPathSection: REDWOOD_WEB_PATH_NAME,
     generator: 'page',
-    templatePath: 'stories.tsx.template',
+    templatePath: rest.paramName !== '' ? 'stories.routeParams.tsx.template' : 'stories.tsx.template',
     templateVars: rest,
   })
 
