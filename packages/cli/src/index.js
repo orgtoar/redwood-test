@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 import fs from 'fs'
+import { createRequire } from 'module'
 import path from 'path'
 
 import { config } from 'dotenv-defaults'
+import findup from 'findup-sync'
+import toml from 'toml'
+import parser from 'yargs-parser'
 import { hideBin } from 'yargs/helpers'
 import yargs from 'yargs/yargs'
 
-import { getConfigPath } from '@redwoodjs/internal/dist/paths'
 import { telemetryMiddleware } from '@redwoodjs/telemetry'
 
 import * as buildCommand from './commands/build'
@@ -32,63 +35,80 @@ import * as typeCheckCommand from './commands/type-check'
 import * as upgradeCommand from './commands/upgrade'
 import { getPaths } from './lib'
 
-/**
- * The current working directory can be set via:
- * 1. A `--cwd` option
- * 2. The `RWJS_CWD` env-var
- * 3. Found by traversing directories upwards for the first `redwood.toml`
- *
- * This middleware parses, validates, and sets current working directory
- * in the order above.
- */
-const getCwdMiddleware = (argv) => {
-  let configPath
+// # Setting the CWD
+//
+// The current working directory can be set via:
+//
+// 1. The `--cwd` option
+// 2. The `RWJS_CWD` env-var
+// 3. By traversing directories upwards for the first `redwood.toml`
+//
+// ## Examples
+//
+// ```
+// yarn rw info --cwd /path/to/project
+// RWJS_CWD=/path/to/project yarn rw info
+//
+// # In this case, `--cwd` wins out
+// RWJS_CWD=/path/to/project yarn rw info --cwd /path/to/other/project
+//
+// # Here `findup` traverses upwards.
+// cd api
+// yarn rw info
+// ```
+let { cwd } = parser(hideBin(process.argv))
+cwd ??= process.env.RWJS_CWD
+const redwoodTomlPath = findup('redwood.toml', { cwd: cwd ?? process.cwd() })
 
-  try {
-    let cwd
-    if (argv.cwd) {
-      cwd = argv.cwd
-      // We delete the argument because it's not actually referenced in CLI,
-      // we use the `RWJS_CWD` env-var,
-      // and it conflicts with "forwarding" commands such as test and prisma.
-      delete argv.cwd
-    } else if (process.env.RWJS_CWD) {
-      cwd = process.env.RWJS_CWD
-    } else {
-      cwd = path.dirname(getConfigPath())
-    }
-
-    configPath = path.resolve(process.cwd(), cwd, 'redwood.toml')
-    if (!fs.existsSync(configPath)) {
-      throw new Error('Could not find `redwood.toml` config file.')
-    }
-
-    process.env.RWJS_CWD = cwd
-  } catch (e) {
-    console.error()
-    console.error('Error: Redwood CLI could not find your config file.')
-    console.error(`Expected '${configPath}'`)
-    console.error()
-    console.error(`Did you run Redwood CLI in a RedwoodJS project?`)
-    console.error(`Or specify an incorrect '--cwd' option?`)
-    console.error()
-    process.exit(1)
+try {
+  if (!redwoodTomlPath) {
+    throw new Error(
+      `Couldn't find a "redwood.toml" file--are you sure you're in a Redwood project?`
+    )
   }
+} catch (error) {
+  console.error(
+    [
+      `The Redwood CLI couldn't find your project's "redwood.toml".`,
+      'Did you run the Redwood CLI in a RedwoodJS project? Or specify "--cwd" incorrectly?',
+    ].join('\n')
+  )
+  process.exit(1)
 }
 
-const loadDotEnvDefaultsMiddleware = () => {
-  config({
-    path: path.join(getPaths().base, '.env'),
-    defaults: path.join(getPaths().base, '.env.defaults'),
-    multiline: true,
-  })
-}
+cwd ??= path.dirname(redwoodTomlPath)
+process.env.RWJS_CWD = cwd
+
+const rwPaths = getPaths()
+
+// # Load .env, .env.defaults
+//
+// This should be done as early as possible.
+// And the earliest we can do it is after setting the cwd.
+
+config({
+  path: path.join(rwPaths.base, '.env'),
+  defaults: path.join(rwPaths.base, '.env.defaults'),
+  multiline: true,
+})
+
+// # Configure the CLI
+//
+// We don't add commands yet till later cause we have to do so dynamically.
+// But we can set options up front.
 
 const cli = yargs(hideBin(process.argv))
   .scriptName('rw')
   .middleware([
-    getCwdMiddleware,
-    loadDotEnvDefaultsMiddleware,
+    // We've already handled cwd above, but it's still in argv.
+    // Let's delete it, and add paths.
+    (argv) => {
+      if (argv.cwd) {
+        delete argv.cwd
+      }
+
+      argv.rwPaths = rwPaths
+    },
     telemetryMiddleware,
   ])
   .option('cwd', {
@@ -100,6 +120,8 @@ const cli = yargs(hideBin(process.argv))
   )
   .demandCommand()
   .strict()
+
+// # Redwood's built in commands
 
 const commands = [
   buildCommand,
@@ -125,8 +147,30 @@ const commands = [
   upgradeCommand,
 ]
 
-for (const command of commands) {
+// # Load plugins
+
+const plugins = []
+
+const redwoodToml = toml.parse(fs.readFileSync(redwoodTomlPath, 'utf-8'))
+
+const requireFromRedwoodProject = createRequire(
+  require.resolve(path.join(cwd, 'package.json'))
+)
+
+for (const plugin of redwoodToml.cli?.plugins ?? []) {
+  try {
+    plugins.push(requireFromRedwoodProject(plugin))
+  } catch (error) {
+    console.warn(`Couldn't load plugin at ${plugin}`)
+  }
+}
+
+// # Add commands and plugins to the CLI
+
+for (const command of [...commands, ...plugins]) {
   cli.command(command)
 }
+
+// # Run it
 
 cli.parse()
