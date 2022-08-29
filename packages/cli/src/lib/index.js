@@ -487,3 +487,19 @@ export const usingVSCode = () => {
   const VS_CODE_PATH = path.join(redwoodPaths.base, '.vscode')
   return fs.existsSync(VS_CODE_PATH)
 }
+
+// /** @type {Record<string, import('yargs').Options>} */
+// export const yargsDefaults = {
+//   force: {
+//     alias: 'f',
+//     default: false,
+//     description: 'Overwrite existing files',
+//     type: 'boolean',
+//   },
+//   typescript: {
+//     alias: 'ts',
+//     default: isTypeScriptProject(),
+//     description: 'Generate TypeScript files',
+//     type: 'boolean',
+//   },
+// }

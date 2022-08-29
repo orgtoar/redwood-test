@@ -4,7 +4,9 @@ import { createRequire } from 'module'
 import path from 'path'
 
 import { config } from 'dotenv-defaults'
+import execa from 'execa'
 import findup from 'findup-sync'
+import terminalLink from 'terminal-link'
 import toml from 'toml'
 import parser from 'yargs-parser'
 import { hideBin } from 'yargs/helpers'
@@ -15,25 +17,50 @@ import { telemetryMiddleware } from '@redwoodjs/telemetry'
 import * as buildCommand from './commands/build'
 import * as checkCommand from './commands/check'
 import * as consoleCommand from './commands/console'
-import * as dataMigrateCommand from './commands/data-migrate'
+import * as dataMigrateInstallCommand from './commands/dataMigrate/install'
+import * as dataMigrateUpCommand from './commands/dataMigrate/up'
 import * as deployCommand from './commands/deploy'
 import * as destroyCommand from './commands/destroy'
 import * as devCommand from './commands/dev'
 import * as execCommand from './commands/exec'
-import * as generateCommand from './commands/generate'
+import * as generateCellCommand from './commands/generate/cell/cell'
+import * as generateComponentCommand from './commands/generate/component/component'
+import * as generateDataMigrationCommand from './commands/generate/dataMigration/dataMigration'
+import * as generateDbAuthCommand from './commands/generate/dbAuth/dbAuth'
+import * as generateDirectiveCommand from './commands/generate/directive/directive'
+import * as generateFunctionCommand from './commands/generate/function/function'
+import * as generateLayoutCommand from './commands/generate/layout/layout'
+import * as generateModelCommand from './commands/generate/model/model'
+import * as generatePageCommand from './commands/generate/page/page'
+import * as generateScaffoldCommand from './commands/generate/scaffold/scaffold'
+import * as generateScriptCommand from './commands/generate/script/script'
+import * as generateSDLCommand from './commands/generate/sdl/sdl'
+import * as generateSecretCommand from './commands/generate/secret/secret'
+import * as generateServiceCommand from './commands/generate/service/service'
 import * as infoCommand from './commands/info'
 import * as lintCommand from './commands/lint'
 import * as prerenderCommand from './commands/prerender'
 import * as prismaCommand from './commands/prisma'
 import * as recordCommand from './commands/record'
 import * as serveCommand from './commands/serve'
-import * as setupCommand from './commands/setup'
+import * as setupAuthCommand from './commands/setup/auth/auth'
+import * as setupCustomWebIndexCommand from './commands/setup/custom-web-index/custom-web-index'
+import * as setupGeneratorCommand from './commands/setup/generator/generator'
+import * as setupGraphiqlCommand from './commands/setup/graphiql/graphiql'
+import * as setupI18nCommand from './commands/setup/i18n/i18n'
+import * as setupTSConfigCommand from './commands/setup/tsconfig/tsconfig'
+import * as setupUIChakraUICommand from './commands/setup/ui/libraries/chakra-ui'
+import * as setupUIMantineCommand from './commands/setup/ui/libraries/mantine'
+import * as setupUITailwindCSSCommand from './commands/setup/ui/libraries/tailwindcss'
+import * as setupUIWindiCSSCommand from './commands/setup/ui/libraries/windicss'
+import * as setupWebpackCommand from './commands/setup/webpack/webpack'
 import * as storybookCommand from './commands/storybook'
 import * as testCommand from './commands/test'
 import * as tstojsCommand from './commands/ts-to-js'
 import * as typeCheckCommand from './commands/type-check'
 import * as upgradeCommand from './commands/upgrade'
 import { getPaths } from './lib'
+import detectRwVersion from './middleware/detectProjectRwVersion'
 
 // # Setting the CWD
 //
@@ -123,6 +150,125 @@ const cli = yargs(hideBin(process.argv))
 
 // # Redwood's built in commands
 
+const dataMigrateCommands = [dataMigrateInstallCommand, dataMigrateUpCommand]
+
+const dataMigrateCommand = {
+  command: 'data-migrate <command>',
+  aliases: ['dm', 'dataMigrate'],
+  description: 'Migrate the data in your database',
+  builder(yargs) {
+    yargs
+      .demandCommand()
+      .epilogue(
+        `Also see the ${terminalLink(
+          'Redwood CLI Reference',
+          'https://redwoodjs.com/docs/cli-commands#datamigrate'
+        )}`
+      )
+
+    for (const dataMigrateCommand of dataMigrateCommands) {
+      yargs.command(dataMigrateCommand)
+    }
+  },
+}
+
+const generateCommands = [
+  generateCellCommand,
+  generateComponentCommand,
+  generateDataMigrationCommand,
+  generateDbAuthCommand,
+  generateDirectiveCommand,
+  generateFunctionCommand,
+  generateLayoutCommand,
+  generateModelCommand,
+  generatePageCommand,
+  generateScaffoldCommand,
+  generateScriptCommand,
+  generateSDLCommand,
+  generateSecretCommand,
+  generateServiceCommand,
+]
+
+const generateCommand = {
+  command: 'generate <type>',
+  aliases: ['g'],
+  description: 'Generate boilerplate code and type definitions',
+  builder(yargs) {
+    yargs
+      .command('types', 'Generate supplementary code', {}, () => {
+        execa.sync('yarn rw-gen', { shell: true, stdio: 'inherit' })
+      })
+      .demandCommand()
+      .epilogue(
+        `Also see the ${terminalLink(
+          'Redwood CLI Reference',
+          'https://redwoodjs.com/docs/cli-commands#generate-alias-g'
+        )}`
+      )
+
+    for (const generateCommand of generateCommands) {
+      yargs.command(generateCommand)
+    }
+  },
+}
+
+const setupUICommands = [
+  setupUIChakraUICommand,
+  setupUIMantineCommand,
+  setupUITailwindCSSCommand,
+  setupUIWindiCSSCommand,
+]
+
+const setupUICommand = {
+  command: 'ui <library>',
+  description: 'Set up a UI design or style library',
+  builder(yargs) {
+    yargs
+      .demandCommand()
+      .epilogue(
+        `Also see the ${terminalLink(
+          'Redwood CLI Reference',
+          'https://redwoodjs.com/docs/cli-commands#setup-ui'
+        )}`
+      )
+
+    for (const setupUICommand of setupUICommands) {
+      yargs.command(setupUICommand)
+    }
+  },
+}
+
+const setupCommands = [
+  setupAuthCommand,
+  setupCustomWebIndexCommand,
+  setupGeneratorCommand,
+  setupGraphiqlCommand,
+  setupI18nCommand,
+  setupTSConfigCommand,
+  setupUICommand,
+  setupWebpackCommand,
+]
+
+const setupCommand = {
+  command: 'setup <command>',
+  description: 'Initialize project config and install packages',
+  builder(yargs) {
+    yargs
+      .demandCommand()
+      .middleware(detectRwVersion)
+      .epilogue(
+        `Also see the ${terminalLink(
+          'Redwood CLI Reference',
+          'https://redwoodjs.com/docs/cli-commands#setup'
+        )}`
+      )
+
+    for (const setupCommand of setupCommands) {
+      yargs.command(setupCommand)
+    }
+  },
+}
+
 const commands = [
   buildCommand,
   checkCommand,
@@ -149,8 +295,6 @@ const commands = [
 
 // # Load plugins
 
-const plugins = []
-
 const redwoodToml = toml.parse(fs.readFileSync(redwoodTomlPath, 'utf-8'))
 
 const requireFromRedwoodProject = createRequire(
@@ -159,7 +303,11 @@ const requireFromRedwoodProject = createRequire(
 
 for (const plugin of redwoodToml.cli?.plugins ?? []) {
   try {
-    plugins.push(requireFromRedwoodProject(plugin))
+    // add to the right one...
+    // setup commands
+    // commands
+    // etc...
+    commands.push(requireFromRedwoodProject(plugin))
   } catch (error) {
     console.warn(`Couldn't load plugin at ${plugin}`)
   }
@@ -167,7 +315,7 @@ for (const plugin of redwoodToml.cli?.plugins ?? []) {
 
 // # Add commands and plugins to the CLI
 
-for (const command of [...commands, ...plugins]) {
+for (const command of commands) {
   cli.command(command)
 }
 
