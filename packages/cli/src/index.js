@@ -3,7 +3,8 @@ import fs from 'fs'
 import path from 'path'
 
 import { config } from 'dotenv-defaults'
-import yargs from 'yargs'
+import { hideBin } from 'yargs/helpers'
+import yargs from 'yargs/yargs'
 
 import { getConfigPath } from '@redwoodjs/internal/dist/paths'
 import { telemetryMiddleware } from '@redwoodjs/telemetry'
@@ -83,8 +84,7 @@ const loadDotEnvDefaultsMiddleware = () => {
   })
 }
 
-// eslint-disable-next-line no-unused-expressions
-yargs
+const cli = yargs(hideBin(process.argv))
   .scriptName('rw')
   .middleware([
     getCwdMiddleware,
@@ -94,30 +94,39 @@ yargs
   .option('cwd', {
     describe: 'Working directory to use (where `redwood.toml` is located.)',
   })
-  .command(buildCommand)
-  .command(checkCommand)
-  .command(consoleCommand)
-  .command(dataMigrateCommand)
-  .command(deployCommand)
-  .command(destroyCommand)
-  .command(devCommand)
-  .command(execCommand)
-  .command(generateCommand)
-  .command(infoCommand)
-  .command(lintCommand)
-  .command(prerenderCommand)
-  .command(prismaCommand)
-  .command(recordCommand)
-  .command(serveCommand)
-  .command(setupCommand)
-  .command(storybookCommand)
-  .command(testCommand)
-  .command(tstojsCommand)
-  .command(typeCheckCommand)
-  .command(upgradeCommand)
   .example(
     'yarn rw g page home /',
     "\"Create a page component named 'Home' at path '/'\""
   )
   .demandCommand()
-  .strict().argv
+  .strict()
+
+const commands = [
+  buildCommand,
+  checkCommand,
+  consoleCommand,
+  dataMigrateCommand,
+  deployCommand,
+  destroyCommand,
+  devCommand,
+  execCommand,
+  generateCommand,
+  infoCommand,
+  lintCommand,
+  prerenderCommand,
+  prismaCommand,
+  recordCommand,
+  serveCommand,
+  setupCommand,
+  storybookCommand,
+  testCommand,
+  tstojsCommand,
+  typeCheckCommand,
+  upgradeCommand,
+]
+
+for (const command of commands) {
+  cli.command(command)
+}
+
+cli.parse()
