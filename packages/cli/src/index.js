@@ -17,43 +17,16 @@ import { telemetryMiddleware } from '@redwoodjs/telemetry'
 import * as buildCommand from './commands/build'
 import * as checkCommand from './commands/check'
 import * as consoleCommand from './commands/console'
-import * as dataMigrateInstallCommand from './commands/dataMigrate/install'
-import * as dataMigrateUpCommand from './commands/dataMigrate/up'
 import * as deployCommand from './commands/deploy'
 import * as destroyCommand from './commands/destroy'
 import * as devCommand from './commands/dev'
 import * as execCommand from './commands/exec'
-import * as generateCellCommand from './commands/generate/cell/cell'
-import * as generateComponentCommand from './commands/generate/component/component'
-import * as generateDataMigrationCommand from './commands/generate/dataMigration/dataMigration'
-import * as generateDbAuthCommand from './commands/generate/dbAuth/dbAuth'
-import * as generateDirectiveCommand from './commands/generate/directive/directive'
-import * as generateFunctionCommand from './commands/generate/function/function'
-import * as generateLayoutCommand from './commands/generate/layout/layout'
-import * as generateModelCommand from './commands/generate/model/model'
-import * as generatePageCommand from './commands/generate/page/page'
-import * as generateScaffoldCommand from './commands/generate/scaffold/scaffold'
-import * as generateScriptCommand from './commands/generate/script/script'
-import * as generateSDLCommand from './commands/generate/sdl/sdl'
-import * as generateSecretCommand from './commands/generate/secret/secret'
-import * as generateServiceCommand from './commands/generate/service/service'
 import * as infoCommand from './commands/info'
 import * as lintCommand from './commands/lint'
 import * as prerenderCommand from './commands/prerender'
 import * as prismaCommand from './commands/prisma'
 import * as recordCommand from './commands/record'
 import * as serveCommand from './commands/serve'
-import * as setupAuthCommand from './commands/setup/auth/auth'
-import * as setupCustomWebIndexCommand from './commands/setup/custom-web-index/custom-web-index'
-import * as setupGeneratorCommand from './commands/setup/generator/generator'
-import * as setupGraphiqlCommand from './commands/setup/graphiql/graphiql'
-import * as setupI18nCommand from './commands/setup/i18n/i18n'
-import * as setupTSConfigCommand from './commands/setup/tsconfig/tsconfig'
-import * as setupUIChakraUICommand from './commands/setup/ui/libraries/chakra-ui'
-import * as setupUIMantineCommand from './commands/setup/ui/libraries/mantine'
-import * as setupUITailwindCSSCommand from './commands/setup/ui/libraries/tailwindcss'
-import * as setupUIWindiCSSCommand from './commands/setup/ui/libraries/windicss'
-import * as setupWebpackCommand from './commands/setup/webpack/webpack'
 import * as storybookCommand from './commands/storybook'
 import * as testCommand from './commands/test'
 import * as tstojsCommand from './commands/ts-to-js'
@@ -150,13 +123,13 @@ const cli = yargs(hideBin(process.argv))
 
 // # Redwood's built in commands
 
-const dataMigrateCommands = [dataMigrateInstallCommand, dataMigrateUpCommand]
+const dataMigrateCommands = []
 
 const dataMigrateCommand = {
   command: 'data-migrate <command>',
   aliases: ['dm', 'dataMigrate'],
   description: 'Migrate the data in your database',
-  builder(yargs) {
+  async builder(yargs) {
     yargs
       .demandCommand()
       .epilogue(
@@ -166,34 +139,28 @@ const dataMigrateCommand = {
         )}`
       )
 
-    for (const dataMigrateCommand of dataMigrateCommands) {
+    const dataMigrateInstallCommand = await import(
+      './commands/dataMigrate/install'
+    )
+    const dataMigrateUpCommand = await import('./commands/dataMigrate/up')
+
+    for (const dataMigrateCommand of [
+      dataMigrateInstallCommand,
+      dataMigrateUpCommand,
+      ...dataMigrateCommands,
+    ]) {
       yargs.command(dataMigrateCommand)
     }
   },
 }
 
-const generateCommands = [
-  generateCellCommand,
-  generateComponentCommand,
-  generateDataMigrationCommand,
-  generateDbAuthCommand,
-  generateDirectiveCommand,
-  generateFunctionCommand,
-  generateLayoutCommand,
-  generateModelCommand,
-  generatePageCommand,
-  generateScaffoldCommand,
-  generateScriptCommand,
-  generateSDLCommand,
-  generateSecretCommand,
-  generateServiceCommand,
-]
+const generateCommands = []
 
 const generateCommand = {
   command: 'generate <type>',
   aliases: ['g'],
   description: 'Generate boilerplate code and type definitions',
-  builder(yargs) {
+  async builder(yargs) {
     yargs
       .command('types', 'Generate supplementary code', {}, () => {
         execa.sync('yarn rw-gen', { shell: true, stdio: 'inherit' })
@@ -206,23 +173,69 @@ const generateCommand = {
         )}`
       )
 
-    for (const generateCommand of generateCommands) {
+    const generateCellCommand = await import('./commands/generate/cell/cell')
+    const generateComponentCommand = await import(
+      './commands/generate/component/component'
+    )
+    const generateDataMigrationCommand = await import(
+      './commands/generate/dataMigration/dataMigration'
+    )
+    const generateDbAuthCommand = await import(
+      './commands/generate/dbAuth/dbAuth'
+    )
+    const generateDirectiveCommand = await import(
+      './commands/generate/directive/directive'
+    )
+    const generateFunctionCommand = await import(
+      './commands/generate/function/function'
+    )
+    const generateLayoutCommand = await import(
+      './commands/generate/layout/layout'
+    )
+    const generateModelCommand = await import('./commands/generate/model/model')
+    const generatePageCommand = await import('./commands/generate/page/page')
+    const generateScaffoldCommand = await import(
+      './commands/generate/scaffold/scaffold'
+    )
+    const generateScriptCommand = await import(
+      './commands/generate/script/script'
+    )
+    const generateSDLCommand = await import('./commands/generate/sdl/sdl')
+    const generateSecretCommand = await import(
+      './commands/generate/secret/secret'
+    )
+    const generateServiceCommand = await import(
+      './commands/generate/service/service'
+    )
+
+    for (const generateCommand of [
+      generateCellCommand,
+      generateComponentCommand,
+      generateDataMigrationCommand,
+      generateDbAuthCommand,
+      generateDirectiveCommand,
+      generateFunctionCommand,
+      generateLayoutCommand,
+      generateModelCommand,
+      generatePageCommand,
+      generateScaffoldCommand,
+      generateScriptCommand,
+      generateSDLCommand,
+      generateSecretCommand,
+      generateServiceCommand,
+      ...generateCommands,
+    ]) {
       yargs.command(generateCommand)
     }
   },
 }
 
-const setupUICommands = [
-  setupUIChakraUICommand,
-  setupUIMantineCommand,
-  setupUITailwindCSSCommand,
-  setupUIWindiCSSCommand,
-]
+const setupUICommands = []
 
 const setupUICommand = {
   command: 'ui <library>',
   description: 'Set up a UI design or style library',
-  builder(yargs) {
+  async builder(yargs) {
     yargs
       .demandCommand()
       .epilogue(
@@ -232,27 +245,37 @@ const setupUICommand = {
         )}`
       )
 
-    for (const setupUICommand of setupUICommands) {
+    const setupUIChakraUICommand = await import(
+      './commands/setup/ui/libraries/chakra-ui'
+    )
+    const setupUIMantineCommand = await import(
+      './commands/setup/ui/libraries/mantine'
+    )
+    const setupUITailwindCSSCommand = await import(
+      './commands/setup/ui/libraries/tailwindcss'
+    )
+    const setupUIWindiCSSCommand = await import(
+      './commands/setup/ui/libraries/windicss'
+    )
+
+    for (const setupUICommand of [
+      setupUIChakraUICommand,
+      setupUIMantineCommand,
+      setupUITailwindCSSCommand,
+      setupUIWindiCSSCommand,
+      ...setupUICommands,
+    ]) {
       yargs.command(setupUICommand)
     }
   },
 }
 
-const setupCommands = [
-  setupAuthCommand,
-  setupCustomWebIndexCommand,
-  setupGeneratorCommand,
-  setupGraphiqlCommand,
-  setupI18nCommand,
-  setupTSConfigCommand,
-  setupUICommand,
-  setupWebpackCommand,
-]
+const setupCommands = []
 
 const setupCommand = {
   command: 'setup <command>',
   description: 'Initialize project config and install packages',
-  builder(yargs) {
+  async builder(yargs) {
     yargs
       .demandCommand()
       .middleware(detectRwVersion)
@@ -263,7 +286,33 @@ const setupCommand = {
         )}`
       )
 
-    for (const setupCommand of setupCommands) {
+    const setupAuthCommand = await import('./commands/setup/auth/auth')
+    const setupCustomWebIndexCommand = await import(
+      './commands/setup/custom-web-index/custom-web-index'
+    )
+    const setupGeneratorCommand = await import(
+      './commands/setup/generator/generator'
+    )
+    const setupGraphiqlCommand = await import(
+      './commands/setup/graphiql/graphiql'
+    )
+    const setupI18nCommand = await import('./commands/setup/i18n/i18n')
+    const setupTSConfigCommand = await import(
+      './commands/setup/tsconfig/tsconfig'
+    )
+    const setupWebpackCommand = await import('./commands/setup/webpack/webpack')
+
+    for (const setupCommand of [
+      setupAuthCommand,
+      setupCustomWebIndexCommand,
+      setupGeneratorCommand,
+      setupGraphiqlCommand,
+      setupI18nCommand,
+      setupTSConfigCommand,
+      setupUICommand,
+      setupWebpackCommand,
+      ...setupCommands,
+    ]) {
       yargs.command(setupCommand)
     }
   },
