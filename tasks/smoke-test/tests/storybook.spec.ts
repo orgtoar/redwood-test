@@ -7,7 +7,7 @@ import storybookTest, {
   StorybookFixture,
 } from '../playwright-fixtures/storybook.fixture'
 
-storybookTest(
+storybookTest.skip(
   'Loads Cell Stories',
   async ({ port, page, server }: PlaywrightTestArgs & StorybookFixture) => {
     // We do this to make sure playwright doesn't bring the server down
@@ -64,7 +64,7 @@ storybookTest(
   }
 )
 
-storybookTest(
+storybookTest.skip(
   'Loads Cell mocks when Cell is nested in another story',
   async ({ port, page, server }: PlaywrightTestArgs & StorybookFixture) => {
     // We do this to make sure playwright doesn't bring the server down
@@ -91,7 +91,7 @@ storybookTest(
   }
 )
 
-storybookTest(
+storybookTest.skip(
   'Mocks current user, and updates UI while dev server is running',
   async ({ port, page, server }: PlaywrightTestArgs & StorybookFixture) => {
     const profileStoryPath = path.join(

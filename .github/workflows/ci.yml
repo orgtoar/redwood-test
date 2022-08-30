@@ -213,6 +213,7 @@ jobs:
           PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
           REDWOOD_DISABLE_TELEMETRY: 1
           RECORD_REPLAY_METADATA_TEST_RUN_TITLE: jtoar test / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
+          DEBUG: 'pw:protocol'
 
       - name: Run `rw info`
         run: |
