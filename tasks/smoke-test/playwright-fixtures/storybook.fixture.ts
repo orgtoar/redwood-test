@@ -3,6 +3,8 @@ import { test as base } from '@playwright/test'
 import execa from 'execa'
 import isPortReachable from 'is-port-reachable'
 
+import { waitForServer } from '../util'
+
 // Declare worker fixtures.
 export type StorybookFixture = {
   port: number
@@ -44,42 +46,16 @@ const test = base.extend<any, StorybookFixture>({
         })
       } else {
         // Don't wait for this to finish, because it doens't
-        const serverHandler = execa(
-          `yarn rw storybook`,
-          ['--port', port, '--no-open', '--ci'],
-          {
-            cwd: projectPath,
-            shell: true,
-            cleanup: true,
-            detached: false,
-            // For some reason we need to do this. Otherwise the server doesn't launch correctly
-            stdio: 'ignore',
-          }
-        )
-
-        let serverReadyPromiseHandle
-
-        const waitForSbServer = new Promise<boolean>((resolve, reject) => {
-          serverReadyPromiseHandle = { resolve, reject }
+        execa(`yarn rw storybook`, ['--port', port, '--no-open', '--ci'], {
+          cwd: projectPath,
+          shell: true,
+          cleanup: true,
+          detached: false,
+          // For some reason we need to do this. Otherwise the server doesn't launch correctly
+          stdio: 'ignore',
         })
 
-        // Pipe out logs so we can debug, when required
-        serverHandler.stdout.on('data', (data) => {
-          const outputAsString = Buffer.from(data, 'utf-8').toString()
-          console.log('[rw-storybook-fixture]', outputAsString)
-
-          if (outputAsString.includes(`http://localhost:${port}/`)) {
-            serverReadyPromiseHandle.resolve()
-          }
-        })
-
-        // @NOTE: For some reason we need to do this
-        // Because otherwise the server doesn't launch correctly
-        serverHandler.stdout.pipe(process.stdout)
-        serverHandler.stderr.pipe(process.stderr)
-
-        console.log('Waiting for server.....')
-        await waitForSbServer
+        await waitForServer(port, 1_000)
       }
 
       console.log('Starting tests!')
