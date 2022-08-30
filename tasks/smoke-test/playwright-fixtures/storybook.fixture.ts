@@ -52,6 +52,8 @@ const test = base.extend<any, StorybookFixture>({
             shell: true,
             cleanup: true,
             detached: false,
+            // For some reason we need to do this. Otherwise the server doesn't launch correctly
+            stdio: 'ignore',
           }
         )
 
