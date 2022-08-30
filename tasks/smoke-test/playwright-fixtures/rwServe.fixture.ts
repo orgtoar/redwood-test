@@ -41,7 +41,7 @@ const test = base.extend<any, ServeFixture>({
         execa.sync(`yarn rw build`, {
           cwd: projectPath,
           shell: true,
-          stdio: 'inherit',
+          stdio: 'ignore',
         })
       }
 
@@ -55,14 +55,6 @@ const test = base.extend<any, ServeFixture>({
       if (!serverHandler) {
         throw new Error('Could not start test server')
       }
-
-      // Pipe out logs so we can debug, when required
-      serverHandler.stdout?.on('data', (data) => {
-        console.log(
-          '[rw-serve-fixture] ',
-          Buffer.from(data, 'utf-8').toString()
-        )
-      })
 
       console.log('Waiting for server.....')
       await waitForServer(port, 1000)

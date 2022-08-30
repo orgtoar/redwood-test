@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 import { test as base } from '@playwright/test'
-import execa, { ExecaChildProcess } from 'execa'
+import execa from 'execa'
 import isPortReachable from 'is-port-reachable'
 
 import { waitForServer } from '../util'
@@ -50,8 +50,6 @@ const test = base.extend<any, DevServerFixtures>({
         timeout: 5000,
       })
 
-      let devServerHandler: ExecaChildProcess
-
       if (isServerAlreadyUp) {
         console.log('Reusing server....')
         console.log({
@@ -62,26 +60,15 @@ const test = base.extend<any, DevServerFixtures>({
         console.log(`Launching dev server at ${projectPath}`)
 
         // Don't wait for this to finish, because it doens't
-        devServerHandler = execa(
-          `yarn rw dev --fwd="--no-open" --no-generate`,
-          {
-            cwd: projectPath,
-            shell: true,
-            detached: false,
-            env: {
-              WEB_DEV_PORT: webServerPort,
-              API_DEV_PORT: apiServerPort,
-            },
-            cleanup: true,
-          }
-        )
-
-        // Pipe out logs so we can debug, when required
-        devServerHandler.stdout.on('data', (data) => {
-          console.log(
-            '[devServer-fixture] ',
-            Buffer.from(data, 'utf-8').toString()
-          )
+        execa(`yarn rw dev --fwd="--no-open" --no-generate`, {
+          cwd: projectPath,
+          shell: true,
+          detached: false,
+          env: {
+            WEB_DEV_PORT: webServerPort,
+            API_DEV_PORT: apiServerPort,
+          },
+          cleanup: true,
         })
       }
 
