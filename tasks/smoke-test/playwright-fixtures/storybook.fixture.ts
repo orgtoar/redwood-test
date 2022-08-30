@@ -23,7 +23,7 @@ const test = base.extend<any, StorybookFixture>({
   // "server" fixture starts automatically for every worker - we pass "auto" for that.
   server: [
     async ({ port }, use) => {
-      console.log('Starting storybook server.....')
+      console.log('Starting storybook server')
 
       const projectPath = process.env.PROJECT_PATH
 
@@ -40,7 +40,7 @@ const test = base.extend<any, StorybookFixture>({
       })
 
       if (isServerAlreadyUp) {
-        console.log('Reusing existing SB server....')
+        console.log('Reusing existing SB server')
         console.log({
           port,
         })
@@ -58,7 +58,7 @@ const test = base.extend<any, StorybookFixture>({
         await waitForServer(port, 1_000)
       }
 
-      console.log('Starting tests!')
+      console.log('Starting tests')
       await use(`Server ready at ${port}`)
     },
     { scope: 'worker', auto: true },

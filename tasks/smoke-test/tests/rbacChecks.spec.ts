@@ -39,7 +39,7 @@ devServerTest.beforeAll(async ({ browser }: PlaywrightWorkerArgs) => {
       page: adminSignupPage,
       email: adminEmail,
       password,
-      fullName: 'Admin User'
+      fullName: 'Admin User',
     }),
     // Signup non-admin user
     signUpTestUser({
@@ -121,7 +121,7 @@ console.log(await db.user.findMany())
 }`
     )
 
-    console.log(`Giving ${adminEmail} ADMIN role....`)
+    console.log(`Giving ${adminEmail} ADMIN role`)
     await execa(`yarn rw exec makeAdmin --email ${adminEmail}`, {
       cwd: process.env.PROJECT_PATH,
       stdio: 'inherit',

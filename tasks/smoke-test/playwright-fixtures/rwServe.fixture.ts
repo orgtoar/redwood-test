@@ -23,7 +23,7 @@ const test = base.extend<any, ServeFixture>({
   // "server" fixture starts automatically for every worker - we pass "auto" for that.
   server: [
     async ({ port }, use) => {
-      console.log('Starting rw server.....')
+      console.log('Starting rw server')
 
       const projectPath = process.env.PROJECT_PATH
 
@@ -36,7 +36,7 @@ const test = base.extend<any, ServeFixture>({
       console.log(`Running rw serve at ${projectPath}`)
 
       if (projectNeedsBuilding(projectPath)) {
-        console.log('Building project...')
+        console.log('Building project')
         // skip rw build if its already done
         execa.sync(`yarn rw build`, {
           cwd: projectPath,
@@ -56,10 +56,10 @@ const test = base.extend<any, ServeFixture>({
         throw new Error('Could not start test server')
       }
 
-      console.log('Waiting for server.....')
+      console.log('Waiting for server')
       await waitForServer(port, 1000)
 
-      console.log('Starting tests!')
+      console.log('Starting tests')
       await use()
     },
     { scope: 'worker', auto: true },

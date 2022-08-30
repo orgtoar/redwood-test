@@ -51,7 +51,7 @@ const test = base.extend<any, DevServerFixtures>({
       })
 
       if (isServerAlreadyUp) {
-        console.log('Reusing server....')
+        console.log('Reusing server')
         console.log({
           webServerPort,
           apiServerPort,
@@ -72,11 +72,11 @@ const test = base.extend<any, DevServerFixtures>({
         })
       }
 
-      console.log('Waiting for dev servers.....')
+      console.log('Waiting for dev servers')
       await waitForServer(webServerPort, 1000)
       await waitForServer(apiServerPort, 1000)
 
-      console.log('Starting tests!')
+      console.log('Starting tests')
 
       await use()
     },
