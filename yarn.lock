@@ -6798,7 +6798,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@replayio/playwright@npm:^0.2.24":
+"@replayio/playwright@npm:0.2.24":
   version: 0.2.24
   resolution: "@replayio/playwright@npm:0.2.24"
   dependencies:
@@ -27233,7 +27233,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.18.9
     "@nrwl/nx-cloud": 14.3.0
     "@playwright/test": 1.25.1
-    "@replayio/playwright": ^0.2.24
+    "@replayio/playwright": 0.2.24
     "@testing-library/jest-dom": 5.16.5
     "@testing-library/react": 12.1.5
     "@testing-library/react-hooks": 8.0.1
@@ -31820,22 +31820,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^7.3.1":
-  version: 7.5.7
-  resolution: "ws@npm:7.5.7"
-  peerDependencies:
-    bufferutil: ^4.0.1
-    utf-8-validate: ^5.0.2
-  peerDependenciesMeta:
-    bufferutil:
-      optional: true
-    utf-8-validate:
-      optional: true
-  checksum: f856382d94dfa8d722337d79117fe4f16d48ef7d7f77a58e94af7d7f32e863fce8403c00992ddddbf1efd5a334c581c2a987aea66255f7ee368680e59f78ae15
-  languageName: node
-  linkType: hard
-
-"ws@npm:^7.5.0":
+"ws@npm:^7.3.1, ws@npm:^7.5.0":
   version: 7.5.9
   resolution: "ws@npm:7.5.9"
   peerDependencies:
