@@ -71,16 +71,16 @@ jobs:
       - name: 🔨 Build
         run: yarn build
 
-      - name: 🔎 Lint
-        run: yarn lint
+      # - name: 🔎 Lint
+      #   run: yarn lint
 
-      - name: Get number of CPU cores
-        if: always()
-        id: cpu-cores
-        uses: SimenB/github-actions-cpu-cores@v1
+      # - name: Get number of CPU cores
+      #   if: always()
+      #   id: cpu-cores
+      #   uses: SimenB/github-actions-cpu-cores@v1
 
-      - name: 🧪 Test
-        run: yarn test-ci ${{ steps.cpu-cores.outputs.count }}
+      # - name: 🧪 Test
+      #   run: yarn test-ci ${{ steps.cpu-cores.outputs.count }}
 
       - name: ⌨️ CLI Test (cwd, env)
         uses: ./tasks/cli-test
