@@ -308,3 +308,36 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - run: echo "Only doc changes"
+
+  cli-test:
+    needs: check
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+      fail-fast: true
+    name: ⌨️ CLI test / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    env:
+      REDWOOD_CI: 1
+    steps:
+      - uses: actions/checkout@v3
+      - name: 🧶 Setup job
+        uses: ./.github/actions/setup_job
+        with:
+          node-version: 16
+
+      - run: node ./packages/cli/dist/index.js --cwd ./__fixtures__/test-project --help
+      - run: RWJS_CWD=./__fixtures__/test-project node ./packages/cli/dist/index.js --help
+      - run: RWJS_CWD=/ignored/path node ./packages/cli/dist/index.js --cwd ./__fixtures__/test-project --help
+
+
+  cli-test-docs:
+    needs: only-doc-changes
+    if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    name: ⌨️ CLI test / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: echo "Only doc changes"
