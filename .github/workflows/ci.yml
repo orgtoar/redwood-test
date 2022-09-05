@@ -82,7 +82,8 @@ jobs:
       - name: 🧪 Test
         run: yarn test-ci ${{ steps.cpu-cores.outputs.count }}
 
-      - name: ⌨️ Test CLI
+      - name: ⌨️ CLI Test
+        uses: ./tasks/cli-test
 
   build-lint-test-docs:
     needs: only-doc-changes
@@ -307,37 +308,6 @@ jobs:
         os: [ubuntu-latest, windows-latest]
         node-version: [14, 16]
     name: 👀 Smoke test / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
-    runs-on: ${{ matrix.os }}
-    steps:
-      - run: echo "Only doc changes"
-
-  cli-test:
-    needs: check
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-      fail-fast: true
-    name: ⌨️ CLI test / ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    env:
-      REDWOOD_CI: 1
-    steps:
-      - uses: actions/checkout@v3
-      - name: 🧶 Setup job
-        uses: ./.github/actions/setup_job
-        with:
-          node-version: 16
-
-      - name: 🔨 Build
-        run: yarn build
-
-  cli-test-docs:
-    needs: only-doc-changes
-    if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    name: ⌨️ CLI test / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
       - run: echo "Only doc changes"
