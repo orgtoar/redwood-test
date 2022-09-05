@@ -68,23 +68,15 @@ await exec(
 console.log(
   "\n[TEST] Finds up for a redwood.toml if --cwd and RWJS_CWD aren't set\n"
 )
-await exec(
-  `node ${process.env.PROJECT_CWD}/packages/cli/dist/index.js --version`,
-  null,
-  {
-    cwd: './__fixtures__/test-project/api',
-  }
-)
+await exec(`node ../../../packages/cli/dist/index.js --version`, null, {
+  cwd: './__fixtures__/test-project/api',
+})
 
 try {
   console.log("\n[TEST] Throws if it can't find up for a redwood.toml\n")
-  await exec(
-    `node ${process.env.PROJECT_CWD}/packages/cli/dist/index.js --version`,
-    null,
-    {
-      cwd: './__fixtures__',
-    }
-  )
+  await exec(`node ../packages/cli/dist/index.js --version`, null, {
+    cwd: './__fixtures__',
+  })
   process.exit(1)
   // eslint-disable-next-line no-empty
 } catch {}
