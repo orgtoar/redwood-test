@@ -82,6 +82,8 @@ jobs:
       - name: 🧪 Test
         run: yarn test-ci ${{ steps.cpu-cores.outputs.count }}
 
+      - name: ⌨️ Test CLI
+
   build-lint-test-docs:
     needs: only-doc-changes
     if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
@@ -328,26 +330,6 @@ jobs:
 
       - name: 🔨 Build
         run: yarn build
-
-      - name: Lets the user set the cwd via --cwd
-        run: node ./packages/cli/dist/index.js --cwd ./__fixtures__/test-project --help
-      - name: Throws if set via --cwd and there's no "redwood.toml"
-        run: node ./packages/cli/dist/index.js --cwd ./__fixtures__ --help
-
-      - name: Lets the user set the cwd via RWJS_PRJ
-        run: RWJS_CWD=./__fixtures__/test-project node ./packages/cli/dist/index.js --help
-      - name: Throws if set via RWJS_CWD and there's no "redwood.toml"
-        run: RWJS_CWD=./__fixtures__ node ./packages/cli/dist/index.js --help
-
-      - name: Prefers --cwd to RWJS_CWD
-        run: RWJS_CWD=/ignored/path node ./packages/cli/dist/index.js --cwd ./__fixtures__/test-project --help
-
-      - name: Finds up for a redwood.toml if --cwd and RWJS_CWD aren't set
-        run: node ./packages/cli/dist/index.js --help
-        working-directory: ./__fixtures__/test-project/api
-      - name: Throws if it can't find a redwood.toml
-        run: node ./packages/cli/dist/index.js --help
-        working-directory: ./__fixtures__
 
   cli-test-docs:
     needs: only-doc-changes
