@@ -364,6 +364,8 @@ test('Authenticated user has assigned role access as expected', async () => {
   })
   fireEvent.click(screen.getByText('Log In'))
 
+  screen.debug()
+
   // Check that you're logged in!
   await waitFor(() => screen.getByText('Log Out'))
 
