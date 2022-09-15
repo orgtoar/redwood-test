@@ -491,7 +491,9 @@ test('Authenticated user has not been assigned some role access but not others a
   fireEvent.click(screen.getByText('Log In'))
 
   // Check that you're logged in!
-  await waitFor(() => screen.getByText('Log Out'))
+  await waitFor(() => screen.getByText('Log Out'), {
+    timeout: 5_000,
+  })
 
   mockAuthClient.hasRole = jest.fn(async () => {
     return true
@@ -783,7 +785,9 @@ test('Authenticated user has assigned role access as expected', async () => {
   fireEvent.click(screen.getByText('Log In'))
 
   // Check that you're logged in!
-  await waitFor(() => screen.getByText('Log Out'))
+  await waitFor(() => screen.getByText('Log Out'), {
+    timeout: 5_000,
+  })
 
   mockAuthClient.hasRole = jest.fn(async () => {
     return true
