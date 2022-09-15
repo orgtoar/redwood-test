@@ -82,6 +82,11 @@ jobs:
       - name: 🧪 Test
         run: yarn test-ci ${{ steps.cpu-cores.outputs.count }}
 
+      - uses: actions/checkout@v2
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
+
   build-lint-test-docs:
     needs: only-doc-changes
     if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
