@@ -1,14 +1,10 @@
 name: Merge Release PR
 
 on:
-  # Try enabling auto-merge for a pull request when a draft is marked as “ready for review”, when
-  # a required label is applied or when a “do not merge” label is removed, or when a pull request
-  # is updated in any way (opened, synchronized, reopened, edited).
-  pull_request:
+  pull_request_target:
     branches: [release]
     types: [opened]
 
-# this job may trigger other workflows; use personal token because actions don't trigger actions
 jobs:
   automerge:
     runs-on: ubuntu-latest
