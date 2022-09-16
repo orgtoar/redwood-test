@@ -1,0 +1,16 @@
+name: Auto approve release PR
+
+on:
+  pull_request_target:
+    branches: [release]
+    types: [opened]
+
+jobs:
+  auto-approve-release-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto approve release PR
+        uses: hmarr/auto-approve-action@v2
+        if: contains(github.event.pull_request.labels.*.name, 'cherry-pick')
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
