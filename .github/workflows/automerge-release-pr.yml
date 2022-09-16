@@ -1,0 +1,18 @@
+name: ✅ Enable auto-merge for release PR
+
+on:
+  pull_request_target:
+    branches: [release]
+    types: [opened]
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ✅ Enable auto-merge for release PR
+        uses: reitermarkus/automerge@v1
+        with:
+          token: ${{ secrets.JTOAR_TOKEN }}
+          merge-method: squash
+          do-not-merge-labels: never-merge
+          pull-request: ${{ github.event.inputs.pull-request }}

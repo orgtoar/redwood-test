@@ -1,31 +1,8 @@
 /* eslint-env node, es2021 */
 
-/**
- * Use this script to release a version of RedwoodJS:
- *
- * ```
- * yarn release
- * ```
- *
- * @remarks
- *
- * You'll need...
- *
- * 1. a GitHub token in your environment (GITHUB_TOKEN)
- * 2. to be logged into NPM
- * 3. the appropriate permissions on your NPM account (contact @thedavidprice)
- *
- * @todo
- *
- * - consider writing an e2e test using verdaccio
- */
-
 import c from 'ansi-colors'
 import boxen from 'boxen'
 import notifier from 'node-notifier'
-/**
- * See {@link https://github.com/google/zx}
- */
 import { $, cd } from 'zx'
 
 import generateReleaseNotes from './generateReleaseNotes.mjs'
@@ -44,9 +21,6 @@ import updatePRsMilestone, { closeMilestone } from './updatePRsMilestone.mjs'
 let milestone
 
 export default async function release() {
-  /**
-   * Make sure that we're on main.
-   */
   const gitBranchPO = await $`git branch --show-current`
 
   if (gitBranchPO.stdout.trim() !== 'main') {
@@ -57,11 +31,6 @@ export default async function release() {
 
   console.log(ok`On main`)
 
-  /**
-   * - ask for the desired semver
-   * - get the current and next versions
-   * - do a few basic validations so that we can fail early
-   */
   const { semver } = await exitOnCancelPrompts({
     type: 'select',
     name: 'semver',
