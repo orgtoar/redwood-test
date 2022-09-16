@@ -1,0 +1,24 @@
+name: 🍒 Cherry pick into release PR
+
+on:
+  pull_request:
+    branches: [main]
+    types: [closed]
+
+jobs:
+  cherry-pick-into-release-pr:
+    runs-on: ubuntu-latest
+    name: 🍒 Cherry pick into release PR
+
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'release:feature-breaking') }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Cherry pick into release PR
+        uses: carloscastrojumo/github-cherry-pick-action@v1.0.2
+        with:
+          token: ${{ secrets.JTOAR_TOKEN }}
+          branch: release
+          labels: cherry-pick
