@@ -9,6 +9,8 @@ jobs:
   auto-approve-release-pr:
     runs-on: ubuntu-latest
     steps:
+      - run: echo ${{ github.event.pull_request.labels.*.name }}
+      - run: echo ${{ contains(github.event.pull_request.labels.*.name, 'cherry-pick') }}
       - name: Auto approve release PR
         uses: hmarr/auto-approve-action@v2
         if: contains(github.event.pull_request.labels.*.name, 'cherry-pick')
