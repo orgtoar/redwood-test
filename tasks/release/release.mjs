@@ -21,9 +21,6 @@ import updatePRsMilestone, { closeMilestone } from './updatePRsMilestone.mjs'
 let milestone
 
 export default async function release() {
-  /**
-   * Make sure that we're on main.
-   */
   const gitBranchPO = await $`git branch --show-current`
 
   if (gitBranchPO.stdout.trim() !== 'main') {
