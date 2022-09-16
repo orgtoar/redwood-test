@@ -31,11 +31,6 @@ export default async function release() {
 
   console.log(ok`On main`)
 
-  /**
-   * - ask for the desired semver
-   * - get the current and next versions
-   * - do a few basic validations so that we can fail early
-   */
   const { semver } = await exitOnCancelPrompts({
     type: 'select',
     name: 'semver',
