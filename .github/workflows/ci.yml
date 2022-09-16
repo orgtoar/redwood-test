@@ -1,7 +1,24 @@
 name: ⚙️ CI
 
 on:
-  pull_request
+  pull_request:
+    - assigned
+    - unassigned
+    - labeled
+    - unlabeled
+    - opened
+    - edited
+    - closed
+    - reopened
+    - synchronize
+    - converted_to_draft
+    - ready_for_review
+    - locked
+    - unlocked
+    - review_requested
+    - review_request_removed
+    - auto_merge_enabled
+    - auto_merge_disabled
 
 jobs:
   only-doc-changes:
