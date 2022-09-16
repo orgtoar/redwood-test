@@ -20,5 +20,6 @@ jobs:
       - name: Cherry pick into release
         uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
         with:
+          token: ${{ secrets.JTOAR_TOKEN }}
           branch: release
           labels: cherry-pick
