@@ -1,14 +1,11 @@
 import { exec, getExecOutput } from '@actions/exec'
 import core from '@actions/core'
 
-console.log({
-  env: process.env
-})
+const branch = process.env.GITHUB_BASE_REF
 
-// needs to be configured per branch...
-await exec('git fetch origin main')
+await exec(`git fetch origin ${branch}`)
 
-const { stdout } = await getExecOutput('git diff origin/main --name-only')
+const { stdout } = await getExecOutput(`git diff origin/${branch} --name-only`)
 
 const changedFiles = stdout.toString().trim().split('\n').filter(Boolean)
 

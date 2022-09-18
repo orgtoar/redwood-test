@@ -19,9 +19,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - run: echo ${{ github.actor }}
-      - run: echo ${{ toJSON(github) }}
-      - run: env
+      # doesn't handle multiple authors...
+      # - run: |
+      #     authorName="$(gh api ${{ github.pull_request.commits_url }} -q .[0].commit.author.name)"
+      #     authorEmail="$(gh api ${{ github.pull_request.commits_url }} -q .[0].commit.author.email)"
+      #     echo 'AUTHOR='"$authorName $authorEmail" >> $GITHUB_ENV
+
+      #     committerName="$(gh api ${{ github.pull_request.commits_url }} -q .[0].commit.committer.name)"
+      #     committerEmail="$(gh api ${{ github.pull_request.commits_url }} -q .[0].commit.committer.email)"
+      #     echo 'COMMITTER='"$committerName $committerEmail" >> $GITHUB_ENV
 
       - name: Cherry pick into release PR
         uses: carloscastrojumo/github-cherry-pick-action@v1.0.2
@@ -31,3 +37,5 @@ jobs:
           token: ${{ secrets.JTOAR_TOKEN }}
           branch: release
           labels: cherry-pick
+          # author: ${{ process.env.AUTHOR }}
+          # committer: ${{ process.env.COMMITTER }}
