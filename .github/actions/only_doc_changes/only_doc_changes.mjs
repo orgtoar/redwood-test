@@ -1,6 +1,11 @@
 import { exec, getExecOutput } from '@actions/exec'
 import core from '@actions/core'
 
+console.log({
+  env: process.env
+})
+
+// needs to be configured per branch...
 await exec('git fetch origin main')
 
 const { stdout } = await getExecOutput('git diff origin/main --name-only')

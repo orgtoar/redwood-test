@@ -19,6 +19,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - run: echo ${{ github.actor }}
+      - run: echo ${{ toJSON(github) }}
+      - run: env
+
       - name: Cherry pick into release PR
         uses: carloscastrojumo/github-cherry-pick-action@v1.0.2
         with:
