@@ -8,6 +8,8 @@ import terminalLink from 'terminal-link'
 
 import { errorTelemetry } from '@redwoodjs/telemetry'
 
+// new commit
+
 import {
   getPaths,
   writeFilesTask,
