@@ -9,11 +9,31 @@ on:
     types: [closed]
 
 jobs:
-  cherry-pick-into-release-pr:
-    name: 🍒 Cherry pick into release PR
+  cherry-pick-fast-forward:
+    name: ⏩ Cherry pick fast forward
     runs-on: ubuntu-latest
+
     # Don't cherry pick things that are breaking.
     if: ${{ !contains(github.event.pull_request.labels.*.name, 'release:feature-breaking') }}
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: ⏩ Cherry pick fast forward
+        run: |
+          git switch release
+          git cherry-pick --ff $GITHUB_SHA
+          git push
+
+  cherry-pick-into-release-pr:
+    name:  Cherry pick PR
+    runs-on: ubuntu-latest
+
+    needs: cherry-pick-fast-forward
+    if: needs.only-doc-changes.result == 'failure'
+
     steps:
       - uses: actions/checkout@v2
         with:
@@ -27,5 +47,3 @@ jobs:
           token: ${{ secrets.JTOAR_TOKEN }}
           branch: release
           labels: cherry-pick
-          author: Tobbe Lundberg <tobbe@tlundberg.com>
-          committer: Tobbe Lundberg <tobbe@tlundberg.com>
