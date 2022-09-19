@@ -320,3 +320,34 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - run: echo "Only doc changes"
+
+  cherry-pick:
+    name: cherry-pick
+    runs-on: ubuntu-latest
+
+    needs: [build-lint-test, tutorial-e2e, smoke-test]
+    if: github.event.pull_request.base.ref == 'release' && contains(github.event.pull_request.labels.*.name, 'cherry-pick') && !contains(join(needs.*.result, ','), 'failure')
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.JTOAR_TOKEN }}
+
+      - name: 🍒 Cherry pick
+        run: |
+          git switch release
+          git cherry-pick $GITHUB_SHA
+          git push
+
+      - name: Close PR
+        run: |
+          gh api graphql -F id=${{ github.pull_request.id }} query='
+            mutation($id: ID!) {
+              closePullRequest(input: {
+                pullRequestId: $id
+              }) {
+                clientMutationId
+              }
+            }
+          '
