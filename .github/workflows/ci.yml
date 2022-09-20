@@ -340,12 +340,14 @@ jobs:
 
       - name: Close PR
         run: |
-          gh api graphql -F id=${{ github.event.pull_request.id }} query='
-            mutation($id: ID!) {
-              closePullRequest(input: {
-                pullRequestId: $id
-              }) {
-                clientMutationId
+          gh api graphql \
+            -F id=${{ github.event.pull_request.id }} \
+            -f query='
+              mutation($id: ID!) {
+                closePullRequest(input: {
+                  pullRequestId: $id
+                }) {
+                  clientMutationId
+                }
               }
-            }
-          '
+            '
