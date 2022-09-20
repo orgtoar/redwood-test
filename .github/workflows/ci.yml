@@ -324,17 +324,13 @@ jobs:
     runs-on: ubuntu-latest
 
     needs: [build-lint-test, tutorial-e2e, smoke-test]
-    # if: github.event.pull_request.base.ref == 'release' && contains(github.event.pull_request.labels.*.name, 'cherry-pick') && !contains(join(needs.*.result, ','), 'failure')
+    if: github.event.pull_request.base.ref == 'release' && contains(github.event.pull_request.labels.*.name, 'cherry-pick') && !contains(join(needs.*.result, ','), 'failure')
 
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
           token: ${{ secrets.JTOAR_TOKEN }}
-
-      - run: echo ${{ github.event.pull_request.base.ref == 'release' }}
-      - run: echo ${{ contains(github.event.pull_request.labels.*.name, 'cherry-pick') }}
-      - run: echo ${{ !contains(join(needs.*.result, ','), 'failure') }}
 
       - name: 🍒 Cherry pick
         run: |
