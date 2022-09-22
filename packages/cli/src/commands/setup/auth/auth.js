@@ -4,8 +4,6 @@ export const command = 'auth <provider>'
 
 export const description = 'Generate an auth configuration'
 
-// test change
-
 export async function builder(yargs) {
   const {
     setupAuthAuth0Command,
