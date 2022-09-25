@@ -1302,9 +1302,9 @@ export class DbAuthHandler<TUser extends Record<string | number, any>> {
   }
 
   // checks that a single field meets validation requirements and
-  // currently checks for presense only
+  // currently checks for presence only
   _validateField(name: string, value: string | undefined): value is string {
-    // check for presense
+    // check for presence
     if (!value || value.trim() === '') {
       throw new DbAuthError.FieldRequiredError(
         name,
