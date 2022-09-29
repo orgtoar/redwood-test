@@ -6,6 +6,8 @@ import Listr from 'listr'
 import prompts from 'prompts'
 import terminalLink from 'terminal-link'
 
+// test
+
 import { errorTelemetry } from '@redwoodjs/telemetry'
 
 import {
