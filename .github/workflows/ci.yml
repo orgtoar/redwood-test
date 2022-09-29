@@ -333,11 +333,11 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.JTOAR_TOKEN }}
 
-      - name: 🍒 Cherry pick
-        run: |
-          git switch release
-          git cherry-pick $GITHUB_SHA
-          git push
+      # - name: 🍒 Cherry pick
+      #   run: |
+      #     git switch release
+      #     git cherry-pick $GITHUB_SHA
+      #     git push
 
       - name: Close PR
         run: |
