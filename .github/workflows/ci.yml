@@ -82,11 +82,16 @@ jobs:
 
   cherry-pick:
     needs: [build-lint-test, tutorial-e2e, smoke-test]
-    if: ${{ github.event.pull_request.base.ref == 'release' && contains(github.event.pull_request.labels.*.name, 'cherry-pick') && !contains(join(needs.*.result, ','), 'failure') }}
     name: cherry-pick
     runs-on: ubuntu-latest
 
     steps:
+      - run: |
+          echo "${{ toJSON(github) }}"
+          echo "${{ github.event.pull_request.base.ref }}"
+          echo "${{ contains(github.event.pull_request.labels.*.name, 'cherry-pick') }}"
+          echo "${{ !contains(join(needs.*.result, ','), 'failure') }}"
+
       - uses: actions/checkout@v3
         with:
           ref: release
