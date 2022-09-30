@@ -79,3 +79,44 @@ jobs:
       PLAYWRIGHT_BROWSERS_PATH: 0
     steps:
       - run: echo "Pass"
+
+  cherry-pick:
+    needs: [build-lint-test, tutorial-e2e, smoke-test]
+    if: github.event.pull_request.user.login == 'redwoodjs-bot[bot]' && github.base_ref == 'release' && !contains(join(needs.*.result, ','), 'failure')
+    name: cherry-pick
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+
+      - uses: actions/checkout@v3
+        with:
+          ref: release
+          # git isn't able to work with the $GITHUB_SHA if we don't checkout everything.
+          fetch-depth: 0
+          # Since release is a protected branch, we need a token to run git push later.
+          token: ${{ steps.generate_token.outputs.token }}
+
+      - name: 🍒 Cherry pick
+        run: |
+          git cherry-pick ${{ github.event.pull_request.head.sha }}
+          git push
+
+      - name: Close PR
+        env:
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
+        run: |
+          gh api graphql -F id=${{ github.event.pull_request.node_id }} -f query='
+            mutation($id: ID!) {
+              closePullRequest(input: {
+                pullRequestId: $id
+              }) {
+                clientMutationId
+              }
+            }
+          '
