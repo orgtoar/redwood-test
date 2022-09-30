@@ -1,6 +1,8 @@
+name: Cherry pick release PR
+
 on:
   workflow_run:
-    workflows: ["⚙️ CI"]
+    workflows: [CI]
     types: [completed]
     # branches: [release]
 
