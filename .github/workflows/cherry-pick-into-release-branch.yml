@@ -1,6 +1,6 @@
 # When a PR is merged into the main branch, this workflow tries to cherry pick the squashed commit into the release branch
 # by fast forwarding the release branch via the `--ff` option.
-# If that's not an option (i.e. main and release have diverged), it'll open a PR against release with the squashed commit.
+# If that doesn't work (i.e. main and release have diverged), it'll open a PR against the branch release with the squashed commit.
 
 name: 🍒 Cherry pick into release branch
 
@@ -15,15 +15,15 @@ jobs:
     runs-on: ubuntu-latest
 
     # Don't cherry pick commits with breaking changes.
-    if: ${{ !contains(github.event.pull_request.labels.*.name, 'release:feature-breaking') }}
+    if: !contains(github.event.pull_request.labels.*.name, 'release:feature-breaking')
 
     steps:
       - uses: actions/checkout@v3
         with:
           ref: release
-          # Git isn't able to work with the $GITHUB_SHA if we don't checkout everything.
+          # git isn't able to work with $GITHUB_SHA if we don't checkout everything.
           fetch-depth: 0
-          # Since release is a protected branch, we need a token to run git push later.
+          # Since release is a protected branch, we need a token to run `git push` later.
           token: ${{ secrets.JTOAR_TOKEN }}
 
       - name: ⏩ Cherry pick fast forward
@@ -31,6 +31,7 @@ jobs:
           git cherry-pick --ff $GITHUB_SHA
 
           # If the HEAD of main and release point to the same commit, then the fast forward worked.
+
           if [[ "$(git rev-parse origin/main)" = "$(git rev-parse release)" ]]; then
             git push
           else
