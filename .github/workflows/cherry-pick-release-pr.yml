@@ -2,7 +2,7 @@ on:
   workflow_run:
     workflows: [⚙️ CI]
     types: [completed]
-    branches: [release]
+    # branches: [release]
 
 jobs:
   cherry-pick:
