@@ -82,18 +82,12 @@ jobs:
 
   cherry-pick:
     needs: [build-lint-test, tutorial-e2e, smoke-test]
+    if: ${{ github.event.pull_request.base.ref == 'release' && contains(github.event.pull_request.labels.*.name, 'cherry-pick') && !contains(join(needs.*.result, ','), 'failure') }}
     name: cherry-pick
     runs-on: ubuntu-latest
 
     steps:
-      - run: |
-          echo ${{ github.event.pull_request.base.ref == 'release' }}
-          echo ${{ contains(github.event.pull_request.labels.*.name, 'cherry-pick') }}
-          echo ${{ join(needs.*.result, ',') }}
-          echo ${{ !contains(join(needs.*.result, ','), 'failure') }}
-
       - uses: actions/checkout@v3
-        if: !contains(join(needs.*.result, ','), 'failure') }}
         with:
           ref: release
           # git isn't able to work with the $GITHUB_SHA if we don't checkout everything.
@@ -102,13 +96,11 @@ jobs:
           token: ${{ secrets.JTOAR_TOKEN }}
 
       - name: 🍒 Cherry pick
-        if: !contains(join(needs.*.result, ','), 'failure') }}
         run: |
           git cherry-pick ${{ github.event.pull_request.head.ref }}
           git push
 
       - name: Close PR
-        if: !contains(join(needs.*.result, ','), 'failure') }}
         env:
           GH_TOKEN: ${{ secrets.JTOAR_TOKEN }}
         run: |
