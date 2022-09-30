@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     # Don't cherry pick commits with breaking changes.
-    if: !contains(github.event.pull_request.labels.*.name, 'release:feature-breaking')
+    if: "!contains(github.event.pull_request.labels.*.name, 'release:feature-breaking')"
 
     steps:
       - uses: actions/checkout@v3
