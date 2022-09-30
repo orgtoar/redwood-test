@@ -340,6 +340,8 @@ jobs:
       #     git push
 
       - name: Close PR
+        env:
+          GH_TOKEN: ${{ secrets.JTOAR_TOKEN }}
         run: |
           gh api graphql -F id=${{ github.event.pull_request.node_id }} -f query='
             mutation($id: ID!) {
