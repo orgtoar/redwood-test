@@ -10,7 +10,7 @@ jobs:
     outputs:
       only-doc-changes: ${{ steps.only-doc-changes.outputs.only-doc-changes }}
     steps:
-      - run: echo ${{ github.triggering_actor }}
+      - run: echo ${{ github.event.pull_request.user.login }}
       - uses: actions/checkout@v3
 
       - uses: actions/setup-node@v3
@@ -83,7 +83,7 @@ jobs:
 
   cherry-pick:
     needs: [build-lint-test, tutorial-e2e, smoke-test]
-    if: github.triggering_actor == 'redwoodjs-bot[bot]' && github.base_ref == 'release' && !contains(join(needs.*.result, ','), 'failure')
+    if: github.event.pull_request.user.login == 'redwoodjs-bot[bot]' && github.base_ref == 'release' && !contains(join(needs.*.result, ','), 'failure')
     name: cherry-pick
     runs-on: ubuntu-latest
 
