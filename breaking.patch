@@ -1,0 +1,13 @@
+diff --git a/packages/api-server/src/cliHandlers.ts b/packages/api-server/src/cliHandlers.ts
+index ed3e120a9..06e5c0418 100644
+--- a/packages/api-server/src/cliHandlers.ts
++++ b/packages/api-server/src/cliHandlers.ts
+@@ -4,6 +4,8 @@ import c from 'ansi-colors'
+ 
+ import { getConfig } from '@redwoodjs/internal/dist/config'
+ 
++// test 2
++
+ import createFastifyInstance from './fastify'
+ import withApiProxy from './plugins/withApiProxy'
+ import withFunctions from './plugins/withFunctions'
