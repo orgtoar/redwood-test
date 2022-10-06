@@ -1,5 +1,7 @@
 import c from 'ansi-colors'
 
+// test
+
 import { getConfig } from '@redwoodjs/internal/dist/config'
 
 import createFastifyInstance from './fastify'
