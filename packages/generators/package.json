@@ -1,5 +1,8 @@
 {
   "name": "@redwoodjs/generators",
   "version": "0.0.1",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "toml": "3.0.0"
+  }
 }
