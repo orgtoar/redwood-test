@@ -6499,6 +6499,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@redwoodjs/generators@workspace:packages/generators":
+  version: 0.0.0-use.local
+  resolution: "@redwoodjs/generators@workspace:packages/generators"
+  dependencies:
+    toml: 3.0.0
+  languageName: unknown
+  linkType: soft
+
 "@redwoodjs/graphql-server@3.1.1, @redwoodjs/graphql-server@workspace:packages/graphql-server":
   version: 0.0.0-use.local
   resolution: "@redwoodjs/graphql-server@workspace:packages/graphql-server"
