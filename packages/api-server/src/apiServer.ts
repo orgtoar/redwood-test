@@ -1,5 +1,7 @@
 import { FastifyInstance } from 'fastify'
 
+// TODO: redo this file
+
 export interface HttpServerParams {
   port: number
   socket?: string
