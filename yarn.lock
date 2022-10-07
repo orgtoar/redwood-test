@@ -9153,14 +9153,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:18.0.20":
-  version: 18.0.20
-  resolution: "@types/react@npm:18.0.20"
+"@types/react@npm:18.0.21":
+  version: 18.0.21
+  resolution: "@types/react@npm:18.0.21"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: 594bd90a6418837ab755be2449c48fa2031f5080e257fb3b28befdb9afee65db92459399cf1250cb1a37a6e74541edbccada16f56b829ce4fd951be3b23e2a3b
+  checksum: cfe65f3291a62c86b342935df70943c222a4a70b3c74bfb45c1acb7bec47a583c9832b4628313baf0c312447c08baa6353a6f39313b0624b6eb7c1251cf5a0a0
   languageName: node
   linkType: hard
 
