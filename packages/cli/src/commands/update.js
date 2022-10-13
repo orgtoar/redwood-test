@@ -156,7 +156,8 @@ async function getUpdateVersionStatus() {
   }
 
   // Determine if the user has a tag (e.g. -rc, -canary), if so extract the tag from the version
-  let tag = ''
+  let tag
+
   if (localVersion.includes('-')) {
     tag = extractTagFromVersion(localVersion)
 
@@ -201,6 +202,7 @@ export function isUpdateCheckDue() {
 
 export function shouldShowUpgradeAvailableMessage() {
   const updateData = readUpgradeFile()
+
   return (
     updateData.upgradeAvailable &&
     updateData.skipVersion !== updateData.remoteVersion &&
@@ -220,13 +222,20 @@ function writeUpgradeFile(updateData) {
   }
 }
 
+let updateData
+
 function readUpgradeFile() {
+  if (updateData) {
+    return updateData
+  }
+
   try {
-    return JSON.parse(fs.readFileSync(getUpgradeFilePath()))
+    updateData = JSON.parse(fs.readFileSync(getUpgradeFilePath()))
+    return updateData
   } catch (error) {
     if (error.code === 'ENOENT') {
       // default update-data.json file
-      return {
+      updateData = {
         localVersion: '0.0.0',
         remoteVersion: '0.0.0',
         skipVersion: '0.0.0',
@@ -234,6 +243,8 @@ function readUpgradeFile() {
         lastChecked: 946684800000, // 2000-01-01T00:00:00.000Z
         lastShown: 946684800000, // 2000-01-01T00:00:00.000Z
       }
+
+      return updateData
     }
     throw new Error('Could not read update-data.json file!')
   }

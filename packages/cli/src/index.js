@@ -88,29 +88,36 @@ const loadDotEnvDefaultsMiddleware = () => {
 
 const updateCheckerMiddleware = (argv) => {
   const excludedCommands = ['update', 'upgrade', 'ts-to-js']
-  if (excludedCommands.includes(argv._[0])) {
+
+  const [command] = argv._
+
+  if (excludedCommands.includes(command)) {
     return
   }
+
   if (updateCommand.shouldShowUpgradeAvailableMessage()) {
     process.on('exit', () => {
       updateCommand.showUpgradeAvailableMessage()
     })
   }
+
   if (updateCommand.isUpdateCheckDue()) {
     const out = fs.openSync(
       path.join(getPaths().generated.base, 'background-update-checker.out.log'),
       'a'
     )
+
     const err = fs.openSync(
       path.join(getPaths().generated.base, 'background-update-checker.err.log'),
       'a'
     )
+
     const child = spawn('yarn', ['rw', 'update', '--silent'], {
       detached: true,
       stdio: ['ignore', out, err],
       cwd: getPaths().base,
-      shell: process.platform === 'win32',
     })
+
     child.unref()
   }
 }
