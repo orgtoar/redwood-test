@@ -1,18 +1,18 @@
 import { assertSingleExecutionValue, createTestkit } from '@envelop/testing'
-import { makeExecutableSchema } from '@graphql-tools/schema'
-import type { PluginOrDisabledPlugin } from '@graphql-yoga/common'
+import * as GraphQLJS from 'graphql'
 import {
   FieldDefinitionNode,
   getDirectiveValues,
   GraphQLDirective,
 } from 'graphql'
+import { useEngine, Plugin, createSchema } from 'graphql-yoga'
 
 import { GraphQLTypeWithFields } from '../../index'
 import { useRedwoodDirective, DirectiveType } from '../useRedwoodDirective'
 
 //  ===== Test Setup ======
 const AUTH_ERROR_MESSAGE = 'Sorry, you cannot do that'
-const schemaWithDirectiveQueries = makeExecutableSchema({
+const schemaWithDirectiveQueries = createSchema({
   typeDefs: `
     directive @requireAuth(roles: [String]) on FIELD_DEFINITION
     directive @skipAuth on FIELD_DEFINITION
@@ -100,6 +100,7 @@ const schemaWithDirectiveQueries = makeExecutableSchema({
 
 const testInstance = createTestkit(
   [
+    useEngine(GraphQLJS),
     useRedwoodDirective({
       onResolvedValue: () => {
         throw new Error(AUTH_ERROR_MESSAGE)
@@ -114,7 +115,7 @@ const testInstance = createTestkit(
       type: DirectiveType.VALIDATOR,
       name: 'skipAuth',
     }),
-  ] as PluginOrDisabledPlugin[],
+  ] as Plugin[],
   schemaWithDirectiveQueries
 )
 
