@@ -1,0 +1,12 @@
+diff --git a/packages/api-server/src/plugins/lambdaLoader.ts b/packages/api-server/src/plugins/lambdaLoader.ts
+index b5693a89c..0443e1152 100644
+--- a/packages/api-server/src/plugins/lambdaLoader.ts
++++ b/packages/api-server/src/plugins/lambdaLoader.ts
+@@ -1,5 +1,7 @@
+ import path from 'path'
+ 
++// test
++
+ import c from 'ansi-colors'
+ import type { Handler } from 'aws-lambda'
+ import { FastifyReply, FastifyRequest, RequestGenericInterface } from 'fastify'
