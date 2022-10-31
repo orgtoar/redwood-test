@@ -83,6 +83,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: log stuff
+        run: |
+          echo ${{ github.workspace }}
+          echo "${{ github.workspace }}"
+
       - name: 📁 Create a temporary directory
         id: createpath
         run: |
@@ -112,7 +117,9 @@ jobs:
         uses: cypress-io/github-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CYPRESS_RW_PATH:  "${{ steps.createpath.outputs.project_path }}"
+          CYPRESS_RW_PATH: "${{ steps.createpath.outputs.project_path }}"
+          CYPRESS_RWFW_PATH: ${{ github.workspace }}
+          CYPRESS_RWFW_PATH2: "${{ github.workspace }}"
         with:
           # We've already installed dependencies.
           install: false
@@ -124,6 +131,10 @@ jobs:
           spec: |
              cypress/e2e/01-tutorial/*.cy.js
              cypress/e2e/04-logger/*.cy.js
+
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
 
   tutorial-e2e-docs:
     needs: only-doc-changes

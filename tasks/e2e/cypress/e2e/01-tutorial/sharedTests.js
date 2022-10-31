@@ -124,6 +124,14 @@ export const test_dynamic = () =>
     cy.exec(`cd ${BASE_DIR}; yarn rw prisma migrate dev`)
     cy.exec(`cd ${BASE_DIR}; yarn rw g scaffold post --force`)
 
+    cy.exec(`echo ${Cypress.env()}`)
+
+    cy.exec(
+      `cd ${BASE_DIR}; RWFW_PATH=${Cypress.env(
+        'RWFW_PATH'
+      )} yarn rwfw project:copy`
+    )
+
     // Wait for API server to be available.
     waitForApiSide()
     cy.visit('http://localhost:8910/posts')
