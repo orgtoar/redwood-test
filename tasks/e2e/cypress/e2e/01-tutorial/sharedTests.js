@@ -114,10 +114,6 @@ export const test_layouts = () =>
 
 export const test_dynamic = () =>
   it('4. Getting Dynamic', () => {
-    cy.exec(`echo ${Cypress.env()}`)
-    cy.exec(`echo '${JSON.stringify(Cypress.env())}' > /tmp/cypress_env_echo`)
-    cy.exec(`echo ${BASE_DIR} > /tmp/cypress_base_dir`)
-
     // https://redwoodjs.com/docs/tutorial/chapter2/getting-dynamic
     cy.writeFile(path.join(BASE_DIR, 'api/db/schema.prisma'), Step4_1_DbSchema)
     cy.exec(`rm ${BASE_DIR}/api/db/dev.db`, { failOnNonZeroExit: false })
@@ -128,12 +124,13 @@ export const test_dynamic = () =>
     cy.exec(`cd ${BASE_DIR}; yarn rw prisma migrate dev`)
     cy.exec(`cd ${BASE_DIR}; yarn rw g scaffold post --force`)
 
-    const RWFW_PATH = Cypress.env('RWFW_PATH')
-    cy.exec(`echo ${RWFW_PATH} > /tmp/cypress_rwfw_path`)
-    const projectCopyCmd = `cd ${BASE_DIR}; ` + `RWFW_PATH=${RWFW_PATH} yarn rwfw project:copy`
-    cy.exec(`echo "${projectCopyCmd}" > /tmp/cypress_project_copy_cmd`)
+    cy.exec(`echo ${Cypress.env()}`)
 
-    cy.exec(projectCopyCmd)
+    cy.exec(
+      `cd ${BASE_DIR}; RWFW_PATH=${Cypress.env(
+        'RWFW_PATH'
+      )} yarn rwfw project:copy`
+    )
 
     // Wait for API server to be available.
     waitForApiSide()
