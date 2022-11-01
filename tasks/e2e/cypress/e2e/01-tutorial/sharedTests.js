@@ -115,7 +115,7 @@ export const test_layouts = () =>
 export const test_dynamic = () =>
   it('4. Getting Dynamic', () => {
     cy.exec(`echo ${Cypress.env()}`)
-    cy.exec(`echo ${Cypress.env()} > /tmp/cypress_env_echo`)
+    cy.exec(`echo ${JSON.stringify(Cypress.env(), undefined, 2)} > /tmp/cypress_env_echo`)
 
     // https://redwoodjs.com/docs/tutorial/chapter2/getting-dynamic
     cy.writeFile(path.join(BASE_DIR, 'api/db/schema.prisma'), Step4_1_DbSchema)
