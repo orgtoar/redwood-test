@@ -114,6 +114,9 @@ export const test_layouts = () =>
 
 export const test_dynamic = () =>
   it('4. Getting Dynamic', () => {
+    cy.exec(`echo ${Cypress.env()}`)
+    cy.exec(`echo ${Cypress.env()} > /tmp/cypress_env_echo`)
+
     // https://redwoodjs.com/docs/tutorial/chapter2/getting-dynamic
     cy.writeFile(path.join(BASE_DIR, 'api/db/schema.prisma'), Step4_1_DbSchema)
     cy.exec(`rm ${BASE_DIR}/api/db/dev.db`, { failOnNonZeroExit: false })
@@ -123,8 +126,6 @@ export const test_dynamic = () =>
     )
     cy.exec(`cd ${BASE_DIR}; yarn rw prisma migrate dev`)
     cy.exec(`cd ${BASE_DIR}; yarn rw g scaffold post --force`)
-
-    cy.exec(`echo ${Cypress.env()}`)
 
     cy.exec(
       `cd ${BASE_DIR}; RWFW_PATH=${Cypress.env(
