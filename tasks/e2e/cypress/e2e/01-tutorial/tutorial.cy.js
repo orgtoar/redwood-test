@@ -30,31 +30,12 @@ describe('The Redwood Tutorial - Golden path edition', () => {
   after(() => {
     cy.exec(
       `cd ${BASE_DIR}; git add . && git commit -a --message=01-tutorial`,
-      { failOnNonZeroExit: false }
-    ).then((res) => {
-      cy.task('log', res.stdout)
-      cy.task('log', res.stderr)
-    })
+      {
+        failOnNonZeroExit: true,
+      }
+    )
   })
   it('0. Starting Development', () => {
-    cy.task('log', '')
-    cy.task('log', { env: Cypress.env() })
-    cy.task('log', '')
-
-    cy.task('log', '')
-    cy.task('log', 'doing rwfw project:copy')
-    cy.exec(
-      `cd ${BASE_DIR}; RWFW_PATH=${Cypress.env(
-        'RWFW_PATH'
-      )} yarn rwfw project:copy`
-    ).then((res) => {
-      cy.task('log', res.code)
-      cy.task('log', res.stdout)
-      cy.task('log', res.stderr)
-    })
-    cy.task('log', 'done')
-    cy.task('log', '')
-
     // disable auth
     // cy.writeFile(
     //   path.join(BASE_DIR, 'api/src/lib/auth.js'),
@@ -80,13 +61,13 @@ describe('The Redwood Tutorial - Golden path edition', () => {
     cy.get('h1', { timeout: 10000 }).should('contain', 'Welcome to')
   })
 
-  // test_first_page()
-  // test_pages()
-  // test_layouts()
-  // test_dynamic()
-  // test_cells()
-  // test_routing_params()
-  // test_forms()
-  // test_saving_data()
+  test_first_page()
+  test_pages()
+  test_layouts()
+  test_dynamic()
+  test_cells()
+  test_routing_params()
+  test_forms()
+  test_saving_data()
   // test_auth_cell_failure()
 })
