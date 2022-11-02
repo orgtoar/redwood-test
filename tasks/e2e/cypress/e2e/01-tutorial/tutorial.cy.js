@@ -28,12 +28,11 @@ describe('The Redwood Tutorial - Golden path edition', () => {
   // TODO: https://redwoodjs.com/docs/tutorial/chapter3/saving-data
   // TODO: https://redwoodjs.com/docs/tutorial/chapter4/administration
   after(() => {
-    cy.exec(
-      `cd ${BASE_DIR}; git add . && git commit -a --message=01-tutorial`,
-      {
-        failOnNonZeroExit: true,
-      }
+    const { stdout, stderr } = cy.exec(
+      `cd ${BASE_DIR}; git add . && git commit -a --message=01-tutorial`
     )
+    cy.task('log', stdout)
+    cy.task('log', stderr)
   })
   it('0. Starting Development', () => {
     cy.task('log', '')
