@@ -124,22 +124,6 @@ export const test_dynamic = () =>
     cy.exec(`cd ${BASE_DIR}; yarn rw prisma migrate dev`)
     cy.exec(`cd ${BASE_DIR}; yarn rw g scaffold post --force`)
 
-    cy.task('log', '')
-    cy.task('log', { env: Cypress.env() })
-    cy.task('log', '')
-    cy.task('log', 'doing rwfw project:copy')
-    cy.exec(
-      `cd ${BASE_DIR}; RWFW_PATH=${Cypress.env(
-        'RWFW_PATH'
-      )} yarn rwfw project:copy`
-    ).then((res) => {
-      cy.task('log', res.code)
-      cy.task('log', res.stdout)
-      cy.task('log', res.stderr)
-    })
-    cy.task('log', 'done')
-    cy.task('log', '')
-
     // Wait for API server to be available.
     waitForApiSide()
     cy.visit('http://localhost:8910/posts')
