@@ -65,6 +65,16 @@ const createRedwoodJSApp = ({ yarn1 }) => {
         stdio: 'inherit',
       }
     )
+
+    // add prisma resolution
+    const packageJSONPath = path.join(REDWOOD_PROJECT_DIRECTORY, 'package.json')
+    const packageJSON = fs.readJSONSync(packageJSONPath)
+    packageJSON.resolutions = {
+      prisma: '4.5.0',
+      '@prisma/client': '4.5.0',
+      '@prisma/internals': '4.5.0',
+    }
+    fs.writeFileSync(packageJSONPath, JSON.stringify(packageJSON, null, 2))
   } catch (e) {
     console.error('Error: Could not create Redwood Project')
     console.error(e)
