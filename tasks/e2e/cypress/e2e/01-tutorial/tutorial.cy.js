@@ -28,12 +28,13 @@ describe('The Redwood Tutorial - Golden path edition', () => {
   // TODO: https://redwoodjs.com/docs/tutorial/chapter3/saving-data
   // TODO: https://redwoodjs.com/docs/tutorial/chapter4/administration
   after(() => {
-    const { stdout, stderr } = cy.exec(
+    cy.exec(
       `cd ${BASE_DIR}; git add . && git commit -a --message=01-tutorial`,
       { failOnNonZeroExit: false }
-    )
-    cy.task('log', stdout)
-    cy.task('log', stderr)
+    ).then((res) => {
+      cy.task('log', res.stdout)
+      cy.task('log', res.stderr)
+    })
   })
   it('0. Starting Development', () => {
     cy.task('log', '')
@@ -42,14 +43,15 @@ describe('The Redwood Tutorial - Golden path edition', () => {
 
     cy.task('log', '')
     cy.task('log', 'doing rwfw project:copy')
-    const { code, stdout, stderr } = cy.exec(
+    cy.exec(
       `cd ${BASE_DIR}; RWFW_PATH=${Cypress.env(
         'RWFW_PATH'
       )} yarn rwfw project:copy`
-    )
-    cy.task('log', code)
-    cy.task('log', stdout)
-    cy.task('log', stderr)
+    ).then((res) => {
+      cy.task('log', res.code)
+      cy.task('log', res.stdout)
+      cy.task('log', res.stderr)
+    })
     cy.task('log', 'done')
     cy.task('log', '')
 
