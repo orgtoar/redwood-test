@@ -118,8 +118,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CYPRESS_RW_PATH: "${{ steps.createpath.outputs.project_path }}"
-          CYPRESS_RWFW_PATH: ${{ github.workspace }}
-          CYPRESS_RWFW_PATH2: "${{ github.workspace }}"
+          CYPRESS_RWFW_PATH: "${{ github.workspace }}"
         with:
           # We've already installed dependencies.
           install: false
@@ -132,9 +131,9 @@ jobs:
              cypress/e2e/01-tutorial/*.cy.js
              cypress/e2e/04-logger/*.cy.js
 
-      - name: Setup tmate session
-        if: ${{ failure() }}
-        uses: mxschmitt/action-tmate@v3
+      # - name: Setup tmate session
+      #   if: ${{ failure() }}
+      #   uses: mxschmitt/action-tmate@v3
 
   tutorial-e2e-docs:
     needs: only-doc-changes
