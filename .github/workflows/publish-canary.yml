@@ -42,14 +42,24 @@ jobs:
           TAG='canary' && [[ "$GITHUB_REF_NAME" = 'next' ]] && TAG='next'
           echo "Publishing $TAG"
           echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
-          yarn lerna publish --include-merged-tags \
-                             --canary \
-                             --preid $TAG \
-                             --dist-tag $TAG \
-                             --force-publish \
-                             --loglevel verbose \
-                             --no-git-reset \
-                             --yes
+
+          args=(
+            --include-merged-tags
+            --canary
+            --preid "$TAG"
+            --dist-tag "$TAG"
+            --force-publish
+            --loglevel verbose
+            --no-git-reset
+            --yes
+          )
+
+          if [[ "$GITHUB_REF_NAME" = 'main' ]]; then
+            args+=(--premajor)
+          fi
+
+          yarn lerna publish "${args[@]}"
+
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
