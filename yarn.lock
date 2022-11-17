@@ -3458,9 +3458,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-tools/executor@npm:0.0.7":
-  version: 0.0.7
-  resolution: "@graphql-tools/executor@npm:0.0.7"
+"@graphql-tools/executor@npm:0.0.8":
+  version: 0.0.8
+  resolution: "@graphql-tools/executor@npm:0.0.8"
   dependencies:
     "@graphql-tools/utils": 9.1.0
     "@graphql-typed-document-node/core": 3.1.1
@@ -3469,7 +3469,7 @@ __metadata:
     value-or-promise: 1.0.11
   peerDependencies:
     graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
-  checksum: 0476eee8c1db523a553c67eae1b88590fabd53faa85073f708b601daea541640cba3549abd1e6c722104d4db60583d6527824ed05612a76287fd40da5c112c81
+  checksum: 60626bbb02c1dc64878a9e47d57fd6a58ebd37a8894ed59b4cc65b801e6b6fa2e04a35f95602924ae958a57d181a23b3bd5dece137b865cce5e1c4839ce8ad39
   languageName: node
   linkType: hard
 
@@ -7023,7 +7023,7 @@ __metadata:
     graphql: 16.6.0
     graphql-scalars: 1.20.1
     graphql-tag: 2.12.6
-    graphql-yoga: 3.0.0-next.11
+    graphql-yoga: 3.0.0-next.12
     jest: 29.3.1
     jsonwebtoken: 8.5.1
     lodash.merge: 4.6.2
@@ -10600,6 +10600,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@whatwg-node/fetch@npm:0.5.3, @whatwg-node/fetch@npm:^0.5.0":
+  version: 0.5.3
+  resolution: "@whatwg-node/fetch@npm:0.5.3"
+  dependencies:
+    "@peculiar/webcrypto": ^1.4.0
+    abort-controller: ^3.0.0
+    busboy: ^1.6.0
+    form-data-encoder: ^1.7.1
+    formdata-node: ^4.3.1
+    node-fetch: ^2.6.7
+    undici: ^5.12.0
+    web-streams-polyfill: ^3.2.0
+  checksum: 2893c35e4a8fec2c38272f98b30815fb04fc7fd7012a6675b565b11bc5a0292783c7924d6ff84ced451662e9dc575f30720d6dd2e1a75b3b673b72b822800ffc
+  languageName: node
+  linkType: hard
+
 "@whatwg-node/fetch@npm:^0.3.0":
   version: 0.3.2
   resolution: "@whatwg-node/fetch@npm:0.3.2"
@@ -10617,31 +10633,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@whatwg-node/fetch@npm:^0.5.0":
-  version: 0.5.3
-  resolution: "@whatwg-node/fetch@npm:0.5.3"
+"@whatwg-node/server@npm:0.4.16":
+  version: 0.4.16
+  resolution: "@whatwg-node/server@npm:0.4.16"
   dependencies:
-    "@peculiar/webcrypto": ^1.4.0
-    abort-controller: ^3.0.0
-    busboy: ^1.6.0
-    form-data-encoder: ^1.7.1
-    formdata-node: ^4.3.1
-    node-fetch: ^2.6.7
-    undici: ^5.12.0
-    web-streams-polyfill: ^3.2.0
-  checksum: 2893c35e4a8fec2c38272f98b30815fb04fc7fd7012a6675b565b11bc5a0292783c7924d6ff84ced451662e9dc575f30720d6dd2e1a75b3b673b72b822800ffc
-  languageName: node
-  linkType: hard
-
-"@whatwg-node/server@npm:0.4.14":
-  version: 0.4.14
-  resolution: "@whatwg-node/server@npm:0.4.14"
-  dependencies:
-    "@whatwg-node/fetch": 0.5.1
+    "@whatwg-node/fetch": 0.5.3
     tslib: ^2.3.1
   peerDependencies:
     "@types/node": ^18.0.6
-  checksum: c615689673e66e7cc4beb951a796c52545bccf3780eb624d39242d73da6ea12f9efdf1306c4fec7e36db2520c7fe713901f522356fd23e99fb4102a4bd7b7187
+  checksum: 42b0e2d854fbf7c947aef9e7e3f1255ec64868cfadc4bdd29158996c0a5c21679c093a964f8fc5057e482623415f63c6534e61130fd4a8208d7a72393dec75d8
   languageName: node
   linkType: hard
 
@@ -18777,24 +18777,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-yoga@npm:3.0.0-next.11":
-  version: 3.0.0-next.11
-  resolution: "graphql-yoga@npm:3.0.0-next.11"
+"graphql-yoga@npm:3.0.0-next.12":
+  version: 3.0.0-next.12
+  resolution: "graphql-yoga@npm:3.0.0-next.12"
   dependencies:
     "@envelop/core": 3.0.3
     "@envelop/parser-cache": 5.0.3
     "@envelop/validation-cache": 5.0.3
-    "@graphql-tools/executor": 0.0.7
+    "@graphql-tools/executor": 0.0.8
     "@graphql-tools/schema": ^9.0.0
     "@graphql-tools/utils": ^9.0.1
     "@graphql-yoga/subscription": ^3.0.0-next.0
-    "@whatwg-node/fetch": 0.5.1
-    "@whatwg-node/server": 0.4.14
+    "@whatwg-node/fetch": 0.5.3
+    "@whatwg-node/server": 0.4.16
     dset: ^3.1.1
     tslib: ^2.3.1
   peerDependencies:
     graphql: ^15.2.0 || ^16.0.0
-  checksum: 059c152b9ef59389f0c010d4297404c84fd367e7a612716934f5515e2d4145be83184706364c36e0d05eee95ea6d3b1d289eabc239f7c70c43c36c2dce9fa46a
+  checksum: 6fb3cd5f0e1ae93db42cf99520cafca544be9373e82954db0cf3fd01951ca4dab76208ba8ae7d2d156c0913216022c72e568effd19e3de1fbbefea1a16929f5e
   languageName: node
   linkType: hard
 
