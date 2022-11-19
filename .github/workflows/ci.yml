@@ -166,7 +166,7 @@ jobs:
           YARN_ENABLE_IMMUTABLE_INSTALLS: false
 
       - name: 🎭 Install playwright dependencies
-        run: npx playwright install --with-deps chromium
+        run: npx playwright@1.27.1 install --with-deps chromium
 
       - name: Run `rw build` without prerender
         run: |
@@ -180,7 +180,7 @@ jobs:
 
       - name: Run smoke tests on 'rw dev', 'rw serve', 'rw storybook'
         working-directory: ./tasks/smoke-test
-        run: npx playwright test --project ${{ matrix.os == 'ubuntu-latest' && 'replay-chromium' || 'chromium' }} --reporter @replayio/playwright/reporter,line
+        run: npx playwright@1.27.1 test --project ${{ matrix.os == 'ubuntu-latest' && 'replay-chromium' || 'chromium' }} --reporter @replayio/playwright/reporter,line
         env:
           PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
           REDWOOD_DISABLE_TELEMETRY: 1
