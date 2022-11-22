@@ -279,7 +279,11 @@ export const createGraphQLHandler = ({
      *
      * @see: https://www.rfc-editor.org/rfc/rfc7540#section-8.1.2
      */
-    lambdaResponse.headers['content-type'] = 'application/json'
+    // DT: Yoga v3 uses `application/graphql-response+json; charset=utf-8`
+    // But we still do want to make sure the header is lowercase.
+    // Comment out for now since GraphiQL doesn't work with this header anymore
+    // because it loads its UI from a CDN and needs text/html to be the response type
+    // lambdaResponse.headers['content-type'] = 'application/json'
 
     return lambdaResponse
   }
