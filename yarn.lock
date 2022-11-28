@@ -6552,7 +6552,7 @@ __metadata:
     "@types/pascalcase": 1.0.1
     "@types/split2": 3.2.1
     "@types/uuid": 8.3.4
-    "@whatwg-node/fetch": 0.5.1
+    "@whatwg-node/fetch": 0.5.3
     aws-lambda: 1.0.7
     base64url: 3.0.1
     core-js: 3.26.1
@@ -6844,7 +6844,7 @@ __metadata:
     "@types/prettier": 2.7.1
     "@types/yargs": 17.0.13
     "@vscode/ripgrep": 1.14.2
-    "@whatwg-node/fetch": 0.5.1
+    "@whatwg-node/fetch": 0.5.3
     core-js: 3.26.1
     deepmerge: 4.2.2
     execa: 5.1.1
@@ -7017,7 +7017,7 @@ __metadata:
     "@types/lodash.merge": 4.6.7
     "@types/lodash.omitby": 4.6.7
     "@types/uuid": 8.3.4
-    "@whatwg-node/fetch": 0.5.1
+    "@whatwg-node/fetch": 0.5.3
     aws-lambda: 1.0.7
     core-js: 3.26.1
     graphql: 16.6.0
@@ -7098,7 +7098,7 @@ __metadata:
     "@redwoodjs/structure": 3.2.0
     "@redwoodjs/web": 3.2.0
     "@types/mime-types": 2.1.1
-    "@whatwg-node/fetch": 0.5.1
+    "@whatwg-node/fetch": 0.5.3
     babel-plugin-ignore-html-and-css-imports: 0.1.0
     babel-plugin-tester: 10.1.0
     cheerio: 1.0.0-rc.12
@@ -7201,7 +7201,7 @@ __metadata:
     "@types/envinfo": 7.8.1
     "@types/uuid": 8.3.4
     "@types/yargs": 17.0.13
-    "@whatwg-node/fetch": 0.5.1
+    "@whatwg-node/fetch": 0.5.3
     ci-info: 3.5.0
     core-js: 3.26.1
     envinfo: 7.8.1
