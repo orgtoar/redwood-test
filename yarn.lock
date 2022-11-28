@@ -2094,53 +2094,40 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@envelop/depth-limit@npm:1.8.0":
-  version: 1.8.0
-  resolution: "@envelop/depth-limit@npm:1.8.0"
+"@envelop/depth-limit@npm:2.0.4":
+  version: 2.0.4
+  resolution: "@envelop/depth-limit@npm:2.0.4"
   dependencies:
     graphql-depth-limit: ^1.1.0
     tslib: ^2.4.0
   peerDependencies:
-    "@envelop/core": ^2.6.0
+    "@envelop/core": ^3.0.4
     graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-  checksum: b56981dc3082b69307087f7ee719141ffb52357a3b50b6ab3ea3dd5a438c6a3c595ec49396af0225ae57ca0fca92433f2dd7d81a064b2cf2f445c52902bd1e42
+  checksum: dd84c0e4ca167345ae1dfa9c4647e16f6e51f3f7442078f848b074a32d85876fc926dfb29b12a66e706b5d4bc41228da342bd7217888c3496f454fa9a84c3144
   languageName: node
   linkType: hard
 
-"@envelop/disable-introspection@npm:3.6.0":
-  version: 3.6.0
-  resolution: "@envelop/disable-introspection@npm:3.6.0"
+"@envelop/disable-introspection@npm:4.0.4":
+  version: 4.0.4
+  resolution: "@envelop/disable-introspection@npm:4.0.4"
   dependencies:
     tslib: ^2.4.0
   peerDependencies:
-    "@envelop/core": ^2.6.0
+    "@envelop/core": ^3.0.4
     graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-  checksum: fa0c3956ba7d44d5108524e12cd442c2f9eb4ba0d6c7e5ff7299879527f605c80a077ccc0efa244f9a3236400d2be73e8406623e54fe7fef95066fea4007761c
+  checksum: 80e82bc380e107e1600fe96eed22d7a7c498be9c2b567ccb68a9bfee8de08f4ce223ff1c39c216ec3dfb625614d597b970f368d22ac426b763faa6ce58709162
   languageName: node
   linkType: hard
 
-"@envelop/filter-operation-type@npm:3.6.0":
-  version: 3.6.0
-  resolution: "@envelop/filter-operation-type@npm:3.6.0"
+"@envelop/filter-operation-type@npm:4.0.4":
+  version: 4.0.4
+  resolution: "@envelop/filter-operation-type@npm:4.0.4"
   dependencies:
     tslib: ^2.4.0
   peerDependencies:
-    "@envelop/core": ^2.6.0
+    "@envelop/core": ^3.0.4
     graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-  checksum: 6401dade04d91814e999a2f338124cf1598839d1c51288fee3609f6e5083ca291f9a624ec0c02bf40408f48d4c67ae4e04071d866d0525cd96a032684ae39618
-  languageName: node
-  linkType: hard
-
-"@envelop/parser-cache@npm:4.7.0":
-  version: 4.7.0
-  resolution: "@envelop/parser-cache@npm:4.7.0"
-  dependencies:
-    lru-cache: ^6.0.0
-    tslib: ^2.4.0
-  peerDependencies:
-    "@envelop/core": ^2.6.0
-    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-  checksum: bc89fa331e559803aac65336942b9c13dede82f2cf34d4430b9b04aa7b855e5359a0f5b86378d84d3fe89ea077ea46176b899e2d79ea7c717227c5fb7257c687
+  checksum: 95b2a3d73cc37bb8b74c4ff0ad8b532f40320f2136fdc0aecbfebceb6e8ce7401fbcc0ef186115500695fc81f607c18498003e93a54e9e8bc0ec1ec45c884138
   languageName: node
   linkType: hard
 
@@ -2157,17 +2144,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@envelop/testing@npm:4.6.0":
-  version: 4.6.0
-  resolution: "@envelop/testing@npm:4.6.0"
+"@envelop/testing@npm:5.0.4":
+  version: 5.0.4
+  resolution: "@envelop/testing@npm:5.0.4"
   dependencies:
     "@graphql-tools/utils": ^8.8.0
     tslib: ^2.4.0
   peerDependencies:
-    "@envelop/core": ^2.6.0
-    "@envelop/types": ^2.4.0
+    "@envelop/core": ^3.0.4
+    "@envelop/types": ^3.0.1
     graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-  checksum: a1ebc30dba1297ffd746deef23973e9bb6bf5cf6490875a854b9533f0dcb1dcdc0f4e70d1a800ce0b56e97183c611b7a95ada0b8c21db033da85403662a1cae5
+  checksum: 49c83d671578796206236ced79c95613b2e072b6bb243a71ea3a804b65f93c2aee7f68d21fe71533a6e31741f6e81573007f0eb33c5bff8827815b35e8ca8e2a
   languageName: node
   linkType: hard
 
@@ -2177,19 +2164,6 @@ __metadata:
   dependencies:
     tslib: ^2.4.0
   checksum: f715d6d565c31cfe221c82e678d23b973dd3321a7ed1f5ab1fad1db332acd7700075e91abe77880020a4b4ec570b30abd3e36c1a15dcc989aff30c605b49f3ec
-  languageName: node
-  linkType: hard
-
-"@envelop/validation-cache@npm:4.7.0":
-  version: 4.7.0
-  resolution: "@envelop/validation-cache@npm:4.7.0"
-  dependencies:
-    lru-cache: ^6.0.0
-    tslib: ^2.4.0
-  peerDependencies:
-    "@envelop/core": ^2.6.0
-    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
-  checksum: d3ea1f4cce498860289d450024b816c253c4a75a369f46c27c00380cc763dec1356fcf64e061fb31cb9a815f65f93803402d1008e8a452f9e460832074e50608
   languageName: node
   linkType: hard
 
@@ -6975,12 +6949,11 @@ __metadata:
     "@babel/cli": 7.19.3
     "@babel/core": 7.20.2
     "@babel/runtime-corejs3": 7.20.1
-    "@envelop/depth-limit": 1.8.0
-    "@envelop/disable-introspection": 3.6.0
-    "@envelop/filter-operation-type": 3.6.0
-    "@envelop/parser-cache": 4.7.0
-    "@envelop/testing": 4.6.0
-    "@envelop/validation-cache": 4.7.0
+    "@envelop/core": 3.0.4
+    "@envelop/depth-limit": 2.0.4
+    "@envelop/disable-introspection": 4.0.4
+    "@envelop/filter-operation-type": 4.0.4
+    "@envelop/testing": 5.0.4
     "@graphql-tools/merge": 8.3.6
     "@graphql-tools/schema": 8.5.1
     "@graphql-tools/utils": 8.12.0
