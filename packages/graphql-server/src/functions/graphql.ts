@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
+import { MaskError } from '@envelop/core'
 import { useDepthLimit } from '@envelop/depth-limit'
 import { useDisableIntrospection } from '@envelop/disable-introspection'
 import { useFilterAllowedOperations } from '@envelop/filter-operation-type'
@@ -8,7 +9,7 @@ import type {
   Context as LambdaContext,
 } from 'aws-lambda'
 import { GraphQLError, GraphQLSchema, OperationTypeNode } from 'graphql'
-import { Plugin, MaskError, useReadinessCheck } from 'graphql-yoga'
+import { Plugin, useReadinessCheck } from 'graphql-yoga'
 import { createYoga } from 'graphql-yoga'
 
 import { RedwoodError } from '@redwoodjs/api'
