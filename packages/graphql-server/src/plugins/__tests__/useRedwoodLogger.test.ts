@@ -2,9 +2,9 @@ import { existsSync, readFileSync, statSync } from 'fs'
 import os from 'os'
 import { join } from 'path'
 
+import { useEngine } from '@envelop/core'
 import { createTestkit } from '@envelop/testing'
 import * as GraphQLJS from 'graphql'
-import { useEngine } from 'graphql-yoga'
 
 import type { Logger, LoggerOptions } from '@redwoodjs/api/logger'
 import { createLogger } from '@redwoodjs/api/logger'

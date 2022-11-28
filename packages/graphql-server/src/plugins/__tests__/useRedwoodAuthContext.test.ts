@@ -1,6 +1,6 @@
+import { useEngine } from '@envelop/core'
 import { createSpiedPlugin, createTestkit } from '@envelop/testing'
 import * as GraphQLJS from 'graphql'
-import { useEngine } from 'graphql-yoga'
 
 import { testSchema, testQuery } from '../__fixtures__/common'
 import { useRedwoodAuthContext } from '../useRedwoodAuthContext'

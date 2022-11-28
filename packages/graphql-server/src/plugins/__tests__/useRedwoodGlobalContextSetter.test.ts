@@ -1,6 +1,6 @@
+import { useEngine } from '@envelop/core'
 import { createTestkit } from '@envelop/testing'
 import * as GraphQLJS from 'graphql'
-import { useEngine } from 'graphql-yoga'
 
 import { context, getAsyncStoreInstance } from '../../index'
 import { testSchema, testQuery } from '../__fixtures__/common'
