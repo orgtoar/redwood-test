@@ -3,11 +3,11 @@ import path from 'node:path'
 import { pathExistsSync } from 'fs-extra'
 import isPortReachable from 'is-port-reachable'
 
-export function waitForServer(port, interval) {
+export function waitForServer(port, interval, host = 'localhost') {
   return new Promise((resolve) => {
     const watchInterval = setInterval(async () => {
       console.log(`Waiting for server at localhost:${port}....`)
-      const isServerUp = await isPortReachable(port, { host: 'localhost' })
+      const isServerUp = await isPortReachable(port, { host })
       if (isServerUp) {
         clearInterval(watchInterval)
         resolve(true)
