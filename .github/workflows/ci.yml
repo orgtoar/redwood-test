@@ -8,7 +8,7 @@ env:
 
 jobs:
   only-doc-changes:
-    if: github.repository == 'redwoodjs/redwood'
+    # if: github.repository == 'redwoodjs/redwood'
     name: 📖 Only doc changes?
     runs-on: ubuntu-latest
     outputs:
@@ -57,7 +57,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         node-version: [14, 16]
-      fail-fast: true
+      fail-fast: false
     name: 🏗 Build, lint, test / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
     runs-on: ${{ matrix.os }}
     steps:
@@ -104,7 +104,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         node-version: [14, 16]
-      fail-fast: true
+      fail-fast: false
     name: 🌲 Tutorial E2E / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
     runs-on: ${{ matrix.os }}
     steps:
@@ -175,7 +175,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         node-version: [14, 16]
-      fail-fast: true
+      fail-fast: false
     name: 👀 Smoke test / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
     runs-on: ${{ matrix.os }}
     env:
