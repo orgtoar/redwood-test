@@ -3,7 +3,6 @@ name: 🦜 Publish Canary
 on:
   push:
     branches: [main, next]
-    # We don't want this to run when we publish a release
     tags-ignore: ['v**']
     # No need to run on docs-only changes
     paths-ignore: ['docs/**']
