@@ -10,12 +10,14 @@ inputs:
   version:
     description: version
     required: true
-  slack-webhook-url:
-    description: 'Slack webhook URL'
-    required: true
 runs:
   using: composite
   steps:
+    - debug:
+      run |
+        echo ${{ toJSON(github) }}
+        echo ${{ toJSON(github.event) }}
+
     - name: Get status emoji
       id: get-status-emoji
       uses: sergeysova/jq-action@v2.2.1
@@ -30,7 +32,6 @@ runs:
             "title": "${{ inputs.title }}",
             "status": "${{ steps.get-status-emoji.outputs.value }} ${{ inputs.status }}",
             "version": "${{ inputs.version }}"
-            "ref": "${{ github.ref }}"
           }
       env:
-        SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook-url }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_PACKAGE_PUBLISHING }}
