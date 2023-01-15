@@ -1,4 +1,4 @@
-name: 🦜 Publish Canary
+name: '🦜 Publish Canary'
 
 on:
   push:
@@ -15,8 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get-version.outputs.value }}
+
     steps:
-      - name: ⏹️ Cancel previous runs
+      - name: '⏹️ Cancel previous runs'
         uses: styfle/cancel-workflow-action@0.11.0
 
       - uses: actions/checkout@v3
