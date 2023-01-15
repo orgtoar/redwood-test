@@ -13,16 +13,17 @@ jobs:
     name: 🏷 Check git tags
     if: github.repository == 'redwoodjs/redwood'
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
-        # Required because lerna uses tags to determine the version.
         with:
+          # `fetch-depth`—number of commits to fetch. `0` fetches all history for all branches and tags.
+          #  This is required because lerna uses tags to determine the version.
           fetch-depth: 0
 
-      - name: Setup node
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
 
       - name: 🏷 Check git tags
         run: |
@@ -44,11 +45,12 @@ jobs:
           yarn dlx semver-compare-cli $CURRENT_TAG lt $BRANCH_TAG
 
   publish-release-candidate:
-    name: 🚢 Publish Release Candidate
+    name: 🏎 Publish Release Candidate
     needs: check-git-tags
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get-version.outputs.value }}
+
     steps:
       - uses: actions/checkout@v3
         with:
@@ -74,7 +76,9 @@ jobs:
       - name: 🚢 Publish
         run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
+
           SEMVER=$(basename $(dirname ${{ github.ref_name }}))
+
           yarn lerna publish pre$SEMVER --include-merged-tags \
                                         --canary \
                                         --preid rc \
@@ -95,11 +99,12 @@ jobs:
   message-slack:
     name: 💬 Message Slack
     needs: publish-release-candidate
-    if: always()
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
+
       - name: 💬 Message Slack
         uses: ./.github/actions/message_slack_publishing
         with:

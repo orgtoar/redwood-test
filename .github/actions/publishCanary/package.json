@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@actions/exec": "1.1.1"
+  },
+  "packageManager": "yarn@3.3.1"
+}

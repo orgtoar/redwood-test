@@ -1,28 +1,26 @@
-name: 🦜 Publish Canary
+name: 🦜 Publish canary
 
 on:
   push:
-    branches: [main, next]
-    # We don't want this to run when we publish a release
+    branches: [main]
+    # We don't want this to run when we publish a release.
     tags-ignore: ['v**']
-    # No need to run on docs-only changes
+    # No need to publish a canary on docs-only changes.
     paths-ignore: ['docs/**']
 
 jobs:
   publish-canary:
-    name: 🦜 Publish Canary
+    name: 🦜 Publish canary
     if: github.repository == 'redwoodjs/redwood'
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get-version.outputs.value }}
-    steps:
-      - name: ⏹️ Cancel previous runs
-        uses: styfle/cancel-workflow-action@0.11.0
 
+    steps:
       - uses: actions/checkout@v3
-        # `fetch-depth`—number of commits to fetch. `0` fetches all history for all branches and tags.
-        #  This is required because lerna uses tags to determine the version
         with:
+          # `fetch-depth`—number of commits to fetch. `0` fetches all history for all branches and tags.
+          #  This is required because lerna uses tags to determine the version
           fetch-depth: 0
 
       - name: 🧶 Setup job
@@ -40,15 +38,10 @@ jobs:
       - name: 🧪 Test
         run: yarn test
 
-      - name: Get publish flags
-        id: get-publish-flags
-        uses: ./.github/actions/get_publish_flags
-
       - name: 🚢 Publish
         run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}" > .npmrc
-
-          yarn lerna publish ${{ steps.get-publish-flags.outputs.flags }}
+          yarn node ./.github/actions/publishCanary.mjs
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
@@ -66,8 +59,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
       - name: 💬 Message Slack
-        uses: ./.github/actions/message_slack_publishing
+        uses: ./.github/actions/message-slack-publishing
         with:
           title: "🦜 Canary Packages"
           status: ${{ needs.publish-canary.result }}
