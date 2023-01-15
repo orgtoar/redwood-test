@@ -1,4 +1,4 @@
-name: Check test project fixture
+name: 🔎 Check test project fixture
 
 on:
   pull_request:
@@ -6,17 +6,14 @@ on:
 
 jobs:
   check-test-project-fixture:
-    name: Check test project fixture
+    name: 🔎 Check test project fixture
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
-      - run: yarn install
-        working-directory: ./.github/actions/check_test_project_fixture
+          node-version: 18
 
-      - name: Check test project fixture
-        uses: ./.github/actions/check_test_project_fixture
-        with:
-          labels: '{ "labels": ${{ toJSON(github.event.pull_request.labels) }} }'
+      - name: 🔎 Check test project fixture
+        run: yarn node ./.github/actions/checkTestProjectFixture/checkTestProjectFixture.mjs

@@ -1,35 +1,32 @@
-import { exec, getExecOutput } from '@actions/exec'
-import core from '@actions/core'
+import { exec, getExecOutput } from "@actions/exec";
+import core from "@actions/core";
 
-const branch = process.env.GITHUB_BASE_REF
+const IGNORE_FILES = [
+  "CHANGELOG.md",
+  "CODE_OF_CONDUCT.md",
+  "CONTRIBUTING.md",
+  "CONTRIBUTORS.md",
+  "LICENSE",
+  "README.md",
+  "SECURITY.md",
+];
 
-await exec(`git fetch origin ${branch}`)
+async function run() {
+  const branch = process.env.GITHUB_BASE_REF;
 
-const { stdout } = await getExecOutput(`git diff origin/${branch} --name-only`)
+  await exec(`git fetch origin ${branch}`);
 
-const changedFiles = stdout.toString().trim().split('\n').filter(Boolean)
+  const { stdout } = await getExecOutput(
+    `git diff origin/${branch} --name-only`,
+  );
 
-for (const changedFile of changedFiles) {
-  if (changedFile.startsWith('docs')) {
-    continue
-  }
+  const changedFiles = stdout.trim().split("\n").filter(Boolean);
 
-  for (const fileToIgnore of [
-    'CHANGELOG.md',
-    'CODE_OF_CONDUCT.md',
-    'CONTRIBUTING.md',
-    'CONTRIBUTORS.md',
-    'LICENSE',
-    'README.md',
-    'SECURITY.md',
-  ]) {
-    if (changedFile === fileToIgnore) {
-      continue
-    }
-  }
+  changedFiles
+    .filter((changedFile) => changedFile.startsWith("docs"))
+    .filter((changedFile) => IGNORE_FILES.includes(changedFile));
 
-  core.setOutput('only-doc-changes', false)
-  process.exit(0)
+  core.setOutput("only-doc-changes", !!changedFiles.length);
 }
 
-core.setOutput('only-doc-changes', true)
+run();
