@@ -15,5 +15,6 @@ jobs:
         with:
           node-version: 18
 
-      - name: 🔎 Check test project fixture
-        run: yarn node ./.github/actions/checkTestProjectFixture/checkTestProjectFixture.mjs
+      - run: |
+          yarn install
+          yarn node ./.github/actions/checkTestProjectFixture/checkTestProjectFixture.mjs
