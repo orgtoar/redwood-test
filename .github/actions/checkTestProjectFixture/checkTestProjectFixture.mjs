@@ -3,8 +3,6 @@
 import { context } from "@actions/github";
 import { exec, getExecOutput } from "@actions/exec";
 
-import boxen from "boxen";
-
 // If a PR changes a file in one of these directories, the fixture may need to be rebuilt.
 const sensitivePaths = [
   // yarn rw g
@@ -22,13 +20,14 @@ async function run() {
   // ------------------------
   // If the PR has the "fixture-ok" label, just pass
   console.log({ labels: context.payload.pull_request.labels })
+  console.log()
 
   const hasFixtureOkLabel = context.payload.pull_request.labels.some((label) =>
     label.name === "fixture-ok"
   );
 
   if (hasFixtureOkLabel) {
-    console.log('The PR has the "fixture-ok" label');
+    console.log('This PR has the "fixture-ok" label');
     return;
   }
 
@@ -40,12 +39,13 @@ async function run() {
   console.log()
 
   const changedFiles = stdout.trim().split("\n").filter(Boolean);
-  const didRebuildFixture = changedFiles.some((file) =>
+
+  const rebuiltFixture = changedFiles.some((file) =>
     file.startsWith("__fixtures__/test-project")
   );
 
-  if (didRebuildFixture) {
-    console.log("The PR rebuilt the test project fixture");
+  if (rebuiltFixture) {
+    console.log("This PR rebuilt the test project fixture");
     return;
   }
 
@@ -72,19 +72,6 @@ async function run() {
   );
 
   process.exitCode = 1;
-}
-
-/**
- * @param {string} message
- */
-function consoleBox(message) {
-  console.log(
-    boxen(message, {
-      padding: { top: 0, bottom: 0, right: 1, left: 1 },
-      margin: 1,
-      borderColor: "gray",
-    }),
-  );
 }
 
 run();
