@@ -2,6 +2,8 @@ const path = require('path')
 
 const findUp = require('findup-sync')
 
+// misc change
+
 // Framework Babel config is monorepo root ./babel.config.js
 // `yarn lint` runs for each workspace, which needs findup for path to root
 const findBabelConfig = (cwd = process.cwd()) => {
