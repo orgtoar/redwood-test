@@ -30,7 +30,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@actions/exec", "npm:1.1.1"],\
             ["@actions/github", "npm:5.1.1"],\
-            ["boxen", "npm:7.0.1"]\
+            ["boxen", "npm:7.0.1"],\
+            ["chalk", "npm:5.2.0"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -400,7 +401,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["root-workspace-0b6124", "workspace:."],\
             ["@actions/exec", "npm:1.1.1"],\
             ["@actions/github", "npm:5.1.1"],\
-            ["boxen", "npm:7.0.1"]\
+            ["boxen", "npm:7.0.1"],\
+            ["chalk", "npm:5.2.0"]\
           ],\
           "linkType": "SOFT"\
         }]\

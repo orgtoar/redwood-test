@@ -2,7 +2,8 @@
   "dependencies": {
     "@actions/exec": "1.1.1",
     "@actions/github": "5.1.1",
-    "boxen": "7.0.1"
-  },
+    "boxen": "7.0.1",
+    "chalk": "5.2.0"
+},
   "packageManager": "yarn@3.3.1"
 }

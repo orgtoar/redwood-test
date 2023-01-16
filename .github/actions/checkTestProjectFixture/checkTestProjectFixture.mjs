@@ -5,6 +5,8 @@ import { exec, getExecOutput } from "@actions/exec";
 
 import boxen from "boxen";
 
+import chalk from 'chalk'
+
 const styles = {
   margin: { top: 1, right: 0, bottom: 1, left: 0 },
   padding: { top: 0, right: 1, bottom: 0, left: 1 },
@@ -14,7 +16,7 @@ const styles = {
 };
 
 function logSuccess(message) {
-  console.log(boxen(message, { ...styles, title: "Ok" }));
+  console.log(boxen(message, { ...styles, title: chalk.green("Ok") }));
 }
 
 // If a PR changes a file in one of these directories, the fixture may need to be rebuilt.
@@ -34,7 +36,6 @@ async function run() {
   // ------------------------
   // If the PR has the "fixture-ok" label, just pass
   console.log({ labels: context.payload.pull_request.labels });
-  console.log();
 
   const hasFixtureOkLabel = context.payload.pull_request.labels.some((label) =>
     label.name === "fixture-ok"
@@ -45,12 +46,14 @@ async function run() {
     return;
   }
 
+  console.log();
+
   // ------------------------
   // Check if the PR rebuilds the fixture
   await exec("git fetch origin main");
   console.log();
   const { stdout } = await getExecOutput("git diff origin/main --name-only");
-  console.log();
+
 
   const changedFiles = stdout.trim().split("\n").filter(Boolean);
   const rebuiltFixture = changedFiles.some((file) =>
