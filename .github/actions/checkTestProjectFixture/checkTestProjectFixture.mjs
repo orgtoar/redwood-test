@@ -7,10 +7,6 @@
 import { exec, getExecOutput } from '@actions/exec'
 import { context } from '@actions/github'
 import boxen from 'boxen'
-import { Chalk } from 'chalk'
-
-const chalk = new Chalk({ level: 1 })
-
 const styles = {
   borderStyle: 'round',
   float: 'left',
@@ -21,7 +17,7 @@ const styles = {
  * @param {string} message
  */
 function logSuccess(message) {
-  console.log(boxen(message, { ...styles, title: chalk.green('Ok') }))
+  console.log(boxen(message, { ...styles, title: `✅ Ok` }))
 }
 
 // If a PR changes a file in one of these directories, the fixture may need to be rebuilt.
@@ -103,7 +99,7 @@ async function run() {
       ].join('\n'),
       {
         ...styles,
-        title: chalk.yellow('Heads up'),
+        title: '👋 Heads up',
       }
     )
   )
