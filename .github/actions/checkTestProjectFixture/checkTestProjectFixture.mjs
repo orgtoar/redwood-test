@@ -92,7 +92,7 @@ async function run() {
           'Otherwise, rebuild the test project fixture (this may take a while), commit the changes, and push:',
         ].join(' '),
         '',
-        'yarn build:test-project --rebuild-fixture',
+        '  yarn build:test-project --rebuild-fixture',
       ].join('\n'),
       {
         ...styles,
