@@ -1,9 +1,9 @@
 import os from 'node:os'
 import path from 'node:path'
-import fs from 'fs-extra'
 
-import { exec } from '@actions/exec'
 import * as core from '@actions/core'
+import { exec } from '@actions/exec'
+import fs from 'fs-extra'
 
 const test_project_path = path.join(
   os.tmpdir(),
@@ -13,7 +13,7 @@ const test_project_path = path.join(
 )
 
 console.log({
-  test_project_path
+  test_project_path,
 })
 
 core.setOutput('test_project_path', test_project_path)
@@ -25,11 +25,13 @@ try {
     !fs.existsSync(path.join(test_project_path, 'web/tsconfig.json')) ||
     !fs.existsSync(path.join(test_project_path, 'api/tsconfig.json'))
   ) {
-    throw ('Test-project is not TypeScript')
+    throw 'Test-project is not TypeScript'
   }
-} catch(e) {
+} catch (e) {
   console.log('********************************')
-  console.error('\nError: Test-project is expected to be TypeScript\nExiting test-project setup.\n')
+  console.error(
+    '\nError: Test-project is expected to be TypeScript\nExiting test-project setup.\n'
+  )
   console.log('********************************')
   process.exit(1)
 }
