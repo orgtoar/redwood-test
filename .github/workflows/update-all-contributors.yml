@@ -19,9 +19,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          # The script commits and pushes to main.
-          # token: ${{ secrets.JTOAR_TOKEN }}
+        # with:
+        #   # The script commits and pushes to main.
+        #   token: ${{ secrets.JTOAR_TOKEN }}
 
       - uses: actions/setup-node@v3
         with:
