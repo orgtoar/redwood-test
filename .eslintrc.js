@@ -168,5 +168,13 @@ module.exports = {
         ],
       },
     },
+    {
+      files: [
+        '.github/actions/checkTestProjectFixture/checkTestProjectFixture.mjs',
+      ],
+      env: {
+        node: true,
+      },
+    },
   ],
 }
