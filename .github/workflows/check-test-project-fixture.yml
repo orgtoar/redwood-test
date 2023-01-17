@@ -1,3 +1,9 @@
+# Check if, based on the changes in a PR, the test project fixture needs to be updated.
+#
+# The test project fixture is used in the "⚙ CI" workflow's "Smoke test" job.
+# It's important to keep it up to date. If it's not updated, we're testing an old version of redwood,
+# which could lead to false positives.
+
 name: 🔎 Check test project fixture
 
 on:
