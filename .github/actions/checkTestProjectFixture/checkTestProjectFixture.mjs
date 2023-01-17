@@ -25,8 +25,6 @@ function logSuccess(message) {
 }
 
 // If a PR changes a file in one of these directories, the fixture may need to be rebuilt.
-// We need the parens for JSDoc to do its thing.
-// See https://stackoverflow.com/questions/64559624/jsdoc-equivalent-to-typescripts-as-const.
 const sensitivePaths = /** @type {const} */ ([
   // yarn rw g
   'packages/cli/src/commands/generate',
@@ -48,26 +46,27 @@ async function run() {
   // ------------------------
   // If the PR has the "fixture-ok" label, just pass
   const { labels } = context.payload.pull_request
-
   const hasFixtureOkLabel = labels.some((label) => label.name === 'fixture-ok')
 
   console.log({ labels, hasFixtureOkLabel })
+  console.log()
 
   if (hasFixtureOkLabel) {
     logSuccess('This PR has the "fixture-ok" label')
     return
   }
 
-  console.log()
-
   // ------------------------
   // Check if the PR rebuilds the fixture
   await exec('git fetch origin main')
   console.log()
 
-  const changedFiles = (
+  const { stdout } = (
     await getExecOutput('git diff origin/main --name-only')
-  ).stdout
+  )
+  console.log()
+
+  const changedFiles = stdout
     .trim()
     .split('\n')
     .filter(Boolean)
