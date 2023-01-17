@@ -1,5 +1,7 @@
 import pascalcase from 'pascalcase'
 
+//test
+
 import { generate as generateTypes } from '@redwoodjs/internal/dist/generate/generate'
 
 import { nameVariants, transformTSToJS } from '../../../lib'
