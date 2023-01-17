@@ -58,15 +58,10 @@ async function run() {
   await exec('git fetch origin main')
   console.log()
 
-  const { stdout } = (
-    await getExecOutput('git diff origin/main --name-only')
-  )
+  const { stdout } = await getExecOutput('git diff origin/main --name-only')
   console.log()
 
-  const changedFiles = stdout
-    .trim()
-    .split('\n')
-    .filter(Boolean)
+  const changedFiles = stdout.trim().split('\n').filter(Boolean)
 
   const rebuiltFixture = changedFiles.some((file) =>
     file.startsWith('__fixtures__/test-project')
@@ -91,12 +86,13 @@ async function run() {
   console.log(
     boxen(
       [
-        'This PR changes files that could affect the test project fixture.',
-        `It may need to be rebuilt. But if you know that it doesn't, add the "fixture-ok" label.`,
-        'Otherwise, rebuild the test project fixture (this may take a while), commit the changes, and push:',
+        [
+          'This PR changes files that could affect the test project fixture.',
+          `It may need to be rebuilt. But if you know that it doesn't, add the "fixture-ok" label.`,
+          'Otherwise, rebuild the test project fixture (this may take a while), commit the changes, and push:',
+        ].join(' '),
         '',
-        '  yarn build:test-project --rebuild-fixture',
-        '',
+        'yarn build:test-project --rebuild-fixture',
       ].join('\n'),
       {
         ...styles,
