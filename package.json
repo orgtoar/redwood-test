@@ -16,6 +16,7 @@
     "e2e": "node ./tasks/run-e2e",
     "lint": "RWJS_CWD=packages/create-redwood-app/template eslint --config .eslintrc.js packages",
     "lint:fix": "yarn lint --fix",
+    "lint:actions": "RWJS_CWD=packages/create-redwood-app/template yarn run eslint --config .eslintrc.js --ignore-pattern \"!.github\" --ignore-pattern \".pnp.*\" --env \"node\" \".github/actions/**/*.mjs\"",
     "project:copy": "node ./tasks/framework-tools/frameworkFilesToProject.mjs",
     "project:deps": "node ./tasks/framework-tools/frameworkDepsToProject.mjs",
     "project:sync": "node ./tasks/framework-tools/frameworkSyncToProject.mjs",
