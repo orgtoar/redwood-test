@@ -7,6 +7,9 @@
 import { exec, getExecOutput } from '@actions/exec'
 import { context } from '@actions/github'
 import boxen from 'boxen'
+import { Chalk } from 'chalk'
+
+const chalk = new Chalk({ level: 1 })
 
 const styles = {
   borderStyle: 'round',
@@ -88,11 +91,11 @@ async function run() {
       [
         [
           'This PR changes files that could affect the test project fixture.',
-          `It may need to be rebuilt. But if you know that it doesn't, add the "fixture-ok" label.`,
+          `It may need to be rebuilt. But if you know that it doesn't, add the ${chalk.green('fixture-ok')} label.`,
           'Otherwise, rebuild the test project fixture (this may take a while), commit the changes, and push:',
         ].join(' '),
         '',
-        '  yarn build:test-project --rebuild-fixture',
+        chalk.green('yarn build:test-project --rebuild-fixture'),
       ].join('\n'),
       {
         ...styles,
