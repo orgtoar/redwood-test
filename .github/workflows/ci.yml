@@ -103,14 +103,14 @@ jobs:
     steps:
       - run: echo "Only doc changes"
 
-  tutorial-e2e:
+  telemetry-crwa:
     needs: check
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
         node-version: [16, 18]
       fail-fast: true
-    name: 🌲 Tutorial E2E / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
+    name: 🔭 Telemetry check - CRWA / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -119,208 +119,239 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: 📁 Create a temporary directory
-        id: createpath
-        run: |
-          project_path=$(mktemp -d -t redwood.XXXXXX)
-          echo "::set-output name=project_path::$project_path"
-          framework_path=$(pwd)
-          echo "::set-output name=framework_path::$framework_path"
+      - name: 📢 Listen for telemetry
+        uses: ./.github/actions/telemetry-check-crwa
 
-      - name: 🌲 Create a Redwood App
-        run: ./tasks/run-e2e ${{ steps.createpath.outputs.project_path }} --no-start
-        env:
-          YARN_ENABLE_IMMUTABLE_INSTALLS: false
-
-      - name: 🐙 Git init in the Redwood App directory
-        run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
-          git init --initial-branch main && git add .
-          git commit -a --message=init
-        working-directory: ${{ steps.createpath.outputs.project_path }}
-
-      - name: Start server in background
-        run: yarn rw dev --no-generate --fwd="--no-open" &
-        working-directory: ${{ steps.createpath.outputs.project_path }}
-
-      - name: 🌲 Run cypress
-        uses: cypress-io/github-action@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CYPRESS_RW_PATH:  "${{ steps.createpath.outputs.project_path }}"
-        with:
-          # We've already installed dependencies.
-          install: false
-          env: true
-          browser: chrome
-          record: false
-          wait-on: ${{ matrix.node-version == 18 && 'http://[::1]:8910' || 'http://localhost:8910' }}
-          working-directory: ./tasks/e2e
-          spec: |
-             cypress/e2e/01-tutorial/*.cy.js
-             cypress/e2e/04-logger/*.cy.js
-
-  tutorial-e2e-docs:
-    needs: only-doc-changes
-    if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node-version: [16, 18]
-    name: 🌲 Tutorial E2E / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
-    runs-on: ${{ matrix.os }}
-    steps:
-      - run: echo "Only doc changes"
-
-  smoke-test:
-    needs: check
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-        node-version: [16, 18]
-      fail-fast: true
-    name: 👀 Smoke test / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
-    runs-on: ${{ matrix.os }}
-    env:
-      REDWOOD_CI: 1
-      REDWOOD_VERBOSE_TELEMETRY: 1
-      # This makes sure that playwright dependencies are cached in node_modules.
-      PLAYWRIGHT_BROWSERS_PATH: 0
-    steps:
-      - uses: actions/checkout@v3
-      - name: 🧶 Set up job
-        uses: ./.github/actions/set-up-job
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: 🌲 Setup test project
-        id: setup_test_project
-        uses: ./.github/actions/setup_test_project
-        env:
-          REDWOOD_DISABLE_TELEMETRY: 1
-          YARN_ENABLE_IMMUTABLE_INSTALLS: false
-
-      - name: 🎭 Install playwright dependencies
-        run: npx playwright install --with-deps chromium
-
-      - name: Run `rw build` without prerender
-        run: |
-          yarn rw build --no-prerender
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run `rw prerender`
-        run: |
-          yarn rw prerender --verbose
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run smoke tests on 'rw dev', 'rw serve', 'rw storybook'
-        working-directory: ./tasks/smoke-test
-        run: npx playwright test --project ${{ matrix.os == 'ubuntu-latest' && 'replay-chromium' || 'chromium' }} --reporter @replayio/playwright/reporter,line
-        env:
-          PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
-          REDWOOD_DISABLE_TELEMETRY: 1
-          RECORD_REPLAY_METADATA_TEST_RUN_TITLE: Smoke test / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
-          RECORD_REPLAY_TEST_METRICS: 1
-
-      - name: Run `rw info`
-        run: |
-          yarn rw info
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run `rw lint`
-        run: |
-          yarn rw lint ./api/src --fix
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "rw test api"
-        run: |
-          yarn rw test api --no-watch
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "rw test web"
-        run: |
-          yarn rw test web --no-watch
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "rw check"
-        run: |
-          yarn rw check
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "rw storybook"
-        run: |
-          yarn rw sb --smoke-test
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "rw exec"
-        run: |
-          yarn rw g script testScript && yarn rw exec testScript
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "prisma generate"
-        run: |
-          yarn rw prisma generate
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "rw data-migrate"
-        run: |
-          yarn rw dataMigrate up
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "data-migrate install"
-        run: |
-          yarn rw data-migrate install
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "prisma migrate"
-        run: |
-          yarn rw prisma migrate dev --name ci-test
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run `rw deploy --help`
-        run: yarn rw setup deploy --help && yarn rw deploy --help
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run `rw setup ui --help`
-        run: yarn rw setup --help && yarn rw setup ui --help
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "g page"
-        run: |
-          yarn rw g page ciTest
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "g sdl"
-        run: |
-          yarn rw g sdl userExample
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "rw type-check"
-        run: |
-          yarn rw type-check
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Throw Error | Run `rw g sdl <model>`
-        run: |
-          yarn rw g sdl DoesNotExist
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-        continue-on-error: true
-
-      - name: Upload Replays
-        if: always()
-        uses: replayio/action-upload@v0.4.7
-        with:
-          api-key: rwk_cZn4WLe8106j6tC5ygNQxDpxAwCLpFo5oLQftiRN7OP
-
-  smoke-test-docs:
+  telemetry-crwa-docs:
     needs: only-doc-changes
     if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
         node-version: [16, 18]
-    name: 👀 Smoke test / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
+    name: 🔭 Telemetry check - CRWA / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
     runs-on: ${{ matrix.os }}
     steps:
       - run: echo "Only doc changes"
+
+  # tutorial-e2e:
+  #   needs: check
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest]
+  #       node-version: [16, 18]
+  #     fail-fast: true
+  #   name: 🌲 Tutorial E2E / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: 🧶 Set up job
+  #       uses: ./.github/actions/set-up-job
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
+
+  #     - name: 📁 Create a temporary directory
+  #       id: createpath
+  #       run: |
+  #         project_path=$(mktemp -d -t redwood.XXXXXX)
+  #         echo "::set-output name=project_path::$project_path"
+  #         framework_path=$(pwd)
+  #         echo "::set-output name=framework_path::$framework_path"
+
+  #     - name: 🌲 Create a Redwood App
+  #       run: ./tasks/run-e2e ${{ steps.createpath.outputs.project_path }} --no-start
+  #       env:
+  #         YARN_ENABLE_IMMUTABLE_INSTALLS: false
+
+  #     - name: 🐙 Git init in the Redwood App directory
+  #       run: |
+  #         git config --global user.email "you@example.com"
+  #         git config --global user.name "Your Name"
+  #         git init --initial-branch main && git add .
+  #         git commit -a --message=init
+  #       working-directory: ${{ steps.createpath.outputs.project_path }}
+
+  #     - name: Start server in background
+  #       run: yarn rw dev --no-generate --fwd="--no-open" &
+  #       working-directory: ${{ steps.createpath.outputs.project_path }}
+
+  #     - name: 🌲 Run cypress
+  #       uses: cypress-io/github-action@v5
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         CYPRESS_RW_PATH:  "${{ steps.createpath.outputs.project_path }}"
+  #       with:
+  #         # We've already installed dependencies.
+  #         install: false
+  #         env: true
+  #         browser: chrome
+  #         record: false
+  #         wait-on: ${{ matrix.node-version == 18 && 'http://[::1]:8910' || 'http://localhost:8910' }}
+  #         working-directory: ./tasks/e2e
+  #         spec: |
+  #            cypress/e2e/01-tutorial/*.cy.js
+  #            cypress/e2e/04-logger/*.cy.js
+
+  # tutorial-e2e-docs:
+  #   needs: only-doc-changes
+  #   if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest]
+  #       node-version: [16, 18]
+  #   name: 🌲 Tutorial E2E / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - run: echo "Only doc changes"
+
+  # smoke-test:
+  #   needs: check
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest, windows-latest]
+  #       node-version: [16, 18]
+  #     fail-fast: true
+  #   name: 👀 Smoke test / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
+  #   runs-on: ${{ matrix.os }}
+  #   env:
+  #     REDWOOD_CI: 1
+  #     REDWOOD_VERBOSE_TELEMETRY: 1
+  #     # This makes sure that playwright dependencies are cached in node_modules.
+  #     PLAYWRIGHT_BROWSERS_PATH: 0
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: 🧶 Set up job
+  #       uses: ./.github/actions/set-up-job
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
+
+  #     - name: 🌲 Setup test project
+  #       id: setup_test_project
+  #       uses: ./.github/actions/setup_test_project
+  #       env:
+  #         REDWOOD_DISABLE_TELEMETRY: 1
+  #         YARN_ENABLE_IMMUTABLE_INSTALLS: false
+
+  #     - name: 🎭 Install playwright dependencies
+  #       run: npx playwright install --with-deps chromium
+
+  #     - name: Run `rw build` without prerender
+  #       run: |
+  #         yarn rw build --no-prerender
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+
+  #     - name: Run `rw prerender`
+  #       run: |
+  #         yarn rw prerender --verbose
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+
+  #     - name: Run smoke tests on 'rw dev', 'rw serve', 'rw storybook'
+  #       working-directory: ./tasks/smoke-test
+  #       run: npx playwright test --project ${{ matrix.os == 'ubuntu-latest' && 'replay-chromium' || 'chromium' }} --reporter @replayio/playwright/reporter,line
+  #       env:
+  #         PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
+  #         REDWOOD_DISABLE_TELEMETRY: 1
+  #         RECORD_REPLAY_METADATA_TEST_RUN_TITLE: Smoke test / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
+  #         RECORD_REPLAY_TEST_METRICS: 1
+
+  #     - name: Run `rw info`
+  #       run: |
+  #         yarn rw info
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+
+  #     - name: Run `rw lint`
+  #       run: |
+  #         yarn rw lint ./api/src --fix
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+
+  #     - name: Run "rw test api"
+  #       run: |
+  #         yarn rw test api --no-watch
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+
+  #     - name: Run "rw test web"
+  #       run: |
+  #         yarn rw test web --no-watch
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+
+  #     - name: Run "rw check"
+  #       run: |
+  #         yarn rw check
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+
+  #     - name: Run "rw storybook"
+  #       run: |
+  #         yarn rw sb --smoke-test
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+
+  #     - name: Run "rw exec"
+  #       run: |
+  #         yarn rw g script testScript && yarn rw exec testScript
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+
+  #     - name: Run "prisma generate"
+  #       run: |
+  #         yarn rw prisma generate
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+
+  #     - name: Run "rw data-migrate"
+  #       run: |
+  #         yarn rw dataMigrate up
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+
+  #     - name: Run "data-migrate install"
+  #       run: |
+  #         yarn rw data-migrate install
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+
+  #     - name: Run "prisma migrate"
+  #       run: |
+  #         yarn rw prisma migrate dev --name ci-test
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+
+  #     - name: Run `rw deploy --help`
+  #       run: yarn rw setup deploy --help && yarn rw deploy --help
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+
+  #     - name: Run `rw setup ui --help`
+  #       run: yarn rw setup --help && yarn rw setup ui --help
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+
+  #     - name: Run "g page"
+  #       run: |
+  #         yarn rw g page ciTest
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+
+  #     - name: Run "g sdl"
+  #       run: |
+  #         yarn rw g sdl userExample
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+
+  #     - name: Run "rw type-check"
+  #       run: |
+  #         yarn rw type-check
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+
+  #     - name: Throw Error | Run `rw g sdl <model>`
+  #       run: |
+  #         yarn rw g sdl DoesNotExist
+  #       working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+  #       continue-on-error: true
+
+  #     - name: Upload Replays
+  #       if: always()
+  #       uses: replayio/action-upload@v0.4.7
+  #       with:
+  #         api-key: rwk_cZn4WLe8106j6tC5ygNQxDpxAwCLpFo5oLQftiRN7OP
+
+  # smoke-test-docs:
+  #   needs: only-doc-changes
+  #   if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest, windows-latest]
+  #       node-version: [16, 18]
+  #   name: 👀 Smoke test / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - run: echo "Only doc changes"

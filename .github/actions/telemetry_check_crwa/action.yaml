@@ -1,0 +1,5 @@
+name: 'Listen for CRWA telemetry'
+description: 'Builds and executes the CRWA while listening for redirected telemetry'
+runs:
+  main: 'telemetry_check_crwa.mjs'
+  working-directory: ./packages/create-redwood-app/
