@@ -120,7 +120,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: 📢 Listen for telemetry
-        working-directory: ./packages/create-redwood-app
         uses: ./.github/actions/telemetry_check_crwa
 
   telemetry-crwa-docs:
