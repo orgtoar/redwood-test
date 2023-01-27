@@ -120,7 +120,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: 📢 Listen for telemetry
-        uses: ./.github/actions/telemetry-check-crwa
+        uses: ./.github/actions/telemetry_check_crwa
 
   telemetry-crwa-docs:
     needs: only-doc-changes
