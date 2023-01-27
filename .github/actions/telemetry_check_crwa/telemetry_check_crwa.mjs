@@ -21,7 +21,9 @@ const test_project_path = path.join(
 // Redirect telemetry
 if (os.type() === "Windows_NT") {
   await exec(`echo "127.0.0.1 telemetry.redwoodjs.com" >> C:\Windows\System32\Drivers\etc\hosts`)
+  process.exit(0) // TODO: Fix this
 } else if (os.type() === "Linux") {
+  await exec("sudo setcap cap_net_bind_service=+ep `readlink -f \`which node\``")
   await exec(`sudo echo "127.0.0.1 telemetry.redwoodjs.com" | sudo tee -a /etc/hosts`)
 } else {
   throw new Error("unhandled OS type")
