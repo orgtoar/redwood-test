@@ -6,6 +6,8 @@ import * as core from '@actions/core'
 
 import http from "http"
 
+await exec(`cd packages/create-redwood-app`)
+
 // Build the create-redwood-app package
 await exec(`yarn build`)
 
