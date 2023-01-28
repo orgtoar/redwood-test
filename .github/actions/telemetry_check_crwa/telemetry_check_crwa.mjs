@@ -1,8 +1,4 @@
-import os from 'node:os'
-import path from 'node:path'
-
 import { exec } from '@actions/exec'
-import * as core from '@actions/core'
 
 import http from "http"
 
@@ -18,12 +14,38 @@ const server = http.createServer((req, res) => {
     res.writeHead(200)
     res.end()
 
-    const body = JSON.parse(data)
-    console.log("------")
-    console.log(body)
+    const packet = JSON.parse(data)
 
-    // TODO: test telemetry packet structure
-    process.exit(0)
+    const correctFields = Object.keys(packet) === [
+      "type",
+      "command",
+      "duration",
+      "uid",
+      "ci",
+      "redwoodCi",
+      "NODE_ENV",
+      "os",
+      "osVersion",
+      "shell",
+      "nodeVersion",
+      "yarnVersion",
+      "npmVersion",
+      "redwoodVersion",
+      "system",
+      "complexity",
+      "sides"
+    ]
+    const isCI = packet.ci
+
+    if((correctFields && isCI)){
+      console.log("Valid telemetry received")
+      process.exit(0)
+    }else{
+      console.error("Inalid telemetry received")
+      console.error(packet)
+      process.exit(1)
+    }
+
   })
 });
 server.listen(7777, "localhost", () => {
@@ -39,4 +61,5 @@ try {
 
 // If we didn't hear the telemetry after 2 mins then let's fail
 await new Promise(r => setTimeout(r, 120_000));
+console.error("No telemetry response within 120 seconds. Failing...")
 process.exit(1)
