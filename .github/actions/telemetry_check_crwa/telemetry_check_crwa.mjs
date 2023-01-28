@@ -3,10 +3,7 @@ import { exec } from '@actions/exec'
 import http from "http"
 
 console.log(`Telemetry is being redirected to: ${process.env.REDWOOD_REDIRECT_TELEMETRY}`)
-
-const sections = process.env.REDWOOD_REDIRECT_TELEMETRY.split(":")
-const host = sections[1].substring(2)
-const port = parseInt(sections[2])
+const port = parseInt(process.env.REDWOOD_REDIRECT_TELEMETRY.split(":")[2])
 
 // Setup fake telemetry server
 const server = http.createServer((req, res) => {
@@ -36,8 +33,8 @@ const server = http.createServer((req, res) => {
     }
   })
 });
-server.listen(port, host, () => {
-  console.log(`Telemetry listener is running on http://${host}:${port}`);
+server.listen(port, "127.0.0.1", () => {
+  console.log(`Telemetry listener is running on http://127.0.0.1:${port}`);
 });
 
 // Run create-redwood-app
