@@ -35,7 +35,7 @@ const server = http.createServer((req, res) => {
       "complexity",
       "sides"
     ]
-    const isCI = packet.ci
+    const isCI = packet.ci ?? false
 
     if((correctFields && isCI)){
       console.log("Valid telemetry received")
@@ -43,8 +43,7 @@ const server = http.createServer((req, res) => {
     }else{
       console.error("Invalid telemetry received")
       console.error(packet)
-      console.error("correctFields:", correctFields)
-      console.error("isCI:", isCI)
+      console.error("fields:", Object.keys(packet))
       process.exit(1)
     }
 
