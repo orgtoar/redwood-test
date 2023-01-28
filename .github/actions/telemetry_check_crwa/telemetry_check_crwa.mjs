@@ -15,34 +15,17 @@ const server = http.createServer((req, res) => {
     res.end()
 
     const packet = JSON.parse(data)
+    let correctPacket = true
 
-    const correctFields = JSON.stringify(Object.keys(packet)) === JSON.stringify([
-      "type",
-      "command",
-      "duration",
-      "uid",
-      "ci",
-      "redwoodCi",
-      "NODE_ENV",
-      "os",
-      "osVersion",
-      "shell",
-      "nodeVersion",
-      "yarnVersion",
-      "npmVersion",
-      "redwoodVersion",
-      "system",
-      "complexity",
-      "sides"
-    ])
-    const isCI = packet.ci ?? false
+    // correct service name
+    correctPacket &&= packet.resourceSpans[0].resource["service.name"] === "create-redwood-app"
 
-    if((correctFields && isCI)){
+    if(correctPacket){
       console.log("Valid telemetry received")
       process.exit(0)
     }else{
       console.error("Invalid telemetry received")
-      console.error(packet)
+      console.error(JSON.stringify(packet, undefined, 2))
       process.exit(1)
     }
 
