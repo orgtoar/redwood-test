@@ -12,7 +12,7 @@ console.log(`Telemetry is being redirected to: ${process.env.REDWOOD_REDIRECT_TE
 const server = http.createServer((req, res) => {
   const data = ""
   req.on("data", (chunk) => {
-    data += chukn
+    data += chunk
   })
   req.on("end", () => {
     res.writeHead(200)
