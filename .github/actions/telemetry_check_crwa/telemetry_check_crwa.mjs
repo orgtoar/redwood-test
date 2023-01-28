@@ -6,7 +6,7 @@ import * as core from '@actions/core'
 
 import http from "http"
 
-console.log(process.cwd())
+console.log(process.env.REDWOOD_REDIRECT_TELEMETRY)
 
 // Build the create-redwood-app package
 await exec(`yarn build`)
@@ -40,7 +40,7 @@ const requestListener = function (req, res) {
   // TODO: exit(0)
 }
 const server = http.createServer(requestListener);
-server.listen(80, "localhost", () => {
+server.listen(7777, "localhost", () => {
   console.log(`Server is running on http://${host}:${port}`);
 });
 
