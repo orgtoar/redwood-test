@@ -16,7 +16,7 @@ const server = http.createServer((req, res) => {
 
     const packet = JSON.parse(data)
 
-    const correctFields = Object.keys(packet) === [
+    const correctFields = JSON.stringify(Object.keys(packet)) === JSON.stringify([
       "type",
       "command",
       "duration",
@@ -34,7 +34,7 @@ const server = http.createServer((req, res) => {
       "system",
       "complexity",
       "sides"
-    ]
+    ])
     const isCI = packet.ci ?? false
 
     if((correctFields && isCI)){
@@ -43,7 +43,6 @@ const server = http.createServer((req, res) => {
     }else{
       console.error("Invalid telemetry received")
       console.error(packet)
-      console.error("fields:", Object.keys(packet))
       process.exit(1)
     }
 
