@@ -121,6 +121,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: ⚒️ Build the CRWA package
+        run: yarn build
+        working-directory: ./packages/create-redwood-app
+
       - name: 📢 Listen for telemetry
         uses: ./.github/actions/telemetry_check_crwa
 
