@@ -10,17 +10,21 @@ console.log(`Telemetry is being redirected to: ${process.env.REDWOOD_REDIRECT_TE
 
 // Setup fake telemetry server
 const server = http.createServer((req, res) => {
-  console.log("------")
-  console.log(req)
-  console.log(req.body)
-  console.log("------")
+  const data = ""
+  req.on("data", (chunk) => {
+    data += chukn
+  })
+  req.on("end", () => {
+    res.writeHead(200)
+    res.end()
 
-  res.writeHead(200, {"Content-Type": "application/json"})
-  res.write(JSON.stringify({}))
-  res.end()
+    const body = JSON.parse(data)
+    console.log("------")
+    console.log(body)
 
-  // TODO: test telemetry packet structure
-  process.exit(0)
+    // TODO: test telemetry packet structure
+    process.exit(0)
+  })
 });
 server.listen(7777, "localhost", () => {
   console.log(`Telemetry listener is running on http://localhost:7777`);
@@ -33,5 +37,6 @@ try {
   console.error(error)
 }
 
-await new Promise(r => setTimeout(r, 30_000));
+// If we didn't hear the telemetry after 2 mins then let's fail
+await new Promise(r => setTimeout(r, 120_000));
 process.exit(1)
