@@ -123,7 +123,8 @@ jobs:
 
       - name: ⚒️ Build the CRWA package
         run: yarn build
-        working-directory: ./packages/create-redwood-app
+        # working-directory: ./packages/create-redwood-app # Only build CRWA
+        working-directory: .
 
       - name: 📢 Listen for telemetry
         uses: ./.github/actions/telemetry_check_crwa
