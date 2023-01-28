@@ -4,6 +4,10 @@ import http from "http"
 
 console.log(`Telemetry is being redirected to: ${process.env.REDWOOD_REDIRECT_TELEMETRY}`)
 
+const sections = process.env.REDWOOD_REDIRECT_TELEMETRY.split(":")
+const host = sections[1].substring(2)
+const port = parseInt(sections[2])
+
 // Setup fake telemetry server
 const server = http.createServer((req, res) => {
   let data = ""
@@ -32,8 +36,8 @@ const server = http.createServer((req, res) => {
     }
   })
 });
-server.listen(7777, "localhost", () => {
-  console.log(`Telemetry listener is running on http://localhost:7777`);
+server.listen(port, host, () => {
+  console.log(`Telemetry listener is running on http://${host}:${port}`);
 });
 
 // Run create-redwood-app
