@@ -28,13 +28,7 @@ server.listen(7777, "localhost", () => {
 });
 
 // Run create-redwood-app
-const test_project_path = path.join(
-  os.tmpdir(),
-  'test-project',
-  // ":" is problematic with paths
-  new Date().toISOString().split(':').join('-')
-)
-await exec(`yarn ./dist/create-redwood-app.js ${test_project_path}`)
+await exec(`yarn node ./dist/create-redwood-app.js ./crwa`)
 
 await new Promise(r => setTimeout(r, 5_000));
 process.exit(1)
