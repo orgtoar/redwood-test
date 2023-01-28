@@ -41,8 +41,10 @@ const server = http.createServer((req, res) => {
       console.log("Valid telemetry received")
       process.exit(0)
     }else{
-      console.error("Inalid telemetry received")
+      console.error("Invalid telemetry received")
       console.error(packet)
+      console.error("correctFields:", correctFields)
+      console.error("isCI:", isCI)
       process.exit(1)
     }
 
