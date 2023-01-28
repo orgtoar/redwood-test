@@ -10,7 +10,7 @@ console.log(`Telemetry is being redirected to: ${process.env.REDWOOD_REDIRECT_TE
 
 // Setup fake telemetry server
 const server = http.createServer((req, res) => {
-  const data = ""
+  let data = ""
   req.on("data", (chunk) => {
     data += chunk
   })
