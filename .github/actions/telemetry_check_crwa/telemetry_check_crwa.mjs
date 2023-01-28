@@ -28,7 +28,7 @@ server.listen(7777, "localhost", () => {
 });
 
 // Run create-redwood-app
-await exec(`yarn node ./dist/create-redwood-app.js ./crwa`)
+await exec(`yarn node .packages/create-redwood-app/dist/create-redwood-app.js ../crwa-telemetry`)
 
 await new Promise(r => setTimeout(r, 5_000));
 process.exit(1)
