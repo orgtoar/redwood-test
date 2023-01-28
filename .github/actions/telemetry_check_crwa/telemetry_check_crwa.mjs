@@ -6,26 +6,24 @@ import * as core from '@actions/core'
 
 import http from "http"
 
-console.log(process.env.REDWOOD_REDIRECT_TELEMETRY)
-
-// Build the create-redwood-app package
-// TODO: Only build CRWA here?
-// await exec(`yarn build`)
+console.log(`Telemetry is being redirected to: ${process.env.REDWOOD_REDIRECT_TELEMETRY}`)
 
 // Setup fake telemetry server
 const server = http.createServer((req, res) => {
   console.log("------")
+  console.log(req)
   console.log(req.body)
   console.log("------")
 
-  res.writeHead(200)
+  res.writeHead(200, {"Content-Type": "application/json"})
+  res.write(JSON.stringify({}))
   res.end()
 
   // TODO: test telemetry packet structure
   process.exit(0)
 });
 server.listen(7777, "localhost", () => {
-  console.log(`Server is running on http://localhost:7777`);
+  console.log(`Telemetry listener is running on http://localhost:7777`);
 });
 
 // Run create-redwood-app
@@ -35,5 +33,5 @@ try {
   console.error(error)
 }
 
-await new Promise(r => setTimeout(r, 5_000));
+await new Promise(r => setTimeout(r, 30_000));
 process.exit(1)
