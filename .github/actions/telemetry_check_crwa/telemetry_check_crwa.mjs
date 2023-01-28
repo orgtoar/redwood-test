@@ -9,25 +9,8 @@ import http from "http"
 console.log(process.env.REDWOOD_REDIRECT_TELEMETRY)
 
 // Build the create-redwood-app package
+// TODO: Only build CRWA here?
 await exec(`yarn build`)
-
-const test_project_path = path.join(
-  os.tmpdir(),
-  'test-project',
-  // ":" is problematic with paths
-  new Date().toISOString().split(':').join('-')
-)
-
-// Redirect telemetry
-if (os.type() === "Windows_NT") {
-  await exec(`echo "127.0.0.1 telemetry.redwoodjs.com" >> C:\Windows\System32\Drivers\etc\hosts`)
-  process.exit(0) // TODO: Fix this
-} else if (os.type() === "Linux") {
-  await exec("sudo setcap cap_net_bind_service=+ep `readlink -f \`which node\``")
-  await exec(`sudo echo "127.0.0.1 telemetry.redwoodjs.com" | sudo tee -a /etc/hosts`)
-} else {
-  throw new Error("unhandled OS type")
-}
 
 // Setup fake telemetry server
 const requestListener = function (req, res) {
@@ -45,6 +28,12 @@ server.listen(7777, "localhost", () => {
 });
 
 // Run create-redwood-app
+const test_project_path = path.join(
+  os.tmpdir(),
+  'test-project',
+  // ":" is problematic with paths
+  new Date().toISOString().split(':').join('-')
+)
 await exec(`yarn ./dist/create-redwood-app.js ${test_project_path}`)
 
 await new Promise(r => setTimeout(r, 5_000));
