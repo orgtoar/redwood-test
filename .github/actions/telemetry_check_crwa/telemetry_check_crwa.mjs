@@ -17,8 +17,10 @@ const server = http.createServer((req, res) => {
     const packet = JSON.parse(data)
     let correctPacket = true
 
-    // correct service name
-    correctPacket &&= packet.resourceSpans[0].resource["service.name"] === "create-redwood-app"
+    // correct service name ["service.name"] === "create-redwood-app"
+    correctPacket &&= packet.resourceSpans[0].resource.attributes.some((attribute) => {
+      return attribute.key === "service.name" && attribute.value.stringValue === "create-redwood-app"
+    })
 
     if(correctPacket){
       console.log("Valid telemetry received")
@@ -28,7 +30,6 @@ const server = http.createServer((req, res) => {
       console.error(JSON.stringify(packet, undefined, 2))
       process.exit(1)
     }
-
   })
 });
 server.listen(7777, "localhost", () => {
