@@ -30,7 +30,7 @@ server.listen(7777, "localhost", () => {
 
 // Run create-redwood-app
 try {
-  await exec(`yarn node ./packages/create-redwood-app/dist/create-redwood-app.js ../crwa-telemetry --typescript true --git true --yarn-install false`)
+  await exec(`yarn node ./packages/create-redwood-app/dist/create-redwood-app.js ../crwa-telemetry --typescript true --git false --yarn-install false`)
 } catch (error) {
   console.error(error)
 }
