@@ -16,7 +16,7 @@ const expectedPacketFields = [
   "NODE_ENV",
   "os",
   "osVersion",
-  "shell",
+  // "shell", // Not expected on windows
   "nodeVersion",
   "yarnVersion",
   "npmVersion",
