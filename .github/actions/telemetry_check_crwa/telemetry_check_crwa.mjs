@@ -3,6 +3,29 @@ import { exec } from '@actions/exec'
 import http from "http"
 
 console.log(`Telemetry is being redirected to: ${process.env.REDWOOD_REDIRECT_TELEMETRY}`)
+const port = parseInt(process.env.REDWOOD_REDIRECT_TELEMETRY.split(":")[2])
+
+// All the fields we expect inside a telemetry packet
+const expectedPacketFields = [
+  "type",
+  "command",
+  "duration",
+  "uid",
+  "ci",
+  "redwoodCi",
+  "NODE_ENV",
+  "os",
+  "osVersion",
+  "shell",
+  "nodeVersion",
+  "yarnVersion",
+  "npmVersion",
+  "redwoodVersion",
+  "system",
+  "complexity",
+  "sides",
+  "bundler"
+]
 
 // Setup fake telemetry server
 const server = http.createServer((req, res) => {
@@ -16,28 +39,14 @@ const server = http.createServer((req, res) => {
 
     const packet = JSON.parse(data)
 
-    const correctFields = JSON.stringify(Object.keys(packet)) === JSON.stringify([
-      "type",
-      "command",
-      "duration",
-      "uid",
-      "ci",
-      "redwoodCi",
-      "NODE_ENV",
-      "os",
-      "osVersion",
-      "shell",
-      "nodeVersion",
-      "yarnVersion",
-      "npmVersion",
-      "redwoodVersion",
-      "system",
-      "complexity",
-      "sides"
-    ])
+    let hasAllFields = true
+    for (const field of expectedPacketFields) {
+      hasAllFields &&= (packet[field] !== undefined)
+    }
+
     const isCI = packet.ci ?? false
 
-    if((correctFields && isCI)){
+    if((hasAllFields && isCI)){
       console.log("Valid telemetry received")
       process.exit(0)
     }else{
@@ -45,21 +54,20 @@ const server = http.createServer((req, res) => {
       console.error(packet)
       process.exit(1)
     }
-
   })
 });
-server.listen(7777, "localhost", () => {
-  console.log(`Telemetry listener is running on http://localhost:7777`);
+server.listen(port, "localhost", () => {
+  console.log(`Telemetry listener is running on http://localhost:${port}`);
 });
 
 // Run create-redwood-app
 try {
-  await exec(`yarn node ./packages/create-redwood-app/dist/create-redwood-app.js ../crwa-telemetry --typescript true --git false --yarn-install false`)
+  await exec(`yarn node ./packages/create-redwood-app/dist/create-redwood-app.js ../crwa-telemetry --typescript false --git false --yarn-install false`)
 } catch (error) {
   console.error(error)
 }
 
-// If we didn't hear the telemetry after 2 mins then let's fail
+// If we didn't hear the telemetry after 2 mins since running crwa then let's fail
 await new Promise(r => setTimeout(r, 120_000));
 console.error("No telemetry response within 120 seconds. Failing...")
 process.exit(1)

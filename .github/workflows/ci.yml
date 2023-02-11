@@ -113,7 +113,7 @@ jobs:
     name: 🔭 Telemetry check - CRWA / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
     runs-on: ${{ matrix.os }}
     env:
-      REDWOOD_REDIRECT_TELEMETRY: "http://localhost:7777"
+      REDWOOD_REDIRECT_TELEMETRY: "http://localhost:48619"
     steps:
       - uses: actions/checkout@v3
       - name: 🧶 Set up job
@@ -123,7 +123,6 @@ jobs:
 
       - name: ⚒️ Build the CRWA package
         run: yarn build
-        # working-directory: ./packages/create-redwood-app # Only build CRWA
         working-directory: .
 
       - name: 📢 Listen for telemetry
