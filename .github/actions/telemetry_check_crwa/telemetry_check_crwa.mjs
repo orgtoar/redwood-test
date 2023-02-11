@@ -2,7 +2,7 @@ import { exec } from '@actions/exec'
 
 import http from "http"
 
-console.log(`Telemetry is being redirected to: ${process.env.REDWOOD_REDIRECT_TELEMETRY}`)
+console.log(`Telemetry is being redirected to ${process.env.REDWOOD_REDIRECT_TELEMETRY}`)
 const port = parseInt(process.env.REDWOOD_REDIRECT_TELEMETRY.split(":")[2])
 
 // All the fields we expect inside a telemetry packet
@@ -41,7 +41,10 @@ const server = http.createServer((req, res) => {
 
     let hasAllFields = true
     for (const field of expectedPacketFields) {
-      hasAllFields &&= (packet[field] !== undefined)
+      if(packet[field] === undefined){
+        hasAllFields = false
+        console.error(`Telemetry packet is missing field "${field}"`)
+      }
     }
 
     const isCI = packet.ci ?? false
