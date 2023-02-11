@@ -59,8 +59,8 @@ const server = http.createServer((req, res) => {
     }
   })
 });
-server.listen(port, "localhost", () => {
-  console.log(`Telemetry listener is running on http://localhost:${port}`);
+server.listen(port, "127.0.0.1", () => {
+  console.log(`Telemetry listener is running on http://127.0.0.1:${port}`);
 });
 
 // Run create-redwood-app

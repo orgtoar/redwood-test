@@ -113,7 +113,7 @@ jobs:
     name: 🔭 Telemetry check - CRWA / ${{ matrix.os }} / node ${{ matrix.node-version }} latest
     runs-on: ${{ matrix.os }}
     env:
-      REDWOOD_REDIRECT_TELEMETRY: "http://localhost:48619" # Random port
+      REDWOOD_REDIRECT_TELEMETRY: "http://127.0.0.1:48619" # Random port
     steps:
       - uses: actions/checkout@v3
       - name: 🧶 Set up job
