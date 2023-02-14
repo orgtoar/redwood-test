@@ -5,7 +5,7 @@ import http from "http"
 console.log(process.version)
 
 console.log(`Telemetry is being redirected to ${process.env.REDWOOD_REDIRECT_TELEMETRY}`)
-const host = process.env.REDWOOD_REDIRECT_TELEMETRY.split(":")[1]
+const host = process.env.REDWOOD_REDIRECT_TELEMETRY.split(":")[1].slice(2)
 const port = parseInt(process.env.REDWOOD_REDIRECT_TELEMETRY.split(":")[2])
 
 // All the fields we expect inside a telemetry packet
