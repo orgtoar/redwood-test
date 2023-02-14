@@ -3,7 +3,6 @@ import { exec } from '@actions/exec'
 import http from "http"
 
 console.log(process.version)
-
 console.log(`Telemetry is being redirected to ${process.env.REDWOOD_REDIRECT_TELEMETRY}`)
 
 // All the fields we expect inside a telemetry packet
@@ -71,12 +70,19 @@ server.listen(port, host, () => {
 // Run a command and await output
 try {
   const mode = process.argv[process.argv.indexOf("--mode") + 1]
+  let exitCode = 0
   switch (mode) {
     case "crwa":
-      await exec(`yarn node ./packages/create-redwood-app/dist/create-redwood-app.js ../project-for-telemetry --typescript false --git false --yarn-install true`)
+      exitCode = await exec(`yarn node ./packages/create-redwood-app/dist/create-redwood-app.js ../project-for-telemetry --typescript false --git false --yarn-install true`)
+      if(exitCode){
+        process.exit(1)
+      }
       break;
     case "cli":
-      await exec(`yarn --cwd ../project-for-telemetry rw info`)
+      exitCode = await exec(`yarn --cwd ../project-for-telemetry rw info`)
+      if(exitCode){
+        process.exit(1)
+      }
       break;
     default:
       console.error(`Unknown mode: ${mode}`)

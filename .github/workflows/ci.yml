@@ -126,6 +126,8 @@ jobs:
 
       - name: 📢 Listen for telemetry (CRWA)
         run: node ./.github/actions/telemetry_check/check.mjs --mode crwa
+        env:
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
 
       - name: 📢 Listen for telemetry (CLI)
         run: node ./.github/actions/telemetry_check/check.mjs --mode cli
