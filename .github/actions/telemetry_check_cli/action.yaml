@@ -1,6 +1,0 @@
-name: 'Listen for CRWA telemetry'
-description: 'Executes a CLI command while listening for redirected telemetry'
-
-runs:
-  main: 'telemetry_check_crwa.mjs'
-  working-directory: ../crwa-telemetry

@@ -123,13 +123,12 @@ jobs:
 
       - name: ⚒️ Build the framework packages
         run: yarn build
-        working-directory: .
 
       - name: 📢 Listen for telemetry (CRWA)
-        uses: ./.github/actions/telemetry_check_crwa
+        run: node ./.github/actions/telemetry_check_crwa
 
       - name: 📢 Listen for telemetry (CLI)
-        uses: ./.github/actions/telemetry_check_cli
+        run: node ./.github/actions/telemetry_check_cli
 
   telemetry-check-docs:
     needs: only-doc-changes

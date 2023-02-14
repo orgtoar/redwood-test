@@ -1,5 +1,0 @@
-name: 'Listen for CRWA telemetry'
-description: 'Executes CRWA while listening for redirected telemetry'
-
-runs:
-  main: 'telemetry_check_crwa.mjs'
