@@ -66,9 +66,9 @@ server.listen(port, host, () => {
   console.log(`Telemetry listener is running on http://${host}:${port}`);
 });
 
-// Run create-redwood-app
+// Run a cli command
 try {
-  await exec(`yarn node ./packages/create-redwood-app/dist/create-redwood-app.js ../crwa-telemetry --typescript false --git false --yarn-install false`)
+  await exec(`yarn rw info`)
 } catch (error) {
   console.error(error)
 }
