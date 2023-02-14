@@ -2,7 +2,6 @@ import { exec } from '@actions/exec'
 
 import http from "http"
 
-console.log(process.version)
 console.log(`Telemetry is being redirected to ${process.env.REDWOOD_REDIRECT_TELEMETRY}`)
 
 // All the fields we expect inside a telemetry packet
@@ -24,7 +23,7 @@ const expectedPacketFields = [
   "system",
   "complexity",
   "sides",
-  // "bundler"
+  // "bundler" // Experimental
 ]
 
 // Setup fake telemetry server
