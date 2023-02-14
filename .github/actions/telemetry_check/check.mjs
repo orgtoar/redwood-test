@@ -78,8 +78,7 @@ try {
       }
       break;
     case "cli":
-      console.log(await exec(`ls ..`))
-      exitCode = await exec(`yarn --cwd ../project-for-telemetry node ../redwood-repo/packages/cli/dist/index.js info`)
+      exitCode = await exec(`yarn --cwd ../project-for-telemetry node ../redwood-test/packages/cli/dist/index.js info`)
       if(exitCode){
         process.exit(1)
       }
