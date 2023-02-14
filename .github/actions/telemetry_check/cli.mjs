@@ -68,7 +68,7 @@ server.listen(port, host, () => {
 
 // Run a cli command
 try {
-  await exec(`yarn rw info`)
+  await exec(`yarn --cwd ../project-for-telemetry rw info`)
 } catch (error) {
   console.error(error)
 }
