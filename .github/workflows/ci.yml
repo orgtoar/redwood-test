@@ -125,10 +125,11 @@ jobs:
         run: yarn build
 
       - name: 📢 Listen for telemetry (CRWA)
-        run: node ./.github/actions/telemetry_check_crwa
+        run: node ./.github/actions/telemetry_check/crwa.mjs
 
       - name: 📢 Listen for telemetry (CLI)
-        run: node ./.github/actions/telemetry_check_cli
+        run: node ./.github/actions/telemetry_check/cli.mjs
+        working-directory: ../project-for-telemetry
 
   telemetry-check-docs:
     needs: only-doc-changes
