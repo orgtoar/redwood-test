@@ -1,5 +1,5 @@
 name: 'Listen for CRWA telemetry'
-description: 'Executes CRWA while listening for redirected telemetry'
+description: 'Executes a CLI command while listening for redirected telemetry'
 
 inputs:
   node-version:
@@ -9,3 +9,4 @@ runs:
   main: 'telemetry_check_crwa.mjs'
   with:
     node-version: ${{ inputs.node-version }}
+  working-directory: ../crwa-telemetry

@@ -130,7 +130,6 @@ jobs:
 
       - name: 📢 Listen for telemetry (CLI)
         uses: ./.github/actions/telemetry_check_cli
-        working-directory: ../crwa-telemetry
 
   telemetry-check-docs:
     needs: only-doc-changes
