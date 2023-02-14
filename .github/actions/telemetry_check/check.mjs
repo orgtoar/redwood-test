@@ -68,7 +68,7 @@ server.listen(port, host, () => {
 
 // Run a command and await output
 try {
-  const mode = process.argv[process.argv.findIndex("--mode") + 1]
+  const mode = process.argv[process.argv.indexOf("--mode") + 1]
   switch (mode) {
     case "crwa":
       await exec(`yarn node ./packages/create-redwood-app/dist/create-redwood-app.js ../project-for-telemetry --typescript false --git false --yarn-install false`)
