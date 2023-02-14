@@ -66,9 +66,21 @@ server.listen(port, host, () => {
   console.log(`Telemetry listener is running on http://${host}:${port}`);
 });
 
-// Run create-redwood-app
+// Run a command and await output
 try {
-  await exec(`yarn node ./packages/create-redwood-app/dist/create-redwood-app.js ../project-for-telemetry --typescript false --git false --yarn-install false`)
+  const mode = process.argv[process.argv.findIndex("--mode") + 1]
+  switch (mode) {
+    case "crwa":
+      await exec(`yarn node ./packages/create-redwood-app/dist/create-redwood-app.js ../project-for-telemetry --typescript false --git false --yarn-install false`)
+      break;
+    case "cli":
+      await exec(`yarn --cwd ../project-for-telemetry yarn install`)
+      await exec(`yarn --cwd ../project-for-telemetry rw info`)
+      break;
+    default:
+      console.error(`Unknown mode: ${mode}`)
+      process.exit(1)
+  }
 } catch (error) {
   console.error(error)
 }
