@@ -5,8 +5,6 @@ import http from "http"
 console.log(process.version)
 
 console.log(`Telemetry is being redirected to ${process.env.REDWOOD_REDIRECT_TELEMETRY}`)
-const host = process.env.REDWOOD_REDIRECT_TELEMETRY.split(":")[1].slice(2)
-const port = parseInt(process.env.REDWOOD_REDIRECT_TELEMETRY.split(":")[2])
 
 // All the fields we expect inside a telemetry packet
 const expectedPacketFields = [
@@ -62,6 +60,10 @@ const server = http.createServer((req, res) => {
     }
   })
 });
+
+// Run the fake telemetry server at the redirected location
+const host = process.env.REDWOOD_REDIRECT_TELEMETRY.split(":")[1].slice(2)
+const port = parseInt(process.env.REDWOOD_REDIRECT_TELEMETRY.split(":")[2])
 server.listen(port, host, () => {
   console.log(`Telemetry listener is running on http://${host}:${port}`);
 });
@@ -71,10 +73,9 @@ try {
   const mode = process.argv[process.argv.indexOf("--mode") + 1]
   switch (mode) {
     case "crwa":
-      await exec(`yarn node ./packages/create-redwood-app/dist/create-redwood-app.js ../project-for-telemetry --typescript false --git false --yarn-install false`)
+      await exec(`yarn node ./packages/create-redwood-app/dist/create-redwood-app.js ../project-for-telemetry --typescript false --git false --yarn-install true`)
       break;
     case "cli":
-      await exec(`yarn --cwd ../project-for-telemetry yarn install`)
       await exec(`yarn --cwd ../project-for-telemetry rw info`)
       break;
     default:
@@ -85,7 +86,7 @@ try {
   console.error(error)
 }
 
-// If we didn't hear the telemetry after 2 mins since running crwa then let's fail
+// If we didn't hear the telemetry after 2 mins then let's fail
 await new Promise(r => setTimeout(r, 120_000));
 console.error("No telemetry response within 120 seconds. Failing...")
 process.exit(1)
