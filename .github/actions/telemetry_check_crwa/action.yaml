@@ -6,6 +6,7 @@ inputs:
     default: 18
 
 runs:
+  using: composite
   main: 'telemetry_check_crwa.mjs'
   with:
     node-version: ${{ inputs.node-version }}
