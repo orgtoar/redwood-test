@@ -15,7 +15,7 @@ concurrency:
 jobs:
   publish-experimental:
     name: 🧪 Publish Experimental
-    if: github.repository == 'redwoodjs/redwood'
+    # if: github.repository == 'redwoodjs/redwood'
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get-version.outputs.value }}
