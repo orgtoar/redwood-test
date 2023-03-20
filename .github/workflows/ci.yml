@@ -390,10 +390,10 @@ jobs:
           npm install -g @lhci/cli
           lhci autorun --upload.target=temporary-public-storage --collect.startServerCommand="yarn rw serve" --collect.url=http://localhost:8910
 
-    lighthouse-docs:
-      needs: only-doc-changes
-      if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
-      name: 🚢 Lighthouse CI
-      runs-on: ubuntu-latest
-      steps:
-        - run: echo "Only doc changes"
+  lighthouse-docs:
+    needs: only-doc-changes
+    if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
+    name: 🚢 Lighthouse CI
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Only doc changes"
