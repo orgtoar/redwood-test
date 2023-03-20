@@ -369,6 +369,8 @@ jobs:
     needs: check
     name: 🚢 Lighthouse CI
     runs-on: ubuntu-latest
+    env:
+      REDWOOD_CI: 1
     steps:
       - uses: actions/checkout@v3
       - name: 🧶 Set up job
