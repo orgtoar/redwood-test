@@ -365,3 +365,35 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - run: echo "Only doc changes"
+
+  lighthouse:
+      needs: check
+      name: 🚢 Lighthouse CI
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - name: 🧶 Set up job
+          uses: ./.github/actions/set-up-job
+          with:
+            node-version: 16
+
+        - name: 🌲 Setup test project
+          id: setup_test_project
+          uses: ./.github/actions/setup_test_project
+          env:
+            REDWOOD_DISABLE_TELEMETRY: 1
+            YARN_ENABLE_IMMUTABLE_INSTALLS: false
+
+        - name: Run Lighthouse CI
+          working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+          run: |
+            npm install -g @lhci/cli
+            lhci autorun --upload.target=temporary-public-storage --collect.startServerCommand="yarn rw serve" --collect.url=http://localhost:8910
+
+    lighthouse-docs:
+      needs: only-doc-changes
+      if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
+      name: 🚢 Lighthouse CI
+      runs-on: ubuntu-latest
+      steps:
+        - run: echo "Only doc changes"
