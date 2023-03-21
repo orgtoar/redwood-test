@@ -49,6 +49,9 @@ async function recursivelyRender(
           value.variables
         )
 
+        console.log('RESULT STRING: ')
+        console.log(resultString)
+
         let result
 
         try {
