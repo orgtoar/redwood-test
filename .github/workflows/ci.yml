@@ -14,7 +14,6 @@ env:
 
 jobs:
   tutorial-e2e:
-    needs: check
     strategy:
       matrix:
         os: [ubuntu-latest]
