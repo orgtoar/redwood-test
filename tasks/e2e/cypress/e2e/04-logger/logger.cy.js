@@ -40,7 +40,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
     cy.contains('Edit')
     cy.contains('Loading...').should('not.exist')
 
-    console.log('1 --- Waiting...')
+    cy.task('log', '1 --- Waiting...')
     cy.waitUntil(
       () =>
         cy.readFile(LOG_PATH).then((str) => {
@@ -56,7 +56,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
     cy.get('input#body').type('Hello world!')
     cy.get('button').contains('Save').click()
 
-    console.log('2 --- Waiting...')
+    cy.task('log', '2 --- Waiting...')
     cy.waitUntil(() =>
       cy.readFile(LOG_PATH).then((str) => {
         console.log(str)
@@ -69,7 +69,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
     cy.get('input#body').clear().type('No, Margle the World!')
     cy.get('button').contains('Save').click()
 
-    console.log('3 --- Waiting...')
+    cy.task('log', '3 --- Waiting...')
     cy.waitUntil(() =>
       cy.readFile(LOG_PATH).then((str) => {
         console.log(str)
@@ -80,7 +80,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
     // DELETE
     cy.contains('Delete').click()
 
-    console.log('4 --- Waiting...')
+    cy.task('log', '4 --- Waiting...')
     cy.waitUntil(() =>
       cy.readFile(LOG_PATH).then((str) => {
         console.log(str)
@@ -106,7 +106,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
     cy.contains('Edit')
     cy.contains('Loading...').should('not.exist')
 
-    console.log('1 --- Waiting...')
+    cy.task('log', '1 --- Waiting...')
     cy.waitUntil(
       () =>
         cy.readFile(LOG_PATH).then((str) => {
@@ -135,7 +135,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
     cy.contains('Edit')
     cy.contains('Loading...').should('not.exist')
 
-    console.log('2 --- Waiting...')
+    cy.task('log', '2 --- Waiting...')
     cy.waitUntil(
       () =>
         cy.readFile(LOG_PATH).then((str) => {
