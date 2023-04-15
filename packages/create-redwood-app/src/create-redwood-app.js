@@ -21,6 +21,8 @@ import yargs from 'yargs/yargs'
 
 import { name, version } from '../package'
 
+// A fake comment to trigger CI
+
 /**
  * To keep a consistent color/style palette between cli packages, such as
  * @redwood/create-redwood-app and @redwood/cli, please keep them compatible
