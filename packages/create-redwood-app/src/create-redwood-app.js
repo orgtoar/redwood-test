@@ -54,7 +54,7 @@ import { name, version } from '../package'
   // Initial welcome message
   console.log(
     `${style.redwood(
-      '------------------------------------------------------------------'
+      '----------------------------------------------------------------------'
     )}`
   )
   console.log(`🌲⚡️ ${style.header('Welcome to RedwoodJS!')} ⚡️🌲`)
