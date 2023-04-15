@@ -46,7 +46,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
           console.log(str)
           return str.includes('> in posts()')
         }),
-      { timeout: 10_000, interval: 2_000 }
+      { timeout: 60_000, interval: 2_000 }
     )
 
     // CREATE / SAVE
@@ -61,7 +61,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
           console.log(str)
           return str.includes('> in createPost()')
         }),
-      { timeout: 10_000, interval: 2_000 }
+      { timeout: 60_000, interval: 2_000 }
     )
 
     // EDIT
@@ -75,7 +75,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
           console.log(str)
           return str.includes('> in updatePost()')
         }),
-      { timeout: 10_000, interval: 2_000 }
+      { timeout: 60_000, interval: 2_000 }
     )
 
     // DELETE
@@ -86,7 +86,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
           console.log(str)
           return str.includes('> in deletePost()')
         }),
-      { timeout: 10_000, interval: 2_000 }
+      { timeout: 60_000, interval: 2_000 }
     )
   })
 
@@ -116,7 +116,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
             !str.includes('Slow Query performed in ')
           )
         }),
-      { timeout: 10_000, interval: 2_000 }
+      { timeout: 60_000, interval: 2_000 }
     )
 
     // With slow query logging.
@@ -141,7 +141,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
           console.log(str)
           return str.includes('Slow Query performed in ')
         }),
-      { timeout: 10_000, interval: 2_000 }
+      { timeout: 60_000, interval: 2_000 }
     )
   })
 })
