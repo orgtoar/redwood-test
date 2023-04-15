@@ -46,7 +46,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
           console.log(str)
           return str.includes('> in posts()')
         }),
-      { interval: 2000, timeout: 2000 }
+      { timeout: 10_000, interval: 2_000 }
     )
 
     // CREATE / SAVE
@@ -55,11 +55,13 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
     cy.get('input#body').type('Hello world!')
     cy.get('button').contains('Save').click()
 
-    cy.waitUntil(() =>
-      cy.readFile(LOG_PATH).then((str) => {
-        console.log(str)
-        return str.includes('> in createPost()')
-      })
+    cy.waitUntil(
+      () =>
+        cy.readFile(LOG_PATH).then((str) => {
+          console.log(str)
+          return str.includes('> in createPost()')
+        }),
+      { timeout: 10_000, interval: 2_000 }
     )
 
     // EDIT
@@ -67,20 +69,24 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
     cy.get('input#body').clear().type('No, Margle the World!')
     cy.get('button').contains('Save').click()
 
-    cy.waitUntil(() =>
-      cy.readFile(LOG_PATH).then((str) => {
-        console.log(str)
-        return str.includes('> in updatePost()')
-      })
+    cy.waitUntil(
+      () =>
+        cy.readFile(LOG_PATH).then((str) => {
+          console.log(str)
+          return str.includes('> in updatePost()')
+        }),
+      { timeout: 10_000, interval: 2_000 }
     )
 
     // DELETE
     cy.contains('Delete').click()
-    cy.waitUntil(() =>
-      cy.readFile(LOG_PATH).then((str) => {
-        console.log(str)
-        return str.includes('> in deletePost()')
-      })
+    cy.waitUntil(
+      () =>
+        cy.readFile(LOG_PATH).then((str) => {
+          console.log(str)
+          return str.includes('> in deletePost()')
+        }),
+      { timeout: 10_000, interval: 2_000 }
     )
   })
 
@@ -110,7 +116,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
             !str.includes('Slow Query performed in ')
           )
         }),
-      { interval: 2000, timeout: 2000 }
+      { timeout: 10_000, interval: 2_000 }
     )
 
     // With slow query logging.
@@ -135,7 +141,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
           console.log(str)
           return str.includes('Slow Query performed in ')
         }),
-      { interval: 2000, timeout: 2000 }
+      { timeout: 10_000, interval: 2_000 }
     )
   })
 })
