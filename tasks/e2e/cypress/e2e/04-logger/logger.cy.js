@@ -1,8 +1,8 @@
 /* eslint-disable no-undef, camelcase */
 /// <reference types="cypress" />
-import path from 'path'
-
 import 'cypress-wait-until'
+
+import path from 'path'
 
 import { waitForApiSide } from '../01-tutorial/sharedTests'
 
@@ -12,8 +12,6 @@ import { setupPrismaLogger } from './codemods/Step2_1_Setup_Prisma_Logger'
 
 const BASE_DIR = Cypress.env('RW_PATH')
 const LOG_FILENAME = 'e2e.log'
-
-import 'cypress-wait-until'
 
 describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
   const LOG_PATH = path.join(BASE_DIR, LOG_FILENAME)
@@ -50,7 +48,8 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
     cy.waitUntil(
       () =>
         cy.readFile(LOG_PATH).then((str) => {
-          console.log(str)
+          cy.task('log', 'read log file')
+          cy.task('log', str)
           return str.includes('> in posts()')
         }),
       { interval: 2000, timeout: 10_000 }
