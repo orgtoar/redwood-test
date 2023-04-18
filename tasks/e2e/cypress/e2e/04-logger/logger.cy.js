@@ -45,15 +45,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
     cy.task('log', "loading doesn't exist")
 
     cy.task('log', '1 --- Waiting...')
-    cy.waitUntil(
-      () =>
-        cy.readFile(LOG_PATH).then((str) => {
-          cy.task('log', 'read log file')
-          cy.task('log', str)
-          return str.includes('> in posts()')
-        }),
-      { interval: 2000, timeout: 10_000 }
-    )
+    cy.readFile(LOG_PATH).should('include', '> in posts()')
 
     // CREATE / SAVE
     cy.contains(' New Post').click()
