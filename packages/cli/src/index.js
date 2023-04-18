@@ -35,6 +35,8 @@ import * as upgradeCommand from './commands/upgrade'
 import { getPaths } from './lib'
 import * as updateCheck from './lib/updateCheck'
 
+// THIS IS A RANDOM COMMENT
+
 // # Setting the CWD
 //
 // The current working directory can be set via:
