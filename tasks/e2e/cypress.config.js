@@ -23,9 +23,12 @@ module.exports = defineConfig({
     runMode: 5,
     openMode: 0,
   },
+
   defaultCommandTimeout: 12_0000,
   execTimeout: 12_0000,
   pageLoadTimeout: 12_0000,
   requestTimeout: 12_0000,
   taskTimeout: 12_0000,
+
+  video: false,
 })
