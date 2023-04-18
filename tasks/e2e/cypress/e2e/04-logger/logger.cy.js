@@ -21,17 +21,22 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
   it('1. Test Logging for CRUD', () => {
     // Empty log file.
     cy.writeFile(LOG_PATH, '')
+    cy.task('log', 'wrote empty log path')
 
     cy.writeFile(
       path.join(BASE_DIR, 'api/src/lib/logger.js'),
       setupLogger(BASE_DIR, LOG_FILENAME)
     )
+    cy.task('log', 'wrote logger.js')
+
     cy.writeFile(
       path.join(BASE_DIR, 'api/src/services/posts/posts.js'),
       Step1_2_Add_Logger
     )
+    cy.task('log', 'wrote posts.js')
 
     waitForApiSide()
+    cy.task('log', 'done waiting for api side')
 
     cy.visit('http://localhost:8910/blog-post/3')
 
@@ -39,6 +44,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
 
     cy.contains('Edit')
     cy.contains('Loading...').should('not.exist')
+    cy.task('log', "loading doesn't exist")
 
     cy.task('log', '1 --- Waiting...')
     cy.waitUntil(
