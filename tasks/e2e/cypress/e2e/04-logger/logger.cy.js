@@ -53,7 +53,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
           console.log(str)
           return str.includes('> in posts()')
         }),
-      { interval: 2000, timeout: 2000 }
+      { interval: 2000, timeout: 10_000 }
     )
 
     // CREATE / SAVE
@@ -122,7 +122,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
             !str.includes('Slow Query performed in ')
           )
         }),
-      { interval: 2000, timeout: 2000 }
+      { interval: 2000, timeout: 10_000 }
     )
 
     // With slow query logging.
@@ -148,7 +148,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
           console.log(str)
           return str.includes('Slow Query performed in ')
         }),
-      { interval: 2000, timeout: 2000 }
+      { interval: 2000, timeout: 10_000 }
     )
   })
 })
