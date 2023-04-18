@@ -33,7 +33,6 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
     )
     cy.task('log', 'wrote posts.js')
 
-    waitForApiSide()
     cy.task('log', 'done waiting for api side')
 
     cy.visit('http://localhost:8910/blog-post/3')
@@ -54,12 +53,7 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
     cy.get('button').contains('Save').click()
 
     cy.task('log', '2 --- Waiting...')
-    cy.waitUntil(() =>
-      cy.readFile(LOG_PATH).then((str) => {
-        console.log(str)
-        return str.includes('> in createPost()')
-      })
-    )
+    cy.readFile(LOG_PATH).should('include', '> in createPost()')
 
     // EDIT
     cy.contains('Edit').click()
@@ -67,23 +61,13 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
     cy.get('button').contains('Save').click()
 
     cy.task('log', '3 --- Waiting...')
-    cy.waitUntil(() =>
-      cy.readFile(LOG_PATH).then((str) => {
-        console.log(str)
-        return str.includes('> in updatePost()')
-      })
-    )
+    cy.readFile(LOG_PATH).should('include', '> in updatePost()')
 
     // DELETE
     cy.contains('Delete').click()
 
     cy.task('log', '4 --- Waiting...')
-    cy.waitUntil(() =>
-      cy.readFile(LOG_PATH).then((str) => {
-        console.log(str)
-        return str.includes('> in deletePost()')
-      })
-    )
+    cy.readFile(LOG_PATH).should('include', '> in deletePost()')
   })
 
   it('2. Test logging for Prisma', () => {
@@ -96,25 +80,14 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
       setupPrismaLogger({ slowQueryThreshold: 9_999 })
     )
 
-    waitForApiSide()
-
     cy.visit('http://localhost:8910/posts')
 
     cy.contains('Edit')
     cy.contains('Loading...').should('not.exist')
 
     cy.task('log', '1 --- Waiting...')
-    cy.waitUntil(
-      () =>
-        cy.readFile(LOG_PATH).then((str) => {
-          console.log(str)
-          return (
-            str.includes('Query performed in ') &&
-            !str.includes('Slow Query performed in ')
-          )
-        }),
-      { interval: 2000, timeout: 10_000 }
-    )
+    cy.readFile(LOG_PATH).should('include', 'Query performed in ')
+    cy.readFile(LOG_PATH).should('not.include', 'Slow Query performed in ')
 
     // With slow query logging.
     // Reset log file.
@@ -133,13 +106,6 @@ describe('The Redwood Logger - Basic Scaffold CRUD Logging', () => {
     cy.contains('Loading...').should('not.exist')
 
     cy.task('log', '2 --- Waiting...')
-    cy.waitUntil(
-      () =>
-        cy.readFile(LOG_PATH).then((str) => {
-          console.log(str)
-          return str.includes('Slow Query performed in ')
-        }),
-      { interval: 2000, timeout: 10_000 }
-    )
+    cy.readFile(LOG_PATH).should('include', 'Slow Query performed in ')
   })
 })
