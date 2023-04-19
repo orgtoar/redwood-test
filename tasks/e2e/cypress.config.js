@@ -6,11 +6,9 @@ module.exports = defineConfig({
     specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
     supportFile: false,
     testIsolation: false,
-    setupNodeEvents(on, config) {
+    setupNodeEvents(on, _config) {
       on('task', {
         log(message) {
-          // Then to see the log messages in the terminal
-          //   cy.task("log", "my message");
           console.log(message + '\n\n')
           return null
         },
@@ -31,4 +29,5 @@ module.exports = defineConfig({
   taskTimeout: 12_0000,
 
   video: false,
+  screenshotOnRunFailure: false,
 })
