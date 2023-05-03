@@ -52,6 +52,9 @@ async function measurePackageSize(
   frameworkPackagesPath,
   packageName
 ) {
+  // Clear the temp directory
+  fs.emptyDirSync(tempDirectory)
+
   // Copy the package of interest to the temp directory
   const packageFolderName = packageName.replace('@redwoodjs/', '')
   fs.copySync(
@@ -237,8 +240,7 @@ async function main() {
     cwd: frameworkPath,
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
-  fs.removeSync(tempTestingDirectory)
-  fs.ensureDirSync(tempTestingDirectory)
+  fs.emptyDirSync(tempTestingDirectory)
 
   // Get main branch package sizes
   console.log('Getting main branch package sizes:')
