@@ -145,7 +145,10 @@ async function measurePackageSize(
 
   // Measure size
   let size = 0
-  const directoriesToInclude = ['node_modules', ...(packageJSON.files || [])]
+  const directoriesToInclude = [
+    'node_modules',
+    ...(packageJSON.files || []),
+  ].filter((d) => d !== 'dist')
   for (const directory of directoriesToInclude) {
     size += getDirSize(
       path.join(tempDirectory, packageFolderName, directory),
