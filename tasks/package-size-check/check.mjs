@@ -143,13 +143,17 @@ async function measurePackageSize(
     )
   )
 
-  // Measure size of node_modules and return number of bytes
-  const seen = new Set()
-  return getDirSize(
-    path.join(tempDirectory, packageFolderName, 'node_modules'),
-    seen
-  )
-  // Note: Handle other non-node_modules files that are needed for the package size measurement
+  // Measure size
+  let size = 0
+  const directoriesToInclude = ['node_modules', ...(packageJSON.files || [])]
+  for (const directory of directoriesToInclude) {
+    size += getDirSize(
+      path.join(tempDirectory, packageFolderName, directory),
+      new Set()
+    )
+  }
+
+  return size
 }
 
 // Copies local packages to a temp directory and runs yarn install to determine install size
@@ -164,7 +168,7 @@ async function main() {
   )
 
   // Get a list of all files that have changed compared to the main branch
-  const branch = process.env.GITHUB_BASE_REF
+  const branch = process.env.GITHUB_BASE_REF || 'jgmw-ci/deps-change'
   await exec(`git fetch origin ${branch}`, undefined, {
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
@@ -240,6 +244,10 @@ async function main() {
 
   // Checkout main branch and cleanout temp directory
   await exec('git checkout main', undefined, {
+    cwd: frameworkPath,
+    silent: true && !process.env.REDWOOD_CI_VERBOSE,
+  })
+  await exec('git clean -fd', undefined, {
     cwd: frameworkPath,
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
