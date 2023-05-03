@@ -97,27 +97,23 @@ async function main(packageName) {
     JSON.stringify(packageJSON, undefined, 2)
   )
 
+  const yarnDir = path.join(frameworkPath, '.yarn', 'releases')
+  const yarnBin = path.resolve(
+    path.join(yarnDir, fs.readdirSync(yarnDir).sort().reverse()[0])
+  )
+
   // Run yarn install
   console.log('Running yarn commands...')
-  await exec('yarn', ['set', 'version', 'latest'], {
-    cwd: path.join(tempTestingDirectory, packageFolderName),
-    env: {
-      ...process.env,
-      YARN_CACHE_FOLDER: path.join(tempTestingDirectory, 'yarn-cache'),
-      YARN_NPM_REGISTRY_SERVER: 'https://registry.npmjs.org',
-      YARN_NODE_LINKER: 'node-modules',
-    },
-  })
-  await exec('yarn', ['plugin', 'import', 'workspace-tools'], {
-    cwd: path.join(tempTestingDirectory, packageFolderName),
-    env: {
-      ...process.env,
-      YARN_CACHE_FOLDER: path.join(tempTestingDirectory, 'yarn-cache'),
-      YARN_NPM_REGISTRY_SERVER: 'https://registry.npmjs.org',
-      YARN_NODE_LINKER: 'node-modules',
-    },
-  })
-  await exec('yarn', ['workspaces', 'focus', '--all', '--production'], {
+  // await exec(yarnBin, ['plugin', 'import', 'workspace-tools'], {
+  //   cwd: path.join(tempTestingDirectory, packageFolderName),
+  //   env: {
+  //     ...process.env,
+  //     YARN_CACHE_FOLDER: path.join(tempTestingDirectory, 'yarn-cache'),
+  //     YARN_NPM_REGISTRY_SERVER: 'https://registry.npmjs.org',
+  //     YARN_NODE_LINKER: 'node-modules',
+  //   },
+  // })
+  await exec(yarnBin, ['workspaces', 'focus', '--all', '--production'], {
     cwd: path.join(tempTestingDirectory, packageFolderName),
     env: {
       ...process.env,
