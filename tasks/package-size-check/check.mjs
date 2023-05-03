@@ -104,15 +104,15 @@ async function main(packageName) {
 
   // Run yarn install
   console.log('Running yarn commands...')
-  // await exec(yarnBin, ['plugin', 'import', 'workspace-tools'], {
-  //   cwd: path.join(tempTestingDirectory, packageFolderName),
-  //   env: {
-  //     ...process.env,
-  //     YARN_CACHE_FOLDER: path.join(tempTestingDirectory, 'yarn-cache'),
-  //     YARN_NPM_REGISTRY_SERVER: 'https://registry.npmjs.org',
-  //     YARN_NODE_LINKER: 'node-modules',
-  //   },
-  // })
+  await exec('node', [yarnBin, 'plugin', 'import', 'workspace-tools'], {
+    cwd: path.join(tempTestingDirectory, packageFolderName),
+    env: {
+      ...process.env,
+      YARN_CACHE_FOLDER: path.join(tempTestingDirectory, 'yarn-cache'),
+      YARN_NPM_REGISTRY_SERVER: 'https://registry.npmjs.org',
+      YARN_NODE_LINKER: 'node-modules',
+    },
+  })
   await exec(
     'node',
     [yarnBin, 'workspaces', 'focus', '--all', '--production'],
