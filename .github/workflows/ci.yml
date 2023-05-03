@@ -366,7 +366,8 @@ jobs:
       - run: yarn install
         working-directory: ./tasks/package-size-check
 
-      - name: Check package size changes
+      - id: package-size-check
+        name: Check package size changes
         uses: ./tasks/package-size-check
 
       - name: Comment on PR
@@ -374,7 +375,7 @@ jobs:
         with:
           message: |
             SIZE: ${{ steps.package-size-check.outputs.size }}
-          # Just come unique string to identify this comment
+          # Just come unique string to identify the bot comment
           comment_tag: package-size-check-054a3467-b747-4933-8ae1-c2939d2ba7ef
 
       # TODO:
