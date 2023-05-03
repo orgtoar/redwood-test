@@ -7,6 +7,8 @@ import chalk from 'chalk'
 import { prompt as enquirerPrompt } from 'enquirer'
 import { UpdateManager } from 'stdout-update'
 
+// An insignificant change to trigger the CI package size check
+
 /**
  * A default set of styling for the TUI, designed for a cohesive look and feel around the Redwood CLI, CRWA and vairous plugins
  */

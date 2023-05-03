@@ -23,6 +23,8 @@ import {
   recordErrorViaTelemetry,
 } from './telemetry'
 
+// An insignificant change to trigger package size check
+
 // Telemetry
 const { telemetry } = Parser(hideBin(process.argv))
 
