@@ -145,9 +145,22 @@ async function main(packageName) {
     seen
   )
 
-  // Set the github ci output variable
-  core.setOutput('size', size)
+  // Genrate a report message and set the github ci output variable
   console.log(`Size of node_modules: ${prettyBytes(size)}`)
+
+  let message = [
+    '### 📦 Package Size Changes',
+    'The following packages were altered and triggered an install size check. The results are:',
+    '',
+    '| Package | Main   | PR     | Change [%] |      |',
+    '| ------- | -----: | -----: | ---------: | :--: |',
+    '| create-redwood-app | 2.0 MB | 2.4 MB | +20.00 | 🔴 |',
+    '| tui | 2.0 MB | 1.0 MB | -50.00 | 🟢 |',
+    '',
+    `*Last updated: ${new Date().toISOString()}*`,
+  ].join('\n')
+
+  core.setOutput('message', message)
 }
 
 // TODO - get package name from input

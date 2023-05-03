@@ -352,12 +352,8 @@ jobs:
 
   package-size-check:
     needs: check
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-      fail-fast: true
-    name: 📦 Package size check / ${{ matrix.os }} / node 18 latest
-    runs-on: ${{ matrix.os }}
+    name: 📦 Package size check
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -373,8 +369,7 @@ jobs:
       - name: Comment on PR
         uses: thollander/actions-comment-pull-request@v2
         with:
-          message: |
-            SIZE: ${{ steps.package-size-check.outputs.size }}
+          message: ${{ steps.package-size-check.outputs.message }}
           # Just come unique string to identify the bot comment
           comment_tag: package-size-check-054a3467-b747-4933-8ae1-c2939d2ba7ef
 
@@ -383,15 +378,11 @@ jobs:
       # - Execute package-size-check on each of them
       # - Report back the resulting change in size (use https://github.com/marketplace/actions/comment-pull-request)
       # - Compare to main? Need to have main cached somewhere and recalc'd on each commit to main
-      #
 
   package-size-check-docs:
     needs: only-doc-changes
     if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-    name: 📦 Package size check / ${{ matrix.os }} / node 18 latest
-    runs-on: ${{ matrix.os }}
+    name: 📦 Package size check
+    runs-on: ubuntu-latest
     steps:
       - run: echo "Only doc changes"
