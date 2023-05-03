@@ -366,9 +366,6 @@ jobs:
       - run: yarn install
         working-directory: ./tasks/package-size-check
 
-      - name: Use latest yarn
-        run: yarn set version latest
-
       - name: Check package size changes
         uses: ./tasks/package-size-check
 
