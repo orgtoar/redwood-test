@@ -294,6 +294,7 @@ async function main() {
   for (const [packageName, prPackageSize] of prPackageSizes) {
     const mainPackageSize = mainPackageSizes.get(packageName)
     const change = ((prPackageSize - mainPackageSize) / mainPackageSize) * 100
+    const icon = Math.abs(change) < 0.01 ? '🟡' : change > 0 ? '🔴' : '🟢'
     tableRows.push(
       [
         packageName,
@@ -301,7 +302,7 @@ async function main() {
         prettyBytes(prPackageSize),
         prettyBytes(prPackageSize - mainPackageSize),
         `${change > 0 ? '+' : ''}${numberFormatter.format(change)}`,
-        change > 0 ? '🔴' : '🟢',
+        icon,
       ].join('|')
     )
   }
