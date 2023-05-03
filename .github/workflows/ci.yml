@@ -374,12 +374,6 @@ jobs:
           # Just come unique string to identify the bot comment
           comment_tag: package-size-check-054a3467-b747-4933-8ae1-c2939d2ba7ef
 
-      # TODO:
-      # - Get a list of what packages have changed
-      # - Execute package-size-check on each of them
-      # - Report back the resulting change in size (use https://github.com/marketplace/actions/comment-pull-request)
-      # - Compare to main? Need to have main cached somewhere and recalc'd on each commit to main
-
   package-size-check-docs:
     needs: only-doc-changes
     if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
