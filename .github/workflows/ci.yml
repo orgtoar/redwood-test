@@ -368,6 +368,7 @@ jobs:
 
       - name: Comment on PR
         uses: thollander/actions-comment-pull-request@v2
+        if: ${{ steps.package-size-check.outputs.message != 0 }}
         with:
           message: ${{ steps.package-size-check.outputs.message }}
           # Just come unique string to identify the bot comment

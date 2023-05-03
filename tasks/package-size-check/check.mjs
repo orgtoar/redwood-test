@@ -255,6 +255,7 @@ async function main() {
   const numberFormatter = new Intl.NumberFormat('en-US', {
     maximumFractionDigits: 2,
     minimumFractionDigits: 2,
+    minimumSignificantDigits: 2,
   })
   const tableRows = []
   for (const [packageName, prPackageSize] of prPackageSizes) {
