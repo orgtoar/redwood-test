@@ -74,6 +74,8 @@ async function measurePackageSize(
   const requiredRedwoodPackages = Object.keys(packageJSON.dependencies).filter(
     (dep) => dep.startsWith('@redwoodjs')
   )
+
+  // Need to recusively update the package.json files of the required redwood packages
   for (const requiredRedwoodPackage of requiredRedwoodPackages) {
     // Copy the redwood package to the temp directory
     const requiredPackageFolderName = requiredRedwoodPackage.replace(
@@ -147,6 +149,7 @@ async function measurePackageSize(
     path.join(tempDirectory, packageFolderName, 'node_modules'),
     seen
   )
+  // Note: Handle other non-node_modules files that are needed for the package size measurement
 }
 
 // Copies local packages to a temp directory and runs yarn install to determine install size
@@ -161,7 +164,7 @@ async function main() {
   )
 
   // Get a list of all files that have changed compared to the main branch
-  const branch = process.env.GITHUB_BASE_REF || 'jgmw-ci/deps-change' // TODO: Remove this default
+  const branch = process.env.GITHUB_BASE_REF
   await exec(`git fetch origin ${branch}`, undefined, {
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
