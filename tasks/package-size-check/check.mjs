@@ -253,9 +253,8 @@ async function main() {
 
   // Generate a report message and set the github ci output variable
   const numberFormatter = new Intl.NumberFormat('en-US', {
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 2,
-    minimumSignificantDigits: 2,
+    maximumFractionDigits: 3,
+    minimumFractionDigits: 3,
   })
   const tableRows = []
   for (const [packageName, prPackageSize] of prPackageSizes) {
@@ -266,6 +265,7 @@ async function main() {
         packageName,
         prettyBytes(mainPackageSize),
         prettyBytes(prPackageSize),
+        prettyBytes(prPackageSize - mainPackageSize),
         `${change > 0 ? '+' : ''}${numberFormatter.format(change)}`,
         change > 0 ? '🔴' : '🟢',
       ].join('|')
@@ -275,8 +275,8 @@ async function main() {
     '### 📦 Package Size Changes',
     'The following packages were altered and triggered an install size check.',
     '',
-    '| Package | Main   | PR     | Change [%] |      |',
-    '| ------- | -----: | -----: | ---------: | :--: |',
+    '| Package | Main   | PR     | Change | Change [%] |      |',
+    '| ------- | -----: | -----: | -----: | ---------: | :--: |',
     ...tableRows,
     '',
     `*Last updated: ${new Date().toISOString()}*`,
