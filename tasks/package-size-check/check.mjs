@@ -182,6 +182,12 @@ async function main() {
       packagesWithChanges.add(packageJSONDirectory)
     }
   }
+
+  // Exit early if no changes detected
+  if (packagesWithChanges.size === 0) {
+    console.log('No changes detected in any packages.')
+    return
+  }
   console.log('Changes have been detected in the following packages:')
   for (const packageWithChanges of packagesWithChanges) {
     console.log(` - ${packageWithChanges.substring(9)}`)
@@ -216,16 +222,52 @@ async function main() {
     )
     prPackageSizes.set(packageName, packageSize)
   }
-  console.log('PR branch package sizes:', prPackageSizes)
+
+  // Checkout main branch and cleanout temp directory
+  await exec('git checkout main', undefined, {
+    cwd: frameworkPath,
+    silent: true && !process.env.REDWOOD_CI_VERBOSE,
+  })
+  fs.removeSync(tempTestingDirectory)
+  fs.ensureDirSync(tempTestingDirectory)
 
   // Get main branch package sizes
-  // TODO
+  console.log('Getting main branch package sizes:')
+  const mainPackageSizes = new Map()
+  for (const packageWithChanges of packagesWithChanges) {
+    const packageName = JSON.parse(
+      fs.readFileSync(
+        path.join(frameworkPath, packageWithChanges, 'package.json'),
+        'utf8'
+      )
+    ).name
+    console.log(` - Measuring size of ${packageName}...`)
+    const packageSize = await measurePackageSize(
+      tempTestingDirectory,
+      frameworkPath,
+      frameworkPackagesPath,
+      packageName
+    )
+    mainPackageSizes.set(packageName, packageSize)
+  }
 
   // Generate a report message and set the github ci output variable
+  const numberFormatter = new Intl.NumberFormat('en-US', {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2,
+  })
   const tableRows = []
   for (const [packageName, prPackageSize] of prPackageSizes) {
+    const mainPackageSize = mainPackageSizes.get(packageName)
+    const change = ((prPackageSize - mainPackageSize) / mainPackageSize) * 100
     tableRows.push(
-      `| ${packageName} | ? | ${prettyBytes(prPackageSize)} | ? | ? |`
+      [
+        packageName,
+        prettyBytes(mainPackageSize),
+        prettyBytes(prPackageSize),
+        `${change > 0 ? '+' : ''}${numberFormatter.format(change)}`,
+        change > 0 ? '🔴' : '🟢',
+      ].join('|')
     )
   }
   let message = [
