@@ -19,6 +19,8 @@
  */
 import { createRequire } from 'module'
 
+// Some random comment
+
 // You can think about the argument we're passing to `createRequire` as being kinda like setting the `cwd`:
 //
 // > It's using the path/URL to resolve relative paths (e.g.: createRequire('/foo/bar')('./baz') may load /foo/baz/index.js)
