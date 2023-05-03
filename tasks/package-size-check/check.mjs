@@ -285,7 +285,7 @@ async function main() {
         prettyBytes(prPackageSize),
         prettyBytes(prPackageSize - mainPackageSize),
         `${change > 0 ? '+' : ''}${numberFormatter.format(change)}`,
-        change === 0 ? '🔵' : change > 0 ? '🔴' : '🟢',
+        change > 0 ? '🔴' : '🟢',
       ].join('|')
     )
   }
