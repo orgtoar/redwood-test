@@ -15,6 +15,8 @@ import { v4 as uuidv4 } from 'uuid'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
+let yarnPluginImported = false
+
 // Copied from https://github.com/styfle/packagephobia/blob/165578bb35dfde3b6c88ea0ac944a75e5faaabfa/src/util/backend/npm-stats.ts#LL11C4-L11C4
 export function getDirSize(root, seen) {
   const stats = fs.lstatSync(root)
@@ -103,16 +105,19 @@ async function measurePackageSize(
   )
 
   // Run yarn install
-  await exec('node', [yarnBin, 'plugin', 'import', 'workspace-tools'], {
-    cwd: path.join(tempDirectory, packageFolderName),
-    env: {
-      ...process.env,
-      YARN_CACHE_FOLDER: path.join(tempDirectory, 'yarn-cache'),
-      YARN_NPM_REGISTRY_SERVER: 'https://registry.npmjs.org',
-      YARN_NODE_LINKER: 'node-modules',
-    },
-    silent: true && !process.env.REDWOOD_CI_VERBOSE,
-  })
+  if (!yarnPluginImported) {
+    await exec('node', [yarnBin, 'plugin', 'import', 'workspace-tools'], {
+      cwd: path.join(tempDirectory, packageFolderName),
+      env: {
+        ...process.env,
+        YARN_CACHE_FOLDER: path.join(tempDirectory, 'yarn-cache'),
+        YARN_NPM_REGISTRY_SERVER: 'https://registry.npmjs.org',
+        YARN_NODE_LINKER: 'node-modules',
+      },
+      silent: true && !process.env.REDWOOD_CI_VERBOSE,
+    })
+    yarnPluginImported = true
+  }
   await exec(
     'node',
     [yarnBin, 'workspaces', 'focus', '--all', '--production'],
@@ -207,12 +212,21 @@ async function main() {
   console.log('Getting PR branch package sizes:')
   const prPackageSizes = new Map()
   for (const packageWithChanges of packagesWithChanges) {
-    const packageName = JSON.parse(
-      fs.readFileSync(
-        path.join(frameworkPath, packageWithChanges, 'package.json'),
-        'utf8'
-      )
-    ).name
+    let packageName
+    try {
+      packageName = JSON.parse(
+        fs.readFileSync(
+          path.join(frameworkPath, packageWithChanges, 'package.json'),
+          'utf8'
+        )
+      ).name
+    } catch (error) {
+      if (process.env.REDWOOD_CI_VERBOSE) {
+        console.error(error)
+      }
+      // If the package is not in the PR branch, set the size to 0
+      prPackageSizes.set(packageName, 0)
+    }
     console.log(` - Measuring size of ${packageName}...`)
     const packageSize = await measurePackageSize(
       tempTestingDirectory,
@@ -235,12 +249,21 @@ async function main() {
   console.log('Getting main branch package sizes:')
   const mainPackageSizes = new Map()
   for (const packageWithChanges of packagesWithChanges) {
-    const packageName = JSON.parse(
-      fs.readFileSync(
-        path.join(frameworkPath, packageWithChanges, 'package.json'),
-        'utf8'
-      )
-    ).name
+    let packageName
+    try {
+      packageName = JSON.parse(
+        fs.readFileSync(
+          path.join(frameworkPath, packageWithChanges, 'package.json'),
+          'utf8'
+        )
+      ).name
+    } catch (error) {
+      if (process.env.REDWOOD_CI_VERBOSE) {
+        console.error(error)
+      }
+      // If the package is not in the main branch, set the size to 0
+      mainPackageSizes.set(packageName, 0)
+    }
     console.log(` - Measuring size of ${packageName}...`)
     const packageSize = await measurePackageSize(
       tempTestingDirectory,
@@ -267,7 +290,7 @@ async function main() {
         prettyBytes(prPackageSize),
         prettyBytes(prPackageSize - mainPackageSize),
         `${change > 0 ? '+' : ''}${numberFormatter.format(change)}`,
-        change > 0 ? '🔴' : '🟢',
+        change === 0 ? '🔵' : change > 0 ? '🔴' : '🟢',
       ].join('|')
     )
   }
