@@ -7,6 +7,7 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import core from '@actions/core'
 import execa from 'execa'
 import fs from 'fs-extra'
 import prettyBytes from 'pretty-bytes'
@@ -133,8 +134,9 @@ async function main(packageName) {
     seen
   )
 
+  // Set the github ci output variable
+  core.setOutput('size', size)
   console.log(`Size of node_modules: ${prettyBytes(size)}`)
-  return size
 }
 
 // TODO - get package name from input

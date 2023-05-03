@@ -15,28 +15,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@actions/exec@npm:1.1.1":
-  version: 1.1.1
-  resolution: "@actions/exec@npm:1.1.1"
-  dependencies:
-    "@actions/io": ^1.0.1
-  checksum: 4a09f6bdbe50ce68b5cf8a7254d176230d6a74bccf6ecc3857feee209a8c950ba9adec87cc5ecceb04110182d1c17117234e45557d72fde6229b7fd3a395322a
-  languageName: node
-  linkType: hard
-
 "@actions/http-client@npm:^2.0.1":
   version: 2.0.1
   resolution: "@actions/http-client@npm:2.0.1"
   dependencies:
     tunnel: ^0.0.6
   checksum: b58987ba2f53d7988f612ede7ff834573a3360c21f8fdea9fea92f26ada0fd0efafb22aa7d83f49c18965a5b765775d5253e2edb8d9476d924c4b304ef726b67
-  languageName: node
-  linkType: hard
-
-"@actions/io@npm:^1.0.1":
-  version: 1.1.2
-  resolution: "@actions/io@npm:1.1.2"
-  checksum: 61c871bbee1cf58f57917d9bb2cf6bb7ea4dc40de3f65c7fb4ec619ceff57fc98f56be9cca2d476b09e7a96e1cba0d88cd125c4f690d384b9483935186f256c1
   languageName: node
   linkType: hard
 
@@ -197,7 +181,6 @@ __metadata:
   resolution: "package-size-check@workspace:."
   dependencies:
     "@actions/core": 1.10.0
-    "@actions/exec": 1.1.1
     "@types/fs-extra": 11.0.1
     "@types/uuid": 9.0.1
     execa: 5.1.1

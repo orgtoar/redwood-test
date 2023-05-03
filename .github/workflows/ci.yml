@@ -362,8 +362,22 @@ jobs:
     #   REDWOOD_REDIRECT_TELEMETRY: "http://127.0.0.1:48619" # Random port
     steps:
       - uses: actions/checkout@v3
-      - name: 🧶 Set up job
-        uses: ./.github/actions/set-up-job
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: yarn install
+        working-directory: ./tasks/package-size-check
+
+      - name: Check package size changes
+        uses: ./tasks/package-size-check
+
+      - name: Comment on PR
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            SIZE: ${{ steps.package-size-check.outputs.size }}
+          # Just come unique string to identify this comment
+          comment_tag: package-size-check-054a3467-b747-4933-8ae1-c2939d2ba7ef
 
       # TODO:
       # - Get a list of what packages have changed
