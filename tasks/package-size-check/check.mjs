@@ -113,15 +113,19 @@ async function main(packageName) {
   //     YARN_NODE_LINKER: 'node-modules',
   //   },
   // })
-  await exec(yarnBin, ['workspaces', 'focus', '--all', '--production'], {
-    cwd: path.join(tempTestingDirectory, packageFolderName),
-    env: {
-      ...process.env,
-      YARN_CACHE_FOLDER: path.join(tempTestingDirectory, 'yarn-cache'),
-      YARN_NPM_REGISTRY_SERVER: 'https://registry.npmjs.org',
-      YARN_NODE_LINKER: 'node-modules',
-    },
-  })
+  await exec(
+    'node',
+    [yarnBin, 'workspaces', 'focus', '--all', '--production'],
+    {
+      cwd: path.join(tempTestingDirectory, packageFolderName),
+      env: {
+        ...process.env,
+        YARN_CACHE_FOLDER: path.join(tempTestingDirectory, 'yarn-cache'),
+        YARN_NPM_REGISTRY_SERVER: 'https://registry.npmjs.org',
+        YARN_NODE_LINKER: 'node-modules',
+      },
+    }
+  )
 
   // Remove files that are not needed for the package size measurement
   fs.rmSync(
