@@ -15,8 +15,6 @@ import { v4 as uuidv4 } from 'uuid'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-let yarnPluginImported = false
-
 // Copied from https://github.com/styfle/packagephobia/blob/165578bb35dfde3b6c88ea0ac944a75e5faaabfa/src/util/backend/npm-stats.ts#LL11C4-L11C4
 export function getDirSize(root, seen) {
   const stats = fs.lstatSync(root)
@@ -105,19 +103,16 @@ async function measurePackageSize(
   )
 
   // Run yarn install
-  if (!yarnPluginImported) {
-    await exec('node', [yarnBin, 'plugin', 'import', 'workspace-tools'], {
-      cwd: path.join(tempDirectory, packageFolderName),
-      env: {
-        ...process.env,
-        YARN_CACHE_FOLDER: path.join(tempDirectory, 'yarn-cache'),
-        YARN_NPM_REGISTRY_SERVER: 'https://registry.npmjs.org',
-        YARN_NODE_LINKER: 'node-modules',
-      },
-      silent: true && !process.env.REDWOOD_CI_VERBOSE,
-    })
-    yarnPluginImported = true
-  }
+  await exec('node', [yarnBin, 'plugin', 'import', 'workspace-tools'], {
+    cwd: path.join(tempDirectory, packageFolderName),
+    env: {
+      ...process.env,
+      YARN_CACHE_FOLDER: path.join(tempDirectory, 'yarn-cache'),
+      YARN_NPM_REGISTRY_SERVER: 'https://registry.npmjs.org',
+      YARN_NODE_LINKER: 'node-modules',
+    },
+    silent: true && !process.env.REDWOOD_CI_VERBOSE,
+  })
   await exec(
     'node',
     [yarnBin, 'workspaces', 'focus', '--all', '--production'],
