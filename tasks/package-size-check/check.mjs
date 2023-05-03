@@ -8,7 +8,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import core from '@actions/core'
-import execa from 'execa'
+import { exec } from '@actions/exec'
 import fs from 'fs-extra'
 import prettyBytes from 'pretty-bytes'
 import { v4 as uuidv4 } from 'uuid'
@@ -99,17 +99,19 @@ async function main(packageName) {
 
   // Run yarn install
   console.log('Running yarn commands...')
-  await execa('yarn', ['plugin', 'import', 'workspace-tools'], {
+  await exec('yarn', ['plugin', 'import', 'workspace-tools'], {
     cwd: path.join(tempTestingDirectory, packageFolderName),
     env: {
+      ...process.env,
       YARN_CACHE_FOLDER: path.join(tempTestingDirectory, 'yarn-cache'),
       YARN_NPM_REGISTRY_SERVER: 'https://registry.npmjs.org',
       YARN_NODE_LINKER: 'node-modules',
     },
   })
-  await execa('yarn', ['workspaces', 'focus', '--all', '--production'], {
+  await exec('yarn', ['workspaces', 'focus', '--all', '--production'], {
     cwd: path.join(tempTestingDirectory, packageFolderName),
     env: {
+      ...process.env,
       YARN_CACHE_FOLDER: path.join(tempTestingDirectory, 'yarn-cache'),
       YARN_NPM_REGISTRY_SERVER: 'https://registry.npmjs.org',
       YARN_NODE_LINKER: 'node-modules',

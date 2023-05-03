@@ -354,12 +354,10 @@ jobs:
     needs: check
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
       fail-fast: true
     name: 📦 Package size check / ${{ matrix.os }} / node 18 latest
     runs-on: ${{ matrix.os }}
-    # env:
-    #   REDWOOD_REDIRECT_TELEMETRY: "http://127.0.0.1:48619" # Random port
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -391,7 +389,7 @@ jobs:
     if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
     name: 📦 Package size check / ${{ matrix.os }} / node 18 latest
     runs-on: ${{ matrix.os }}
     steps:
