@@ -57,23 +57,33 @@ function findPackageJSONFiles(rootDirectory) {
 }
 
 function getRedwoodDependenciesOfPackage(packageName) {
+  const packageFrameworkDirectory = packageFrameworkDirectories.get(packageName)
+  if (!packageFrameworkDirectory) {
+    console.log(`Could not find package directory for ${packageName}!`)
+    return []
+  }
+  if (
+    !fs.existsSync(
+      path.join(frameworkPath, packageFrameworkDirectory, 'package.json')
+    )
+  ) {
+    console.log(`Could not find package.json for ${packageName}!`)
+    return []
+  }
+
   const packageJSON = JSON.parse(
     fs.readFileSync(
-      path.join(
-        frameworkPath,
-        packageFrameworkDirectories.get(packageName),
-        'package.json'
-      ),
+      path.join(frameworkPath, packageFrameworkDirectory, 'package.json'),
       'utf8'
     )
   )
-  const directDeps = Object.keys(packageJSON.dependencies).filter((dep) =>
+  const redwoodDeps = Object.keys(packageJSON.dependencies).filter((dep) =>
     dep.startsWith('@redwoodjs')
   )
-  const indirectDeps = directDeps.flatMap((dep) =>
-    getRedwoodDependenciesOfPackage(dep)
-  )
-  return [...directDeps, ...indirectDeps]
+  for (const redwoodDep of redwoodDeps) {
+    redwoodDeps.push(...getRedwoodDependenciesOfPackage(redwoodDep))
+  }
+  return Array.from(new Set(redwoodDeps))
 }
 
 async function measurePackageSize(packageName, tempDirectory) {
@@ -87,14 +97,15 @@ async function measurePackageSize(packageName, tempDirectory) {
     return 0
   }
 
-  const redwoodPackagesUsed = new Set(
-    getRedwoodDependenciesOfPackage(packageName)
+  const redwoodPackagesUsed = Array.from(
+    new Set([packageName, ...getRedwoodDependenciesOfPackage(packageName)])
   )
-  redwoodPackagesUsed.add(packageName)
 
   const nonRedwoodPackagesUsed = new Map()
   for (const redwoodPackage of redwoodPackagesUsed) {
     // Get the package.json
+    const packageFrameworkDirectory =
+      packageFrameworkDirectories.get(redwoodPackage)
     const packageJSON = JSON.parse(
       fs.readFileSync(
         path.join(frameworkPath, packageFrameworkDirectory, 'package.json'),
