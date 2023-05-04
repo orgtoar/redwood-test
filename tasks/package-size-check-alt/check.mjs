@@ -204,7 +204,7 @@ async function measurePackageSize(packageName, tempDirectory) {
   )
 
   // Measure size of node_modules
-  let size = getDirSize(
+  const size = getDirSize(
     path.join(customPackageDirectory, 'node_modules'),
     new Set()
   )
@@ -316,6 +316,9 @@ async function main() {
 
   // Checkout main branch, remove stray files and cleanout temp directory
   console.log('Checking out main branch...')
+  await exec(`git fetch origin main`, undefined, {
+    silent: true && !process.env.REDWOOD_CI_VERBOSE,
+  })
   await exec('git checkout main', undefined, {
     cwd: frameworkPath,
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
