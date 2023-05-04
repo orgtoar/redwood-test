@@ -326,6 +326,7 @@ async function main() {
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
   fs.emptyDirSync(tempTestingDirectory)
+  fs.emptyDirSync(yarnCacheDirectory)
 
   // Install dependencies and build packages for the main branch
   await installAndBuildPackages()
