@@ -316,11 +316,11 @@ async function main() {
 
   // Checkout main branch, remove stray files and cleanout temp directory
   console.log('Checking out main branch...')
-  await exec(`git checkout ${mainBranch}`, undefined, {
+  await exec('git stash', undefined, {
     cwd: frameworkPath,
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
-  await exec('git stash', undefined, {
+  await exec(`git checkout ${mainBranch}`, undefined, {
     cwd: frameworkPath,
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
