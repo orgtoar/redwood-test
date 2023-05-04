@@ -231,12 +231,6 @@ async function main() {
   // Build the framework packages
   await installAndBuildPackages()
 
-  console.log('\n\n\n\n\n')
-  await exec(`git status`, undefined, {
-    silent: true && !process.env.REDWOOD_CI_VERBOSE,
-  })
-  console.log('\n\n\n\n\n')
-
   // Get all package directories
   const packageJSONFiles = findPackageJSONFiles(
     path.join(frameworkPath, 'packages')
@@ -258,12 +252,13 @@ async function main() {
   }
 
   // Get a list of all files that have changed compared to the main branch
-  const branch = process.env.GITHUB_BASE_REF
-  await exec(`git fetch origin ${branch}`, undefined, {
+  const mainBranch = process.env.GITHUB_BASE_REF
+  const prBranch = process.env.GITHUB_REF
+  await exec(`git fetch origin ${mainBranch}`, undefined, {
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
   const { stdout } = await getExecOutput(
-    `git diff origin/${branch} --name-only`,
+    `git diff origin/${mainBranch} --name-only`,
     undefined,
     {
       silent: true && !process.env.REDWOOD_CI_VERBOSE,
@@ -308,17 +303,17 @@ async function main() {
   })
 
   // Checkout PR branch, remove stray files and cleanout temp directory
-  console.log('Checking out PR branch...')
-  await exec(`git checkout ${branch}`, undefined, {
-    cwd: frameworkPath,
-    silent: true && !process.env.REDWOOD_CI_VERBOSE,
-  })
-  await exec('git clean -fd', undefined, {
-    cwd: frameworkPath,
-    silent: true && !process.env.REDWOOD_CI_VERBOSE,
-  })
-  fs.emptyDirSync(tempTestingDirectory)
-  fs.emptyDirSync(yarnCacheDirectory)
+  // console.log('Checking out PR branch...')
+  // await exec(`git checkout ${prBranch}`, undefined, {
+  //   cwd: frameworkPath,
+  //   silent: true && !process.env.REDWOOD_CI_VERBOSE,
+  // })
+  // await exec('git clean -fd', undefined, {
+  //   cwd: frameworkPath,
+  //   silent: true && !process.env.REDWOOD_CI_VERBOSE,
+  // })
+  // fs.emptyDirSync(tempTestingDirectory)
+  // fs.emptyDirSync(yarnCacheDirectory)
 
   // Get PR branch package sizes
   console.log('Getting PR branch package sizes:')
@@ -335,7 +330,7 @@ async function main() {
 
   // Checkout main branch, remove stray files and cleanout temp directory
   console.log('Checking out main branch...')
-  await exec('git checkout main', undefined, {
+  await exec(`git checkout ${mainBranch}`, undefined, {
     cwd: frameworkPath,
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
@@ -363,7 +358,7 @@ async function main() {
   }
 
   // Return to the PR branch (useful if run locally)
-  await exec(`git checkout ${branch}`, undefined, {
+  await exec(`git checkout ${prBranch}`, undefined, {
     cwd: frameworkPath,
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
