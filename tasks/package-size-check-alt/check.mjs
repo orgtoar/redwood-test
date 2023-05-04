@@ -253,11 +253,12 @@ async function main() {
 
   // Get a list of all files that have changed compared to the main branch
   const branch = process.env.GITHUB_BASE_REF
-  await exec(`git fetch origin ${branch}`, undefined, {
+  console.log('BRANCH: ', branch)
+  await exec(`git fetch origin main`, undefined, {
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
   const { stdout } = await getExecOutput(
-    `git diff origin/${branch} --name-only`,
+    `git diff origin/main --name-only`,
     undefined,
     {
       silent: true && !process.env.REDWOOD_CI_VERBOSE,
@@ -316,9 +317,6 @@ async function main() {
 
   // Checkout main branch, remove stray files and cleanout temp directory
   console.log('Checking out main branch...')
-  await exec(`git fetch origin main`, undefined, {
-    silent: true && !process.env.REDWOOD_CI_VERBOSE,
-  })
   await exec('git checkout main', undefined, {
     cwd: frameworkPath,
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
