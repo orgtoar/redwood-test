@@ -383,3 +383,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Only doc changes"
+
+  package-size-check-alt:
+    needs: check
+    name: 📦 Package size check ALT
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: yarn install
+        working-directory: ./tasks/package-size-check-alt
+
+      - id: package-size-check-alt
+        name: Check package size changes
+        uses: ./tasks/package-size-check-alt
+        env:
+          REDWOOD_CI_VERBOSE: 1
+
+      - name: Comment on PR
+        uses: thollander/actions-comment-pull-request@v2
+        if: ${{ steps.package-size-check-alt.outputs.message != 0 }}
+        with:
+          message: ${{ steps.package-size-check-alt.outputs.message }}
+          # Just come unique string to identify the bot comment
+          comment_tag: package-size-check-054a3467-b747-4933-8ae1-c2939d2ba7ef-ALT
+
+  package-size-check-alt-docs:
+    needs: only-doc-changes
+    if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
+    name: 📦 Package size check ALT
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Only doc changes"

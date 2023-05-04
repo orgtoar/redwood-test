@@ -1,0 +1,5 @@
+name: 'Package Size Check'
+description: "Check the install size of packages."
+runs:
+  using: node16
+  main: 'check.mjs'
