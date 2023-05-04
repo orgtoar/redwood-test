@@ -7,7 +7,7 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import core from '@actions/core'
+import core, { getInput } from '@actions/core'
 import { exec, getExecOutput } from '@actions/exec'
 import fs from 'fs-extra'
 import prettyBytes from 'pretty-bytes'
@@ -225,9 +225,14 @@ async function main() {
   const changedFiles = stdout.toString().trim().split('\n').filter(Boolean)
 
   // Determine which packages have changes
+  const { labels } = JSON.parse(getInput('labels'))
+  const hasForceCheck = labels.some(
+    (label) => label.name === 'force-package-size-check'
+  )
   const packagesWithChanges = new Set()
   for (const packageJSONDirectory of packageJSONDirectories) {
     if (
+      hasForceCheck ||
       changedFiles.some((changedFile) => {
         return changedFile.startsWith(packageJSONDirectory)
       })
