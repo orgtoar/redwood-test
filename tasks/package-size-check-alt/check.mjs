@@ -156,7 +156,7 @@ async function measurePackageSize(packageName, tempDirectory) {
       ...Object.fromEntries(
         [...redwoodPackagesUsed].map((dep) => [
           dep,
-          `link:${path.join(
+          `file:${path.join(
             tempDirectory,
             packageTestingDirectories.get(dep)
           )}`,
