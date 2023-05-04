@@ -253,12 +253,11 @@ async function main() {
 
   // Get a list of all files that have changed compared to the main branch
   const branch = process.env.GITHUB_BASE_REF
-  console.log('BRANCH: ', branch)
-  await exec(`git fetch origin main`, undefined, {
+  await exec(`git fetch origin ${branch}`, undefined, {
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
   const { stdout } = await getExecOutput(
-    `git diff origin/main --name-only`,
+    `git diff origin/${branch} --name-only`,
     undefined,
     {
       silent: true && !process.env.REDWOOD_CI_VERBOSE,
@@ -301,6 +300,19 @@ async function main() {
     fs.removeSync(tempTestingDirectory)
     fs.removeSync(yarnCacheDirectory)
   })
+
+  // Checkout PR branch, remove stray files and cleanout temp directory
+  console.log('Checking out PR branch...')
+  await exec(`git checkout ${branch}`, undefined, {
+    cwd: frameworkPath,
+    silent: true && !process.env.REDWOOD_CI_VERBOSE,
+  })
+  await exec('git clean -fd', undefined, {
+    cwd: frameworkPath,
+    silent: true && !process.env.REDWOOD_CI_VERBOSE,
+  })
+  fs.emptyDirSync(tempTestingDirectory)
+  fs.emptyDirSync(yarnCacheDirectory)
 
   // Get PR branch package sizes
   console.log('Getting PR branch package sizes:')
