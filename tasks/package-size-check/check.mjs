@@ -15,6 +15,12 @@ import { v4 as uuidv4 } from 'uuid'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
+const frameworkPath = path.resolve(__dirname, '../../')
+const yarnDir = path.join(frameworkPath, '.yarn', 'releases')
+const yarnBin = path.resolve(
+  path.join(yarnDir, fs.readdirSync(yarnDir).sort().reverse()[0])
+)
+
 const packageNameToDirectory = new Map()
 
 // Copied from https://github.com/styfle/packagephobia/blob/165578bb35dfde3b6c88ea0ac944a75e5faaabfa/src/util/backend/npm-stats.ts#LL11C4-L11C4
@@ -50,7 +56,6 @@ function findPackageJSONFiles(rootDirectory) {
 
 function copyRedwoodPackageToTempDirectory(packageDirectory, tempDirectory) {
   // Find the package.json
-  const frameworkPath = path.resolve(__dirname, '../../')
   const packageJSON = JSON.parse(
     fs.readFileSync(
       path.join(frameworkPath, packageDirectory, 'package.json'),
@@ -98,18 +103,11 @@ function copyRedwoodPackageToTempDirectory(packageDirectory, tempDirectory) {
 }
 
 async function measurePackageSize(packageDirectory, tempDirectory) {
-  const frameworkPath = path.resolve(__dirname, '../../')
-
   // Clear the temp directory
   fs.emptyDirSync(tempDirectory)
 
   // Copy the package of interest to the temp directory
   copyRedwoodPackageToTempDirectory(packageDirectory, tempDirectory)
-
-  const yarnDir = path.join(frameworkPath, '.yarn', 'releases')
-  const yarnBin = path.resolve(
-    path.join(yarnDir, fs.readdirSync(yarnDir).sort().reverse()[0])
-  )
 
   // Run yarn install
   const packageName = packageDirectory.substring(9)
@@ -165,11 +163,9 @@ async function measurePackageSize(packageDirectory, tempDirectory) {
 
 // Copies local packages to a temp directory and runs yarn install to determine install size
 async function main() {
-  const frameworkPath = path.resolve(__dirname, '../../')
-
   // Build the framework packages
   console.log('Building packages...')
-  await exec('yarn', ['build'], {
+  await exec('node', [yarnBin, 'build'], {
     cwd: frameworkPath,
     env: {
       ...process.env,
@@ -263,6 +259,15 @@ async function main() {
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
   fs.emptyDirSync(tempTestingDirectory)
+
+  await exec('node', [yarnBin, 'build'], {
+    cwd: frameworkPath,
+    env: {
+      ...process.env,
+      NODE_ENV: 'production',
+    },
+    silent: true && !process.env.REDWOOD_CI_VERBOSE,
+  })
 
   // Get main branch package sizes
   console.log('Getting main branch package sizes:')
