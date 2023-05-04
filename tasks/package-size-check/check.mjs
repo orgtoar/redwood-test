@@ -225,7 +225,7 @@ async function main() {
   const changedFiles = stdout.toString().trim().split('\n').filter(Boolean)
 
   // Determine which packages have changes
-  const { labels } = JSON.parse(getInput('labels'))
+  const { labels } = JSON.parse(getInput('labels') || '{}')
   const hasForceCheck =
     labels.some((label) => label.name === 'force-package-size-check') || true
   const packagesWithChanges = new Set()
