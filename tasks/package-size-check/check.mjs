@@ -95,6 +95,7 @@ function copyRedwoodPackageToTempDirectory(
     if (portalsUsed.includes(requiredRedwoodPackage)) {
       // If it was previously added as a portal we'll already be counting it's size
       delete packageJSON.dependencies[requiredRedwoodPackage]
+      continue
     } else {
       packageJSON.dependencies[requiredRedwoodPackage] = `portal:${path.join(
         tempDirectory,
@@ -178,6 +179,7 @@ async function measurePackageSize(packageDirectory, tempDirectory) {
 // Copies local packages to a temp directory and runs yarn install to determine install size
 async function main() {
   // Build the framework packages
+  console.log('Installing and building packages...')
   await exec('node', [yarnBin, 'install'], {
     cwd: frameworkPath,
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
@@ -267,6 +269,7 @@ async function main() {
   }
 
   // Checkout main branch, remove stray files and cleanout temp directory
+  console.log('Checking out main branch...')
   await exec('git checkout main', undefined, {
     cwd: frameworkPath,
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
@@ -278,6 +281,7 @@ async function main() {
   fs.emptyDirSync(tempTestingDirectory)
 
   // Install dependencies and build packages for the main branch
+  console.log('Installing and building packages...')
   await exec('node', [yarnBin, 'install'], {
     cwd: frameworkPath,
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
@@ -303,6 +307,7 @@ async function main() {
   }
 
   // Generate a report message and set the github ci output variable
+  console.log('Generating PR comment...')
   const numberFormatter = new Intl.NumberFormat('en-US', {
     maximumFractionDigits: 3,
     minimumFractionDigits: 3,
