@@ -270,6 +270,10 @@ async function main() {
     }
   }
 
+  // TODO: Remove this
+  packagesWithChanges.clear()
+  packagesWithChanges.add('create-redwood-app')
+
   // Exit early if no changes detected
   if (packagesWithChanges.size === 0) {
     console.log('No changes detected in any packages.')
@@ -289,7 +293,7 @@ async function main() {
   // Cleanup temp directory on exit
   process.on('exit', () => {
     // TODO: Add this back
-    fs.removeSync(tempTestingDirectory)
+    // fs.removeSync(tempTestingDirectory)
   })
 
   // Get PR branch package sizes
@@ -324,11 +328,13 @@ async function main() {
   console.log('Getting main branch package sizes:')
   const mainPackageSizes = new Map()
   for (const packageWithChanges of packagesWithChanges) {
-    console.log(` - Measuring size of '${packageWithChanges.substring(9)}'...`)
-    mainPackageSizes.set(
-      packageWithChanges.substring(9),
-      await measurePackageSize(packageWithChanges, tempTestingDirectory)
+    console.log(` - Measuring size of '${packageWithChanges}'...`)
+    const size = await measurePackageSize(
+      packageWithChanges,
+      tempTestingDirectory
     )
+    console.log(`   - Size: ${size} (${prettyBytes(size)})`)
+    mainPackageSizes.set(packageWithChanges, size)
   }
 
   // Generate a report message and set the github ci output variable
