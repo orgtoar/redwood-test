@@ -365,6 +365,8 @@ jobs:
       - id: package-size-check
         name: Check package size changes
         uses: ./tasks/package-size-check
+        env:
+          REDWOOD_CI_VERBOSE: 1
 
       - name: Comment on PR
         uses: thollander/actions-comment-pull-request@v2
