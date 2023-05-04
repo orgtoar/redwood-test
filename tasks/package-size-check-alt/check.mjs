@@ -231,6 +231,12 @@ async function main() {
   // Build the framework packages
   await installAndBuildPackages()
 
+  console.log('\n\n\n\n\n')
+  await exec(`git status`, undefined, {
+    silent: true && !process.env.REDWOOD_CI_VERBOSE,
+  })
+  console.log('\n\n\n\n\n')
+
   // Get all package directories
   const packageJSONFiles = findPackageJSONFiles(
     path.join(frameworkPath, 'packages')
