@@ -54,7 +54,11 @@ function findPackageJSONFiles(rootDirectory) {
   return packageJSONFiles
 }
 
-function copyRedwoodPackageToTempDirectory(packageDirectory, tempDirectory) {
+function copyRedwoodPackageToTempDirectory(
+  packageDirectory,
+  tempDirectory,
+  portalsUsed
+) {
   // Find the package.json
   const packageJSON = JSON.parse(
     fs.readFileSync(
@@ -85,14 +89,23 @@ function copyRedwoodPackageToTempDirectory(packageDirectory, tempDirectory) {
   )
   for (const requiredRedwoodPackage of requiredRedwoodPackages) {
     // Update the package.json to use the local packages
-    packageJSON.dependencies[requiredRedwoodPackage] = `file:${path.join(
-      tempDirectory,
-      requiredRedwoodPackage.replace('@redwoodjs/', '')
-    )}`
+    // 'portal' - creates a link to the folder and follows dependencies
+    //  See https://github.com/yarnpkg/berry/issues/4478, cannot have multiple portals to the same folder - boo!
+    if (portalsUsed.includes(requiredRedwoodPackage)) {
+      // If it was previously added as a portal we'll already be counting it's size
+      delete packageJSON.dependencies[requiredRedwoodPackage]
+    } else {
+      packageJSON.dependencies[requiredRedwoodPackage] = `portal:${path.join(
+        tempDirectory,
+        requiredRedwoodPackage.replace('@redwoodjs/', '')
+      )}`
+      portalsUsed.push(requiredRedwoodPackage)
+    }
     // Copy the required redwood packages to the temp directory
     copyRedwoodPackageToTempDirectory(
       packageNameToDirectory.get(requiredRedwoodPackage),
-      tempDirectory
+      tempDirectory,
+      portalsUsed
     )
   }
   // Write the updated package.json
@@ -107,7 +120,7 @@ async function measurePackageSize(packageDirectory, tempDirectory) {
   fs.emptyDirSync(tempDirectory)
 
   // Copy the package of interest to the temp directory
-  copyRedwoodPackageToTempDirectory(packageDirectory, tempDirectory)
+  copyRedwoodPackageToTempDirectory(packageDirectory, tempDirectory, [])
 
   // Run yarn install
   const packageName = packageDirectory.substring(9)
@@ -249,7 +262,7 @@ async function main() {
     )
   }
 
-  // Checkout main branch and cleanout temp directory
+  // Checkout main branch, remove stray files and cleanout temp directory
   await exec('git checkout main', undefined, {
     cwd: frameworkPath,
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
@@ -260,6 +273,11 @@ async function main() {
   })
   fs.emptyDirSync(tempTestingDirectory)
 
+  // Install dependencies and build packages for the main branch
+  await exec('node', [yarnBin, 'install'], {
+    cwd: frameworkPath,
+    silent: true && !process.env.REDWOOD_CI_VERBOSE,
+  })
   await exec('node', [yarnBin, 'build'], {
     cwd: frameworkPath,
     env: {
@@ -289,7 +307,7 @@ async function main() {
   for (const [packageName, prPackageSize] of prPackageSizes) {
     const mainPackageSize = mainPackageSizes.get(packageName)
     const change = ((prPackageSize - mainPackageSize) / mainPackageSize) * 100
-    const icon = Math.abs(change) < 0.01 ? '🟡' : change > 0 ? '🔴' : '🟢'
+    const icon = change > 0 ? (change > 0.02 ? '🔴' : '🟡') : '🟢'
     tableRows.push(
       [
         packageName,
