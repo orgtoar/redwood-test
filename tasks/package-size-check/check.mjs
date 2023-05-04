@@ -74,6 +74,7 @@ function copyRedwoodPackageToTempDirectory(
     'LICENSE',
     ...(packageJSON.files || []),
   ]
+  fs.mkdirSync(path.join(tempDirectory, packageJSON.name.substring(11)))
   for (const content of contentToCopy) {
     if (fs.existsSync(path.join(frameworkPath, packageDirectory, content))) {
       fs.copySync(
