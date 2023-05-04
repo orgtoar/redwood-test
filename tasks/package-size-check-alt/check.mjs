@@ -320,6 +320,10 @@ async function main() {
     cwd: frameworkPath,
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
+  await exec('git stash', undefined, {
+    cwd: frameworkPath,
+    silent: true && !process.env.REDWOOD_CI_VERBOSE,
+  })
   await exec('git clean -fd', undefined, {
     cwd: frameworkPath,
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
