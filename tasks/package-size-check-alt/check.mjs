@@ -253,7 +253,6 @@ async function main() {
 
   // Get a list of all files that have changed compared to the main branch
   const mainBranch = process.env.GITHUB_BASE_REF
-  const prBranch = process.env.GITHUB_REF
   await exec(`git fetch origin ${mainBranch}`, undefined, {
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
@@ -302,19 +301,6 @@ async function main() {
     fs.removeSync(yarnCacheDirectory)
   })
 
-  // Checkout PR branch, remove stray files and cleanout temp directory
-  // console.log('Checking out PR branch...')
-  // await exec(`git checkout ${prBranch}`, undefined, {
-  //   cwd: frameworkPath,
-  //   silent: true && !process.env.REDWOOD_CI_VERBOSE,
-  // })
-  // await exec('git clean -fd', undefined, {
-  //   cwd: frameworkPath,
-  //   silent: true && !process.env.REDWOOD_CI_VERBOSE,
-  // })
-  // fs.emptyDirSync(tempTestingDirectory)
-  // fs.emptyDirSync(yarnCacheDirectory)
-
   // Get PR branch package sizes
   console.log('Getting PR branch package sizes:')
   const prPackageSizes = new Map()
@@ -356,12 +342,6 @@ async function main() {
     console.log(`   - Size: ${size} (${prettyBytes(size)})`)
     mainPackageSizes.set(packageWithChanges, size)
   }
-
-  // Return to the PR branch (useful if run locally)
-  await exec(`git checkout ${prBranch}`, undefined, {
-    cwd: frameworkPath,
-    silent: true && !process.env.REDWOOD_CI_VERBOSE,
-  })
 
   // Generate a report message and set the github ci output variable
   console.log('Generating PR comment...')
