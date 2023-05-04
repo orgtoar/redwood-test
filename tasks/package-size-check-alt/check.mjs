@@ -277,9 +277,12 @@ async function main() {
     }
   }
 
-  // TODO: Remove this
+  // TODO: Remove this - some random packages
   packagesWithChanges.clear()
   packagesWithChanges.add('create-redwood-app')
+  packagesWithChanges.add('@redwoodjs/cli')
+  packagesWithChanges.add('@redwoodjs/web')
+  packagesWithChanges.add('@redwoodjs/api')
   packagesWithChanges.add('@redwoodjs/core')
   packagesWithChanges.add('@redwoodjs/prerender')
 
@@ -302,7 +305,7 @@ async function main() {
   // Cleanup temp directory on exit
   process.on('exit', () => {
     // TODO: Add this back
-    // fs.removeSync(tempTestingDirectory)
+    fs.removeSync(tempTestingDirectory)
   })
 
   // Get PR branch package sizes
