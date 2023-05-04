@@ -177,7 +177,10 @@ async function measurePackageSize(packageDirectory, tempDirectory) {
 // Copies local packages to a temp directory and runs yarn install to determine install size
 async function main() {
   // Build the framework packages
-  console.log('Building packages...')
+  await exec('node', [yarnBin, 'install'], {
+    cwd: frameworkPath,
+    silent: true && !process.env.REDWOOD_CI_VERBOSE,
+  })
   await exec('node', [yarnBin, 'build'], {
     cwd: frameworkPath,
     env: {
