@@ -227,7 +227,7 @@ async function main() {
   // Determine which packages have changes
   const { labels } = JSON.parse(getInput('labels') || '{}')
   const hasForceCheck =
-    labels.some((label) => label.name === 'force-package-size-check') || true
+    labels?.some((label) => label.name === 'force-package-size-check') || true
   const packagesWithChanges = new Set()
   for (const packageJSONDirectory of packageJSONDirectories) {
     if (
