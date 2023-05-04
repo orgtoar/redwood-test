@@ -21,7 +21,9 @@ const yarnBin = path.resolve(
   path.join(yarnDir, fs.readdirSync(yarnDir).sort().reverse()[0])
 )
 
-const packageNameToDirectory = new Map()
+const packageNames = new Set()
+const packageFrameworkDirectories = new Map()
+const packageTestingDirectories = new Map()
 
 // Copied from https://github.com/styfle/packagephobia/blob/165578bb35dfde3b6c88ea0ac944a75e5faaabfa/src/util/backend/npm-stats.ts#LL11C4-L11C4
 export function getDirSize(root, seen) {
@@ -55,17 +57,34 @@ function findPackageJSONFiles(rootDirectory) {
 }
 
 function copyRedwoodPackageToTempDirectory(
-  packageDirectory,
+  packageName,
   tempDirectory,
   portalsUsed
 ) {
-  // Find the package.json
-  const packageJSON = JSON.parse(
-    fs.readFileSync(
-      path.join(frameworkPath, packageDirectory, 'package.json'),
-      'utf8'
-    )
+  // Return if the package has already been copied
+  const tempPackageDirectoryName = packageName.substring(11)
+  if (fs.existsSync(path.join(tempDirectory, tempPackageDirectoryName))) {
+    return
+  }
+
+  // Ensure the package exists
+  const packageDirectory = packageFrameworkDirectories.get(packageName)
+  if (!packageDirectory) {
+    console.log(`Could not find package directory for ${packageName}!`)
+    return
+  }
+  const packageJSONFile = path.join(
+    frameworkPath,
+    packageDirectory,
+    'package.json'
   )
+  if (!fs.existsSync(packageJSONFile)) {
+    console.log(`Could not find package.json for ${packageName}!`)
+    return
+  }
+
+  // Find the package.json
+  const packageJSON = JSON.parse(fs.readFileSync(packageJSONFile, 'utf8'))
 
   // Copy only content that would be published to npm
   const contentToCopy = [
@@ -74,12 +93,12 @@ function copyRedwoodPackageToTempDirectory(
     'LICENSE',
     ...(packageJSON.files || []),
   ]
-  fs.mkdirSync(path.join(tempDirectory, packageJSON.name.substring(11)))
+  fs.mkdirSync(path.join(tempDirectory, tempPackageDirectoryName))
   for (const content of contentToCopy) {
     if (fs.existsSync(path.join(frameworkPath, packageDirectory, content))) {
       fs.copySync(
         path.join(frameworkPath, packageDirectory, content),
-        path.join(tempDirectory, packageJSON.name.substring(11), content)
+        path.join(tempDirectory, tempPackageDirectoryName, content)
       )
     }
   }
@@ -93,41 +112,43 @@ function copyRedwoodPackageToTempDirectory(
     // 'portal' - creates a link to the folder and follows dependencies
     //  See https://github.com/yarnpkg/berry/issues/4478, cannot have multiple portals to the same folder - boo!
     if (portalsUsed.includes(requiredRedwoodPackage)) {
-      // If it was previously added as a portal we'll already be counting it's size
+      // If it was previously added as a portal we'll already be counting it's size, so skip it
       delete packageJSON.dependencies[requiredRedwoodPackage]
       continue
-    } else {
-      packageJSON.dependencies[requiredRedwoodPackage] = `portal:${path.join(
-        tempDirectory,
-        requiredRedwoodPackage.replace('@redwoodjs/', '')
-      )}`
-      portalsUsed.push(requiredRedwoodPackage)
     }
+
+    // Update the package to use a portal
+    packageJSON.dependencies[requiredRedwoodPackage] = `portal:${path.join(
+      tempDirectory,
+      requiredRedwoodPackage.replace('@redwoodjs/', '')
+    )}`
+    portalsUsed.push(requiredRedwoodPackage)
+
     // Copy the required redwood packages to the temp directory
     copyRedwoodPackageToTempDirectory(
-      packageNameToDirectory.get(requiredRedwoodPackage),
+      requiredRedwoodPackage,
       tempDirectory,
       portalsUsed
     )
   }
   // Write the updated package.json
   fs.writeFileSync(
-    path.join(tempDirectory, packageJSON.name.substring(11), 'package.json'),
+    path.join(tempDirectory, tempPackageDirectoryName, 'package.json'),
     JSON.stringify(packageJSON, undefined, 2)
   )
 }
 
-async function measurePackageSize(packageDirectory, tempDirectory) {
+async function measurePackageSize(packageName, tempDirectory) {
   // Clear the temp directory
   fs.emptyDirSync(tempDirectory)
 
   // Copy the package of interest to the temp directory
-  copyRedwoodPackageToTempDirectory(packageDirectory, tempDirectory, [])
+  copyRedwoodPackageToTempDirectory(packageName, tempDirectory, [])
 
   // Run yarn install
-  const packageName = packageDirectory.substring(9)
+  const tempPackageDirectoryName = packageName.substring(11)
   await exec('node', [yarnBin, 'plugin', 'import', 'workspace-tools'], {
-    cwd: path.join(tempDirectory, packageName),
+    cwd: path.join(tempDirectory, tempPackageDirectoryName),
     env: {
       ...process.env,
       YARN_CACHE_FOLDER: path.join(tempDirectory, 'yarn-cache'),
@@ -140,7 +161,7 @@ async function measurePackageSize(packageDirectory, tempDirectory) {
     'node',
     [yarnBin, 'workspaces', 'focus', '--all', '--production'],
     {
-      cwd: path.join(tempDirectory, packageName),
+      cwd: path.join(tempDirectory, tempPackageDirectoryName),
       env: {
         ...process.env,
         YARN_CACHE_FOLDER: path.join(tempDirectory, 'yarn-cache'),
@@ -153,12 +174,17 @@ async function measurePackageSize(packageDirectory, tempDirectory) {
 
   // Remove files that are not needed for the package size measurement
   fs.rmSync(
-    path.join(tempDirectory, packageName, 'node_modules', '.yarn-state.yml')
+    path.join(
+      tempDirectory,
+      tempPackageDirectoryName,
+      'node_modules',
+      '.yarn-state.yml'
+    )
   )
 
   const packageJSON = JSON.parse(
     fs.readFileSync(
-      path.join(tempDirectory, packageName, 'package.json'),
+      path.join(tempDirectory, tempPackageDirectoryName, 'package.json'),
       'utf8'
     )
   )
@@ -168,7 +194,7 @@ async function measurePackageSize(packageDirectory, tempDirectory) {
   const directoriesToInclude = ['node_modules', ...(packageJSON.files || [])]
   for (const directory of directoriesToInclude) {
     size += getDirSize(
-      path.join(tempDirectory, packageName, directory),
+      path.join(tempDirectory, tempPackageDirectoryName, directory),
       new Set()
     )
   }
@@ -176,9 +202,7 @@ async function measurePackageSize(packageDirectory, tempDirectory) {
   return size
 }
 
-// Copies local packages to a temp directory and runs yarn install to determine install size
-async function main() {
-  // Build the framework packages
+async function installAndBuildPackages() {
   console.log('Installing and building packages...')
   await exec('node', [yarnBin, 'install'], {
     cwd: frameworkPath,
@@ -192,26 +216,34 @@ async function main() {
     },
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
+}
+
+async function main() {
+  // Build the framework packages
+  await installAndBuildPackages()
 
   // Get all package directories
   const packageJSONFiles = findPackageJSONFiles(
     path.join(frameworkPath, 'packages')
   )
+  // Generate a map of package name to directory
   for (const packageJSONFile of packageJSONFiles) {
     const packageJSON = JSON.parse(
       fs.readFileSync(packageJSONFile, { encoding: 'utf8' })
     )
-    packageNameToDirectory.set(
+    packageNames.add(packageJSON.name)
+    packageFrameworkDirectories.set(
       packageJSON.name,
       packageJSON.repository.directory
     )
+    packageTestingDirectories.set(
+      packageJSON.name,
+      packageJSON.name.substring(11)
+    )
   }
-  const packageJSONDirectories = packageJSONFiles.map((file) =>
-    path.dirname(file).substring(frameworkPath.length + 1)
-  )
 
   // Get a list of all files that have changed compared to the main branch
-  const branch = process.env.GITHUB_BASE_REF || 'jgmw-ci/deps-change'
+  const branch = process.env.GITHUB_BASE_REF || 'jgmw-ci/deps-change' // TODO: Remove this default
   await exec(`git fetch origin ${branch}`, undefined, {
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
@@ -225,18 +257,16 @@ async function main() {
   const changedFiles = stdout.toString().trim().split('\n').filter(Boolean)
 
   // Determine which packages have changes
-  const { labels } = JSON.parse(getInput('labels') || '{}')
-  const hasForceCheck =
-    labels?.some((label) => label.name === 'force-package-size-check') || true
   const packagesWithChanges = new Set()
-  for (const packageJSONDirectory of packageJSONDirectories) {
+  for (const packageName of packageNames) {
     if (
-      hasForceCheck ||
       changedFiles.some((changedFile) => {
-        return changedFile.startsWith(packageJSONDirectory)
+        return changedFile.startsWith(
+          packageFrameworkDirectories.get(packageName)
+        )
       })
     ) {
-      packagesWithChanges.add(packageJSONDirectory)
+      packagesWithChanges.add(packageName)
     }
   }
 
@@ -245,31 +275,34 @@ async function main() {
     console.log('No changes detected in any packages.')
     return
   }
+
   console.log('Changes have been detected in the following packages:')
   for (const packageWithChanges of packagesWithChanges) {
-    console.log(` - ${packageWithChanges.substring(9)}`)
+    console.log(` - ${packageWithChanges}`)
   }
 
   // Create temp directory
   const tempTestingDirectory = path.join('/tmp', `rw-${uuidv4()}`)
-  fs.ensureDirSync(tempTestingDirectory)
   console.log(`Using temp directory: ${tempTestingDirectory}`)
+  fs.ensureDirSync(tempTestingDirectory)
 
   // Cleanup temp directory on exit
   process.on('exit', () => {
     // TODO: Add this back
-    // fs.removeSync(tempTestingDirectory)
+    fs.removeSync(tempTestingDirectory)
   })
 
   // Get PR branch package sizes
   console.log('Getting PR branch package sizes:')
   const prPackageSizes = new Map()
   for (const packageWithChanges of packagesWithChanges) {
-    console.log(` - Measuring size of '${packageWithChanges.substring(9)}'...`)
-    prPackageSizes.set(
-      packageWithChanges.substring(9),
-      await measurePackageSize(packageWithChanges, tempTestingDirectory)
+    console.log(` - Measuring size of '${packageWithChanges}'...`)
+    const size = await measurePackageSize(
+      packageWithChanges,
+      tempTestingDirectory
     )
+    console.log(`   - Size: ${size} (${prettyBytes(size)})`)
+    prPackageSizes.set(packageWithChanges, size)
   }
 
   // Checkout main branch, remove stray files and cleanout temp directory
@@ -285,19 +318,7 @@ async function main() {
   fs.emptyDirSync(tempTestingDirectory)
 
   // Install dependencies and build packages for the main branch
-  console.log('Installing and building packages...')
-  await exec('node', [yarnBin, 'install'], {
-    cwd: frameworkPath,
-    silent: true && !process.env.REDWOOD_CI_VERBOSE,
-  })
-  await exec('node', [yarnBin, 'build'], {
-    cwd: frameworkPath,
-    env: {
-      ...process.env,
-      NODE_ENV: 'production',
-    },
-    silent: true && !process.env.REDWOOD_CI_VERBOSE,
-  })
+  await installAndBuildPackages()
 
   // Get main branch package sizes
   console.log('Getting main branch package sizes:')
