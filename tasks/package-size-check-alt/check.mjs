@@ -7,7 +7,7 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import core, { getInput } from '@actions/core'
+import core from '@actions/core'
 import { exec, getExecOutput } from '@actions/exec'
 import fs from 'fs-extra'
 import prettyBytes from 'pretty-bytes'
@@ -20,6 +20,8 @@ const yarnDir = path.join(frameworkPath, '.yarn', 'releases')
 const yarnBin = path.resolve(
   path.join(yarnDir, fs.readdirSync(yarnDir).sort().reverse()[0])
 )
+
+const yarnCacheDirectory = path.join('/tmp', `yarn-cache-${uuidv4()}`)
 
 const packageNames = new Set()
 const packageFrameworkDirectories = new Map()
@@ -175,7 +177,7 @@ async function measurePackageSize(packageName, tempDirectory) {
     cwd: customPackageDirectory,
     env: {
       ...process.env,
-      YARN_CACHE_FOLDER: path.join(tempDirectory, 'yarn-cache'),
+      YARN_CACHE_FOLDER: yarnCacheDirectory,
       YARN_NPM_REGISTRY_SERVER: 'https://registry.npmjs.org',
       YARN_NODE_LINKER: 'node-modules',
     },
@@ -188,7 +190,7 @@ async function measurePackageSize(packageName, tempDirectory) {
       cwd: customPackageDirectory,
       env: {
         ...process.env,
-        YARN_CACHE_FOLDER: path.join(tempDirectory, 'yarn-cache'),
+        YARN_CACHE_FOLDER: yarnCacheDirectory,
         YARN_NPM_REGISTRY_SERVER: 'https://registry.npmjs.org',
         YARN_NODE_LINKER: 'node-modules',
       },
@@ -250,7 +252,7 @@ async function main() {
   }
 
   // Get a list of all files that have changed compared to the main branch
-  const branch = process.env.GITHUB_BASE_REF || 'jgmw-ci/deps-change' // TODO: Remove this default
+  const branch = process.env.GITHUB_BASE_REF
   await exec(`git fetch origin ${branch}`, undefined, {
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
@@ -277,15 +279,6 @@ async function main() {
     }
   }
 
-  // TODO: Remove this - some random packages
-  packagesWithChanges.clear()
-  packagesWithChanges.add('create-redwood-app')
-  packagesWithChanges.add('@redwoodjs/cli')
-  packagesWithChanges.add('@redwoodjs/web')
-  packagesWithChanges.add('@redwoodjs/api')
-  packagesWithChanges.add('@redwoodjs/core')
-  packagesWithChanges.add('@redwoodjs/prerender')
-
   // Exit early if no changes detected
   if (packagesWithChanges.size === 0) {
     console.log('No changes detected in any packages.')
@@ -302,10 +295,10 @@ async function main() {
   console.log(`Using temp directory: ${tempTestingDirectory}`)
   fs.ensureDirSync(tempTestingDirectory)
 
-  // Cleanup temp directory on exit
+  // Cleanup temp directories on exit
   process.on('exit', () => {
-    // TODO: Add this back
     fs.removeSync(tempTestingDirectory)
+    fs.removeSync(yarnCacheDirectory)
   })
 
   // Get PR branch package sizes
