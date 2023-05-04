@@ -401,6 +401,7 @@ jobs:
         uses: ./tasks/package-size-check-alt
         env:
           REDWOOD_CI_VERBOSE: 1
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
 
       - name: Comment on PR
         uses: thollander/actions-comment-pull-request@v2
