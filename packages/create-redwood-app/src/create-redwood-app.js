@@ -26,6 +26,8 @@ import {
 // Telemetry
 const { telemetry } = Parser(hideBin(process.argv))
 
+// Add a random comment
+
 const tui = new RedwoodTUI()
 
 async function executeCompatibilityCheck(templateDir, yarnInstall) {
