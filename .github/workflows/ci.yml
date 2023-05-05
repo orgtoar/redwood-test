@@ -379,7 +379,7 @@ jobs:
   package-size-check-docs:
     needs: only-doc-changes
     if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
-    name: 📦 Package size check ALT
+    name: 📦 Package size check
     runs-on: ubuntu-latest
     steps:
       - run: echo "Only doc changes"
