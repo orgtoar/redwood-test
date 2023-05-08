@@ -28,7 +28,8 @@ const packageFrameworkDirectories = new Map()
 const packageTestingDirectories = new Map()
 const packageDependencies = new Map()
 
-console.log('Is TTY:', process.stdout.isTTY)
+console.log('GITHUB_BASE_REF', process.env.GITHUB_BASE_REF)
+console.log('GITHUB_REF', process.env.GITHUB_REF)
 
 // Copied from https://github.com/styfle/packagephobia/blob/165578bb35dfde3b6c88ea0ac944a75e5faaabfa/src/util/backend/npm-stats.ts#LL11C4-L11C4
 export function getDirSize(root, seen) {
@@ -154,10 +155,13 @@ async function measurePackageSize(packageName, tempDirectory) {
   if (packageDependencies.has(packageName)) {
     packageDependencies
       .get(packageName)
-      .push(...redwoodPackagesUsed, ...nonRedwoodPackagesUsed)
+      .push([
+        ...redwoodPackagesUsed,
+        ...Array.from(nonRedwoodPackagesUsed.keys()),
+      ])
   } else {
     packageDependencies.set(packageName, [
-      [...redwoodPackagesUsed, ...nonRedwoodPackagesUsed],
+      [...redwoodPackagesUsed, ...Array.from(nonRedwoodPackagesUsed.keys())],
     ])
   }
 
@@ -334,10 +338,6 @@ async function main() {
     cwd: frameworkPath,
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
-  // await exec('git clean -fd', undefined, {
-  //   cwd: frameworkPath,
-  //   silent: true && !process.env.REDWOOD_CI_VERBOSE,
-  // })
   fs.emptyDirSync(tempTestingDirectory)
   fs.emptyDirSync(yarnCacheDirectory)
 
@@ -359,13 +359,20 @@ async function main() {
 
   // Display dependency changes in CI log
   console.log('Dependency changes:')
-  for (const [packageName, packageDependencies] of packageDependencies) {
-    const dependenciesAdded = packageDependencies[0].filter(
-      (x) => !packageDependencies[1].includes(x)
+  const packageDependencyIncreases = new Map()
+  const packageDependencyDecreases = new Map()
+  for (const [packageName, packageDeps] of packageDependencies) {
+    const dependenciesAdded = packageDeps[0].filter(
+      (x) => !packageDeps[1].includes(x)
     )
-    const dependenciesRemoved = packageDependencies[1].filter(
-      (x) => !packageDependencies[0].includes(x)
+    const dependenciesRemoved = packageDeps[1].filter(
+      (x) => !packageDeps[0].includes(x)
     )
+    if (dependenciesAdded.length === 0 && dependenciesRemoved.length === 0) {
+      packageDependencyIncreases.set(packageName, 0)
+      packageDependencyDecreases.set(packageName, 0)
+      continue
+    }
     console.log(` * ${packageName}`)
     if (dependenciesAdded.length > 0) {
       console.log(dependenciesAdded.map((x) => `   + ${x}`).join('\n'))
@@ -373,9 +380,8 @@ async function main() {
     if (dependenciesRemoved.length > 0) {
       console.log(dependenciesRemoved.map((x) => `   - ${x}`).join('\n'))
     }
-    if (dependenciesAdded.length === 0 && dependenciesRemoved.length === 0) {
-      console.log('   No changes')
-    }
+    packageDependencyIncreases.set(packageName, dependenciesAdded.length)
+    packageDependencyDecreases.set(packageName, dependenciesRemoved.length)
   }
 
   // Generate a report message and set the github ci output variable
@@ -392,6 +398,9 @@ async function main() {
     tableRows.push(
       [
         packageName,
+        `+${packageDependencyIncreases.get(
+          packageName
+        )}, -${packageDependencyDecreases.get(packageName)}`,
         prettyBytes(mainPackageSize),
         prettyBytes(prPackageSize),
         prettyBytes(prPackageSize - mainPackageSize),
@@ -404,8 +413,8 @@ async function main() {
     '### 📦 Package Size Changes',
     'The following packages were altered and triggered an install size check.',
     '',
-    '| Package | Main   | PR     | Change | Change [%] |      |',
-    '| ------- | -----: | -----: | -----: | ---------: | :--: |',
+    '| Package | Dependency Changes | Main   | PR     | Change | Change [%] |      |',
+    '| ------- | -----------------: | -----: | -----: | -----: | ---------: | :--: |',
     ...tableRows,
     '',
     `*Last updated: ${new Date().toISOString()}*`,
