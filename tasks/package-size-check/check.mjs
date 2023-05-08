@@ -26,6 +26,9 @@ const yarnCacheDirectory = path.join('/tmp', `yarn-cache-${uuidv4()}`)
 const packageNames = new Set()
 const packageFrameworkDirectories = new Map()
 const packageTestingDirectories = new Map()
+const packageDependencies = new Map()
+
+console.log('Is TTY:', process.stdout.isTTY)
 
 // Copied from https://github.com/styfle/packagephobia/blob/165578bb35dfde3b6c88ea0ac944a75e5faaabfa/src/util/backend/npm-stats.ts#LL11C4-L11C4
 export function getDirSize(root, seen) {
@@ -145,6 +148,17 @@ async function measurePackageSize(packageName, tempDirectory) {
         )
       }
     }
+  }
+
+  // Record the dependencies
+  if (packageDependencies.has(packageName)) {
+    packageDependencies
+      .get(packageName)
+      .push(...redwoodPackagesUsed, ...nonRedwoodPackagesUsed)
+  } else {
+    packageDependencies.set(packageName, [
+      [...redwoodPackagesUsed, ...nonRedwoodPackagesUsed],
+    ])
   }
 
   // Write the custom package.json with all the redwood packages as links and the non-redwood packages as dependencies
@@ -316,18 +330,14 @@ async function main() {
 
   // Checkout main branch, remove stray files and cleanout temp directory
   console.log('Checking out main branch...')
-  await exec('git stash', undefined, {
-    cwd: frameworkPath,
-    silent: true && !process.env.REDWOOD_CI_VERBOSE,
-  })
   await exec(`git checkout ${mainBranch}`, undefined, {
     cwd: frameworkPath,
     silent: true && !process.env.REDWOOD_CI_VERBOSE,
   })
-  await exec('git clean -fd', undefined, {
-    cwd: frameworkPath,
-    silent: true && !process.env.REDWOOD_CI_VERBOSE,
-  })
+  // await exec('git clean -fd', undefined, {
+  //   cwd: frameworkPath,
+  //   silent: true && !process.env.REDWOOD_CI_VERBOSE,
+  // })
   fs.emptyDirSync(tempTestingDirectory)
   fs.emptyDirSync(yarnCacheDirectory)
 
@@ -345,6 +355,27 @@ async function main() {
     )
     console.log(`   - Size: ${size} (${prettyBytes(size)})`)
     mainPackageSizes.set(packageWithChanges, size)
+  }
+
+  // Display dependency changes in CI log
+  console.log('Dependency changes:')
+  for (const [packageName, packageDependencies] of packageDependencies) {
+    const dependenciesAdded = packageDependencies[0].filter(
+      (x) => !packageDependencies[1].includes(x)
+    )
+    const dependenciesRemoved = packageDependencies[1].filter(
+      (x) => !packageDependencies[0].includes(x)
+    )
+    console.log(` * ${packageName}`)
+    if (dependenciesAdded.length > 0) {
+      console.log(dependenciesAdded.map((x) => `   + ${x}`).join('\n'))
+    }
+    if (dependenciesRemoved.length > 0) {
+      console.log(dependenciesRemoved.map((x) => `   - ${x}`).join('\n'))
+    }
+    if (dependenciesAdded.length === 0 && dependenciesRemoved.length === 0) {
+      console.log('   No changes')
+    }
   }
 
   // Generate a report message and set the github ci output variable
