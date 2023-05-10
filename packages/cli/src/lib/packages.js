@@ -6,6 +6,30 @@ import fs from 'fs-extra'
 import { getPaths } from './index'
 
 /**
+ * Installs a dependency
+ * If the package is already installed, this function does nothing.
+ *
+ * @param {string} package @scope/package-name
+ * @param {string} version semver package version
+ */
+export async function installModule(packageName, version) {
+  /**
+   * TODO:
+   *  This will need to be able to handle what happens if you want a version which is
+   *  not the same as the currently installed version.
+   */
+
+  if (!isModuleInstalled(packageName)) {
+    // We use `version` to make sure we install the same version as the rest
+    // of the RW packages
+    await execa.command(`yarn add -D ${packageName}@${version}`, {
+      stdio: 'inherit',
+      cwd: getPaths().base,
+    })
+  }
+}
+
+/**
  * Installs a Redwood module into a user's project keeping the version consistent with that of \@redwoodjs/cli.
  * If the module is already installed, this function does nothing.
  * If no remote version can not be found which matches the local cli version then the latest canary version will be used.
