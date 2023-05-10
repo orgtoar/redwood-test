@@ -12,7 +12,7 @@ import { telemetryMiddleware } from '@redwoodjs/telemetry'
 
 import { getPaths } from './lib'
 import * as updateCheck from './lib/updateCheck'
-import { loadCommandModules } from './plugins'
+import { loadPlugins } from './plugins'
 
 // # Setting the CWD
 //
@@ -77,32 +77,28 @@ config({
   multiline: true,
 })
 
-loadCommandModules()
-  .then((commandModules) => {
-    // # Build the CLI and run it
-    yargs(hideBin(process.argv))
-      // Config
-      .scriptName('rw')
-      .middleware(
-        [
-          // We've already handled `cwd` above, but it may still be in `argv`.
-          // We don't need it anymore so let's get rid of it.
-          (argv) => {
-            delete argv.cwd
-          },
-          telemetryMiddleware,
-          updateCheck.isEnabled() && updateCheck.updateCheckMiddleware,
-        ].filter(Boolean)
-      )
-      .option('cwd', {
-        describe: 'Working directory to use (where `redwood.toml` is located)',
-      })
-      .demandCommand()
-      .strict()
-      .command(commandModules)
-      .parse()
-  })
-  .catch((error) => {
-    console.error(error)
-    process.exit(1)
-  })
+//
+// Top level async
+;(async () => {
+  const yarg = yargs(hideBin(process.argv))
+    // Config
+    .scriptName('rw')
+    .middleware(
+      [
+        // We've already handled `cwd` above, but it may still be in `argv`.
+        // We don't need it anymore so let's get rid of it.
+        (argv) => {
+          delete argv.cwd
+        },
+        telemetryMiddleware,
+        updateCheck.isEnabled() && updateCheck.updateCheckMiddleware,
+      ].filter(Boolean)
+    )
+    .option('cwd', {
+      describe: 'Working directory to use (where `redwood.toml` is located)',
+    })
+    .demandCommand()
+    .strict()
+  await loadPlugins(yarg)
+  yarg.parse()
+})()
