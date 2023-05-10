@@ -30,7 +30,19 @@ export async function loadPlugins(yargs) {
     new Set(plugins.map((p) => p.name.split('/')[0]))
   )
 
-  for (const namespace of namespaces) {
+  // TODO: We only really use one namespace at a time, so we could
+  // just find the first namespace than loop
+
+  // Filter the namespaces based on the command line args to
+  // reduce the number of plugins we need to load
+  const processArgv = process.argv.slice(2).join(' ')
+  const namespaceInUse = namespaces.filter((ns) => processArgv.includes(ns))
+  if (namespaceInUse.length === 0) {
+    // If no namespace is in use we're using the default @redwoodjs namespace
+    namespaceInUse.push('@redwoodjs')
+  }
+
+  for (const namespace of namespaceInUse) {
     // Get all the plugins for this namespace
     const namespacedPlugins = plugins.filter((p) =>
       p.name.startsWith(namespace)
