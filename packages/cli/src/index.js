@@ -19,7 +19,7 @@ import * as destroyCommand from './commands/destroy'
 import * as devCommand from './commands/dev'
 import * as execCommand from './commands/exec'
 import * as experimentalCommand from './commands/experimental'
-import * as generateCommand from './commands/generate'
+// import * as generateCommand from './commands/generate'
 import * as infoCommand from './commands/info'
 import * as lintCommand from './commands/lint'
 import * as prerenderCommand from './commands/prerender'
@@ -121,28 +121,28 @@ async function runYargs() {
     .strict()
 
     // Commands (Pre-plugin)
-    .command(buildCommand)
-    .command(checkCommand)
-    .command(consoleCommand)
-    .command(dataMigrateCommand)
-    .command(deployCommand)
-    .command(destroyCommand)
-    .command(devCommand)
-    .command(execCommand)
-    .command(experimentalCommand)
-    .command(generateCommand)
-    .command(infoCommand)
-    .command(lintCommand)
-    .command(prerenderCommand)
-    .command(prismaCommand)
-    .command(recordCommand)
-    .command(serveCommand)
-    .command(setupCommand)
-    .command(storybookCommand)
-    .command(testCommand)
-    .command(tstojsCommand)
-    .command(typeCheckCommand)
-    .command(upgradeCommand)
+    .command(buildCommand) // @redwoodjs/cli-plugin-core
+    .command(checkCommand) // @redwoodjs/cli-plugin-misc
+    .command(consoleCommand) // @redwoodjs/cli-plugin-misc
+    .command(dataMigrateCommand) // @redwoodjs/cli-plugin-misc
+    .command(deployCommand) // @redwoodjs/cli-plugin-misc
+    // .command(destroyCommand)   // @redwoodjs/cli-plugin-generator
+    .command(devCommand) // @redwoodjs/cli-plugin-core
+    .command(execCommand) // @redwoodjs/cli-plugin-misc
+    .command(experimentalCommand) // @redwoodjs/cli-plugin-experimental
+    // .command(generateCommand)  // @redwoodjs/cli-plugin-generator
+    .command(infoCommand) // @redwoodjs/cli-plugin-misc
+    .command(lintCommand) // @redwoodjs/cli-plugin-misc
+    .command(prerenderCommand) // @redwoodjs/cli-plugin-misc
+    .command(prismaCommand) // @redwoodjs/cli-plugin-core
+    .command(recordCommand) // @redwoodjs/cli-plugin-misc
+    .command(serveCommand) // @redwoodjs/cli-plugin-core
+    .command(setupCommand) // @redwoodjs/cli-plugin-misc
+    .command(storybookCommand) // @redwoodjs/cli-plugin-misc
+    .command(testCommand) // @redwoodjs/cli-plugin-misc
+    .command(tstojsCommand) // @redwoodjs/cli-plugin-misc
+    .command(typeCheckCommand) // @redwoodjs/cli-plugin-misc
+    .command(upgradeCommand) // @redwoodjs/cli-plugin-core
 
   await loadPlugins(yarg)
   yarg.parse()

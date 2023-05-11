@@ -3,7 +3,8 @@
   "license": "MIT",
   "workspaces": [
     "packages/*",
-    "packages/auth-providers/*/*"
+    "packages/auth-providers/*/*",
+    "packages/cli-plugins/*"
   ],
   "scripts": {
     "build": "lerna run build",
