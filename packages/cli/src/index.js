@@ -10,6 +10,28 @@ import yargs from 'yargs/yargs'
 
 import { telemetryMiddleware } from '@redwoodjs/telemetry'
 
+import * as buildCommand from './commands/build'
+import * as checkCommand from './commands/check'
+import * as consoleCommand from './commands/console'
+import * as dataMigrateCommand from './commands/data-migrate'
+import * as deployCommand from './commands/deploy'
+import * as destroyCommand from './commands/destroy'
+import * as devCommand from './commands/dev'
+import * as execCommand from './commands/exec'
+import * as experimentalCommand from './commands/experimental'
+import * as generateCommand from './commands/generate'
+import * as infoCommand from './commands/info'
+import * as lintCommand from './commands/lint'
+import * as prerenderCommand from './commands/prerender'
+import * as prismaCommand from './commands/prisma'
+import * as recordCommand from './commands/record'
+import * as serveCommand from './commands/serve'
+import * as setupCommand from './commands/setup'
+import * as storybookCommand from './commands/storybook'
+import * as testCommand from './commands/test'
+import * as tstojsCommand from './commands/ts-to-js'
+import * as typeCheckCommand from './commands/type-check'
+import * as upgradeCommand from './commands/upgrade'
 import { getPaths } from './lib'
 import * as updateCheck from './lib/updateCheck'
 import { loadPlugins } from './plugins'
@@ -77,9 +99,7 @@ config({
   multiline: true,
 })
 
-//
-// Top level async
-;(async () => {
+async function runYargs() {
   const yarg = yargs(hideBin(process.argv))
     // Config
     .scriptName('rw')
@@ -99,6 +119,33 @@ config({
     })
     .demandCommand()
     .strict()
+
+    // Commands (Pre-plugin)
+    .command(buildCommand)
+    .command(checkCommand)
+    .command(consoleCommand)
+    .command(dataMigrateCommand)
+    .command(deployCommand)
+    .command(destroyCommand)
+    .command(devCommand)
+    .command(execCommand)
+    .command(experimentalCommand)
+    .command(generateCommand)
+    .command(infoCommand)
+    .command(lintCommand)
+    .command(prerenderCommand)
+    .command(prismaCommand)
+    .command(recordCommand)
+    .command(serveCommand)
+    .command(setupCommand)
+    .command(storybookCommand)
+    .command(testCommand)
+    .command(tstojsCommand)
+    .command(typeCheckCommand)
+    .command(upgradeCommand)
+
   await loadPlugins(yarg)
   yarg.parse()
-})()
+}
+
+runYargs()
