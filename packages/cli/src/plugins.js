@@ -22,8 +22,18 @@ function validatePluginList(plugins) {
 }
 
 export async function loadPlugins(yargs) {
+  console.log(`> memory: `, process.memoryUsage().rss / 1024 / 1024, 'MB')
   console.time('Plugin loading')
   const { plugins, autoInstallPackages } = getConfig().cli
+
+  // TODO: Remove this when we make the full switch to a total plugin based CLI
+  // If we don't have any plugins in the toml file, add all the @redwoodjs plugins
+  if (plugins.length === 0) {
+    plugins.push({
+      name: '@redwoodjs/cli-plugin-generators',
+      version: 'canary',
+    })
+  }
 
   // Validate plugin list from redwood.toml
   try {
@@ -137,6 +147,7 @@ export async function loadPlugins(yargs) {
 
       // Add these commands to the namespace list
       console.timeEnd(`Package import: ${namespacedPlugin.name}`)
+      console.log(`> memory: `, process.memoryUsage().rss / 1024 / 1024, 'MB')
       if (plugin) {
         namespacedCommands.push(...plugin.commands)
       } else {
@@ -177,6 +188,7 @@ export async function loadPlugins(yargs) {
   console.timeEnd('Writing plugin cache')
 
   console.timeEnd('Plugin loading')
+  console.log(`> memory: `, process.memoryUsage().rss / 1024 / 1024, 'MB')
   console.log('-'.repeat(60) + '\n')
   return yargs
 }

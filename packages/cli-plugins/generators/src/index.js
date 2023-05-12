@@ -26,8 +26,8 @@ import * as generateSecret from './commands/generate/secret/secret.js'
 import * as generateService from './commands/generate/service/service.js'
 
 /**
- * This package exports a series of generator commands under the
- * `generate` subcommand.
+ * This package exports the redwood generator related commands under the
+ * `generate` and `destroy` subcommand.
  */
 export const commands = [
   {
@@ -35,23 +35,32 @@ export const commands = [
     aliases: ['g'],
     describe: 'Generate boilerplate code and type definitions',
     builder: (yargs) => {
+      const commands = [
+        generateCell,
+        generateComponent,
+        generateDataMigration,
+        generateDbAuth,
+        generateDirective,
+        generateFunc,
+        generateLayout,
+        generateModel,
+        generatePage,
+        generateScaffold,
+        generateScript,
+        generateSdl,
+        generateSecret,
+        generateService,
+      ]
+      commands.forEach((command) => {
+        yargs.command({
+          ...command,
+          handler: async (args) => {
+            const { handler: commandHandler } = await import(command.handler)
+            commandHandler(args)
+          },
+        })
+      })
       yargs
-        .command([
-          generateCell,
-          generateComponent,
-          generateDataMigration,
-          generateDbAuth,
-          generateDirective,
-          generateFunc,
-          generateLayout,
-          generateModel,
-          generatePage,
-          generateScaffold,
-          generateScript,
-          generateSdl,
-          generateSecret,
-          generateService,
-        ])
         .demandCommand()
         .epilogue(
           `Also see the ${terminalLink(
@@ -67,19 +76,28 @@ export const commands = [
     aliases: ['d'],
     describe: 'Rollback changes made by the generate command',
     builder: (yargs) => {
+      const commands = [
+        destroyCell,
+        destroyComponent,
+        destroyDirective,
+        destroyFunc,
+        // destroyGraphiql, // Removed because it tries to reach "setup" code that doesn't exist in this plugin
+        destroyLayout,
+        destroyPage,
+        destroyScaffold,
+        destroySdl,
+        destroyService,
+      ]
+      commands.forEach((command) => {
+        yargs.command({
+          ...command,
+          handler: async (args) => {
+            const { handler: commandHandler } = await import(command.handler)
+            commandHandler(args)
+          },
+        })
+      })
       yargs
-        .command([
-          destroyCell,
-          destroyComponent,
-          destroyDirective,
-          destroyFunc,
-          // destroyGraphiql, // Removed because it tries to reach "setup" code that doesn't exist in this plugin
-          destroyLayout,
-          destroyPage,
-          destroyScaffold,
-          destroySdl,
-          destroyService,
-        ])
         .demandCommand()
         .epilogue(
           `Also see the ${terminalLink(

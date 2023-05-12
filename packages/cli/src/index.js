@@ -10,29 +10,29 @@ import yargs from 'yargs/yargs'
 
 import { telemetryMiddleware } from '@redwoodjs/telemetry'
 
-import * as buildCommand from './commands/build'
-import * as checkCommand from './commands/check'
-import * as consoleCommand from './commands/console'
-import * as dataMigrateCommand from './commands/data-migrate'
+// import * as buildCommand from './commands/build'
+// import * as checkCommand from './commands/check'
+// import * as consoleCommand from './commands/console'
+// import * as dataMigrateCommand from './commands/data-migrate'
+// import * as deployCommand from './commands/deploy'
 // import * as destroyCommand from './commands/destroy'
-import * as deployCommand from './commands/deploy'
-import * as devCommand from './commands/dev'
-import * as execCommand from './commands/exec'
-import * as experimentalCommand from './commands/experimental'
+// import * as devCommand from './commands/dev'
+// import * as execCommand from './commands/exec'
+// import * as experimentalCommand from './commands/experimental'
 // import * as generateCommand from './commands/generate'
-import * as infoCommand from './commands/info'
-import * as lintCommand from './commands/lint'
+// import * as infoCommand from './commands/info'
+// import * as lintCommand from './commands/lint'
 import * as pluginCommand from './commands/plugin'
-import * as prerenderCommand from './commands/prerender'
-import * as prismaCommand from './commands/prisma'
-import * as recordCommand from './commands/record'
-import * as serveCommand from './commands/serve'
-import * as setupCommand from './commands/setup'
-import * as storybookCommand from './commands/storybook'
-import * as testCommand from './commands/test'
-import * as tstojsCommand from './commands/ts-to-js'
-import * as typeCheckCommand from './commands/type-check'
-import * as upgradeCommand from './commands/upgrade'
+// import * as prerenderCommand from './commands/prerender'
+// import * as prismaCommand from './commands/prisma'
+// import * as recordCommand from './commands/record'
+// import * as serveCommand from './commands/serve'
+// import * as setupCommand from './commands/setup'
+// import * as storybookCommand from './commands/storybook'
+// import * as testCommand from './commands/test'
+// import * as tstojsCommand from './commands/ts-to-js'
+// import * as typeCheckCommand from './commands/type-check'
+// import * as upgradeCommand from './commands/upgrade'
 import { getPaths } from './lib'
 import * as updateCheck from './lib/updateCheck'
 import { loadPlugins } from './plugins'
@@ -122,29 +122,29 @@ async function runYargs() {
     .strict()
 
     // Commands (Pre-plugin)
-    .command(buildCommand) // @redwoodjs/cli-plugin-core
-    .command(checkCommand) // @redwoodjs/cli-plugin-misc
-    .command(consoleCommand) // @redwoodjs/cli-plugin-misc
-    .command(dataMigrateCommand) // @redwoodjs/cli-plugin-misc
-    .command(deployCommand) // @redwoodjs/cli-plugin-misc
-    // .command(destroyCommand)   // @redwoodjs/cli-plugin-generator
-    .command(devCommand) // @redwoodjs/cli-plugin-core
-    .command(execCommand) // @redwoodjs/cli-plugin-misc
-    .command(experimentalCommand) // @redwoodjs/cli-plugin-experimental
-    // .command(generateCommand)  // @redwoodjs/cli-plugin-generator
-    .command(infoCommand) // @redwoodjs/cli-plugin-misc
-    .command(lintCommand) // @redwoodjs/cli-plugin-misc
+    // .command(buildCommand) // @redwoodjs/cli-plugin-core
+    // .command(checkCommand) // @redwoodjs/cli-plugin-misc
+    // .command(consoleCommand) // @redwoodjs/cli-plugin-misc
+    // .command(dataMigrateCommand) // @redwoodjs/cli-plugin-misc
+    // .command(deployCommand) // @redwoodjs/cli-plugin-misc
+    // .command(destroyCommand) // @redwoodjs/cli-plugin-generator
+    // .command(devCommand) // @redwoodjs/cli-plugin-core
+    // .command(execCommand) // @redwoodjs/cli-plugin-misc
+    // .command(experimentalCommand) // @redwoodjs/cli-plugin-experimental
+    // .command(generateCommand) // @redwoodjs/cli-plugin-generator
+    // .command(infoCommand) // @redwoodjs/cli-plugin-misc
+    // .command(lintCommand) // @redwoodjs/cli-plugin-misc
     .command(pluginCommand)
-    .command(prerenderCommand) // @redwoodjs/cli-plugin-misc
-    .command(prismaCommand) // @redwoodjs/cli-plugin-core
-    .command(recordCommand) // @redwoodjs/cli-plugin-misc
-    .command(serveCommand) // @redwoodjs/cli-plugin-core
-    .command(setupCommand) // @redwoodjs/cli-plugin-misc
-    .command(storybookCommand) // @redwoodjs/cli-plugin-misc
-    .command(testCommand) // @redwoodjs/cli-plugin-misc
-    .command(tstojsCommand) // @redwoodjs/cli-plugin-misc
-    .command(typeCheckCommand) // @redwoodjs/cli-plugin-misc
-    .command(upgradeCommand) // @redwoodjs/cli-plugin-core
+  // .command(prerenderCommand) // @redwoodjs/cli-plugin-misc
+  // .command(prismaCommand) // @redwoodjs/cli-plugin-core
+  // .command(recordCommand) // @redwoodjs/cli-plugin-misc
+  // .command(serveCommand) // @redwoodjs/cli-plugin-core
+  // .command(setupCommand) // @redwoodjs/cli-plugin-misc
+  // .command(storybookCommand) // @redwoodjs/cli-plugin-misc
+  // .command(testCommand) // @redwoodjs/cli-plugin-misc
+  // .command(tstojsCommand) // @redwoodjs/cli-plugin-misc
+  // .command(typeCheckCommand) // @redwoodjs/cli-plugin-misc
+  // .command(upgradeCommand) // @redwoodjs/cli-plugin-core
 
   await loadPlugins(yarg)
   yarg.parse()
