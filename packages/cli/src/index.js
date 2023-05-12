@@ -14,14 +14,15 @@ import * as buildCommand from './commands/build'
 import * as checkCommand from './commands/check'
 import * as consoleCommand from './commands/console'
 import * as dataMigrateCommand from './commands/data-migrate'
+// import * as destroyCommand from './commands/destroy'
 import * as deployCommand from './commands/deploy'
-import * as destroyCommand from './commands/destroy'
 import * as devCommand from './commands/dev'
 import * as execCommand from './commands/exec'
 import * as experimentalCommand from './commands/experimental'
 // import * as generateCommand from './commands/generate'
 import * as infoCommand from './commands/info'
 import * as lintCommand from './commands/lint'
+import * as pluginCommand from './commands/plugin'
 import * as prerenderCommand from './commands/prerender'
 import * as prismaCommand from './commands/prisma'
 import * as recordCommand from './commands/record'
@@ -133,6 +134,7 @@ async function runYargs() {
     // .command(generateCommand)  // @redwoodjs/cli-plugin-generator
     .command(infoCommand) // @redwoodjs/cli-plugin-misc
     .command(lintCommand) // @redwoodjs/cli-plugin-misc
+    .command(pluginCommand)
     .command(prerenderCommand) // @redwoodjs/cli-plugin-misc
     .command(prismaCommand) // @redwoodjs/cli-plugin-core
     .command(recordCommand) // @redwoodjs/cli-plugin-misc

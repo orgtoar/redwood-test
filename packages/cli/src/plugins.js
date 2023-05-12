@@ -35,10 +35,19 @@ export async function loadPlugins(yargs) {
     process.exit(1)
   }
 
-  // Get a list of all unique namespaces
+  // Get a list of all unique namespaces, sorted alphabetically with @redwoodjs first
   console.time('Plugin namespacing')
   const namespaces = Array.from(
-    new Set(plugins.map((p) => p.name.split('/')[0]))
+    new Set([
+      ...plugins
+        .filter((p) => p.name.startsWith('@redwoodjs/'))
+        .map((p) => p.name.split('/')[0])
+        .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0)),
+      ...plugins
+        .filter((p) => !p.name.startsWith('@redwoodjs/'))
+        .map((p) => p.name.split('/')[0])
+        .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0)),
+    ])
   )
 
   // If the user is running a help command or no command was given
@@ -54,7 +63,7 @@ export async function loadPlugins(yargs) {
   )
   if (namespaceInUse.length === 0) {
     // If no namespace is in use we're using the default @redwoodjs namespace
-    namespaceInUse.push('@redwoodjs')
+    namespaceInUse.unshift('@redwoodjs')
   }
   console.timeEnd('Plugin namespacing')
 
@@ -76,8 +85,6 @@ export async function loadPlugins(yargs) {
     // No need to log this error, it's just a cache miss
   }
   console.timeEnd('Reading plugin cache')
-
-  console.log('pluginCommandCache', pluginCommandCache)
 
   const firstWord = processArgv.split(' ')[0]
   for (const namespace of namespaceInUse) {
