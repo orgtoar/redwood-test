@@ -35,7 +35,9 @@ jobs:
 
       - name: Get test project cache directory path
         id: test-project-cache-dir-path
-        run: echo "dir=$(node -e \"console.log(require('path').join(require('os').tmpdir(), 'test-project'))\")" >> $GITHUB_OUTPUT
+        run: |
+          DIR=$(node -e "console.log(require('path').join(require('os').tmpdir(), 'test-project'))")
+          echo "dir=$DIR" >> $GITHUB_OUTPUT
         # shell: bash
 
       - name: Cache test project
