@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-      fail-fast: false
+      fail-fast: true
     name: 👀 Smoke test / ${{ matrix.os }} / node 18 latest
     runs-on: ${{ matrix.os }}
     env:
@@ -31,6 +31,7 @@ jobs:
         uses: ./.github/actions/set-up-job
 
       - run: echo ${{ hashFiles('__fixtures__/test-project') }}
+      - run: echo ${{ runner.temp }}
 
       - name: Cache test project
         id: cache-test-project
@@ -39,7 +40,8 @@ jobs:
           path: ${{ runner.temp }}/test-project
           key: ${{ runner.os }}-{{ hashFiles('__fixtures__/test-project') }}-test-project
 
-      - run: echo ${{ toJSON(steps.cache-test-project.outputs) }}
+      - run: echo ${{ toJSON(steps) }}
+      - run: echo ${{ toJSON(steps.cache-test-project) }}
 
       # if cache hit, don't set up...?
       # what gets cached tho?
