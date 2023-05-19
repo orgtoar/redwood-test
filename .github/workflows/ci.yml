@@ -33,9 +33,10 @@ jobs:
       - run: echo "${{ hashFiles('__fixtures__/test-project') }}"
       - run: echo "${{ runner.temp }}"
 
-    - name: Get test project cache directory path
-      id: test-project-cache-dir-path
-      run: echo "dir=$(node -e \"console.log(require('path').join(require('os').tmpdir(), 'test-project'))\")" >> $GITHUB_OUTPUT
+      - name: Get test project cache directory path
+        id: test-project-cache-dir-path
+        run: echo "dir=$(node -e \"console.log(require('path').join(require('os').tmpdir(), 'test-project'))\")" >> $GITHUB_OUTPUT
+        # shell: bash
 
       - name: Cache test project
         id: cache-test-project
