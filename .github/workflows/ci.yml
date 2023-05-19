@@ -30,18 +30,18 @@ jobs:
       - name: 🧶 Set up job
         uses: ./.github/actions/set-up-job
 
-      - run: echo ${{ hashFiles('__fixtures__/test-project') }}
-      - run: echo ${{ runner.temp }}
+      - run: echo "${{ hashFiles('__fixtures__/test-project') }}"
+      - run: echo "${{ runner.temp }}"
 
       - name: Cache test project
         id: cache-test-project
         uses: actions/cache@v3
         with:
           path: ${{ runner.temp }}/test-project
-          key: ${{ runner.os }}-{{ hashFiles('__fixtures__/test-project') }}-test-project
+          key: ${{ runner.os }}-${{ hashFiles('__fixtures__/test-project') }}-test-project
 
-      - run: echo ${{ toJSON(steps) }}
-      - run: echo ${{ toJSON(steps.cache-test-project) }}
+      - run: echo "${{ toJSON(steps) }}"
+      - run: echo "${{ toJSON(steps.cache-test-project) }}"
 
       # if cache hit, don't set up...?
       # what gets cached tho?
