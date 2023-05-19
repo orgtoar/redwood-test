@@ -70,9 +70,9 @@ jobs:
           RECORD_REPLAY_METADATA_TEST_RUN_TITLE: Smoke test / ${{ matrix.os }} / node 18 latest
           RECORD_REPLAY_TEST_METRICS: 1
 
-      - name: Setup tmate session
-        if: ${{ failure() }}
-        uses: mxschmitt/action-tmate@v3
+      # - name: Setup tmate session
+      #   if: ${{ failure() }}
+      #   uses: mxschmitt/action-tmate@v3
 
       - name: Run `rw info`
         run: |
