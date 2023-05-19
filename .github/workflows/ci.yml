@@ -30,12 +30,16 @@ jobs:
       - name: 🧶 Set up job
         uses: ./.github/actions/set-up-job
 
-      # - name: Cache test project
-      #   id: cache-test-project
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: test-project
-      #     key: ${{ runner.os }}-{{ hashFiles('__fixtures__/test-project') }}-test-project
+      - run: echo ${{ hashFiles('__fixtures__/test-project') }}
+
+      - name: Cache test project
+        id: cache-test-project
+        uses: actions/cache@v3
+        with:
+          path: ${{ join(runner.temp, 'test-project') }}
+          key: ${{ runner.os }}-{{ hashFiles('__fixtures__/test-project') }}-test-project
+
+      - run: echo ${{ steps.cache-test-project.outputs.cache-hit }}
 
       - name: 🌲 Setup test project
         id: setup_test_project
