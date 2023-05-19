@@ -39,7 +39,10 @@ jobs:
           path: ${{ join(runner.temp, 'test-project') }}
           key: ${{ runner.os }}-{{ hashFiles('__fixtures__/test-project') }}-test-project
 
-      - run: echo ${{ steps.cache-test-project.outputs.cache-hit }}
+      - run: echo ${{ toJSON(steps.cache-test-project.outputs.cache-hit) }}
+
+      # if cache hit, don't set up...?
+      # what gets cached tho?
 
       - name: 🌲 Setup test project
         id: setup_test_project
