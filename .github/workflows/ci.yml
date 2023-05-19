@@ -36,7 +36,7 @@ jobs:
         id: cache-test-project
         uses: actions/cache@v3
         with:
-          path: ${{ join(runner.temp, 'test-project') }}
+          path: ${{ runner.temp }}/test-project
           key: ${{ runner.os }}-{{ hashFiles('__fixtures__/test-project') }}-test-project
 
       - run: echo ${{ toJSON(steps.cache-test-project.outputs) }}
