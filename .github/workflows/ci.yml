@@ -33,15 +33,12 @@ jobs:
         with:
           node-version: 18
           cache: 'yarn'
-          # cache-dependency-path: 'yarn.lock'
 
       - name: 🐈 Yarn install
         run: yarn install
         shell: bash
         env:
           GITHUB_TOKEN: ${{ github.token }}
-
-      # needless change for cache test
 
       # - name: 🌲 Setup test project
       #   id: setup_test_project
