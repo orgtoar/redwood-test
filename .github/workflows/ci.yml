@@ -34,8 +34,14 @@ jobs:
           node-version: 18
           cache: 'yarn'
 
+      - name: 🐈 Restore yarn install state
+        uses: actions/cache@v3
+        with:
+          path: .yarn/install-state.gz
+          key: yarn-install-state-cache-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+
       - name: 🐈 Yarn install
-        run: yarn install
+        run: yarn install --inline-builds
         shell: bash
         env:
           GITHUB_TOKEN: ${{ github.token }}
