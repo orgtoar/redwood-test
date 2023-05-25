@@ -11,8 +11,6 @@ concurrency:
 
 env:
   NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
-  # Locally, we enable global cache, but there's no need to in CI.
-  YARN_ENABLE_GLOBAL_CACHE: 'false'
 
 jobs:
   smoke-test:
@@ -33,6 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      # We could do caching here but...
       - name: ⬢ Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -42,6 +41,7 @@ jobs:
       # to speed up the yarn install step.
       # Caching the cache directory avoids the fetch step.
       # Here's the gist I used as a reference: https://gist.github.com/belgattitude/042f9caf10d029badbde6cf9d43e400a.
+      # Here's another in-depth answer by the yarn team: https://github.com/yarnpkg/berry/discussions/2621
       - name: 🔑 Get yarn cache keys
         id: yarn-cache-keys
         shell: bash
@@ -78,6 +78,9 @@ jobs:
         shell: bash
         env:
           GITHUB_TOKEN: ${{ github.token }}
+
+      # - name: 🔨 Build
+      #   run: yarn build
 
       - name: 🌲 Setup test project
         id: setup_test_project
