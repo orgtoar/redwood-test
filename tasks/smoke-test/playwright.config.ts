@@ -1,39 +1,54 @@
-import { PlaywrightTestConfig, devices } from '@playwright/test'
-// import { devices as replayDevices } from '@replayio/playwright'
+import { defineConfig, devices } from '@playwright/test'
 
 // See https://playwright.dev/docs/test-configuration#global-configuration
-const config: PlaywrightTestConfig = {
-  timeout: 90_000 * 4,
-  expect: {
-    timeout: 10 * 1000,
-  },
-  workers: 1, // do not run things in parallel
+export default defineConfig({
+  // 30 seconds is th default.
+  timeout: 30_000,
 
-  // Leaving this here to make debugging easier, by uncommenting
-  // use: {
-  //   launchOptions: {
-  //     slowMo: 500,
-  //     headless: false,
-  //   },
-  // },
+  expect: {
+    // Maximum time expect() should wait for the condition to be met.
+    // 5 seconds is the default.
+    timeout: 5_000 * 2,
+  },
+
+  testDir: './tests',
+
+  // Run tests in files in parallel.
+  // fullyParallel: true,
+
+  // Fail the build on CI if you accidentally left test.only in the source code.
+  forbidOnly: !!process.env.CI,
+
+  // Retry on CI only.
+  retries: process.env.CI ? 2 : 0,
+
+  // Opt out of parallel tests on CI.
+  workers: process.env.CI ? 1 : undefined,
+
   projects: [
-    // {
-    //   name: 'replay-firefox',
-    //   use: { ...(replayDevices['Replay Firefox'] as any) },
-    // },
-    // {
-    //   name: 'replay-chromium',
-    //   use: { ...(replayDevices['Replay Chromium'] as any) },
-    // },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chromium'] },
+      use: { ...devices['Desktop Chrome'] },
     },
-  ],
-}
 
-export default config
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    // },
+
+    // {
+    //   name: 'webkit',
+    //   use: { ...devices['Desktop Safari'] },
+    // },
+  ],
+
+  // Concise 'dot' for CI, default 'list' when running locally
+  reporter: process.env.CI ? 'dot' : 'list',
+
+  /* Run your local dev server before starting the tests */
+  // webServer: {
+  //   command: 'npm run start',
+  //   url: 'http://127.0.0.1:3000',
+  //   reuseExistingServer: !process.env.CI,
+  // },
+})
