@@ -12,12 +12,13 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@v3
+    - name: ⬢ Set up Node.js
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ inputs.node-version }}
 
     # From https://github.com/actions/cache/blob/main/examples.md#node---yarn-2.
-    - name: Get yarn cache directory path
+    - name: 📁 Get yarn cache directory path
       id: yarn-cache-dir-path
       run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
       shell: bash
