@@ -41,6 +41,7 @@ jobs:
       # We try to cache and restore yarn's cache directory and install state
       # to speed up the yarn install step.
       # Caching the cache directory avoids the fetch step.
+      # Here's the gist I used as a reference: https://gist.github.com/belgattitude/042f9caf10d029badbde6cf9d43e400a.
       - name: 🔑 Get yarn cache keys
         id: yarn-cache-keys
         shell: bash
