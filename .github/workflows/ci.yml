@@ -34,11 +34,24 @@ jobs:
           node-version: 18
           cache: 'yarn'
 
-      - name: 🐈 Restore yarn install state
+      - name: Gather keys
+        id: yarn-cache-keys
+        # env:
+        #   YARN_ENABLE_GLOBAL_CACHE: 'false'
+        run: |
+          echo "CACHE_FOLDER=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+          echo "CURRENT_NODE_VERSION="node-$(node --version)"" >> $GITHUB_OUTPUT
+          echo "CURRENT_BRANCH=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's,/,-,g')" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - run: echo "${{ toJSON(steps.yarn-cache-keys.outputs) }}"
+        shell: bash
+
+      - name: Restore yarn install state
         uses: actions/cache@v3
         with:
           path: .yarn/install-state.gz
-          key: yarn-install-state-cache-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          key: yarn-install-state-cache-${{ runner.os }}-${{ steps.yarn-cache-keys.outputs.CURRENT_NODE_VERSION }}-${{ steps.yarn-cache-keys.outputs.CURRENT_BRANCH }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
 
       - name: 🐈 Yarn install
         run: yarn install --inline-builds
