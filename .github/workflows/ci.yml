@@ -19,7 +19,7 @@ jobs:
         os: [ubuntu-latest, windows-latest]
       fail-fast: false
 
-    name: 👀 Smoke test / ${{ matrix.os }} / node 18 latest
+    name: Smoke tests / ${{ matrix.os }} / node 18 latest
     runs-on: ${{ matrix.os }}
 
     env:
@@ -37,38 +37,35 @@ jobs:
         with:
           node-version: 18
 
-      # We try to cache and restore yarn's cache directory and install state
-      # to speed up the yarn install step.
-      # Caching the cache directory avoids the fetch step.
-      # Here's the gist I used as a reference: https://gist.github.com/belgattitude/042f9caf10d029badbde6cf9d43e400a.
-      # Here's another in-depth answer by the yarn team: https://github.com/yarnpkg/berry/discussions/2621
-      - name: 🔑 Get yarn cache keys
-        id: yarn-cache-keys
+      # We try to cache and restore yarn's cache directory and install state to speed up the yarn install step.
+      # Caching yarn's cache directory avoids its fetch step.
+      #
+      # See:
+      # - https://gist.github.com/belgattitude/042f9caf10d029badbde6cf9d43e400a
+      # - https://github.com/yarnpkg/berry/discussions/2621
+      - name: 📁 Get yarn cache directory
+        id: get-yarn-cache-directory
+        run: echo "CACHE_DIRECTORY=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
         shell: bash
-        run: |
-          echo "CACHE_DIR=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-          echo "NODE_VERSION="node-$(node --version)"" >> $GITHUB_OUTPUT
-          echo "BRANCH=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's,/,-,g')" >> $GITHUB_OUTPUT
 
       - name: ♻️ Restore yarn cache
         uses: actions/cache@v3
         with:
-          path: ${{ steps.yarn-cache-keys.outputs.CACHE_DIR }}
+          path: ${{ steps.get-yarn-cache-directory.outputs.CACHE_DIRECTORY }}
           key: yarn-cache-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
-          restore-keys: |
-            yarn-cache-${{ runner.os }}
+          restore-keys: yarn-cache-${{ runner.os }}
 
       - name: ♻️ Restore yarn install state
         uses: actions/cache@v3
         with:
           path: .yarn/install-state.gz
-          key: yarn-install-state-cache-${{ runner.os }}-${{ steps.yarn-cache-keys.outputs.NODE_VERSION }}-${{ steps.yarn-cache-keys.outputs.BRANCH }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
+          key: yarn-install-state-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
 
       - name: ♻️ Restore node_modules
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: yarn-node-modules-cache-${{ runner.os }}-${{ steps.yarn-config.outputs.NODE_VERSION }}-${{ steps.yarn-config.outputs.BRANCH }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
+          key: yarn-node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
 
       # `--inline-builds` is only for debugging. It tells Yarn to print the output of dependencies' build steps instead of writing them to files
       # See https://yarnpkg.com/cli/install#options-inline-builds.
