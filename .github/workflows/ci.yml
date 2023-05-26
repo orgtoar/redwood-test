@@ -30,7 +30,8 @@ jobs:
       PLAYWRIGHT_BROWSERS_PATH: 0
 
     steps:
-      - uses: actions/checkout@v3
+      - name: 🌲 Checkout redwoodjs/redwood
+        uses: actions/checkout@v3
         with:
           path: redwood
 
@@ -95,8 +96,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
-          key: test-project-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
-          restore-keys: test-project-${{ runner.os }}
+          key: test-project-${{ runner.os }}
 
       - run: |
           echo '${{ toJSON(steps.get-test-project-directory.outputs) }}'
