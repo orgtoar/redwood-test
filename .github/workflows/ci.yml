@@ -80,7 +80,21 @@ jobs:
       - name: 🔨 Build
         run: yarn build
 
+      - name: 📁 Get test project directory
+        id: get-test-project-directory
+        run: |
+          echo "TEST_PROJECT_PATH=$(node -e "console.log(require('path').join(require('os').tmpdir(), 'test-project', new Date().toISOString().split(':').join('-')))")" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: ♻️ Restore test project cache
+        id: restore-test-project-cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
+          key: yarn-cache-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
+
       - name: 🌲 Set up test project
+        if: steps.restore-test-project-cache.outputs.cache-hit != 'true'
         id: set-up-test-project
         uses: ./.github/actions/set-up-test-project
         env:
