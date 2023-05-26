@@ -85,13 +85,15 @@ jobs:
       - name: 🌲 Set up test project
         id: setup-test-project
         run: |
-          rsync -r __fixtures__/test-project/ ../test-project
+          REDWOOD_FRAMEWORK_PATH=$(pwd)
+
+          rsync -r ./__fixtures__/test-project/ ../test-project
 
           yarn run project:deps ../test-project
 
           cd ../test-project || exit 1
           yarn install
-          cd ../redwood || exit 1
+          cd $REDWOOD_FRAMEWORK_PATH || exit 1
 
           yarn run project:copy ../test-project
 
