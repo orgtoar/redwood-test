@@ -1,7 +1,8 @@
-import { defineConfig, devices } from '@playwright/test'
+import type { PlaywrightTestConfig } from '@playwright/test'
+import { devices } from '@playwright/test'
 
 // See https://playwright.dev/docs/test-configuration#global-configuration
-export default defineConfig({
+export const basePlaywrightConfig: PlaywrightTestConfig = {
   // 30 seconds is th default.
   timeout: 30_000,
 
@@ -44,11 +45,4 @@ export default defineConfig({
 
   // Concise 'dot' for CI, default 'list' when running locally
   reporter: process.env.CI ? 'dot' : 'list',
-
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://127.0.0.1:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
-})
+}
