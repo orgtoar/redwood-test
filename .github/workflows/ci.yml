@@ -92,8 +92,15 @@ jobs:
       - name: 🎭 Install playwright dependencies
         run: npx playwright install --with-deps chromium
 
-      - name: 📕 Run Storybook smoke tests
-        working-directory: ./tasks/smoke-tests/storybook
+      - name: Run dev smoke tests
+        working-directory: ./tasks/smoke-tests/dev
+        run: npx playwright test
+        env:
+          REDWOOD_PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
+          REDWOOD_DISABLE_TELEMETRY: 1
+
+      - name: Run serve smoke tests
+        working-directory: ./tasks/smoke-tests/serve
         run: npx playwright test
         env:
           REDWOOD_PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
@@ -116,19 +123,17 @@ jobs:
           REDWOOD_PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
           REDWOOD_DISABLE_TELEMETRY: 1
 
-      # - name: Run smoke tests on 'rw dev', 'rw serve', 'rw storybook'
-      #   working-directory: ./tasks/smoke-test
-      #   run: npx playwright test --project 'chromium'
-      #   env:
-      #     PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
-      #     REDWOOD_DISABLE_TELEMETRY: 1
-      #     # RECORD_REPLAY_METADATA_TEST_RUN_TITLE: Smoke test / ${{ matrix.os }} / node 18 latest
-      #     # RECORD_REPLAY_TEST_METRICS: 1
+      - name: 📕 Run Storybook smoke tests
+        working-directory: ./tasks/smoke-tests/storybook
+        run: npx playwright test
+        env:
+          REDWOOD_PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
+          REDWOOD_DISABLE_TELEMETRY: 1
 
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: playwright-report
-          path: tasks/smoke-test/playwright-report
-          retention-days: 7
+      # - uses: actions/upload-artifact@v3
+      #   if: always()
+      #   with:
+      #     name: playwright-report
+      #     path: tasks/smoke-test/playwright-report
+      #     retention-days: 7
 
