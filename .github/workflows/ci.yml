@@ -83,7 +83,7 @@ jobs:
 
       - name: 🌲 Set up test project
         id: set-up-test-project
-        run: yarn node ./tasks/test-project/test-project-link.mjs --ci
+        uses: ./.github/actions/set-up-test-project
         env:
           REDWOOD_DISABLE_TELEMETRY: 1
           YARN_ENABLE_IMMUTABLE_INSTALLS: false
