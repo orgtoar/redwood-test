@@ -1,3 +1,4 @@
+/* eslint-env node */
 // @ts-check
 
 import os from 'node:os'
@@ -43,6 +44,7 @@ console.log()
 
 console.log(`Installing node_modules in ${REDWOOD_PROJECT_PATH}`)
 await run('yarn install', { cwd: REDWOOD_PROJECT_PATH })
+console.log()
 
 console.log('Copying framework packages to project')
 await run('yarn project:copy')
@@ -52,12 +54,13 @@ console.log('Generating dbAuth secret')
 const { stdout } = await getExecOutput(
   'yarn rw g secret --raw',
   undefined,
-  { cwd: REDWOOD_PROJECT_PATH }
+  { cwd: REDWOOD_PROJECT_PATH, silent: true }
 )
 fs.appendFileSync(
   path.join(REDWOOD_PROJECT_PATH, '.env'),
   `SESSION_SECRET='${stdout}'`
 )
+console.log()
 
 console.log('Running prisma migrate reset')
 await run(
