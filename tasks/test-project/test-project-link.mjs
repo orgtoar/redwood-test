@@ -56,6 +56,8 @@ async function main() {
     }
   }
 
+  process.env.RWJS_CWD = REDWOOD_PROJECT_PATH
+
   // ------------------------
   console.log(
     [
@@ -76,7 +78,7 @@ async function main() {
     ].join('\n')
   )
 
-  await $`yarn project:deps ${REDWOOD_PROJECT_PATH}`
+  await $`yarn project:deps`
   console.log()
 
   // ------------------------
@@ -99,7 +101,7 @@ async function main() {
     [separator, 'Copying framework packages to project', ''].join('\n')
   )
 
-  await $`yarn project:copy ${REDWOOD_PROJECT_PATH}`
+  await $`yarn project:copy`
   console.log()
 
   // ------------------------
