@@ -4,8 +4,6 @@ import path from 'path'
 import { test, expect } from '@playwright/test'
 import type { PlaywrightTestArgs } from '@playwright/test'
 
-test.describe.configure({ mode: 'parallel' })
-
 test('Loads Cell stories', async ({ page }: PlaywrightTestArgs) => {
   await page.goto('/')
 
