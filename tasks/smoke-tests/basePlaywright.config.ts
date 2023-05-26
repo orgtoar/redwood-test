@@ -3,19 +3,7 @@ import { devices } from '@playwright/test'
 
 // See https://playwright.dev/docs/test-configuration#global-configuration
 export const basePlaywrightConfig: PlaywrightTestConfig = {
-  // 30 seconds is th default.
-  timeout: 30_000,
-
-  expect: {
-    // Maximum time expect() should wait for the condition to be met.
-    // 5 seconds is the default.
-    timeout: 5_000 * 2,
-  },
-
   testDir: './tests',
-
-  // Run tests in files in parallel.
-  // fullyParallel: true,
 
   // Fail the build on CI if you accidentally left test.only in the source code.
   forbidOnly: !!process.env.CI,

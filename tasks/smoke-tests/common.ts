@@ -3,8 +3,8 @@ import { expect, PlaywrightTestArgs } from '@playwright/test'
 export async function smokeTest({ page }: PlaywrightTestArgs) {
   await page.goto('/')
 
-  // Check that the blog posts are being loaded
-  // Avoid checking titles, because we edit them in other tests
+  // Check that the blog posts are being loaded.
+  // Avoid checking titles because we edit them in other tests.
   await page.textContent('text=Meh waistcoat succulents umami')
   await page.textContent('text=Raclette shoreditch before they sold out lyft.')
   await page.textContent(
