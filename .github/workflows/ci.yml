@@ -79,12 +79,29 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      # - name: 🔨 Build
-      #   run: yarn build
+      - name: 🔨 Build
+        run: yarn build
 
-      - name: 🌲 Setup test project
-        id: setup_test_project
-        uses: ./.github/actions/setup_test_project
+      - name: 🌲 Set up test project
+        id: setup-test-project
+        run: |
+          rsync -r __fixtures__/test-project/ ../test-project
+
+          yarn run project:deps ../test-project
+
+          cd ../test-project || exit 1
+          yarn install
+          cd ../redwood || exit 1
+
+          yarn run project:copy ../test-project
+
+          cd ../test-project || exit 1
+          yarn rw g secret --raw >> .env
+          yarn rw prisma migrate reset --force
+
+          echo "test-project-path=$(pwd)" >> $GITHUB_OUTPUT
+
+        shell: bash
         env:
           REDWOOD_DISABLE_TELEMETRY: 1
           YARN_ENABLE_IMMUTABLE_INSTALLS: false
@@ -96,45 +113,53 @@ jobs:
         working-directory: ./tasks/smoke-tests/dev
         run: npx playwright test
         env:
-          REDWOOD_PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
+          REDWOOD_PROJECT_PATH: ${{ steps.set-up-test-project.outputs.test-project-path }}
           REDWOOD_DISABLE_TELEMETRY: 1
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: ./tasks/smoke-test/dev/playwright-report
+          retention-days: 7
+
 
       # - name: Run `rw build` without prerender
       #   run: |
       #     yarn rw build --no-prerender
-      #   working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+      #   working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
 
       # - name: Run `rw prerender`
       #   run: |
       #     yarn rw prerender --verbose
-      #   working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+      #   working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
 
       # - name: Run serve smoke tests
       #   working-directory: ./tasks/smoke-tests/serve
       #   run: npx playwright test
       #   env:
-      #     REDWOOD_PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
+      #     REDWOOD_PROJECT_PATH: ${{ steps.set-up-test-project.outputs.test-project-path }}
       #     REDWOOD_DISABLE_TELEMETRY: 1
 
       # - name: 📄 Run prerender smoke tests
       #   working-directory: ./tasks/smoke-tests/prerender
       #   run: npx playwright test
       #   env:
-      #     REDWOOD_PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
+      #     REDWOOD_PROJECT_PATH: ${{ steps.set-up-test-project.outputs.test-project-path }}
       #     REDWOOD_DISABLE_TELEMETRY: 1
 
       # # - name: Run auth smoke tests
       # #   working-directory: ./tasks/smoke-tests/auth
       # #   run: npx playwright test
       # #   env:
-      # #     REDWOOD_PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
+      # #     REDWOOD_PROJECT_PATH: ${{ steps.set-up-test-project.outputs.test-project-path }}
       # #     REDWOOD_DISABLE_TELEMETRY: 1
 
       # - name: 📕 Run Storybook smoke tests
       #   working-directory: ./tasks/smoke-tests/storybook
       #   run: npx playwright test
       #   env:
-      #     REDWOOD_PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
+      #     REDWOOD_PROJECT_PATH: ${{ steps.set-up-test-project.outputs.test-project-path }}
       #     REDWOOD_DISABLE_TELEMETRY: 1
 
       # # - uses: actions/upload-artifact@v3

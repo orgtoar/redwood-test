@@ -18,7 +18,7 @@ console.log({
 
 core.setOutput('test_project_path', test_project_path)
 
-await exec(`yarn build:test-project --ts --link ${test_project_path}`)
+await exec(`yarn node ./tasks/test-project/test-project-link.mjs ${test_project_path}`)
 
 try {
   if (
