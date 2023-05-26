@@ -140,21 +140,21 @@ jobs:
         working-directory: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
 
       - name: 🖥️ Run serve smoke tests
-        working-directory: ./tasks/smoke-tests/serve
+        working-directory: redwood/tasks/smoke-tests/serve
         run: npx playwright test
         env:
           REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
           REDWOOD_DISABLE_TELEMETRY: 1
 
       # - name: 📄 Run prerender smoke tests
-      #   working-directory: ./tasks/smoke-tests/prerender
+      #   working-directory: redwood/tasks/smoke-tests/prerender
       #   run: npx playwright test
       #   env:
       #     REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
       #     REDWOOD_DISABLE_TELEMETRY: 1
 
       # - name: 📕 Run Storybook smoke tests
-      #   working-directory: ./tasks/smoke-tests/storybook
+      #   working-directory: redwood/tasks/smoke-tests/storybook
       #   run: npx playwright test
       #   env:
       #     REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
@@ -165,5 +165,5 @@ jobs:
       #   if: always()
       #   with:
       #     name: playwright-report
-      #     path: ./playwright-report
+      #     path: redwood/playwright-report
       #     retention-days: 7
