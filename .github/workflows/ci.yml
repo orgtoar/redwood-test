@@ -31,8 +31,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-        # with:
-        #   path: 'redwood'
+        with:
+          path: 'redwood'
 
       # We could do caching here but...
       - name: ⬢ Set up Node.js
@@ -49,6 +49,7 @@ jobs:
       - name: 📁 Get yarn cache directory
         id: get-yarn-cache-directory
         run: echo "CACHE_DIRECTORY=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+        working-directory: redwood
         shell: bash
 
       # If the hashFiles doesn't match, the cache will probably be incomplete, but...
@@ -62,13 +63,13 @@ jobs:
       - name: ♻️ Restore yarn install state
         uses: actions/cache@v3
         with:
-          path: .yarn/install-state.gz
+          path: redwood/.yarn/install-state.gz
           key: yarn-install-state-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
 
       - name: ♻️ Restore node_modules
         uses: actions/cache@v3
         with:
-          path: '**/node_modules'
+          path: 'redwood/**/node_modules'
           key: yarn-node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
 
       # `--inline-builds` is only for debugging. It tells Yarn to print the output of dependencies' build steps instead of writing them to files
@@ -76,16 +77,17 @@ jobs:
       # We include the GitHub token to avoid rate limiting when installing `@vscode/ripgrep`.
       - name: 🐈 Yarn install
         run: yarn install --inline-builds
+        working-directory: redwood
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: 🔨 Build
         run: yarn build
+        working-directory: redwood
 
       - name: 📁 Get test project directory
         id: get-test-project-directory
-        run: |
-          echo "TEST_PROJECT_PATH=$(node -e "console.log(require('path').join(require('os').tmpdir(), 'test-project', new Date().toISOString().split(':').join('-')))")" >> $GITHUB_OUTPUT
+        run: echo "TEST_PROJECT_PATH=$GITHUB_WORKSPACE/test-project" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: ♻️ Restore test project cache
