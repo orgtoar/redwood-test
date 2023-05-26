@@ -130,7 +130,10 @@ async function main() {
   if (ci) {
     console.log([separator, 'Adding TEST_PROJECT_PATH to CI', ''].join('\n'))
 
-    await $`echo "TEST_PROJECT_PATH=$(pwd)" >> $GITHUB_OUTPUT`
+    await within(async () => {
+      cd(REDWOOD_PROJECT_PATH)
+      await $`echo "TEST_PROJECT_PATH=$(pwd)" >> $GITHUB_OUTPUT`
+    })
   }
 }
 
