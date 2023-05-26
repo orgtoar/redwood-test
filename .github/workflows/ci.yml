@@ -67,7 +67,7 @@ jobs:
       - name: ♻️ Restore node_modules
         uses: actions/cache@v3
         with:
-          path: **/node_modules
+          path: '**/node_modules'
           key: yarn-node-modules-cache-${{ runner.os }}-${{ steps.yarn-config.outputs.NODE_VERSION }}-${{ steps.yarn-config.outputs.BRANCH }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
 
       # `--inline-builds` is only for debugging. It tells Yarn to print the output of dependencies' build steps instead of writing them to files
