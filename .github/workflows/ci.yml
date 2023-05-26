@@ -91,37 +91,29 @@ jobs:
       - name: 🎭 Install playwright dependencies
         run: npx playwright install --with-deps chromium
 
-      - name: Run dev smoke tests
-        working-directory: ./tasks/smoke-tests/dev
-        run: npx playwright test --reporter html
-        env:
-          REDWOOD_PROJECT_PATH: '${{ steps.set-up-test-project.outputs.TEST_PROJECT_PATH }}'
-          REDWOOD_DISABLE_TELEMETRY: 1
-
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: playwright-report
-          path: ./playwright-report
-          retention-days: 7
-
-
-      # - name: Run `rw build` without prerender
-      #   run: |
-      #     yarn rw build --no-prerender
-      #   working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
-
-      # - name: Run `rw prerender`
-      #   run: |
-      #     yarn rw prerender --verbose
-      #   working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
-
-      # - name: Run serve smoke tests
-      #   working-directory: ./tasks/smoke-tests/serve
-      #   run: npx playwright test
+      # - name: Run dev smoke tests
+      #   working-directory: ./tasks/smoke-tests/dev
+      #   run: npx playwright test --reporter html
       #   env:
-      #     REDWOOD_PROJECT_PATH: ${{ steps.set-up-test-project.outputs.test-project-path }}
+      #     REDWOOD_PROJECT_PATH: '${{ steps.set-up-test-project.outputs.TEST_PROJECT_PATH }}'
       #     REDWOOD_DISABLE_TELEMETRY: 1
+
+      - name: Run `rw build` without prerender
+        run: |
+          yarn rw build --no-prerender
+        working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
+
+      - name: Run `rw prerender`
+        run: |
+          yarn rw prerender --verbose
+        working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
+
+      - name: Run serve smoke tests
+        working-directory: ./tasks/smoke-tests/serve
+        run: npx playwright test
+        env:
+          REDWOOD_PROJECT_PATH: ${{ steps.set-up-test-project.outputs.test-project-path }}
+          REDWOOD_DISABLE_TELEMETRY: 1
 
       # - name: 📄 Run prerender smoke tests
       #   working-directory: ./tasks/smoke-tests/prerender
@@ -144,10 +136,9 @@ jobs:
       #     REDWOOD_PROJECT_PATH: ${{ steps.set-up-test-project.outputs.test-project-path }}
       #     REDWOOD_DISABLE_TELEMETRY: 1
 
-      # # - uses: actions/upload-artifact@v3
-      # #   if: always()
-      # #   with:
-      # #     name: playwright-report
-      # #     path: tasks/smoke-test/playwright-report
-      # #     retention-days: 7
-
+      # - uses: actions/upload-artifact@v3
+      #   if: always()
+      #   with:
+      #     name: playwright-report
+      #     path: ./playwright-report
+      #     retention-days: 7
