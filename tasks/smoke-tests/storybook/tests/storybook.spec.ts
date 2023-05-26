@@ -139,10 +139,10 @@ test('Mocks current user, and updates UI while dev server is running', async ({
 const MOCK_CURRENT_USER_CONTENT = `\
 export const generated = () => {
   mockCurrentUser({
-  email: 'ba@zinga.com',
-  id: 55,
-  roles: 'ADMIN',
-})
+    email: 'ba@zinga.com',
+    id: 55,
+    roles: 'ADMIN',
+  })
 `
 
 test('Loads MDX Stories', async ({ page }: PlaywrightTestArgs) => {
