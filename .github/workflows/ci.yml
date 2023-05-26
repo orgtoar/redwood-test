@@ -30,10 +30,7 @@ jobs:
       PLAYWRIGHT_BROWSERS_PATH: 0
 
     steps:
-      - name: 🌲 Checkout redwoodjs/redwood
-        uses: actions/checkout@v3
-        with:
-          path: redwood
+      - uses: actions/checkout@v3
 
       - name: ⬢ Set up Node.js
         uses: actions/setup-node@v3
@@ -49,7 +46,6 @@ jobs:
       - name: 📁 Get yarn cache directory
         id: get-yarn-cache-directory
         run: echo "CACHE_DIRECTORY=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-        working-directory: redwood
         shell: bash
 
       # If the hashFiles doesn't match, the cache will probably be incomplete, but...
@@ -57,37 +53,35 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.get-yarn-cache-directory.outputs.CACHE_DIRECTORY }}
-          key: yarn-cache-${{ runner.os }}-${{ hashFiles('redwood/yarn.lock', 'redwood/.yarnrc.yml') }}
+          key: yarn-cache-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
           restore-keys: yarn-cache-${{ runner.os }}
 
       - name: ♻️ Restore yarn install state
         uses: actions/cache@v3
         with:
-          path: redwood/.yarn/install-state.gz
-          key: yarn-install-state-${{ runner.os }}-${{ hashFiles('redwood/yarn.lock', 'redwood/.yarnrc.yml') }}
+          path: .yarn/install-state.gz
+          key: yarn-install-state-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
 
       - name: ♻️ Restore node_modules
         uses: actions/cache@v3
         with:
-          path: 'redwood/**/node_modules'
-          key: yarn-node-modules-${{ runner.os }}-${{ hashFiles('redwood/yarn.lock', 'redwood/.yarnrc.yml') }}
+          path: '**/node_modules'
+          key: yarn-node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
 
       # `--inline-builds` is only for debugging. It tells Yarn to print the output of dependencies' build steps instead of writing them to files
       # See https://yarnpkg.com/cli/install#options-inline-builds.
       # We include the GitHub token to avoid rate limiting when installing `@vscode/ripgrep`.
       - name: 🐈 Yarn install
         run: yarn install --inline-builds
-        working-directory: redwood
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: 🔨 Build
         run: yarn build
-        working-directory: redwood
 
       - name: 📁 Get test project directory
         id: get-test-project-directory
-        run: echo "TEST_PROJECT_PATH=$GITHUB_WORKSPACE/test-project" >> $GITHUB_OUTPUT
+        run: echo "TEST_PROJECT_PATH=$GITHUB_WORKSPACE/../test-project" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: ♻️ Restore test project cache
@@ -105,7 +99,7 @@ jobs:
       - name: 🌲 Set up test project
         if: steps.cache.outputs.cache-hit != 'true'
         id: set-up-test-project
-        uses: ./redwood/.github/actions/set-up-test-project
+        uses: .github/actions/set-up-test-project
         with:
           test-project-path: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
         env:
@@ -114,7 +108,6 @@ jobs:
 
       - name: 🎭 Install playwright dependencies
         run: npx playwright install --with-deps chromium
-        working-directory: redwood
 
       # - name: Run dev smoke tests
       #   working-directory: ./tasks/smoke-tests/dev
@@ -141,7 +134,7 @@ jobs:
         working-directory: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
 
       - name: 🖥️ Run serve smoke tests
-        working-directory: redwood/tasks/smoke-tests/serve
+        working-directory: tasks/smoke-tests/serve
         run: npx playwright test
         env:
           REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
