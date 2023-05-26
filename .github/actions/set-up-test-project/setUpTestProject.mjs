@@ -1,7 +1,6 @@
 /* eslint-env node */
 // @ts-check
 
-import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -16,14 +15,7 @@ const TEST_PROJECT_FIXTURE_PATH = path.join(
   '__fixtures__',
   'test-project'
 )
-const REDWOOD_PROJECT_PATH = path.join(
-  os.tmpdir(),
-  'test-project',
-  // ":" is problematic with paths
-  new Date().toISOString().split(':').join('-')
-)
-
-core.setOutput('TEST_PROJECT_PATH', REDWOOD_PROJECT_PATH)
+const REDWOOD_PROJECT_PATH = core.getInput('test-project-path')
 
 console.log(`Creating project at ${REDWOOD_PROJECT_PATH}`)
 
