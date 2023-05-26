@@ -64,18 +64,17 @@ jobs:
           path: .yarn/install-state.gz
           key: yarn-install-state-cache-${{ runner.os }}-${{ steps.yarn-cache-keys.outputs.NODE_VERSION }}-${{ steps.yarn-cache-keys.outputs.BRANCH }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
 
-      # - name: ♻️ Restore node_modules
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: **/node_modules
-      #     key: yarn-node-modules-cache-${{ runner.os }}-${{ steps.yarn-config.outputs.NODE_VERSION }}-${{ steps.yarn-config.outputs.BRANCH }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
+      - name: ♻️ Restore node_modules
+        uses: actions/cache@v3
+        with:
+          path: **/node_modules
+          key: yarn-node-modules-cache-${{ runner.os }}-${{ steps.yarn-config.outputs.NODE_VERSION }}-${{ steps.yarn-config.outputs.BRANCH }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
 
       # `--inline-builds` is only for debugging. It tells Yarn to print the output of dependencies' build steps instead of writing them to files
       # See https://yarnpkg.com/cli/install#options-inline-builds.
       # We include the GitHub token to avoid rate limiting when installing `@vscode/ripgrep`.
       - name: 🐈 Yarn install
         run: yarn install --inline-builds
-        shell: bash
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
