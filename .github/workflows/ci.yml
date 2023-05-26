@@ -95,12 +95,12 @@ jobs:
       #     REDWOOD_PROJECT_PATH: '${{ steps.set-up-test-project.outputs.TEST_PROJECT_PATH }}'
       #     REDWOOD_DISABLE_TELEMETRY: 1
 
-      - name: ⌨️ Run `rw build` without prerender
+      - name: ⌨️ Run `rw build --no-prerender`
         run: |
           yarn rw build --no-prerender
         working-directory: ${{ steps.set-up-test-project.outputs.TEST_PROJECT_PATH }}
 
-      - name:️ ⌨️ Run `rw prerender`
+      - name: ⌨️ Run `rw prerender`
         run: |
           yarn rw prerender --verbose
         working-directory: ${{ steps.set-up-test-project.outputs.TEST_PROJECT_PATH }}
