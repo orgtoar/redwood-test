@@ -57,20 +57,20 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.get-yarn-cache-directory.outputs.CACHE_DIRECTORY }}
-          key: yarn-cache-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
+          key: yarn-cache-${{ runner.os }}-${{ hashFiles('redwood/yarn.lock', 'redwood/.yarnrc.yml') }}
           restore-keys: yarn-cache-${{ runner.os }}
 
       - name: ♻️ Restore yarn install state
         uses: actions/cache@v3
         with:
           path: redwood/.yarn/install-state.gz
-          key: yarn-install-state-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
+          key: yarn-install-state-${{ runner.os }}-${{ hashFiles('redwood/yarn.lock', 'redwood/.yarnrc.yml') }}
 
       - name: ♻️ Restore node_modules
         uses: actions/cache@v3
         with:
           path: 'redwood/**/node_modules'
-          key: yarn-node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
+          key: yarn-node-modules-${{ runner.os }}-${{ hashFiles('redwood/yarn.lock', 'redwood/.yarnrc.yml') }}
 
       # `--inline-builds` is only for debugging. It tells Yarn to print the output of dependencies' build steps instead of writing them to files
       # See https://yarnpkg.com/cli/install#options-inline-builds.
