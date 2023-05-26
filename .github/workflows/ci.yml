@@ -86,7 +86,7 @@ jobs:
           echo "TEST_PROJECT_PATH=$(node -e "console.log(require('path').join(require('os').tmpdir(), 'test-project', new Date().toISOString().split(':').join('-')))")" >> $GITHUB_OUTPUT
         shell: bash
 
-      - run: echo ${{ toJSON(steps.get-test-project-directory.outputs) }}
+      - run: echo '${{ toJSON(steps.get-test-project-directory.outputs) }}'
         shell: bash
 
       - name: ♻️ Restore test project cache
