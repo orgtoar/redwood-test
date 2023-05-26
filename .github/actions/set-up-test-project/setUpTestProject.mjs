@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url'
 import { exec, getExecOutput } from '@actions/exec'
 import * as core from '@actions/core'
 
-const REDWOOD_FRAMEWORK_PATH = fileURLToPath(new URL('../../', import.meta.url))
+const REDWOOD_FRAMEWORK_PATH = fileURLToPath(new URL('../../../', import.meta.url))
 const TEST_PROJECT_FIXTURE_PATH = path.join(
   REDWOOD_FRAMEWORK_PATH,
   '__fixtures__',
