@@ -27,16 +27,17 @@ core.setOutput('TEST_PROJECT_PATH', REDWOOD_PROJECT_PATH)
 
 console.log(`Creating project at ${REDWOOD_PROJECT_PATH}`)
 await fs.copy(TEST_PROJECT_FIXTURE_PATH, REDWOOD_PROJECT_PATH)
+console.log()
 
 console.log(`Adding framework dependencies to ${REDWOOD_PROJECT_PATH}`)
-await exec('yarn project:deps', null, { RWJS_CWD: REDWOOD_PROJECT_PATH })
+await exec('yarn project:deps', null, { env: { RWJS_CWD: REDWOOD_PROJECT_PATH } })
 console.log()
 
 console.log(`Installing node_modules in ${REDWOOD_PROJECT_PATH}`)
 await exec('yarn install', null, { cwd: REDWOOD_PROJECT_PATH })
 
 console.log('Copying framework packages to project')
-await exec('yarn project:copy', null, { RWJS_CWD: REDWOOD_PROJECT_PATH })
+await exec('yarn project:copy', null, { env: { RWJS_CWD: REDWOOD_PROJECT_PATH } })
 console.log()
 
 console.log('Generating dbAuth secret')
