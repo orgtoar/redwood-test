@@ -106,7 +106,7 @@ jobs:
       - name: 🌲 Set up test project
         if: steps.cache.outputs.cache-hit != 'true'
         id: set-up-test-project
-        uses: redwood/.github/actions/set-up-test-project
+        uses: ./redwood/.github/actions/set-up-test-project
         with:
           test-project-path: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
         env:
