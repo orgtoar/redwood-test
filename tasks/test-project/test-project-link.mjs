@@ -8,7 +8,7 @@ process.env.FORCE_COLOR ??= '3'
 import { fileURLToPath } from 'node:url'
 import { parseArgs } from 'node:util'
 
-import { cd, chalk, fs, path, within, $ } from 'zx'
+import { cd, chalk, fs, os, path, within, $ } from 'zx'
 
 const separator = chalk.gray('-'.repeat(process.stdout.columns))
 
@@ -17,35 +17,44 @@ const TEST_PROJECT_FIXTURE_PATH = path.join(
   REDWOOD_FRAMEWORK_PATH,
   '__fixtures__/test-project'
 )
-
-// Parse args.
-const {
-  positionals,
-  values: { ci },
-} = parseArgs({
-  options: {
-    ci: {
-      type: 'boolean',
-      default: false,
-    },
-  },
-  allowPositionals: true,
-})
-
-if (positionals.length === 0) {
-  throw new Error('Missing positional argument: REDWOOD_PROJECT_PATH')
-}
-
-const REDWOOD_PROJECT_PATH = path.resolve(positionals[0])
-
-// Check that REDWOOD_PROJECT_PATH isn't in REDWOOD_FRAMEWORK_PATH.
-const relative = path.relative(REDWOOD_FRAMEWORK_PATH, REDWOOD_PROJECT_PATH)
-
-if (!relative.startsWith('..') && !path.isAbsolute(relative)) {
-  throw new Error('REDWOOD_PROJECT_PATH must be outside REDWOOD_FRAMEWORK_PATH')
-}
+/** @type {string} */
+let REDWOOD_PROJECT_PATH
 
 async function main() {
+  // Parse args.
+  const {
+    positionals,
+    values: { ci },
+  } = parseArgs({
+    options: {
+      ci: {
+        type: 'boolean',
+        default: false,
+      },
+    },
+    allowPositionals: true,
+  })
+
+  if (positionals.length === 0) {
+    REDWOOD_PROJECT_PATH = path.join(
+      os.tmpdir(),
+      'test-project',
+      // ':' is problematic with paths.
+      new Date().toISOString().split(':').join('-')
+    )
+  } else {
+    REDWOOD_PROJECT_PATH = path.resolve(positionals[0])
+
+    // Check that REDWOOD_PROJECT_PATH isn't in REDWOOD_FRAMEWORK_PATH.
+    const relative = path.relative(REDWOOD_FRAMEWORK_PATH, REDWOOD_PROJECT_PATH)
+
+    if (!relative.startsWith('..') && !path.isAbsolute(relative)) {
+      throw new Error(
+        'REDWOOD_PROJECT_PATH must be outside REDWOOD_FRAMEWORK_PATH'
+      )
+    }
+  }
+
   // ------------------------
   console.log(
     [
