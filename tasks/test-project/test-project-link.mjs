@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* eslint-env node */
-//@ts-check
+// @ts-check
 
 // Force zx to output color unless the user specified otherwise.
 process.env.FORCE_COLOR ??= '3'
@@ -18,7 +18,7 @@ const TEST_PROJECT_FIXTURE_PATH = path.join(
   '__fixtures__/test-project'
 )
 
-// This script takes one argument, the path to the test project.
+// Parse args.
 const {
   positionals,
   values: { ci },
@@ -45,11 +45,6 @@ if (!relative.startsWith('..') && !path.isAbsolute(relative)) {
   throw new Error('REDWOOD_PROJECT_PATH must be outside REDWOOD_FRAMEWORK_PATH')
 }
 
-if (ci) {
-  $.verbose = false
-  console.log = () => {}
-}
-
 async function main() {
   // ------------------------
   console.log(
@@ -74,11 +69,7 @@ async function main() {
     ].join('\n')
   )
 
-  await within(async () => {
-    cd(REDWOOD_PROJECT_PATH)
-    await $`RWFW_PATH=${REDWOOD_FRAMEWORK_PATH} yarn project:deps`
-  })
-
+  await $`yarn project:deps ${REDWOOD_PROJECT_PATH}}`
   console.log()
 
   // ------------------------
@@ -92,18 +83,17 @@ async function main() {
 
   await within(async () => {
     cd(REDWOOD_PROJECT_PATH)
-    await $`yarn install `
+    await $`yarn install`
   })
+  console.log()
 
   // ------------------------
   console.log(
     [separator, 'Copying framework packages to project', ''].join('\n')
   )
 
-  within(async () => {
-    cd(REDWOOD_PROJECT_PATH)
-    await $`RWFW_PATH=${REDWOOD_FRAMEWORK_PATH} yarn project:copy`
-  })
+  await $`yarn project:copy ${REDWOOD_PROJECT_PATH}`
+  console.log()
 
   // ------------------------
   console.log([separator, 'Generating dbAuth secret', ''].join('\n'))
@@ -117,9 +107,10 @@ async function main() {
 
     fs.appendFileSync(
       path.join(REDWOOD_PROJECT_PATH, '.env'),
-      `SESSION_SECRET=${stdout}`
+      `SESSION_SECRET='${stdout}'`
     )
   })
+  console.log()
 
   // ------------------------
   console.log([separator, 'Running prisma migrate reset', ''].join('\n'))
@@ -128,12 +119,13 @@ async function main() {
     cd(REDWOOD_PROJECT_PATH)
     await $`yarn rw prisma migrate reset --force`
   })
+  console.log()
 
   // ------------------------
-  console.log([separator, 'Done', ''].join('\n'))
-
   if (ci) {
-    process.stdout.write(REDWOOD_PROJECT_PATH)
+    console.log([separator, 'Adding TEST_PROJECT_PATH to CI', ''].join('\n'))
+
+    await $`echo "TEST_PROJECT_PATH=$(pwd)" >> $GITHUB_OUTPUT`
   }
 }
 

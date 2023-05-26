@@ -82,27 +82,27 @@ jobs:
       - name: 🔨 Build
         run: yarn build
 
-      - name: 🌲 Set up test project
-        id: set-up-test-project
-        run: |
-          REDWOOD_FRAMEWORK_PATH=$(pwd)
+      # - name: 🌲 Set up test project
+      #   id: set-up-test-project
+      #   run: |
+      #     REDWOOD_FRAMEWORK_PATH=$(pwd)
 
-          cp -r ./__fixtures__/test-project/ ../test-project
+      #     cp -r ./__fixtures__/test-project/ ../test-project
 
-          yarn run project:deps ../test-project
+      #     yarn run project:deps ../test-project
 
-          cd ../test-project || exit 1
-          yarn install
-          cd "$REDWOOD_FRAMEWORK_PATH" || exit 1
+      #     cd ../test-project || exit 1
+      #     yarn install
+      #     cd "$REDWOOD_FRAMEWORK_PATH" || exit 1
 
-          yarn run project:copy ../test-project
+      #     yarn run project:copy ../test-project
 
-          cd ../test-project || exit 1
-          yarn rw g secret --raw >> .env
-          yarn rw prisma migrate reset --force
+      #     cd ../test-project || exit 1
+      #     yarn rw g secret --raw >> .env
+      #     yarn rw prisma migrate reset --force
 
-          echo "$(pwd)"
-          echo "TEST_PROJECT_PATH=$(pwd)" >> $GITHUB_OUTPUT
+      #     echo "$(pwd)"
+      #     echo "TEST_PROJECT_PATH=$(pwd)" >> $GITHUB_OUTPUT
 
         shell: bash
         env:
