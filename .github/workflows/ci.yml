@@ -82,9 +82,14 @@ jobs:
       - name: 🔨 Build
         run: yarn build
 
-      # - name: 🌲 Set up test project
-      #   id: set-up-test-project
-      #   run: |
+      - name: 🌲 Set up test project
+        id: set-up-test-project
+        run: yarn node ./tasks/test-project/test-project-link.mjs ../test-project
+        shell: bash
+        env:
+          REDWOOD_DISABLE_TELEMETRY: 1
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
+
       #     REDWOOD_FRAMEWORK_PATH=$(pwd)
 
       #     cp -r ./__fixtures__/test-project/ ../test-project
@@ -104,20 +109,13 @@ jobs:
       #     echo "$(pwd)"
       #     echo "TEST_PROJECT_PATH=$(pwd)" >> $GITHUB_OUTPUT
 
-        shell: bash
-        env:
-          REDWOOD_DISABLE_TELEMETRY: 1
-          YARN_ENABLE_IMMUTABLE_INSTALLS: false
-
-      - run: echo "${{ toJSON(steps.set-up-test-project.outputs) }}"
-        shell: bash
 
       - name: 🎭 Install playwright dependencies
         run: npx playwright install --with-deps chromium
 
       - name: Run dev smoke tests
         working-directory: ./tasks/smoke-tests/dev
-        run: npx playwright test
+        run: npx playwright test --reporter html
         env:
           REDWOOD_PROJECT_PATH: ${{ steps.set-up-test-project.outputs.TEST_PROJECT_PATH }}
           REDWOOD_DISABLE_TELEMETRY: 1
@@ -126,7 +124,7 @@ jobs:
         if: always()
         with:
           name: playwright-report
-          path: ./tasks/smoke-test/dev/playwright-report
+          path: ./playwright-report
           retention-days: 7
 
 

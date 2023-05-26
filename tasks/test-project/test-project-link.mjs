@@ -55,7 +55,6 @@ async function main() {
   )
 
   await fs.copy(TEST_PROJECT_FIXTURE_PATH, REDWOOD_PROJECT_PATH)
-  console.log(chalk.green('Created'))
   console.log()
 
   // ------------------------
@@ -69,7 +68,7 @@ async function main() {
     ].join('\n')
   )
 
-  await $`yarn project:deps ${REDWOOD_PROJECT_PATH}}`
+  await $`yarn project:deps ${REDWOOD_PROJECT_PATH}`
   console.log()
 
   // ------------------------
@@ -110,7 +109,6 @@ async function main() {
       `SESSION_SECRET='${stdout}'`
     )
   })
-  console.log()
 
   // ------------------------
   console.log([separator, 'Running prisma migrate reset', ''].join('\n'))
@@ -119,7 +117,6 @@ async function main() {
     cd(REDWOOD_PROJECT_PATH)
     await $`yarn rw prisma migrate reset --force`
   })
-  console.log()
 
   // ------------------------
   if (ci) {
