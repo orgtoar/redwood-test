@@ -1,3 +1,5 @@
+// @ts-check
+
 import os from 'node:os'
 import path from 'node:path'
 import fs from 'fs-extra'
@@ -21,8 +23,8 @@ const REDWOOD_PROJECT_PATH = path.join(
 
 core.setOutput('TEST_PROJECT_PATH', REDWOOD_PROJECT_PATH)
 
-function run(command, { cwd = REDWOOD_FRAMEWORK_PATH, env = {} }) {
-  return exec(command, null, {
+function run(command, { cwd = REDWOOD_FRAMEWORK_PATH, env = {} } = {}) {
+  return exec(command, undefined, {
     cwd, env: {
       ...process.env,
       RWJS_CWD: REDWOOD_PROJECT_PATH,
@@ -49,7 +51,7 @@ console.log()
 console.log('Generating dbAuth secret')
 const { stdout } = await getExecOutput(
   'yarn rw g secret --raw',
-  null,
+  undefined,
   { cwd: REDWOOD_PROJECT_PATH }
 )
 fs.appendFileSync(
