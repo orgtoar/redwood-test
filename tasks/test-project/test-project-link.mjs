@@ -60,7 +60,6 @@ async function main() {
 
   if (ci) {
     await $`echo "TEST_PROJECT_PATH=${REDWOOD_PROJECT_PATH}" >> $GITHUB_OUTPUT`
-    console.log()
   }
 
   // ------------------------
