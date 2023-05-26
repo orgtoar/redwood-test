@@ -17,5 +17,7 @@ export default defineConfig({
     url: 'http://localhost:7910',
     reuseExistingServer: !process.env.CI,
     stdout: 'pipe',
+    // The Storybook v7 CLI seems noticeably slower, and it times out in Windows CI.
+    timeout: 60_000 * 2,
   },
 })
