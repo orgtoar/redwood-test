@@ -58,6 +58,11 @@ async function main() {
 
   process.env.RWJS_CWD = REDWOOD_PROJECT_PATH
 
+  if (ci) {
+    await $`echo "TEST_PROJECT_PATH=${REDWOOD_PROJECT_PATH}" >> $GITHUB_OUTPUT`
+    console.log()
+  }
+
   // ------------------------
   console.log(
     [
@@ -127,16 +132,6 @@ async function main() {
     cd(REDWOOD_PROJECT_PATH)
     await $`yarn rw prisma migrate reset --force`
   })
-
-  // ------------------------
-  if (ci) {
-    console.log([separator, 'Adding TEST_PROJECT_PATH to CI', ''].join('\n'))
-
-    await within(async () => {
-      cd(REDWOOD_PROJECT_PATH)
-      await $`echo "TEST_PROJECT_PATH=$(pwd)" >> $GITHUB_OUTPUT`
-    })
-  }
 }
 
 main()
