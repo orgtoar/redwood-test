@@ -31,7 +31,7 @@ console.log(`Attempting to restore cache at ${REDWOOD_PROJECT_PATH}`)
 const hash = await glob.hashFiles(['yarn.lock', '.yarnrc.yml'].join('\n'), undefined, undefined, true)
 
 const key = [
-  'test-project-cache',
+  'test-project',
   process.platform,
   // @ts-expect-error GITHUB_REF_NAME is set by the action.
   process.env.GITHUB_REF_NAME.replaceAll(/\/|\s/g, '-'),

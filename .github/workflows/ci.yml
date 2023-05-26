@@ -48,6 +48,7 @@ jobs:
         run: echo "CACHE_DIRECTORY=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
         shell: bash
 
+      # If the hashFiles doesn't match, the cache will probably be incomplete, but...
       - name: ♻️ Restore yarn cache
         uses: actions/cache@v3
         with:
@@ -95,6 +96,13 @@ jobs:
       #     REDWOOD_PROJECT_PATH: '${{ steps.set-up-test-project.outputs.TEST_PROJECT_PATH }}'
       #     REDWOOD_DISABLE_TELEMETRY: 1
 
+      # - name: 🔐 Run auth smoke tests
+      #   working-directory: ./tasks/smoke-tests/auth
+      #   run: npx playwright test
+      #   env:
+      #     REDWOOD_PROJECT_PATH: ${{ steps.set-up-test-project.outputs.TEST_PROJECT_PATH }}
+      #     REDWOOD_DISABLE_TELEMETRY: 1
+
       - name: ⌨️ Run `rw build --no-prerender`
         run: |
           yarn rw build --no-prerender
@@ -121,13 +129,6 @@ jobs:
 
       - name: 📕 Run Storybook smoke tests
         working-directory: ./tasks/smoke-tests/storybook
-        run: npx playwright test
-        env:
-          REDWOOD_PROJECT_PATH: ${{ steps.set-up-test-project.outputs.TEST_PROJECT_PATH }}
-          REDWOOD_DISABLE_TELEMETRY: 1
-
-      - name: 🔐 Run auth smoke tests
-        working-directory: ./tasks/smoke-tests/auth
         run: npx playwright test
         env:
           REDWOOD_PROJECT_PATH: ${{ steps.set-up-test-project.outputs.TEST_PROJECT_PATH }}
