@@ -34,7 +34,8 @@ const key = [
   'test-project-cache',
   process.platform,
   process.version,
-  process.env.GITHUB_REF_NAME,
+  // @ts-expect-error GITHUB_REF_NAME is set by the action.
+  process.env.GITHUB_REF_NAME.replaceAll(/\/|\s/g, '-'),
   hash,
 ].join('-')
 console.log(`Cache key ${key}`)
