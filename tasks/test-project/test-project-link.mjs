@@ -71,9 +71,7 @@ async function main() {
   console.log(
     [
       separator,
-      `Adding framework dependencies to ${chalk.magenta(
-        REDWOOD_PROJECT_PATH
-      )}}`,
+      `Adding framework dependencies to ${chalk.magenta(REDWOOD_PROJECT_PATH)}`,
       '',
     ].join('\n')
   )
