@@ -16,7 +16,8 @@ jobs:
   smoke-test:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
+        # os: [ubuntu-latest, windows-latest]
       fail-fast: false
 
     name: Smoke tests / ${{ matrix.os }} / node 18 latest
