@@ -27,6 +27,7 @@ const REDWOOD_PROJECT_PATH = path.join(
 
 core.setOutput('TEST_PROJECT_PATH', REDWOOD_PROJECT_PATH)
 
+console.log(`Attempting to restore cache at ${REDWOOD_PROJECT_PATH}`)
 const hash = await glob.hashFiles(['yarn.lock', '.yarnrc.yml'].join('\n'), undefined, undefined, true)
 
 const key = [
@@ -36,23 +37,14 @@ const key = [
   process.env.GITHUB_REF_NAME,
   hash,
 ].join('-')
+console.log(`Cache key ${key}`)
 
-console.log({
-  REDWOOD_PROJECT_PATH,
-  key,
-})
-
-console.log(`Attempting to restore cache at ${REDWOOD_PROJECT_PATH} with key ${key}`)
 const cacheKey = await cache.restoreCache(
   [REDWOOD_PROJECT_PATH],
   key,
 )
-console.log({
-  cacheKey,
-})
 
 if (!cacheKey) {
-  console.log()
   console.log(`Cache miss; creating project at ${REDWOOD_PROJECT_PATH}`)
   await fs.copy(TEST_PROJECT_FIXTURE_PATH, REDWOOD_PROJECT_PATH)
   console.log()
