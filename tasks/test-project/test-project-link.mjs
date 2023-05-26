@@ -15,7 +15,8 @@ const separator = chalk.gray('-'.repeat(process.stdout.columns))
 const REDWOOD_FRAMEWORK_PATH = fileURLToPath(new URL('../../', import.meta.url))
 const TEST_PROJECT_FIXTURE_PATH = path.join(
   REDWOOD_FRAMEWORK_PATH,
-  '__fixtures__/test-project'
+  '__fixtures__',
+  'test-project'
 )
 /** @type {string} */
 let REDWOOD_PROJECT_PATH
