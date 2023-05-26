@@ -114,6 +114,7 @@ jobs:
 
       - name: 🎭 Install playwright dependencies
         run: npx playwright install --with-deps chromium
+        working-directory: redwood
 
       # - name: Run dev smoke tests
       #   working-directory: ./tasks/smoke-tests/dev
