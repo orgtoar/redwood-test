@@ -83,7 +83,7 @@ jobs:
         run: yarn build
 
       - name: 🌲 Set up test project
-        id: setup-test-project
+        id: set-up-test-project
         run: |
           REDWOOD_FRAMEWORK_PATH=$(pwd)
 
@@ -101,14 +101,15 @@ jobs:
           yarn rw g secret --raw >> .env
           yarn rw prisma migrate reset --force
 
-          echo "test-project-path=$(pwd)" >> $GITHUB_OUTPUT
+          echo "$(pwd)"
+          echo "TEST_PROJECT_PATH=$(pwd)" >> $GITHUB_OUTPUT
 
         shell: bash
         env:
           REDWOOD_DISABLE_TELEMETRY: 1
           YARN_ENABLE_IMMUTABLE_INSTALLS: false
 
-      - run: echo "${{ steps.set-up-test-project.outputs.test-project-path }}"
+      - run: echo "${{ toJSON(steps.set-up-test-project.outputs) }}"
         shell: bash
 
       - name: 🎭 Install playwright dependencies
@@ -118,7 +119,7 @@ jobs:
         working-directory: ./tasks/smoke-tests/dev
         run: npx playwright test
         env:
-          REDWOOD_PROJECT_PATH: ${{ steps.set-up-test-project.outputs.test-project-path }}
+          REDWOOD_PROJECT_PATH: ${{ steps.set-up-test-project.outputs.TEST_PROJECT_PATH }}
           REDWOOD_DISABLE_TELEMETRY: 1
 
       - uses: actions/upload-artifact@v3
