@@ -123,6 +123,13 @@ jobs:
           REDWOOD_PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
           REDWOOD_DISABLE_TELEMETRY: 1
 
+      - name: Run auth smoke tests
+        working-directory: ./tasks/smoke-tests/auth
+        run: npx playwright test
+        env:
+          REDWOOD_PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
+          REDWOOD_DISABLE_TELEMETRY: 1
+
       - name: 📕 Run Storybook smoke tests
         working-directory: ./tasks/smoke-tests/storybook
         run: npx playwright test

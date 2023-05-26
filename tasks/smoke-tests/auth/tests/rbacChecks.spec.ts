@@ -1,19 +1,11 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import {
-  expect,
-  Page,
-  PlaywrightTestArgs,
-  PlaywrightWorkerArgs,
-} from '@playwright/test'
+import { test, expect } from '@playwright/test'
+import type { PlaywrightTestArgs, Page } from '@playwright/test'
 import execa from 'execa'
 
-import devServerTest, {
-  DevServerFixtures,
-} from '../playwright-fixtures/devServer.fixture'
-
-import { loginAsTestUser, signUpTestUser } from './common'
+import { loginAsTestUser, signUpTestUser } from '../../common'
 
 // This is a special test that does the following
 // Signup a user (admin@bazinga.com), because salt/secrets won't match, we need to do this
@@ -23,20 +15,14 @@ const adminEmail = 'admin@bazinga.com'
 const password = 'test123'
 
 let messageDate
-devServerTest.beforeAll(async ({ browser }: PlaywrightWorkerArgs) => {
-  // @NOTE we can't access webUrl in beforeAll, so hardcoded
-  // But we can switch to beforeEach if required
-  const webUrl = 'http://localhost:9000'
 
+test.beforeAll(async ({ browser }) => {
   const adminSignupPage = await browser.newPage()
   const incognitoPage = await browser.newPage()
   const regularUserSignupPage = await browser.newPage()
 
   await Promise.all([
     signUpTestUser({
-      // @NOTE we can't access webUrl in beforeAll, so hardcoded
-      // But we can switch to beforeEach if required
-      webUrl,
       page: adminSignupPage,
       email: adminEmail,
       password,
@@ -44,12 +30,10 @@ devServerTest.beforeAll(async ({ browser }: PlaywrightWorkerArgs) => {
     }),
     // Signup non-admin user
     signUpTestUser({
-      webUrl,
       page: regularUserSignupPage,
     }),
     fillOutContactFormAsAnonymousUser({
       page: incognitoPage,
-      webUrl,
       messageDate,
     }),
   ])
@@ -61,117 +45,111 @@ devServerTest.beforeAll(async ({ browser }: PlaywrightWorkerArgs) => {
   ])
 })
 
-devServerTest(
-  'RBAC: Should not be able to delete contact as non-admin user',
-  async ({ webUrl, page }: DevServerFixtures & PlaywrightTestArgs) => {
-    // Login as non-admin user
-    await loginAsTestUser({
-      webUrl,
-      page,
+test('RBAC: Should not be able to delete contact as non-admin user', async ({
+  page,
+}) => {
+  // Login as non-admin user
+  await loginAsTestUser({
+    page,
+  })
+
+  // Go to http://localhost:8910/contacts
+  await page.goto('/contacts')
+
+  page.once('dialog', (dialog) => {
+    console.log(`Dialog message: ${dialog.message()}`)
+    dialog.accept().catch(() => {
+      console.error('Failed to accept dialog')
     })
+  })
 
-    // Go to http://localhost:8910/contacts
-    await page.goto(`${webUrl}/contacts`)
+  await page.locator('text=Delete').first().click()
 
-    page.once('dialog', (dialog) => {
-      console.log(`Dialog message: ${dialog.message()}`)
-      dialog.accept().catch(() => {
-        console.error('Failed to accept dialog')
-      })
-    })
+  await expect(
+    page
+      .locator('.rw-scaffold')
+      .locator("text=You don't have permission to do that")
+  ).toBeTruthy()
 
-    await page.locator('text=Delete').first().click()
+  // @NOTE we do this because the scaffold content is actually on the page,
+  // This is the only way we validate if its actually showing visually
+  await expect(
+    page.locator('.rw-scaffold').locator('text=Contact deleted')
+  ).toBeHidden()
 
-    await expect(
-      page
-        .locator('.rw-scaffold')
-        .locator("text=You don't have permission to do that")
-    ).toBeTruthy()
-
-    // @NOTE we do this because the scaffold content is actually on the page,
-    // This is the only way we validate if its actually showing visually
-    await expect(
-      page.locator('.rw-scaffold').locator('text=Contact deleted')
-    ).toBeHidden()
-
-    await expect(
-      await page.locator('text=charlie@chimichanga.com').count()
-    ).toBeGreaterThan(0)
-  }
-)
-
-devServerTest(
-  'RBAC: Admin user should be able to delete contacts',
-  async ({ webUrl, page }: DevServerFixtures & PlaywrightTestArgs) => {
-    fs.writeFileSync(
-      path.join(process.env.PROJECT_PATH, 'scripts/makeAdmin.ts'),
-      `
-  import { db } from 'api/src/lib/db'
-
-export default async ({ args }) => {
-await db.user.update({
-where: {
-  email: args.email,
-},
-data: {
-  roles: 'ADMIN',
-},
+  await expect(
+    await page.locator('text=charlie@chimichanga.com').count()
+  ).toBeGreaterThan(0)
 })
 
-console.log(await db.user.findMany())
+test('RBAC: Admin user should be able to delete contacts', async ({ page }) => {
+  fs.writeFileSync(
+    path.join(
+      process.env.REDWOOD_PROJECT_PATH as string,
+      'scripts/makeAdmin.ts'
+    ),
+    `\
+import { db } from 'api/src/lib/db'
+
+export default async ({ args }) => {
+  await db.user.update({
+    where: {
+      email: args.email,
+    },
+    data: {
+      roles: 'ADMIN',
+    },
+  })
+
+  console.log(await db.user.findMany())
 }`
-    )
+  )
 
-    console.log(`Giving ${adminEmail} ADMIN role....`)
-    await execa(`yarn rw exec makeAdmin --email ${adminEmail}`, {
-      cwd: process.env.PROJECT_PATH,
-      stdio: 'inherit',
-      shell: true,
+  console.log(`Giving ${adminEmail} ADMIN role....`)
+  await execa(`yarn rw exec makeAdmin --email ${adminEmail}`, {
+    cwd: process.env.REDWOOD_PROJECT_PATH,
+    stdio: 'inherit',
+    shell: true,
+  })
+
+  await loginAsTestUser({
+    page,
+    email: adminEmail,
+    password,
+  })
+
+  await page.goto('/contacts')
+
+  // This makes the test less flaky when running locally against the same
+  // test project multiple times
+  const contactCountBefore = await waitForContact(page)
+
+  page.once('dialog', (dialog) => {
+    console.log(`Dialog message: ${dialog.message()}`)
+    dialog.accept().catch(() => {
+      console.error('Failed to accept dialog')
     })
+  })
 
-    await loginAsTestUser({
-      webUrl,
-      page,
-      email: adminEmail,
-      password,
-    })
+  await page.locator('text=Delete').first().click()
 
-    // Go to http://localhost:8910/contacts
-    await page.goto(`${webUrl}/contacts`)
+  await expect(
+    page.locator('.rw-scaffold').locator('text=Contact deleted')
+  ).toBeVisible()
 
-    // This makes the test less flaky when running locally against the same
-    // test project multiple times
-    const contactCountBefore = await waitForContact(page)
-
-    page.once('dialog', (dialog) => {
-      console.log(`Dialog message: ${dialog.message()}`)
-      dialog.accept().catch(() => {
-        console.error('Failed to accept dialog')
-      })
-    })
-
-    await page.locator('text=Delete').first().click()
-
-    await expect(
-      page.locator('.rw-scaffold').locator('text=Contact deleted')
-    ).toBeVisible()
-
-    await expect(
-      await page.locator('text=charlie@chimichanga.com').count()
-    ).toBe(contactCountBefore - 1)
-  }
-)
+  await expect(await page.locator('text=charlie@chimichanga.com').count()).toBe(
+    contactCountBefore - 1
+  )
+})
 
 async function fillOutContactFormAsAnonymousUser({
   page,
-  webUrl,
   messageDate,
 }: {
   page: PlaywrightTestArgs['page']
-  webUrl: string
   messageDate: string
 }) {
-  await page.goto(`${webUrl}/contact`)
+  await page.goto('localhost:8910/contact')
   // Click input[name="name"]
   await page.locator('input[name="name"]').click()
   // Fill input[name="name"]
