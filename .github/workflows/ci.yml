@@ -90,6 +90,9 @@ jobs:
           REDWOOD_DISABLE_TELEMETRY: 1
           YARN_ENABLE_IMMUTABLE_INSTALLS: false
 
+      - run: echo "${{ toJSON(steps.set-up-test-project.outputs) }}"
+        shell: bash
+
       - name: 🎭 Install playwright dependencies
         run: npx playwright install --with-deps chromium
 
