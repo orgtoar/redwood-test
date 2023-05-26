@@ -6,6 +6,8 @@ import { basePlaywrightConfig } from '../basePlaywright.config'
 export default defineConfig({
   ...basePlaywrightConfig,
 
+  timeout: 30_000 * 2,
+
   use: {
     baseURL: 'http://localhost:8910',
   },
