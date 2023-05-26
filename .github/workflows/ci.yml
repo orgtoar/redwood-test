@@ -91,14 +91,14 @@ jobs:
       - name: 🎭 Install playwright dependencies
         run: npx playwright install --with-deps chromium
 
-      - run: ls ${{ steps.set-up-test-project.outputs.TEST_PROJECT_PATH }}
+      - run: ls '${{ steps.set-up-test-project.outputs.TEST_PROJECT_PATH }}'
         shell: bash
 
       - name: Run dev smoke tests
         working-directory: ./tasks/smoke-tests/dev
         run: npx playwright test --reporter html
         env:
-          REDWOOD_PROJECT_PATH: ${{ steps.set-up-test-project.outputs.TEST_PROJECT_PATH }}
+          REDWOOD_PROJECT_PATH: '${{ steps.set-up-test-project.outputs.TEST_PROJECT_PATH }}'
           REDWOOD_DISABLE_TELEMETRY: 1
 
       - uses: actions/upload-artifact@v3
