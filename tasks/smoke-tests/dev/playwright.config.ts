@@ -14,7 +14,9 @@ export default defineConfig({
   webServer: {
     command: 'yarn redwood dev --no-generate --fwd="--no-open"',
     cwd: process.env.REDWOOD_PROJECT_PATH,
-    url: 'http://localhost:8910',
+    // We wait for the api server to be ready instead of the web server
+    // because web starts much faster with Vite.
+    url: 'http://localhost:8911/graphql?query={redwood{version}}',
     reuseExistingServer: !process.env.CI,
     stdout: 'pipe',
   },
