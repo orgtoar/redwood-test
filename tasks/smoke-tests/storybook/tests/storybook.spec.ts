@@ -4,6 +4,8 @@ import path from 'path'
 import { test, expect } from '@playwright/test'
 import type { PlaywrightTestArgs } from '@playwright/test'
 
+test.describe.configure({ mode: 'parallel' })
+
 test('Loads Cell stories', async ({ page }: PlaywrightTestArgs) => {
   await page.goto('/')
 
@@ -90,13 +92,7 @@ test('Mocks current user, and updates UI while dev server is running', async ({
   if (!profilePageStoryContent.includes('mockCurrentUser')) {
     const contentWithMockCurrentUser = profilePageStoryContent.replace(
       'export const generated = () => {',
-      `export const generated = () => {
-          mockCurrentUser({
-          email: 'ba@zinga.com',
-          id: 55,
-          roles: 'ADMIN',
-        })
-      `
+      MOCK_CURRENT_USER_CONTENT
     )
 
     fs.writeFileSync(profileStoryPath, contentWithMockCurrentUser)
@@ -141,6 +137,15 @@ test('Mocks current user, and updates UI while dev server is running', async ({
     '<td>Is Admin</td><td>true</td>'
   )
 })
+
+const MOCK_CURRENT_USER_CONTENT = `\
+export const generated = () => {
+  mockCurrentUser({
+  email: 'ba@zinga.com',
+  id: 55,
+  roles: 'ADMIN',
+})
+`
 
 test('Loads MDX Stories', async ({ page }: PlaywrightTestArgs) => {
   await page.goto('/')
