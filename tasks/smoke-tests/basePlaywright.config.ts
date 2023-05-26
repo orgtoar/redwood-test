@@ -31,6 +31,6 @@ export const basePlaywrightConfig: PlaywrightTestConfig = {
     // },
   ],
 
-  // Concise 'dot' for CI, default 'list' when running locally
-  reporter: process.env.CI ? 'dot' : 'list',
+  // Use the HTML reporter in CI for debugging.
+  reporter: process.env.CI ? 'html' : 'list',
 }
