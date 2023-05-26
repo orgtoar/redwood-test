@@ -96,6 +96,7 @@ jobs:
       - name: Run dev smoke tests
         working-directory: ./tasks/smoke-tests/dev
         run: npx playwright test --reporter html
+        shell: bash
         env:
           REDWOOD_PROJECT_PATH: ${{ steps.set-up-test-project.outputs.TEST_PROJECT_PATH }}
           REDWOOD_DISABLE_TELEMETRY: 1
