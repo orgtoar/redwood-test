@@ -87,13 +87,13 @@ jobs:
         run: |
           REDWOOD_FRAMEWORK_PATH=$(pwd)
 
-          rsync -r ./__fixtures__/test-project/ ../test-project
+          cp -r ./__fixtures__/test-project/ ../test-project
 
           yarn run project:deps ../test-project
 
           cd ../test-project || exit 1
           yarn install
-          cd $REDWOOD_FRAMEWORK_PATH || exit 1
+          cd "$REDWOOD_FRAMEWORK_PATH" || exit 1
 
           yarn run project:copy ../test-project
 
@@ -107,6 +107,9 @@ jobs:
         env:
           REDWOOD_DISABLE_TELEMETRY: 1
           YARN_ENABLE_IMMUTABLE_INSTALLS: false
+
+      - run: echo "${{ steps.set-up-test-project.outputs.test-project-path }}"
+        shell: bash
 
       - name: 🎭 Install playwright dependencies
         run: npx playwright install --with-deps chromium

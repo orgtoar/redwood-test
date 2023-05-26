@@ -1,5 +1,7 @@
 #!/bin/bash
-echo 'rsync -r __fixtures__/test-project/ ../test-project'
+REDWOOD_FRAMEWORK_PATH=$(pwd)
+
+echo 'cp -r __fixtures__/test-project/ ../test-project'
 rsync -r __fixtures__/test-project/ ../test-project
 
 echo 'yarn run project:deps ../test-project'
@@ -7,7 +9,7 @@ yarn run project:deps ../test-project
 
 cd ../test-project || exit 1
 yarn install
-cd ../redwood || exit 1
+cd "$REDWOOD_FRAMEWORK_PATH" || exit 1
 
 yarn run project:copy ../test-project
 
