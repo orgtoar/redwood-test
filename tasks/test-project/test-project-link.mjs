@@ -5,6 +5,7 @@
 // Force zx to output color unless the user specified otherwise.
 process.env.FORCE_COLOR ??= '3'
 
+import { execSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { parseArgs } from 'node:util'
 
@@ -59,7 +60,9 @@ async function main() {
   process.env.RWJS_CWD = REDWOOD_PROJECT_PATH
 
   if (ci) {
-    await $`echo "TEST_PROJECT_PATH=${REDWOOD_PROJECT_PATH}" >> $GITHUB_OUTPUT`
+    execSync(
+      `echo "TEST_PROJECT_PATH=${REDWOOD_PROJECT_PATH}" >> $GITHUB_OUTPUT`
+    )
   }
 
   // ------------------------
