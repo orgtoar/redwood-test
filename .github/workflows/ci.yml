@@ -16,8 +16,7 @@ jobs:
   smoke-test:
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        # os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest]
       fail-fast: false
 
     name: Smoke tests / ${{ matrix.os }} / node 18 latest
@@ -85,7 +84,7 @@ jobs:
         shell: bash
 
       - name: ♻️ Restore test project cache
-        id: cache
+        id: test-project-cache
         uses: actions/cache@v3
         with:
           path: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
@@ -97,8 +96,7 @@ jobs:
       #   shell: bash
 
       - name: 🌲 Set up test project
-        if: steps.cache.outputs.cache-hit != 'true'
-        id: set-up-test-project
+        if: steps.test-project-cache.outputs.cache-hit != 'true'
         uses: ./.github/actions/set-up-test-project
         with:
           test-project-path: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
