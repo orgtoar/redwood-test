@@ -33,9 +33,9 @@ const hash = await glob.hashFiles(['yarn.lock', '.yarnrc.yml'].join('\n'), undef
 const key = [
   'test-project',
   process.platform,
-  // @ts-expect-error GITHUB_REF_NAME is set by the action.
-  process.env.GITHUB_REF_NAME.replaceAll(/\/|\s/g, '-'),
-  hash,
+  // // @ts-expect-error GITHUB_REF_NAME is set by the action.
+  // process.env.GITHUB_REF_NAME.replaceAll(/\/|\s/g, '-'),
+  // hash,
 ].join('-')
 console.log(`Cache key ${key}`)
 
