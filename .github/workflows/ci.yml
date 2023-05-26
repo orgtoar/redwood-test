@@ -80,7 +80,7 @@ jobs:
 
       - name: 📁 Get test project directory
         id: get-test-project-directory
-        run: echo "TEST_PROJECT_PATH=$GITHUB_WORKSPACE/../test-project" >> $GITHUB_OUTPUT
+        run: echo "TEST_PROJECT_PATH=$(node -e "console.log(path.join(path.dirname(process.cwd()), 'test-project'))")" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: ♻️ Restore test project cache
