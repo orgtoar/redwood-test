@@ -27,12 +27,14 @@ const REDWOOD_PROJECT_PATH = path.join(
 
 core.setOutput('TEST_PROJECT_PATH', REDWOOD_PROJECT_PATH)
 
+const hash = await glob.hashFiles(['yarn.lock', '.yarnrc.yml'].join('\n'), undefined, undefined, true)
+
 const key = [
   'test-project-cache',
   process.platform,
   process.version,
   process.env.GITHUB_REF_NAME,
-  glob.hashFiles('yarn.lock', '.yarnrc.yml')
+  hash,
 ].join('-')
 
 console.log({
@@ -86,10 +88,7 @@ if (!cacheKey) {
   )
 
   console.log(`Caching test project at ${REDWOOD_PROJECT_PATH} with key ${key}`)
-  const cacheId = await cache.saveCache([REDWOOD_PROJECT_PATH], key)
-  console.log({
-    cacheId,
-  })
+  await cache.saveCache([REDWOOD_PROJECT_PATH], key)
 }
 
 function run(command, { cwd = REDWOOD_FRAMEWORK_PATH, env = {} } = {}) {
