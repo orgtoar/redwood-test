@@ -52,52 +52,54 @@ console.log({
 })
 
 if (!cacheKey) {
-  console.log(`Cache miss; creating project at ${REDWOOD_PROJECT_PATH}`)
-  return
-
-  await fs.copy(TEST_PROJECT_FIXTURE_PATH, REDWOOD_PROJECT_PATH)
-  console.log()
-
-  console.log(`Adding framework dependencies to ${REDWOOD_PROJECT_PATH}`)
-  await run('yarn project:deps')
-  console.log()
-
-  console.log(`Installing node_modules in ${REDWOOD_PROJECT_PATH}`)
-  await run('yarn install', { cwd: REDWOOD_PROJECT_PATH })
-  console.log()
-
-  console.log('Copying framework packages to project')
-  await run('yarn project:copy')
-  console.log()
-
-  console.log('Generating dbAuth secret')
-  const { stdout } = await getExecOutput(
-    'yarn rw g secret --raw',
-    undefined,
-    { cwd: REDWOOD_PROJECT_PATH, silent: true }
-  )
-  fs.appendFileSync(
-    path.join(REDWOOD_PROJECT_PATH, '.env'),
-    `SESSION_SECRET='${stdout}'`
-  )
-  console.log()
-
-  console.log('Running prisma migrate reset')
-  await run(
-    'yarn rw prisma migrate reset --force',
-    { cwd: REDWOOD_PROJECT_PATH }
-  )
-
-  console.log(`Caching test project at ${REDWOOD_PROJECT_PATH} with key ${key}`)
-  await cache.saveCache([REDWOOD_PROJECT_PATH], key)
+  console.log('cache miss :/')
 }
 
-function run(command, { cwd = REDWOOD_FRAMEWORK_PATH, env = {} } = {}) {
-  return exec(command, undefined, {
-    cwd, env: {
-      ...process.env,
-      RWJS_CWD: REDWOOD_PROJECT_PATH,
-      ...env
-    }
-  })
-}
+//   console.log(`Cache miss; creating project at ${REDWOOD_PROJECT_PATH}`)
+
+//   await fs.copy(TEST_PROJECT_FIXTURE_PATH, REDWOOD_PROJECT_PATH)
+//   console.log()
+
+//   console.log(`Adding framework dependencies to ${REDWOOD_PROJECT_PATH}`)
+//   await run('yarn project:deps')
+//   console.log()
+
+//   console.log(`Installing node_modules in ${REDWOOD_PROJECT_PATH}`)
+//   await run('yarn install', { cwd: REDWOOD_PROJECT_PATH })
+//   console.log()
+
+//   console.log('Copying framework packages to project')
+//   await run('yarn project:copy')
+//   console.log()
+
+//   console.log('Generating dbAuth secret')
+//   const { stdout } = await getExecOutput(
+//     'yarn rw g secret --raw',
+//     undefined,
+//     { cwd: REDWOOD_PROJECT_PATH, silent: true }
+//   )
+//   fs.appendFileSync(
+//     path.join(REDWOOD_PROJECT_PATH, '.env'),
+//     `SESSION_SECRET='${stdout}'`
+//   )
+//   console.log()
+
+//   console.log('Running prisma migrate reset')
+//   await run(
+//     'yarn rw prisma migrate reset --force',
+//     { cwd: REDWOOD_PROJECT_PATH }
+//   )
+
+//   console.log(`Caching test project at ${REDWOOD_PROJECT_PATH} with key ${key}`)
+//   await cache.saveCache([REDWOOD_PROJECT_PATH], key)
+// }
+
+// function run(command, { cwd = REDWOOD_FRAMEWORK_PATH, env = {} } = {}) {
+//   return exec(command, undefined, {
+//     cwd, env: {
+//       ...process.env,
+//       RWJS_CWD: REDWOOD_PROJECT_PATH,
+//       ...env
+//     }
+//   })
+// }
