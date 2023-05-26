@@ -44,6 +44,12 @@ const cacheKey = await cache.restoreCache(
   key,
 )
 
+console.log({
+  REDWOOD_PROJECT_PATH,
+  key,
+  cacheKey
+})
+
 if (!cacheKey) {
   console.log(`Cache miss; creating project at ${REDWOOD_PROJECT_PATH}`)
   await fs.copy(TEST_PROJECT_FIXTURE_PATH, REDWOOD_PROJECT_PATH)
