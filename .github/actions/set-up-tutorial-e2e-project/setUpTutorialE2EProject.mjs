@@ -72,7 +72,7 @@ async function setUpTutorialE2EProject() {
     TUTORIAL_E2E_PROJECT_PATH,
     '--typescript',
     '--git',
-    "--commit-message 'first'",
+    "--commit-message first",
   ].join(' '))
 
   const packageConfigPath = path.join(TUTORIAL_E2E_PROJECT_PATH, 'package.json')
@@ -95,6 +95,9 @@ async function setUpTutorialE2EProject() {
   console.log(`Installing node_modules in ${TUTORIAL_E2E_PROJECT_PATH}`)
   await execInProject('yarn install')
   console.log()
+
+  await execInProject('git add .')
+  await execInProject("git commit -m 'yarn install'")
 
   await cache.saveCache([TUTORIAL_E2E_PROJECT_PATH], dependenciesKey)
   console.log(`Cache saved with key: ${dependenciesKey}`)
