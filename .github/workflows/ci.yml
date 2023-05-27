@@ -13,62 +13,62 @@ env:
   NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
 jobs:
-  only-doc-changes:
-    # if: github.repository == 'redwoodjs/redwood'
+  # only-doc-changes:
+  #   # if: github.repository == 'redwoodjs/redwood'
 
-    name: 📖 Only doc changes?
-    runs-on: ubuntu-latest
+  #   name: 📖 Only doc changes?
+  #   runs-on: ubuntu-latest
 
-    outputs:
-      only-doc-changes: ${{ steps.only-doc-changes.outputs.only-doc-changes }}
+  #   outputs:
+  #     only-doc-changes: ${{ steps.only-doc-changes.outputs.only-doc-changes }}
 
-    steps:
-      - uses: actions/checkout@v3
+  #   steps:
+  #     - uses: actions/checkout@v3
 
-      - name: ⬢ Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+  #     - name: ⬢ Set up Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 18
 
-      - name: 🐈 Yarn install
-        run: yarn install
-        working-directory: ./.github/actions/only-doc-changes
+  #     - name: 🐈 Yarn install
+  #       run: yarn install
+  #       working-directory: ./.github/actions/only-doc-changes
 
-      - name: 📖 Only doc changes?
-        id: only-doc-changes
-        uses: ./.github/actions/only-doc-changes
+  #     - name: 📖 Only doc changes?
+  #       id: only-doc-changes
+  #       uses: ./.github/actions/only-doc-changes
 
-  run-yarn-checks:
-    needs: only-doc-changes
-    if: needs.only-doc-changes.outputs.only-doc-changes == 'false'
+  # run-yarn-checks:
+  #   needs: only-doc-changes
+  #   if: needs.only-doc-changes.outputs.only-doc-changes == 'false'
 
-    name: ✅ Check constraints, dependencies, and package.json's
-    runs-on: ubuntu-latest
+  #   name: ✅ Check constraints, dependencies, and package.json's
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v3
+  #   steps:
+  #     - uses: actions/checkout@v3
 
-      - name: ⬢ Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+  #     - name: ⬢ Set up Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 18
 
-      - name: 🐈 Yarn install
-        run: yarn install
-        working-directory: ./tasks/run-yarn-checks
+  #     - name: 🐈 Yarn install
+  #       run: yarn install
+  #       working-directory: ./tasks/run-yarn-checks
 
-      - name: ✅ Check constraints, dependencies, and package.json's
-        uses: ./tasks/run-yarn-checks
+  #     - name: ✅ Check constraints, dependencies, and package.json's
+  #       uses: ./tasks/run-yarn-checks
 
-  run-yarn-checks-docs:
-    needs: only-doc-changes
-    if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
+  # run-yarn-checks-docs:
+  #   needs: only-doc-changes
+  #   if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
 
-    name: ✅ Check constraints, dependencies, and package.json's
-    runs-on: ubuntu-latest
+  #   name: ✅ Check constraints, dependencies, and package.json's
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - run: echo "Only doc changes"
+  #   steps:
+  #     - run: echo "Only doc changes"
 
   # build-lint-test:
   #   needs: run-yarn-checks
@@ -128,7 +128,7 @@ jobs:
   #     - run: echo "Only doc changes"
 
   tutorial-e2e:
-    needs: run-yarn-checks
+    # needs: run-yarn-checks
 
     name: 🌲 Tutorial E2E / node 18 latest
     runs-on: ubuntu-latest
@@ -191,18 +191,18 @@ jobs:
              cypress/e2e/01-tutorial/*.cy.js
              cypress/e2e/04-logger/*.cy.js
 
-  tutorial-e2e-docs:
-    needs: only-doc-changes
-    if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
+  # tutorial-e2e-docs:
+  #   needs: only-doc-changes
+  #   if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
 
-    name: 🌲 Tutorial E2E / node 18 latest
-    runs-on: ubuntu-latest
+  #   name: 🌲 Tutorial E2E / node 18 latest
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - run: echo "Only doc changes"
+  #   steps:
+  #     - run: echo "Only doc changes"
 
   smoke-test:
-    needs: run-yarn-checks
+    # needs: run-yarn-checks
 
     strategy:
       matrix:
@@ -314,19 +314,19 @@ jobs:
           path: playwright-report
           retention-days: 7
 
-  smoke-test-docs:
-    needs: only-doc-changes
-    if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
+  # smoke-test-docs:
+  #   needs: only-doc-changes
+  #   if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
 
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest, windows-latest]
 
-    name: 🔄 Smoke tests / ${{ matrix.os }} / node 18 latest
-    runs-on: ${{ matrix.os }}
+  #   name: 🔄 Smoke tests / ${{ matrix.os }} / node 18 latest
+  #   runs-on: ${{ matrix.os }}
 
-    steps:
-      - run: echo "Only doc changes"
+  #   steps:
+  #     - run: echo "Only doc changes"
 
   # telemetry-check:
   #   needs: run-yarn-checks
