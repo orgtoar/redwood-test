@@ -149,11 +149,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      - name: 📁 Create temporary directory
-        id: create-temporary-directory
-        run: |
-          echo "project_path=$(mktemp -d -t redwood.XXXXXX)" >> $GITHUB_OUTPUT
-          echo "framework_path=$(pwd)" >> $GITHUB_OUTPUT
+      - name: 🔨 Build
+        run: yarn build
 
       - name: 🌲 Create Redwood app
         run: ./tasks/run-e2e ${{ steps.create-temporary-directory.outputs.project_path }} --no-start
@@ -172,7 +169,8 @@ jobs:
         run: yarn rw dev --no-generate --fwd="--no-open" &
         working-directory: ${{ steps.create-temporary-directory.outputs.project_path }}
 
-      # Because caching
+      # We have to do this because of the combination of the way we cache node_modules
+      # and where Cypress installs itself.
       - name: 🌲 Install Cypress
         run: yarn run cypress install
 
