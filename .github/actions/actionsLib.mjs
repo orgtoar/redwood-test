@@ -10,7 +10,7 @@ import { hashFiles } from '@actions/glob'
  * @typedef {import('@actions/exec').ExecOptions} ExecOptions
  */
 
-const REDWOOD_FRAMEWORK_PATH = fileURLToPath(new URL('../../', import.meta.url))
+export const REDWOOD_FRAMEWORK_PATH = fileURLToPath(new URL('../../', import.meta.url))
 
 /**
  * @param {string} command
@@ -34,7 +34,7 @@ function execWithEnv(command, { env = {}, ...rest } = {}) {
 /**
  * @param {string} cwd
  */
-function createExecWithEnvInCwd(cwd) {
+export function createExecWithEnvInCwd(cwd) {
   /**
    * @param {string} command
    * @param {Omit<ExecOptions, 'cwd'>} options
@@ -44,26 +44,26 @@ function createExecWithEnvInCwd(cwd) {
   }
 }
 
-const execInFramework = createExecWithEnvInCwd(REDWOOD_FRAMEWORK_PATH)
+export const execInFramework = createExecWithEnvInCwd(REDWOOD_FRAMEWORK_PATH)
 
 /**
  * @param {string} redwoodProjectCwd
  */
-function projectDeps(redwoodProjectCwd) {
+export function projectDeps(redwoodProjectCwd) {
   return execInFramework('yarn project:deps', { env: { RWJS_CWD: redwoodProjectCwd } })
 }
 
 /**
  * @param {string} redwoodProjectCwd
  */
-function projectCopy(redwoodProjectCwd) {
+export function projectCopy(redwoodProjectCwd) {
   return execInFramework('yarn project:copy', { env: { RWJS_CWD: redwoodProjectCwd } })
 }
 
 /**
  * @param {string} prefix
  */
-async function createCacheKeys(prefix) {
+export async function createCacheKeys(prefix) {
   const baseKey = [
     prefix,
     process.env.RUNNER_OS,
@@ -75,24 +75,23 @@ async function createCacheKeys(prefix) {
     await hashFiles(['yarn.lock', '.yarnrc.yml'].join('\n')),
   ].join('-')
 
-  const packagesKey = [
+  const distKey = [
     dependenciesKey,
-    'packages',
-    await hashFiles('packages')
+    'dist',
+    await hashFiles([
+      'package.json',
+      'babel.config.js',
+      'tsconfig.json',
+      'tsconfig.compilerOption.json',
+      'nx.json',
+      'lerna.json',
+      'packages',
+    ].join('\n'))
   ].join('-')
 
   return {
     baseKey,
     dependenciesKey,
-    packagesKey
+    distKey
   }
-}
-
-export {
-  REDWOOD_FRAMEWORK_PATH,
-  execInFramework,
-  createExecWithEnvInCwd,
-  projectDeps,
-  projectCopy,
-  createCacheKeys
 }

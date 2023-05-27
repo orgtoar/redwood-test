@@ -21,17 +21,17 @@ const TUTORIAL_E2E_PROJECT_PATH = core.getInput('tutorial-e2e-project-path')
 
 const {
   dependenciesKey,
-  packagesKey
+  distKey
 } = await createCacheKeys('tutorial-e2e-project')
 
 /**
  * @returns {Promise<void>}
  */
 async function main() {
-  const packagesCacheKey = await cache.restoreCache([TUTORIAL_E2E_PROJECT_PATH], packagesKey)
+  const packagesCacheKey = await cache.restoreCache([TUTORIAL_E2E_PROJECT_PATH], distKey)
 
   if (packagesCacheKey) {
-    console.log(`Cache restored from key: ${packagesKey}`)
+    console.log(`Cache restored from key: ${distKey}`)
     return
   }
 
@@ -41,12 +41,12 @@ async function main() {
     console.log(`Cache restored from key: ${dependenciesKey}`)
     await sharedTasks()
   } else {
-    console.log(`Cache not found for input keys: ${packagesKey}, ${dependenciesKey}`)
+    console.log(`Cache not found for input keys: ${distKey}, ${dependenciesKey}`)
     await setUpTutorialE2EProject()
   }
 
-  await cache.saveCache([TUTORIAL_E2E_PROJECT_PATH], packagesKey)
-  console.log(`Cache saved with key: ${packagesKey}`)
+  await cache.saveCache([TUTORIAL_E2E_PROJECT_PATH], distKey)
+  console.log(`Cache saved with key: ${distKey}`)
 }
 
 async function sharedTasks() {
@@ -92,6 +92,9 @@ async function setUpTutorialE2EProject() {
   console.log(`Installing node_modules in ${TUTORIAL_E2E_PROJECT_PATH}`)
   await execInProject('yarn install')
   console.log()
+
+  await cache.saveCache([TUTORIAL_E2E_PROJECT_PATH], dependenciesKey)
+  console.log(`Cache saved with key: ${dependenciesKey}`)
 
   await sharedTasks()
 }

@@ -20,17 +20,17 @@ const TEST_PROJECT_PATH = core.getInput('test-project-path')
 
 const {
   dependenciesKey,
-  packagesKey
+  distKey
 } = await createCacheKeys('test-project')
 
 /**
  * @returns {Promise<void>}
  */
 async function main() {
-  const packagesCacheKey = await cache.restoreCache([TEST_PROJECT_PATH], packagesKey)
+  const packagesCacheKey = await cache.restoreCache([TEST_PROJECT_PATH], distKey)
 
   if (packagesCacheKey) {
-    console.log(`Cache restored from key: ${packagesKey}`)
+    console.log(`Cache restored from key: ${distKey}`)
     return
   }
 
@@ -40,12 +40,12 @@ async function main() {
     console.log(`Cache restored from key: ${dependenciesKey}`)
     await sharedTasks()
   } else {
-    console.log(`Cache not found for input keys: ${packagesKey}, ${dependenciesKey}`)
+    console.log(`Cache not found for input keys: ${distKey}, ${dependenciesKey}`)
     await setUpTestProject()
   }
 
-  await cache.saveCache([TEST_PROJECT_PATH], packagesKey)
-  console.log(`Cache saved with key: ${packagesKey}`)
+  await cache.saveCache([TEST_PROJECT_PATH], distKey)
+  console.log(`Cache saved with key: ${distKey}`)
 }
 
 /**
