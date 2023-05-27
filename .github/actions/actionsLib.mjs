@@ -2,7 +2,9 @@
 // @ts-check
 
 import { fileURLToPath } from 'node:url'
+
 import { getExecOutput } from '@actions/exec'
+import { hashFiles } from '@actions/glob'
 
 /**
  * @typedef {import('@actions/exec').ExecOptions} ExecOptions
@@ -58,10 +60,39 @@ function projectCopy(redwoodProjectCwd) {
   return execInFramework('yarn project:copy', { env: { RWJS_CWD: redwoodProjectCwd } })
 }
 
+/**
+ * @param {string} prefix
+ */
+async function createCacheKeys(prefix) {
+  const baseKey = [
+    prefix,
+    process.env.RUNNER_OS,
+  ].join('-')
+
+  const dependenciesKey = [
+    baseKey,
+    'dependencies',
+    await hashFiles(['yarn.lock', '.yarnrc.yml'].join('\n')),
+  ].join('-')
+
+  const packagesKey = [
+    dependenciesKey,
+    'packages',
+    await hashFiles('packages')
+  ].join('-')
+
+  return {
+    baseKey,
+    dependenciesKey,
+    packagesKey
+  }
+}
+
 export {
   REDWOOD_FRAMEWORK_PATH,
   execInFramework,
   createExecWithEnvInCwd,
   projectDeps,
-  projectCopy
+  projectCopy,
+  createCacheKeys
 }

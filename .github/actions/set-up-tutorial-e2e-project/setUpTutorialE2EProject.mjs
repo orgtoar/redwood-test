@@ -3,10 +3,13 @@
 
 import path from 'node:path'
 
+import cache from '@actions/cache'
 import core from '@actions/core'
+
 import fs from 'fs-extra'
 
 import {
+  createCacheKeys,
   createExecWithEnvInCwd,
   execInFramework,
   projectCopy,
@@ -16,16 +19,48 @@ import {
 
 const TUTORIAL_E2E_PROJECT_PATH = core.getInput('tutorial-e2e-project-path')
 
-const execInProject = createExecWithEnvInCwd(TUTORIAL_E2E_PROJECT_PATH)
+const {
+  dependenciesKey,
+  packagesKey
+} = await createCacheKeys('tutorial-e2e-project')
 
-function getRedwoodFrameworkDependencyVersion(dependency, { redwoodPackage }) {
-  return fs.readJSONSync(
-    path.join(REDWOOD_FRAMEWORK_PATH, 'packages', redwoodPackage, 'package.json')
-  ).dependencies[dependency]
+/**
+ * @returns {Promise<void>}
+ */
+async function main() {
+  const packagesCacheKey = await cache.restoreCache([TUTORIAL_E2E_PROJECT_PATH], packagesKey)
+
+  if (packagesCacheKey) {
+    console.log(`Cache restored from key: ${packagesKey}`)
+    return
+  }
+
+  const dependenciesCacheKey = await cache.restoreCache([TUTORIAL_E2E_PROJECT_PATH], dependenciesKey)
+
+  if (dependenciesCacheKey) {
+    console.log(`Cache restored from key: ${dependenciesKey}`)
+    await sharedTasks()
+  } else {
+    console.log(`Cache not found for input keys: ${packagesKey}, ${dependenciesKey}`)
+    await setUpTutorialE2EProject()
+  }
+
+  await cache.saveCache([TUTORIAL_E2E_PROJECT_PATH], packagesKey)
+  console.log(`Cache saved with key: ${packagesKey}`)
 }
 
-async function main() {
+async function sharedTasks() {
+  console.log('Copying framework packages to project')
+  await projectCopy(TUTORIAL_E2E_PROJECT_PATH)
+  console.log()
+}
+
+/**
+ * @returns {Promise<void>}
+ */
+async function setUpTutorialE2EProject() {
   console.log(`Creating project at ${TUTORIAL_E2E_PROJECT_PATH}`)
+  console.log()
 
   await execInFramework([
     'yarn',
@@ -37,7 +72,6 @@ async function main() {
     "--commit-message 'first'",
   ].join(' '))
 
-  // Add prisma resolutions
   const packageConfigPath = path.join(TUTORIAL_E2E_PROJECT_PATH, 'package.json')
   const packageConfig = fs.readJSONSync(packageConfigPath)
 
@@ -59,9 +93,20 @@ async function main() {
   await execInProject('yarn install')
   console.log()
 
-  console.log('Copying framework packages to project')
-  await projectCopy(TUTORIAL_E2E_PROJECT_PATH)
-  console.log()
+  await sharedTasks()
 }
+
+/**
+ * @param {string} dependency
+ * @param {{ redwoodPackage: string }} options
+ * @returns {string}
+ */
+function getRedwoodFrameworkDependencyVersion(dependency, { redwoodPackage }) {
+  return fs.readJSONSync(
+    path.join(REDWOOD_FRAMEWORK_PATH, 'packages', redwoodPackage, 'package.json')
+  ).dependencies[dependency]
+}
+
+const execInProject = createExecWithEnvInCwd(TUTORIAL_E2E_PROJECT_PATH)
 
 main()

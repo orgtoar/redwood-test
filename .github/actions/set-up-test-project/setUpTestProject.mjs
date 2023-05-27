@@ -5,43 +5,23 @@ import path from 'node:path'
 
 import cache from '@actions/cache'
 import core from '@actions/core'
-import { hashFiles } from '@actions/glob'
 
 import fs from 'fs-extra'
 
 import {
+  createCacheKeys,
   createExecWithEnvInCwd,
   projectCopy,
   projectDeps,
   REDWOOD_FRAMEWORK_PATH,
 } from '../actionsLib.mjs'
 
-const TEST_PROJECT_FIXTURE_PATH = path.join(
-  REDWOOD_FRAMEWORK_PATH,
-  '__fixtures__',
-  'test-project'
-)
-
 const TEST_PROJECT_PATH = core.getInput('test-project-path')
 
-const execInProject = createExecWithEnvInCwd(TEST_PROJECT_PATH)
-
-const baseKey = [
-  'test-project',
-  process.env.RUNNER_OS,
-].join('-')
-
-const dependenciesKey = [
-  baseKey,
-  'dependencies',
-  await hashFiles(['yarn.lock', '.yarnrc.yml'].join('\n')),
-].join('-')
-
-const packagesKey = [
+const {
   dependenciesKey,
-  'packages',
-  await hashFiles('packages')
-].join('-')
+  packagesKey
+} = await createCacheKeys('test-project')
 
 /**
  * @returns {Promise<void>}
@@ -61,10 +41,7 @@ async function main() {
     await sharedTasks()
   } else {
     console.log(`Cache not found for input keys: ${packagesKey}, ${dependenciesKey}`)
-    console.log(`Creating project at ${TEST_PROJECT_PATH}`)
-    console.log()
-
-    await setUpTestProject(TEST_PROJECT_PATH)
+    await setUpTestProject()
   }
 
   await cache.saveCache([TEST_PROJECT_PATH], packagesKey)
@@ -74,14 +51,22 @@ async function main() {
 /**
  * @returns {Promise<void>}
  */
-async function setUpTestProject(testProjectPath) {
-  await fs.copy(TEST_PROJECT_FIXTURE_PATH, testProjectPath)
+async function setUpTestProject() {
+  const TEST_PROJECT_FIXTURE_PATH = path.join(
+    REDWOOD_FRAMEWORK_PATH,
+    '__fixtures__',
+    'test-project'
+  )
 
-  console.log(`Adding framework dependencies to ${testProjectPath}`)
-  await projectDeps(testProjectPath)
+  console.log(`Creating project at ${TEST_PROJECT_PATH}`)
+  console.log()
+  await fs.copy(TEST_PROJECT_FIXTURE_PATH, TEST_PROJECT_PATH)
+
+  console.log(`Adding framework dependencies to ${TEST_PROJECT_PATH}`)
+  await projectDeps(TEST_PROJECT_PATH)
   console.log()
 
-  console.log(`Installing node_modules in ${testProjectPath}`)
+  console.log(`Installing node_modules in ${TEST_PROJECT_PATH}`)
   await execInProject('yarn install')
   console.log()
 
@@ -91,6 +76,11 @@ async function setUpTestProject(testProjectPath) {
   await sharedTasks()
 }
 
+const execInProject = createExecWithEnvInCwd(TEST_PROJECT_PATH)
+
+/**
+ * @returns {Promise<void>}
+ */
 async function sharedTasks() {
   console.log('Copying framework packages to project')
   await projectCopy(TEST_PROJECT_PATH)
@@ -112,6 +102,5 @@ async function sharedTasks() {
     'yarn rw prisma migrate reset --force',
   )
 }
-
 
 main()
