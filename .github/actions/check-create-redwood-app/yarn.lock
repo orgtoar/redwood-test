@@ -40,9 +40,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"check_test_project_fixture@workspace:.":
+"check-create-redwood-app@workspace:.":
   version: 0.0.0-use.local
-  resolution: "check_test_project_fixture@workspace:."
+  resolution: "check-create-redwood-app@workspace:."
   dependencies:
     "@actions/core": 1.10.0
     "@actions/exec": 1.1.1
