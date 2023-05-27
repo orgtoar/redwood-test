@@ -159,15 +159,15 @@ jobs:
 
       - name: 📁 Get tutorial e2e project directory
         id: get-tutorial-e2e-project-directory
-        run: echo "TUTORIAL_E2E_PROJECT_DIRECTORY=$(node -e "console.log(path.join(path.dirname(process.cwd()), 'test-project'))")" >> $GITHUB_OUTPUT
+        run: echo "TUTORIAL_E2E_PROJECT_DIRECTORY=$(node -e "console.log(path.join(path.dirname(process.cwd()), 'tutorial-e2e-project'))")" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: ♻️ Restore tutorial e2e project cache
-        id: test-project-cache
+        id: tutorial-e2e-project-cache
         uses: actions/cache@v3
         with:
           path: ${{ steps.get-tutorial-e2e-project-directory.outputs.TUTORIAL_E2E_PROJECT_DIRECTORY }}
-          key: test-project-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}-${{ hashFiles('packages') }}
+          key: tutorial-e2e-project-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}-${{ hashFiles('packages') }}
 
       - name: 🌲 Set up tutorial e2e project
         if: steps.tutorial-e2e-project-cache.outputs.cache-hit != 'true'
