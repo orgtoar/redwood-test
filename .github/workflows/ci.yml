@@ -208,7 +208,7 @@ jobs:
   #     - run: echo "Only doc changes"
 
   smoke-test:
-    needs: run-yarn-checks
+    # needs: run-yarn-checks
 
     strategy:
       matrix:
