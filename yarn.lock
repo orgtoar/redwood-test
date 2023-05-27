@@ -26911,6 +26911,7 @@ __metadata:
     rimraf: 5.0.1
     typescript: 5.0.4
     yargs: 17.7.2
+    zod: 3.21.4
     zx: 7.2.2
   languageName: unknown
   linkType: soft
@@ -31285,6 +31286,13 @@ __metadata:
     compress-commons: ^4.1.0
     readable-stream: ^3.6.0
   checksum: ed9eb9387953576c43bdf7678705e8b0ff4e9149cf92b39fa845ddd5413b08daf68655b1ee8311e2dd7c88ddeb95908a785e8e48473016b2595870b0adf588d4
+  languageName: node
+  linkType: hard
+
+"zod@npm:3.21.4":
+  version: 3.21.4
+  resolution: "zod@npm:3.21.4"
+  checksum: 161e8cf7aea38a99244d65da4a9477d9d966f6a533e503feaa20ff7968a9691065c38c6f1eab5cbbdc8374142fff4a05c9cacb8479803ab50ab6a6ca80e5d624
   languageName: node
   linkType: hard
 
