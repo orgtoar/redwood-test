@@ -12,7 +12,7 @@ module.exports = defineConfig({
   // Locally, we use open, but in CI, we use run.
   retries: {
     openMode: null,
-    runMode: 2,
+    runMode: 1,
   },
 
   defaultCommandTimeout: 4_000 * 3,
