@@ -14,6 +14,8 @@ import { getFreePort } from '../lib/ports'
 
 const defaultApiDebugPort = 18911
 
+// test packages hash
+
 export const handler = async ({
   side = ['api', 'web'],
   forward = '',
