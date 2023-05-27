@@ -11,7 +11,6 @@
     "build:link": "node ./tasks/build-and-copy",
     "build:test-project": "node ./tasks/test-project/test-project",
     "build:watch": "lerna run build:watch --parallel; tsc --build",
-    "check": "yarn node ./tasks/check/check.mjs",
     "clean:prisma": "rimraf node_modules/.prisma/client && node node_modules/@prisma/client/scripts/postinstall.js",
     "e2e": "node ./tasks/run-e2e",
     "lint": "RWJS_CWD=packages/create-redwood-app/templates/ts eslint --config .eslintrc.js --ignore-pattern Routes.js packages",
@@ -20,6 +19,7 @@
     "project:deps": "node ./tasks/framework-tools/frameworkDepsToProject.mjs",
     "project:sync": "node ./tasks/framework-tools/frameworkSyncToProject.mjs",
     "release": "node ./tasks/release/releaseCLI.mjs",
+    "run-yarn-checks": "yarn node ./tasks/run-yarn-checks/runYarnChecks.mjs",
     "smoke-test": "cd ./tasks/smoke-test && npx playwright install && npx playwright test --project=chromium",
     "test": "lerna run test --concurrency 2 -- --colors --maxWorkers=4",
     "test-ci": "lerna run test --concurrency 2 -- --colors --maxWorkers"
