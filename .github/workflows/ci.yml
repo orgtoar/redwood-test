@@ -178,8 +178,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CYPRESS_RW_PATH:  "${{ steps.create-temporary-directory.outputs.project_path }}"
         with:
-          # We've already installed dependencies.
-          install: false
+          install: true
           env: true
           browser: chrome
           record: false
