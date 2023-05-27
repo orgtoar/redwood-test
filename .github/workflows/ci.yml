@@ -167,25 +167,90 @@ jobs:
 
   smoke-test:
     needs: check
+
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
       fail-fast: false
-    name: 👀 Smoke test / ${{ matrix.os }} / node 18 latest
+
+    name: 🔄 Smoke tests / ${{ matrix.os }} / node 18 latest
     runs-on: ${{ matrix.os }}
+
     env:
       REDWOOD_CI: 1
       REDWOOD_VERBOSE_TELEMETRY: 1
       # This makes sure that playwright dependencies are cached in node_modules.
       PLAYWRIGHT_BROWSERS_PATH: 0
+
     steps:
       - uses: actions/checkout@v3
-      - name: 🧶 Set up job
-        uses: ./.github/actions/set-up-job
 
-      - name: 🌲 Setup test project
-        id: setup_test_project
-        uses: ./.github/actions/setup_test_project
+      - name: ⬢ Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # We try to cache and restore yarn's cache directory and install state to speed up the yarn install step.
+      # Caching yarn's cache directory avoids its fetch step.
+      #
+      # See:
+      # - https://gist.github.com/belgattitude/042f9caf10d029badbde6cf9d43e400a
+      # - https://github.com/yarnpkg/berry/discussions/2621
+      - name: 📁 Get yarn cache directory
+        id: get-yarn-cache-directory
+        run: echo "CACHE_DIRECTORY=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+        shell: bash
+
+      # If the primary key doesn't match, the cache will probably be stale or incomplete, but still worth restoring.
+      - name: ♻️ Restore yarn cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.get-yarn-cache-directory.outputs.CACHE_DIRECTORY }}
+          key: yarn-cache-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
+          restore-keys: yarn-cache-${{ runner.os }}
+
+      - name: ♻️ Restore yarn install state
+        uses: actions/cache@v3
+        with:
+          path: .yarn/install-state.gz
+          key: yarn-install-state-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
+          restore-keys: yarn-install-state-${{ runner.os }}
+
+      - name: ♻️ Restore node_modules
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: yarn-node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
+          restore-keys: yarn-node-modules-${{ runner.os }}
+
+      # `--inline-builds` is only for debugging. It tells Yarn to print the output of dependencies' build steps instead of writing them to files
+      # See https://yarnpkg.com/cli/install#options-inline-builds.
+      # We include the GitHub token to avoid rate limiting when installing `@vscode/ripgrep`.
+      - name: 🐈 Yarn install
+        run: yarn install --inline-builds
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: 🔨 Build
+        run: yarn build
+
+      - name: 📁 Get test project directory
+        id: get-test-project-directory
+        run: echo "TEST_PROJECT_PATH=$(node -e "console.log(path.join(path.dirname(process.cwd()), 'test-project'))")" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: ♻️ Restore test project cache
+        id: test-project-cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
+          key: test-project-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}-${{ hashFiles('packages') }}
+
+      - name: 🌲 Set up test project
+        if: steps.test-project-cache.outputs.cache-hit != 'true'
+        uses: ./.github/actions/set-up-test-project
+        with:
+          test-project-path: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
         env:
           REDWOOD_DISABLE_TELEMETRY: 1
           YARN_ENABLE_IMMUTABLE_INSTALLS: false
@@ -193,114 +258,58 @@ jobs:
       - name: 🎭 Install playwright dependencies
         run: npx playwright install --with-deps chromium
 
-      - name: Run `rw build` without prerender
+      - name: Run dev smoke tests
+        working-directory: ./tasks/smoke-tests/dev
+        run: npx playwright test --reporter html
+        env:
+          REDWOOD_PROJECT_PATH: '${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}'
+          REDWOOD_DISABLE_TELEMETRY: 1
+
+      - name: 🔐 Run auth smoke tests
+        working-directory: ./tasks/smoke-tests/auth
+        run: npx playwright test --reporter html
+        env:
+          REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
+          REDWOOD_DISABLE_TELEMETRY: 1
+
+      - name: ⌨️ Run `rw build --no-prerender`
         run: |
           yarn rw build --no-prerender
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+        working-directory: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
 
-      - name: Run `rw prerender`
+      - name: ⌨️ Run `rw prerender`
         run: |
           yarn rw prerender --verbose
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+        working-directory: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
 
-      - name: Run smoke tests on 'rw dev', 'rw serve', 'rw storybook'
-        working-directory: ./tasks/smoke-test
-        run: npx playwright test --project 'chromium' --reporter line
+      - name: 🖥️ Run serve smoke tests
+        working-directory: tasks/smoke-tests/serve
+        run: npx playwright test
         env:
-          PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
+          REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
           REDWOOD_DISABLE_TELEMETRY: 1
-          # RECORD_REPLAY_METADATA_TEST_RUN_TITLE: Smoke test / ${{ matrix.os }} / node 18 latest
-          # RECORD_REPLAY_TEST_METRICS: 1
 
-      - name: Run `rw info`
-        run: |
-          yarn rw info
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+      - name: 📄 Run prerender smoke tests
+        working-directory: tasks/smoke-tests/prerender
+        run: npx playwright test
+        env:
+          REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
+          REDWOOD_DISABLE_TELEMETRY: 1
 
-      - name: Run `rw lint`
-        run: |
-          yarn rw lint ./api/src --fix
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+      - name: 📕 Run Storybook smoke tests
+        working-directory: tasks/smoke-tests/storybook
+        run: npx playwright test
+        env:
+          REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
+          REDWOOD_DISABLE_TELEMETRY: 1
 
-      - name: Run "rw test api"
-        run: |
-          yarn rw test api --no-watch
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "rw test web"
-        run: |
-          yarn rw test web --no-watch
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "rw check"
-        run: |
-          yarn rw check
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "rw storybook"
-        run: |
-          yarn rw sb --smoke-test
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "rw exec"
-        run: |
-          yarn rw g script testScript && yarn rw exec testScript
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "prisma generate"
-        run: |
-          yarn rw prisma generate
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "rw data-migrate"
-        run: |
-          yarn rw dataMigrate up
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "data-migrate install"
-        run: |
-          yarn rw data-migrate install
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "prisma migrate"
-        run: |
-          yarn rw prisma migrate dev --name ci-test
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run `rw deploy --help`
-        run: yarn rw setup deploy --help && yarn rw deploy --help
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run `rw setup ui --help`
-        run: yarn rw setup --help && yarn rw setup ui --help
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "g page"
-        run: |
-          yarn rw g page ciTest
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "g sdl"
-        run: |
-          yarn rw g sdl userExample
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Run "rw type-check"
-        run: |
-          yarn rw type-check
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-
-      - name: Throw Error | Run `rw g sdl <model>`
-        run: |
-          yarn rw g sdl DoesNotExist
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
-        continue-on-error: true
-
-      # - name: Upload Replays
-      #   if: always()
-      #   uses: replayio/action-upload@v0.4.7
-      #   with:
-      #     api-key: rwk_cZn4WLe8106j6tC5ygNQxDpxAwCLpFo5oLQftiRN7OP
+      - name: ⬆️ Upload Playwright reports
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
 
   smoke-test-docs:
     needs: only-doc-changes
@@ -308,7 +317,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-    name: 👀 Smoke test / ${{ matrix.os }} / node 18 latest
+    name: 🔄 Smoke tests / ${{ matrix.os }} / node 18 latest
     runs-on: ${{ matrix.os }}
     steps:
       - run: echo "Only doc changes"
