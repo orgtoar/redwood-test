@@ -33,11 +33,13 @@ const baseKey = [
 
 const dependenciesKey = [
   baseKey,
-  await hashFiles('yarn.lock', '.yarnrc.yml'),
+  'dependencies',
+  await hashFiles(['yarn.lock', '.yarnrc.yml'].join('\n')),
 ].join('-')
 
 const packagesKey = [
   dependenciesKey,
+  'packages',
   await hashFiles('packages')
 ].join('-')
 
