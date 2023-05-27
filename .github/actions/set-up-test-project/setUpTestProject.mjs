@@ -7,9 +7,14 @@ import { hashFiles } from '@actions/glob'
 
 const TEST_PROJECT_PATH = core.getInput('test-project-path')
 
+console.log({
+  processPlatform: process.platform,
+  RUNNER_OS: process.env.RUNNER_OS,
+})
+
 const key = [
   'test-project',
-  process.platform,
+  process.env.RUNNER_OS,
   await hashFiles('yarn.lock', '.yarnrc.yml'),
   await hashFiles('packages')
 ].join('-')
@@ -21,7 +26,6 @@ async function main() {
   const cacheKey = await cache.restoreCache([TEST_PROJECT_PATH], key)
 
   if (cacheKey) {
-    console.log('Cache restored successfully')
     console.log(`Cache restored from key: ${key}`)
     return
   }
