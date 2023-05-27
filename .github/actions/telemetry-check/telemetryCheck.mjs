@@ -63,7 +63,7 @@ try {
       }
 
       exitCode = await exec(
-        `yarn node ../redwood/packages/cli/dist/index.js info --cwd ../project-for-telemetry`
+        `yarn node ./packages/cli/dist/index.js --cwd ../project-for-telemetry info`
       )
 
       if (exitCode) {
@@ -83,4 +83,4 @@ try {
 // Fail if we didn't hear the telemetry after two minutes.
 await new Promise((r) => setTimeout(r, 120_000))
 console.error('No telemetry response within 120 seconds. Failing.')
-process.exitCode = 1
+process.exit(1)
