@@ -1,4 +1,5 @@
-/* eslint-env es6, node */
+/* eslint-env node */
+// @ts-check
 
 import core from '@actions/core'
 import { exec } from '@actions/exec'

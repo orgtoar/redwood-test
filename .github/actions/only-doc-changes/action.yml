@@ -1,4 +1,4 @@
-name: Docs
+name: Only doc changes
 description: Determines if the PR only has doc changes
 
 outputs:
