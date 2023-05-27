@@ -7,15 +7,17 @@ module.exports = defineConfig({
     supportFile: false,
     testIsolation: false,
   },
+
   // `runMode` is for `cypress run`, `openMode` is for `cypress open`.
-  // Locally, we use open. But in CI, we use run.
+  // Locally, we use open, but in CI, we use run.
   retries: {
-    runMode: 5,
-    openMode: 0,
+    openMode: null,
+    runMode: 2,
   },
-  defaultCommandTimeout: 12_0000,
-  execTimeout: 12_0000,
-  pageLoadTimeout: 12_0000,
-  requestTimeout: 12_0000,
-  taskTimeout: 12_0000,
+
+  defaultCommandTimeout: 4_000 * 3,
+  execTimeout: 4_000 * 3,
+  pageLoadTimeout: 4_000 * 3,
+  requestTimeout: 4_000 * 3,
+  taskTimeout: 4_000 * 3,
 })
