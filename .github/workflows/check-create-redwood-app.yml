@@ -1,4 +1,4 @@
-name: Check create-redwood-app
+name: 🌲 Check create-redwood-app
 
 on:
   pull_request:
@@ -12,17 +12,22 @@ concurrency:
 
 jobs:
   check-create-redwood-app:
-    name: Check create redwood app
+    name: 🌲 Check create redwood app
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+
+      - name: ⬢ Set up Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: yarn install
-        working-directory: ./.github/actions/check_create_redwood_app
 
-      - name: Check create redwood app
-        uses: ./.github/actions/check_create_redwood_app
+      - name: 🐈 Yarn install
+        run: yarn install
+        working-directory: ./.github/actions/check-create-redwood-app
+
+      - name: 🌲 Check create redwood app
+        uses: ./.github/actions/check-create-redwood-app
         with:
           labels: '{ "labels": ${{ toJSON(github.event.pull_request.labels) }} }'

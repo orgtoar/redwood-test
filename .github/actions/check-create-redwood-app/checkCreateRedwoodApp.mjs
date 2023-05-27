@@ -1,4 +1,5 @@
-/* eslint-env es6, node */
+/* eslint-env node */
+
 import { getInput } from '@actions/core'
 
 // If the PR has the "crwa-ok" label, just pass.

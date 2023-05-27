@@ -3,9 +3,9 @@ name: 🏎 Publish Release Candidate
 on:
   push:
     branches: ['release/**']
-    # We don't want this to run on release
+    # We don't want this to run on release.
     tags-ignore: ['v**']
-    # No need to run on docs-only changes
+    # No need to run on docs-only changes.
     paths-ignore: ['docs/**']
 
 # Cancel in-progress runs of this workflow.
@@ -16,16 +16,18 @@ concurrency:
 
 jobs:
   check-git-tags:
-    name: 🏷 Check git tags
     if: github.repository == 'redwoodjs/redwood'
+
+    name: 🏷 Check git tags
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
         # Required because lerna uses tags to determine the version.
         with:
           fetch-depth: 0
 
-      - name: Setup node
+      - name: ⬢ Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -50,11 +52,14 @@ jobs:
           yarn dlx semver-compare-cli $CURRENT_TAG lt $BRANCH_TAG
 
   publish-release-candidate:
-    name: 🚢 Publish Release Candidate
     needs: check-git-tags
+
+    name: 🚢 Publish Release Candidate
     runs-on: ubuntu-latest
+
     outputs:
       version: ${{ steps.get-version.outputs.value }}
+
     steps:
       - uses: actions/checkout@v3
         with:
@@ -62,7 +67,7 @@ jobs:
           #  This is required because lerna uses tags to determine the version.
           fetch-depth: 0
 
-      - name: 🧶 Set up job
+      - name: 🧶 Set up Node.js and caching for yarn
         uses: ./.github/actions/set-up-job
 
       - name: ✅ Check constraints, dependencies, and package.json's
@@ -100,13 +105,15 @@ jobs:
           cmd: 'jq .version packages/core/package.json -r'
 
   message-slack:
-    name: 💬 Message Slack
     needs: publish-release-candidate
     if: ${{ !cancelled() }}
+
+    name: 💬 Message Slack
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
+
       - name: 💬 Message Slack
         uses: ./.github/actions/message_slack_publishing
         with:

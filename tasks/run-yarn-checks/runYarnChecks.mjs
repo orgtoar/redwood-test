@@ -1,4 +1,5 @@
 /* eslint-env es6, node */
+
 import core from '@actions/core'
 import { exec } from '@actions/exec'
 

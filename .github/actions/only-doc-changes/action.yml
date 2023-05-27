@@ -1,0 +1,11 @@
+name: Docs
+description: Determines if the PR only has doc changes
+
+outputs:
+  only-doc-changes:
+    description: If the PR only has doc changes
+
+runs:
+  # `node18` isn't supported yet
+  using: node16
+  main: onlyDocChanges.mjs

@@ -1,6 +1,7 @@
-name: 'Check'
+name: Run yarn checks
 description: "Check constraints, dependencies, and package.json's"
+
 runs:
   # `node18` isn't supported yet
   using: node16
-  main: 'check.mjs'
+  main: runYarnChecks.mjs
