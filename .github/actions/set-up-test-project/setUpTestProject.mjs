@@ -10,8 +10,8 @@ const TEST_PROJECT_PATH = core.getInput('test-project-path')
 const key = [
   'test-project',
   process.platform,
-  hashFiles('yarn.lock', '.yarnrc.yml'),
-  hashFiles('packages')
+  await hashFiles('yarn.lock', '.yarnrc.yml'),
+  await hashFiles('packages')
 ].join('-')
 
 /**
@@ -32,8 +32,8 @@ async function main() {
 
   await setUpTestProject(TEST_PROJECT_PATH)
 
-  console.log('Caching test project')
   await cache.saveCache([TEST_PROJECT_PATH], key)
+  console.log(`Cache saved with key: ${key}`)
 }
 
 /**
