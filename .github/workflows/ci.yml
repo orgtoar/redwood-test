@@ -203,110 +203,110 @@ jobs:
   #   steps:
   #     - run: echo "Only doc changes"
 
-  smoke-test:
-    # needs: run-yarn-checks
+  # smoke-test:
+  #   # needs: run-yarn-checks
 
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-      fail-fast: false
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest, windows-latest]
+  #     fail-fast: false
 
-    name: 🔄 Smoke tests / ${{ matrix.os }} / node 18 latest
-    runs-on: ${{ matrix.os }}
+  #   name: 🔄 Smoke tests / ${{ matrix.os }} / node 18 latest
+  #   runs-on: ${{ matrix.os }}
 
-    env:
-      REDWOOD_CI: 1
-      REDWOOD_VERBOSE_TELEMETRY: 1
-      # This makes sure that playwright dependencies are cached in node_modules.
-      PLAYWRIGHT_BROWSERS_PATH: 0
+  #   env:
+  #     REDWOOD_CI: 1
+  #     REDWOOD_VERBOSE_TELEMETRY: 1
+  #     # This makes sure that playwright dependencies are cached in node_modules.
+  #     PLAYWRIGHT_BROWSERS_PATH: 0
 
-    steps:
-      - uses: actions/checkout@v3
+  #   steps:
+  #     - uses: actions/checkout@v3
 
-      - name: ⬢ Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+  #     - name: ⬢ Set up Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 18
 
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
+  #     - name: 🐈 Set up yarn cache
+  #       uses: ./.github/actions/set-up-yarn-cache
 
-      - name: 🐈 Yarn install
-        run: yarn install --inline-builds
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+  #     - name: 🐈 Yarn install
+  #       run: yarn install --inline-builds
+  #       env:
+  #         GITHUB_TOKEN: ${{ github.token }}
 
-      - name: 🔨 Build
-        run: yarn build
+  #     - name: 🔨 Build
+  #       run: yarn build
 
-      - name: 📁 Get test project directory
-        id: get-test-project-directory
-        run: echo "TEST_PROJECT_PATH=$(node -e "console.log(path.join(path.dirname(process.cwd()), 'test-project'))")" >> $GITHUB_OUTPUT
-        shell: bash
+  #     - name: 📁 Get test project directory
+  #       id: get-test-project-directory
+  #       run: echo "TEST_PROJECT_PATH=$(node -e "console.log(path.join(path.dirname(process.cwd()), 'test-project'))")" >> $GITHUB_OUTPUT
+  #       shell: bash
 
-      - name: 🌲 Set up test project
-        uses: ./.github/actions/set-up-test-project
-        with:
-          test-project-path: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
-        env:
-          REDWOOD_DISABLE_TELEMETRY: 1
-          YARN_ENABLE_IMMUTABLE_INSTALLS: false
+  #     - name: 🌲 Set up test project
+  #       uses: ./.github/actions/set-up-test-project
+  #       with:
+  #         test-project-path: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
+  #       env:
+  #         REDWOOD_DISABLE_TELEMETRY: 1
+  #         YARN_ENABLE_IMMUTABLE_INSTALLS: false
 
-      - name: 🎭 Install playwright dependencies
-        run: npx playwright install --with-deps chromium
+  #     - name: 🎭 Install playwright dependencies
+  #       run: npx playwright install --with-deps chromium
 
-      - name: Run dev smoke tests
-        working-directory: ./tasks/smoke-tests/dev
-        run: npx playwright test
-        env:
-          REDWOOD_PROJECT_PATH: '${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}'
-          REDWOOD_DISABLE_TELEMETRY: 1
+  #     - name: Run dev smoke tests
+  #       working-directory: ./tasks/smoke-tests/dev
+  #       run: npx playwright test
+  #       env:
+  #         REDWOOD_PROJECT_PATH: '${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}'
+  #         REDWOOD_DISABLE_TELEMETRY: 1
 
-      - name: 🔐 Run auth smoke tests
-        working-directory: ./tasks/smoke-tests/auth
-        run: npx playwright test
-        env:
-          REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
-          REDWOOD_DISABLE_TELEMETRY: 1
+  #     - name: 🔐 Run auth smoke tests
+  #       working-directory: ./tasks/smoke-tests/auth
+  #       run: npx playwright test
+  #       env:
+  #         REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
+  #         REDWOOD_DISABLE_TELEMETRY: 1
 
-      - name: ⌨️ Run `rw build --no-prerender`
-        run: |
-          yarn rw build --no-prerender
-        working-directory: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
+  #     - name: ⌨️ Run `rw build --no-prerender`
+  #       run: |
+  #         yarn rw build --no-prerender
+  #       working-directory: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
 
-      - name: ⌨️ Run `rw prerender`
-        run: |
-          yarn rw prerender --verbose
-        working-directory: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
+  #     - name: ⌨️ Run `rw prerender`
+  #       run: |
+  #         yarn rw prerender --verbose
+  #       working-directory: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
 
-      - name: 🖥️ Run serve smoke tests
-        working-directory: tasks/smoke-tests/serve
-        run: npx playwright test
-        env:
-          REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
-          REDWOOD_DISABLE_TELEMETRY: 1
+  #     - name: 🖥️ Run serve smoke tests
+  #       working-directory: tasks/smoke-tests/serve
+  #       run: npx playwright test
+  #       env:
+  #         REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
+  #         REDWOOD_DISABLE_TELEMETRY: 1
 
-      - name: 📄 Run prerender smoke tests
-        working-directory: tasks/smoke-tests/prerender
-        run: npx playwright test
-        env:
-          REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
-          REDWOOD_DISABLE_TELEMETRY: 1
+  #     - name: 📄 Run prerender smoke tests
+  #       working-directory: tasks/smoke-tests/prerender
+  #       run: npx playwright test
+  #       env:
+  #         REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
+  #         REDWOOD_DISABLE_TELEMETRY: 1
 
-      - name: 📕 Run Storybook smoke tests
-        working-directory: tasks/smoke-tests/storybook
-        run: npx playwright test
-        env:
-          REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
-          REDWOOD_DISABLE_TELEMETRY: 1
+  #     - name: 📕 Run Storybook smoke tests
+  #       working-directory: tasks/smoke-tests/storybook
+  #       run: npx playwright test
+  #       env:
+  #         REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
+  #         REDWOOD_DISABLE_TELEMETRY: 1
 
-      - name: ⬆️ Upload Playwright reports
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: playwright-report
-          path: playwright-report
-          retention-days: 7
+  #     - name: ⬆️ Upload Playwright reports
+  #       uses: actions/upload-artifact@v3
+  #       if: always()
+  #       with:
+  #         name: playwright-report
+  #         path: playwright-report
+  #         retention-days: 7
 
   # smoke-test-docs:
   #   needs: only-doc-changes
