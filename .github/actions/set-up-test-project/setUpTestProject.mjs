@@ -21,12 +21,12 @@ async function main() {
   const cacheKey = await cache.restoreCache([TEST_PROJECT_PATH], key)
 
   if (cacheKey) {
-    console.log('Cache hit')
-    console.log(`Restoring test project at ${TEST_PROJECT_PATH}`)
+    console.log('Cache restored successfully')
+    console.log(`Cache restored from key: ${key}`)
     return
   }
 
-  console.log('Cache miss')
+  console.log(`Cache not found for input keys: ${key}`)
   console.log(`Creating project at ${TEST_PROJECT_PATH}`)
   console.log()
 
