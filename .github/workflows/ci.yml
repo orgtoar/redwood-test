@@ -312,19 +312,19 @@ jobs:
           path: playwright-report
           retention-days: 7
 
-  smoke-test-docs:
-    needs: only-doc-changes
-    if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
+  # smoke-test-docs:
+  #   needs: only-doc-changes
+  #   if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
 
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest, windows-latest]
 
-    name: 🔄 Smoke tests / ${{ matrix.os }} / node 18 latest
-    runs-on: ${{ matrix.os }}
+  #   name: 🔄 Smoke tests / ${{ matrix.os }} / node 18 latest
+  #   runs-on: ${{ matrix.os }}
 
-    steps:
-      - run: echo "Only doc changes"
+  #   steps:
+  #     - run: echo "Only doc changes"
 
   # telemetry-check:
   #   needs: run-yarn-checks
