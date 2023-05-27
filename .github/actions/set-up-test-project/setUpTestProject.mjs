@@ -14,18 +14,32 @@ const key = [
   hashFiles('packages')
 ].join('-')
 
+/**
+ * @returns {Promise<void>}
+ */
 async function main() {
   const cacheKey = await cache.restoreCache([TEST_PROJECT_PATH], key)
 
   if (cacheKey) {
-    console.log(`Cache hit; restoring test project at ${TEST_PROJECT_PATH}`)
+    console.log('Cache hit')
+    console.log(`Restoring test project at ${TEST_PROJECT_PATH}`)
     return
   }
 
-  await setUpTestProject()
+  console.log('Cache miss')
+  console.log(`Creating project at ${TEST_PROJECT_PATH}`)
+  console.log()
+
+  await setUpTestProject(TEST_PROJECT_PATH)
+
+  console.log('Caching test project')
+  await cache.saveCache([TEST_PROJECT_PATH], key)
 }
 
-async function setUpTestProject() {
+/**
+ * @returns {Promise<void>}
+ */
+async function setUpTestProject(testProjectPath) {
   const path = await import('node:path')
 
   const { default: fs } = await import('fs-extra')
@@ -43,22 +57,20 @@ async function setUpTestProject() {
     'test-project'
   )
 
-  const execInProject = createExecWithEnvInCwd(TEST_PROJECT_PATH)
+  const execInProject = createExecWithEnvInCwd(testProjectPath)
 
-  console.log(`Cache miss; creating project at ${TEST_PROJECT_PATH}`)
-  await fs.copy(TEST_PROJECT_FIXTURE_PATH, TEST_PROJECT_PATH)
+  await fs.copy(TEST_PROJECT_FIXTURE_PATH, testProjectPath)
+
+  console.log(`Adding framework dependencies to ${testProjectPath}`)
+  await projectDeps(testProjectPath)
   console.log()
 
-  console.log(`Adding framework dependencies to ${TEST_PROJECT_PATH}`)
-  await projectDeps(TEST_PROJECT_PATH)
-  console.log()
-
-  console.log(`Installing node_modules in ${TEST_PROJECT_PATH}`)
+  console.log(`Installing node_modules in ${testProjectPath}`)
   await execInProject('yarn install')
   console.log()
 
   console.log('Copying framework packages to project')
-  await projectCopy(TEST_PROJECT_PATH)
+  await projectCopy(testProjectPath)
   console.log()
 
   console.log('Generating dbAuth secret')
@@ -67,7 +79,7 @@ async function setUpTestProject() {
     { silent: true }
   )
   fs.appendFileSync(
-    path.join(TEST_PROJECT_PATH, '.env'),
+    path.join(testProjectPath, '.env'),
     `SESSION_SECRET='${stdout}'`
   )
   console.log()
@@ -76,9 +88,6 @@ async function setUpTestProject() {
   await execInProject(
     'yarn rw prisma migrate reset --force',
   )
-
-  console.log('Caching test project')
-  cache.saveCache([TEST_PROJECT_PATH], key)
 }
 
 main()
