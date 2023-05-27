@@ -27,9 +27,9 @@ const {
  * @returns {Promise<void>}
  */
 async function main() {
-  const packagesCacheKey = await cache.restoreCache([TEST_PROJECT_PATH], distKey)
+  const distCacheKey = await cache.restoreCache([TEST_PROJECT_PATH], distKey)
 
-  if (packagesCacheKey) {
+  if (distCacheKey) {
     console.log(`Cache restored from key: ${distKey}`)
     return
   }

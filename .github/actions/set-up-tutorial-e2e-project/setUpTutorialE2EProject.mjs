@@ -28,9 +28,9 @@ const {
  * @returns {Promise<void>}
  */
 async function main() {
-  const packagesCacheKey = await cache.restoreCache([TUTORIAL_E2E_PROJECT_PATH], distKey)
+  const distCacheKey = await cache.restoreCache([TUTORIAL_E2E_PROJECT_PATH], distKey)
 
-  if (packagesCacheKey) {
+  if (distCacheKey) {
     console.log(`Cache restored from key: ${distKey}`)
     return
   }
@@ -49,6 +49,9 @@ async function main() {
   console.log(`Cache saved with key: ${distKey}`)
 }
 
+/**
+ * @returns {Promise<void>}
+ */
 async function sharedTasks() {
   console.log('Copying framework packages to project')
   await projectCopy(TUTORIAL_E2E_PROJECT_PATH)
