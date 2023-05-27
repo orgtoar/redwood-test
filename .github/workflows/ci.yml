@@ -257,18 +257,18 @@ jobs:
           YARN_ENABLE_IMMUTABLE_INSTALLS: false
 
       - name: 🎭 Install playwright dependencies
-        run: yarn dlx playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium
 
       - name: Run dev smoke tests
         working-directory: ./tasks/smoke-tests/dev
-        run: yarn run playwright test --reporter html
+        run: npx playwright test
         env:
           REDWOOD_PROJECT_PATH: '${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}'
           REDWOOD_DISABLE_TELEMETRY: 1
 
       - name: 🔐 Run auth smoke tests
         working-directory: ./tasks/smoke-tests/auth
-        run: npx playwright test --reporter html
+        run: npx playwright test
         env:
           REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
           REDWOOD_DISABLE_TELEMETRY: 1
