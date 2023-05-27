@@ -12,6 +12,8 @@ import c from '../lib/colors'
 import { generatePrismaClient } from '../lib/generatePrismaClient'
 import { getFreePort } from '../lib/ports'
 
+// test caching
+
 const defaultApiDebugPort = 18911
 
 export const handler = async ({
