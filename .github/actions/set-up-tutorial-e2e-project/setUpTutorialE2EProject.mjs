@@ -96,8 +96,10 @@ async function setUpTutorialE2EProject() {
   await execInProject('yarn install')
   console.log()
 
+  console.log(`Adding and committing changes`)
   await execInProject('git add .')
   await execInProject('git commit -m "yarn install"')
+  console.log()
 
   await cache.saveCache([TUTORIAL_E2E_PROJECT_PATH], dependenciesKey)
   console.log(`Cache saved with key: ${dependenciesKey}`)
