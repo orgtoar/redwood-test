@@ -149,6 +149,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
+      # We have to do this because of the combination of the way we cache node_modules
+      # and where Cypress installs itself.
+      - name: 🌲 Install Cypress
+        run: yarn run cypress install
+
       - name: 🔨 Build
         run: yarn build
 
@@ -174,11 +179,6 @@ jobs:
       - name: 🖥️ Start server
         run: yarn rw dev --no-generate --fwd="--no-open" &
         working-directory: ${{ steps.get-tutorial-e2e-project-directory.outputs.TUTORIAL_E2E_PROJECT_DIRECTORY }}
-
-      # We have to do this because of the combination of the way we cache node_modules
-      # and where Cypress installs itself.
-      - name: 🌲 Install Cypress
-        run: yarn run cypress install
 
       - name: 🌲 Run Cypress
         uses: cypress-io/github-action@v5
