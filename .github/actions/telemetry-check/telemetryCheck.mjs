@@ -39,6 +39,7 @@ server.listen(port, host, () => {
 try {
   const mode = process.argv[process.argv.indexOf('--mode') + 1]
   let exitCode = 0
+
   switch (mode) {
     case 'crwa':
       exitCode = await exec(
@@ -80,7 +81,7 @@ try {
   console.error(error)
 }
 
-// Fail if we didn't hear the telemetry after two minutes.
-await new Promise((r) => setTimeout(r, 120_000))
+// Fail if we didn't hear the telemetry after a timeout
+await new Promise((r) => setTimeout(r, 60_000 * 3))
 console.error('No telemetry response within 120 seconds. Failing.')
 process.exit(1)

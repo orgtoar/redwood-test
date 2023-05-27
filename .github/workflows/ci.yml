@@ -174,7 +174,7 @@ jobs:
 
       # Because caching
       - name: 🌲 Install Cypress
-        run: install yarn run cypress install
+        run: yarn run cypress install
 
       - name: 🌲 Run Cypress
         uses: cypress-io/github-action@v5
