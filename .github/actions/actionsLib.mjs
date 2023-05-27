@@ -8,10 +8,7 @@ import { getExecOutput } from '@actions/exec'
  * @typedef {import('@actions/exec').ExecOptions} ExecOptions
  */
 
-const REDWOOD_FRAMEWORK_PATH = fileURLToPath(new URL('../../../', import.meta.url))
-
-console.log('in action lib')
-console.log({ REDWOOD_FRAMEWORK_PATH })
+const REDWOOD_FRAMEWORK_PATH = fileURLToPath(new URL('../../', import.meta.url))
 
 /**
  * @param {string} command
