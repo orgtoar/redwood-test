@@ -172,13 +172,17 @@ jobs:
         run: yarn rw dev --no-generate --fwd="--no-open" &
         working-directory: ${{ steps.create-temporary-directory.outputs.project_path }}
 
+      # - name: 🌲 Install Cypress
+      #   run: npx cypress install
+
       - name: 🌲 Run Cypress
         uses: cypress-io/github-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CYPRESS_RW_PATH:  "${{ steps.create-temporary-directory.outputs.project_path }}"
         with:
-          install: true
+          # We've already installed dependencies.
+          install: false
           env: true
           browser: chrome
           record: false
