@@ -7,17 +7,17 @@ import { hashFiles } from '@actions/glob'
 
 const TEST_PROJECT_PATH = core.getInput('test-project-path')
 
-console.log({
-  processPlatform: process.platform,
-  RUNNER_OS: process.env.RUNNER_OS,
-})
-
 const key = [
   'test-project',
   process.env.RUNNER_OS,
   await hashFiles('yarn.lock', '.yarnrc.yml'),
   await hashFiles('packages')
 ].join('-')
+
+console.log({
+  yarnHash: await hashFiles('yarn.lock', '.yarnrc.yml'),
+  packagesHash: await hashFiles('packages')
+})
 
 /**
  * @returns {Promise<void>}
