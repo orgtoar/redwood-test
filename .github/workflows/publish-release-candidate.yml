@@ -67,8 +67,10 @@ jobs:
           #  This is required because lerna uses tags to determine the version.
           fetch-depth: 0
 
-      - name: 🧶 Set up Node.js and caching for yarn
-        uses: ./.github/actions/set-up-job
+      - name: 🐈 Yarn install
+        run: yarn install --inline-builds
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: ✅ Check constraints, dependencies, and package.json's
         uses: ./tasks/check

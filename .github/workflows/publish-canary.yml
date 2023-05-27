@@ -36,14 +36,10 @@ jobs:
         with:
           node-version: 18
 
-      # We purposely don't do any yarn caching here.
+      # Note that we purposely don't do any yarn caching here.
 
-      # `--inline-builds` is only for debugging. It tells Yarn to print the output of dependencies' build steps instead of writing them to files
-      # See https://yarnpkg.com/cli/install#options-inline-builds.
-      # We include the GitHub token to avoid rate limiting when installing `@vscode/ripgrep`.
       - name: 🐈 Yarn install
         run: yarn install --inline-builds
-        shell: bash
         env:
           GITHUB_TOKEN: ${{ github.token }}
 

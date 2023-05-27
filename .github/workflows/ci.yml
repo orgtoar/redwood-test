@@ -31,7 +31,7 @@ jobs:
           node-version: 18
 
       - name: 🐈 Yarn install
-        run: yarn install --inline-builds
+        run: yarn install
         working-directory: ./.github/actions/only-doc-changes
 
       - name: 📖 Only doc changes?
@@ -54,7 +54,7 @@ jobs:
           node-version: 18
 
       - name: 🐈 Yarn install
-        run: yarn install --inline-builds
+        run: yarn install
         working-directory: ./tasks/run-yarn-checks
 
       - name: ✅ Check constraints, dependencies, and package.json's
@@ -87,8 +87,18 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - name: 🧶 Set up Node.js and caching for yarn
-        uses: ./.github/actions/set-up-job
+      - name: ⬢ Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 🐈 Set up yarn cache
+        uses: ./.github/actions/set-up-yarn-cache
+
+      - name: 🐈 Yarn install
+        run: yarn install --inline-builds
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: 🔨 Build
         run: yarn build
@@ -131,8 +141,18 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: 🧶 Set up Node.js and caching for yarn
-        uses: ./.github/actions/set-up-job
+      - name: ⬢ Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 🐈 Set up yarn cache
+        uses: ./.github/actions/set-up-yarn-cache
+
+      - name: 🐈 Yarn install
+        run: yarn install --inline-builds
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: 📁 Create temporary directory
         id: create-temporary-directory
@@ -151,17 +171,17 @@ jobs:
           git config --global user.name "Your Name"
           git init --initial-branch main && git add .
           git commit -a --message=init
-        working-directory: ${{ steps.createpath.outputs.project_path }}
+        working-directory: ${{ steps.create-temporary-directory.outputs.project_path }}
 
-      - name: Start server
+      - name: 🖥️ Start server
         run: yarn rw dev --no-generate --fwd="--no-open" &
-        working-directory: ${{ steps.createpath.outputs.project_path }}
+        working-directory: ${{ steps.create-temporary-directory.outputs.project_path }}
 
-      - name: 🌲 Run cypress
+      - name: 🌲 Run Cypress
         uses: cypress-io/github-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CYPRESS_RW_PATH:  "${{ steps.createpath.outputs.project_path }}"
+          CYPRESS_RW_PATH:  "${{ steps.create-temporary-directory.outputs.project_path }}"
         with:
           # We've already installed dependencies.
           install: false
@@ -213,42 +233,9 @@ jobs:
         with:
           node-version: 18
 
-      # We try to cache and restore yarn's cache directory and install state to speed up the yarn install step.
-      # Caching yarn's cache directory avoids its fetch step.
-      #
-      # See:
-      # - https://gist.github.com/belgattitude/042f9caf10d029badbde6cf9d43e400a
-      # - https://github.com/yarnpkg/berry/discussions/2621
-      - name: 📁 Get yarn cache directory
-        id: get-yarn-cache-directory
-        run: echo "CACHE_DIRECTORY=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-        shell: bash
+      - name: 🐈 Set up yarn cache
+        uses: ./.github/actions/set-up-yarn-cache
 
-      # If the primary key doesn't match, the cache will probably be stale or incomplete, but still worth restoring.
-      - name: ♻️ Restore yarn cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.get-yarn-cache-directory.outputs.CACHE_DIRECTORY }}
-          key: yarn-cache-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
-          restore-keys: yarn-cache-${{ runner.os }}
-
-      - name: ♻️ Restore yarn install state
-        uses: actions/cache@v3
-        with:
-          path: .yarn/install-state.gz
-          key: yarn-install-state-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
-          restore-keys: yarn-install-state-${{ runner.os }}
-
-      - name: ♻️ Restore node_modules
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: yarn-node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
-          restore-keys: yarn-node-modules-${{ runner.os }}
-
-      # `--inline-builds` is only for debugging. It tells Yarn to print the output of dependencies' build steps instead of writing them to files
-      # See https://yarnpkg.com/cli/install#options-inline-builds.
-      # We include the GitHub token to avoid rate limiting when installing `@vscode/ripgrep`.
       - name: 🐈 Yarn install
         run: yarn install --inline-builds
         env:
@@ -364,8 +351,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: 🧶 Set up Node.js and caching for yarn
-        uses: ./.github/actions/set-up-job
+      - name: ⬢ Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 🐈 Set up yarn cache
+        uses: ./.github/actions/set-up-yarn-cache
+
+      - name: 🐈 Yarn install
+        run: yarn install
 
       - name: 🔨 Build
         run: yarn build
