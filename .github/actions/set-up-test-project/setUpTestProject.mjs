@@ -28,7 +28,7 @@ async function main() {
 async function setUpTestProject() {
   const path = await import('node:path')
 
-  const fs = await import('fs-extra')
+  const { default: fs } = await import('fs-extra')
 
   const {
     createExecWithEnvInCwd,
