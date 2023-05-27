@@ -111,12 +111,12 @@ jobs:
           REDWOOD_PROJECT_PATH: '${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}'
           REDWOOD_DISABLE_TELEMETRY: 1
 
-      # # - name: 🔐 Run auth smoke tests
-      # #   working-directory: ./tasks/smoke-tests/auth
-      # #   run: npx playwright test
-      # #   env:
-      # #     REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
-      # #     REDWOOD_DISABLE_TELEMETRY: 1
+      - name: 🔐 Run auth smoke tests
+        working-directory: ./tasks/smoke-tests/auth
+        run: npx playwright test --reporter html
+        env:
+          REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
+          REDWOOD_DISABLE_TELEMETRY: 1
 
       # - name: ⌨️ Run `rw build --no-prerender`
       #   run: |
