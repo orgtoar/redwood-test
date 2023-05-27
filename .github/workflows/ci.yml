@@ -67,7 +67,7 @@ jobs:
         with:
           path: '**/node_modules'
           key: yarn-node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
-          restore-key: yarn-node-modules-${{ runner.os }}
+          restore-keys: yarn-node-modules-${{ runner.os }}
 
       # `--inline-builds` is only for debugging. It tells Yarn to print the output of dependencies' build steps instead of writing them to files
       # See https://yarnpkg.com/cli/install#options-inline-builds.
