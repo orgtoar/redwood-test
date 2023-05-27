@@ -180,7 +180,7 @@ jobs:
 
       - name: 🖥️ Start server
         run: yarn rw dev --no-generate --fwd="--no-open" &
-        working-directory: ${{ steps.create-temporary-directory.outputs.project_path }}
+        working-directory: ${{ steps.get-tutorial-e2e-project-directory.outputs.TUTORIAL_E2E_PROJECT_DIRECTORY }}
 
       # We have to do this because of the combination of the way we cache node_modules
       # and where Cypress installs itself.
@@ -191,7 +191,7 @@ jobs:
         uses: cypress-io/github-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CYPRESS_RW_PATH:  "${{ steps.create-temporary-directory.outputs.project_path }}"
+          CYPRESS_RW_PATH:  "${{ steps.get-tutorial-e2e-project-directory.outputs.TUTORIAL_E2E_PROJECT_DIRECTORY }}"
         with:
           # We've already installed dependencies.
           install: false
