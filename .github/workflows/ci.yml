@@ -172,8 +172,9 @@ jobs:
         run: yarn rw dev --no-generate --fwd="--no-open" &
         working-directory: ${{ steps.create-temporary-directory.outputs.project_path }}
 
-      # - name: 🌲 Install Cypress
-      #   run: npx cypress install
+      # Because caching
+      - name: 🌲 Install Cypress
+        run: install yarn run cypress install
 
       - name: 🌲 Run Cypress
         uses: cypress-io/github-action@v5
