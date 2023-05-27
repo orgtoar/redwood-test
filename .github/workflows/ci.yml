@@ -118,41 +118,41 @@ jobs:
           REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
           REDWOOD_DISABLE_TELEMETRY: 1
 
-      # - name: ⌨️ Run `rw build --no-prerender`
-      #   run: |
-      #     yarn rw build --no-prerender
-      #   working-directory: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
+      - name: ⌨️ Run `rw build --no-prerender`
+        run: |
+          yarn rw build --no-prerender
+        working-directory: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
 
-      # - name: ⌨️ Run `rw prerender`
-      #   run: |
-      #     yarn rw prerender --verbose
-      #   working-directory: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
+      - name: ⌨️ Run `rw prerender`
+        run: |
+          yarn rw prerender --verbose
+        working-directory: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
 
-      # - name: 🖥️ Run serve smoke tests
-      #   working-directory: tasks/smoke-tests/serve
-      #   run: npx playwright test
-      #   env:
-      #     REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
-      #     REDWOOD_DISABLE_TELEMETRY: 1
+      - name: 🖥️ Run serve smoke tests
+        working-directory: tasks/smoke-tests/serve
+        run: npx playwright test
+        env:
+          REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
+          REDWOOD_DISABLE_TELEMETRY: 1
 
-      # - name: 📄 Run prerender smoke tests
-      #   working-directory: tasks/smoke-tests/prerender
-      #   run: npx playwright test
-      #   env:
-      #     REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
-      #     REDWOOD_DISABLE_TELEMETRY: 1
+      - name: 📄 Run prerender smoke tests
+        working-directory: tasks/smoke-tests/prerender
+        run: npx playwright test
+        env:
+          REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
+          REDWOOD_DISABLE_TELEMETRY: 1
 
-      # - name: 📕 Run Storybook smoke tests
-      #   working-directory: tasks/smoke-tests/storybook
-      #   run: npx playwright test
-      #   env:
-      #     REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
-      #     REDWOOD_DISABLE_TELEMETRY: 1
+      - name: 📕 Run Storybook smoke tests
+        working-directory: tasks/smoke-tests/storybook
+        run: npx playwright test
+        env:
+          REDWOOD_PROJECT_PATH: ${{ steps.get-test-project-directory.outputs.TEST_PROJECT_PATH }}
+          REDWOOD_DISABLE_TELEMETRY: 1
 
-      # - name: ⬆️ Upload Playwright reports
-      #   uses: actions/upload-artifact@v3
-      #   if: always()
-      #   with:
-      #     name: playwright-report
-      #     path: playwright-report
-      #     retention-days: 7
+      - name: ⬆️ Upload Playwright reports
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
