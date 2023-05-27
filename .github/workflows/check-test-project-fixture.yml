@@ -1,4 +1,4 @@
-name: Check test project fixture
+name: ✅ Check test project fixture
 
 on:
   pull_request:
@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   check-test-project-fixture:
-    name: Check test project fixture
+    name: ✅ Check test project fixture
     runs-on: ubuntu-latest
 
     steps:
@@ -27,7 +27,7 @@ jobs:
         run: yarn install
         working-directory: ./.github/actions/check-test-project-fixture
 
-      - name: Check test project fixture
+      - name: ✅ Check test project fixture
         uses: ./.github/actions/check-test-project-fixture
         with:
           labels: '{ "labels": ${{ toJSON(github.event.pull_request.labels) }} }'
