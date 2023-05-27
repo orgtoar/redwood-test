@@ -1,0 +1,11 @@
+name: Set up the tutorial e2e project
+description: Set up the tutorial e2e project
+
+runs:
+  # `node18` isn't supported yet
+  using: node16
+  main: setUpTestProject.mjs
+
+inputs:
+  tutorial-e2e-project-path:
+    description: Path to the tutorial e2e project

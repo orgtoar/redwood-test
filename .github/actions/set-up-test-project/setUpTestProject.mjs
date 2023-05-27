@@ -17,27 +17,27 @@ const TEST_PROJECT_FIXTURE_PATH = path.join(
   '__fixtures__',
   'test-project'
 )
-const REDWOOD_PROJECT_PATH = core.getInput('test-project-path')
+const TEST_PROJECT_PATH = core.getInput('test-project-path')
 
-const execInProject = createExecWithEnvInCwd(REDWOOD_PROJECT_PATH)
+const execInProject = createExecWithEnvInCwd(TEST_PROJECT_PATH)
 
 async function main() {
-  console.log(`Creating project at ${REDWOOD_PROJECT_PATH}`)
-  await fs.copy(TEST_PROJECT_FIXTURE_PATH, REDWOOD_PROJECT_PATH)
+  console.log(`Creating project at ${TEST_PROJECT_PATH}`)
+  await fs.copy(TEST_PROJECT_FIXTURE_PATH, TEST_PROJECT_PATH)
   console.log()
 
-  console.log(`Adding framework dependencies to ${REDWOOD_PROJECT_PATH}`)
+  console.log(`Adding framework dependencies to ${TEST_PROJECT_PATH}`)
   await execInFramework(
     'yarn project:deps',
     {
       env: {
-        RWJS_CWD: REDWOOD_PROJECT_PATH
+        RWJS_CWD: TEST_PROJECT_PATH
       }
     }
   )
   console.log()
 
-  console.log(`Installing node_modules in ${REDWOOD_PROJECT_PATH}`)
+  console.log(`Installing node_modules in ${TEST_PROJECT_PATH}`)
   await execInProject('yarn install')
   console.log()
 
@@ -46,7 +46,7 @@ async function main() {
     'yarn project:copy',
     {
       env: {
-        RWJS_CWD: REDWOOD_PROJECT_PATH
+        RWJS_CWD: TEST_PROJECT_PATH
       }
     }
   )
@@ -58,7 +58,7 @@ async function main() {
     { silent: true }
   )
   fs.appendFileSync(
-    path.join(REDWOOD_PROJECT_PATH, '.env'),
+    path.join(TEST_PROJECT_PATH, '.env'),
     `SESSION_SECRET='${stdout}'`
   )
   console.log()

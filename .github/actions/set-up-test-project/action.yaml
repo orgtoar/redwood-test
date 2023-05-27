@@ -1,8 +1,6 @@
-name: 'Set up test project'
-description: 'Set up the test project fixture'
-outputs:
-  TEST_PROJECT_PATH:
-    description: 'Path to the test project'
+name: Set up test project
+description: Set up the test project fixture
+
 runs:
   # `node18` isn't supported yet
   using: node16
@@ -10,4 +8,4 @@ runs:
 
 inputs:
   test-project-path:
-    description: 'Path to the test project'
+    description: Path to the test project
