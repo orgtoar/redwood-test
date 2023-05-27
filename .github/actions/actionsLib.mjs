@@ -44,8 +44,24 @@ function createExecWithEnvInCwd(cwd) {
 
 const execInFramework = createExecWithEnvInCwd(REDWOOD_FRAMEWORK_PATH)
 
+/**
+ * @param {string} redwoodProjectCwd
+ */
+function projectDeps(redwoodProjectCwd) {
+  return execInFramework('yarn project:deps', { env: { RWJS_CWD: redwoodProjectCwd } })
+}
+
+/**
+ * @param {string} redwoodProjectCwd
+ */
+function projectCopy(redwoodProjectCwd) {
+  return execInFramework('yarn project:copy', { env: { RWJS_CWD: redwoodProjectCwd } })
+}
+
 export {
   REDWOOD_FRAMEWORK_PATH,
   execInFramework,
   createExecWithEnvInCwd,
+  projectDeps,
+  projectCopy
 }

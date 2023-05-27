@@ -4,7 +4,7 @@ description: Set up the tutorial e2e project
 runs:
   # `node18` isn't supported yet
   using: node16
-  main: setUpTestProject.mjs
+  main: setUpTutorialE2EProject.mjs
 
 inputs:
   tutorial-e2e-project-path:

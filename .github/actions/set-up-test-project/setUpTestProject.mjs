@@ -7,9 +7,10 @@ import core from '@actions/core'
 import fs from 'fs-extra'
 
 import {
+  createExecWithEnvInCwd,
+  projectCopy,
+  projectDeps,
   REDWOOD_FRAMEWORK_PATH,
-  execInFramework,
-  createExecWithEnvInCwd
 } from '../actionsLib.mjs'
 
 const TEST_PROJECT_FIXTURE_PATH = path.join(
@@ -27,14 +28,7 @@ async function main() {
   console.log()
 
   console.log(`Adding framework dependencies to ${TEST_PROJECT_PATH}`)
-  await execInFramework(
-    'yarn project:deps',
-    {
-      env: {
-        RWJS_CWD: TEST_PROJECT_PATH
-      }
-    }
-  )
+  await projectDeps(TEST_PROJECT_PATH)
   console.log()
 
   console.log(`Installing node_modules in ${TEST_PROJECT_PATH}`)
@@ -42,14 +36,7 @@ async function main() {
   console.log()
 
   console.log('Copying framework packages to project')
-  await execInFramework(
-    'yarn project:copy',
-    {
-      env: {
-        RWJS_CWD: TEST_PROJECT_PATH
-      }
-    }
-  )
+  await projectCopy(TEST_PROJECT_PATH)
   console.log()
 
   console.log('Generating dbAuth secret')
