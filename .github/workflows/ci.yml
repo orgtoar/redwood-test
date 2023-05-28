@@ -180,8 +180,41 @@ jobs:
       PLAYWRIGHT_BROWSERS_PATH: 0
     steps:
       - uses: actions/checkout@v3
-      - name: 🧶 Set up job
-        uses: ./.github/actions/set-up-job
+
+      - name: ⬢ Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # We try to cache and restore yarn's cache directory and install state to speed up the yarn install step.
+      # Caching yarn's cache directory avoids its fetch step.
+      - name: 📁 Get yarn cache directory
+        id: get-yarn-cache-directory
+        run: echo "CACHE_DIRECTORY=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+        shell: bash
+
+      # If the primary key doesn't match, the cache will probably be stale or incomplete,
+      # but still worth restoring for the yarn install step.
+      - name: ♻️ Restore yarn cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.get-yarn-cache-directory.outputs.CACHE_DIRECTORY }}
+          key: yarn-cache-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
+          restore-keys: yarn-cache-${{ runner.os }}
+
+      - name: ♻️ Restore yarn install state
+        uses: actions/cache@v3
+        with:
+          path: .yarn/install-state.gz
+          key: yarn-install-state-${{ runner.os }}-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
+
+      - name: 🐈 Yarn install
+        run: yarn install --inline-builds
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: 🔨 Build
+        run: yarn build
 
       - name: 🌲 Setup test project
         id: setup_test_project
@@ -193,24 +226,50 @@ jobs:
       - name: 🎭 Install playwright dependencies
         run: npx playwright install --with-deps chromium
 
-      - name: Run `rw build` without prerender
+      - name: Run dev smoke tests
+        working-directory: ./tasks/smoke-tests/dev
+        run: npx playwright test
+        env:
+          REDWOOD_PROJECT_PATH: '${{ steps.setup_test_project.outputs.test_project_path}}'
+          REDWOOD_DISABLE_TELEMETRY: 1
+
+      - name: 🔐 Run auth smoke tests
+        working-directory: ./tasks/smoke-tests/auth
+        run: npx playwright test
+        env:
+          REDWOOD_PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path}}
+          REDWOOD_DISABLE_TELEMETRY: 1
+
+      - name: ⌨️ Run `rw build --no-prerender`
         run: |
           yarn rw build --no-prerender
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+        working-directory: ${{ steps.setup_test_project.outputs.test_project_path}}
 
-      - name: Run `rw prerender`
+      - name: ⌨️ Run `rw prerender`
         run: |
           yarn rw prerender --verbose
-        working-directory: ${{ steps.setup_test_project.outputs.test_project_path }}
+        working-directory: ${{ steps.setup_test_project.outputs.test_project_path}}
 
-      - name: Run smoke tests on 'rw dev', 'rw serve', 'rw storybook'
-        working-directory: ./tasks/smoke-test
-        run: npx playwright test --project 'chromium' --reporter line
+      - name: 🖥️ Run serve smoke tests
+        working-directory: tasks/smoke-tests/serve
+        run: npx playwright test
         env:
-          PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path }}
+          REDWOOD_PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path}}
           REDWOOD_DISABLE_TELEMETRY: 1
-          # RECORD_REPLAY_METADATA_TEST_RUN_TITLE: Smoke test / ${{ matrix.os }} / node 18 latest
-          # RECORD_REPLAY_TEST_METRICS: 1
+
+      - name: 📄 Run prerender smoke tests
+        working-directory: tasks/smoke-tests/prerender
+        run: npx playwright test
+        env:
+          REDWOOD_PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path}}
+          REDWOOD_DISABLE_TELEMETRY: 1
+
+      - name: 📕 Run Storybook smoke tests
+        working-directory: tasks/smoke-tests/storybook
+        run: npx playwright test
+        env:
+          REDWOOD_PROJECT_PATH: ${{ steps.setup_test_project.outputs.test_project_path}}
+          REDWOOD_DISABLE_TELEMETRY: 1
 
       - name: Run `rw info`
         run: |
