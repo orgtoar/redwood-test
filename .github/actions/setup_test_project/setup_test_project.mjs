@@ -5,7 +5,10 @@ import fs from 'fs-extra'
 import { exec } from '@actions/exec'
 import * as core from '@actions/core'
 
-const test_project_path = path.join(path.dirname(process.cwd()), 'test-project')
+const test_project_path = path.join(
+  os.tmpdir(),
+  'test-project',
+)
 
 console.log({
   test_project_path
