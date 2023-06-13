@@ -45,7 +45,7 @@ async function main() {
 
   if (dependenciesCacheKey) {
     console.log(`Cache restored from key: ${dependenciesKey}`)
-    await sharedTasks()
+    await sharedTasks({ bundler })
   } else {
     console.log(`Cache not found for input keys: ${distKey}, ${dependenciesKey}`)
     await setUpTestProject()
