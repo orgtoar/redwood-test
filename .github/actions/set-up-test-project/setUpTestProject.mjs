@@ -95,15 +95,16 @@ async function sharedTasks({ bundler }) {
 
   if (bundler === 'webpack') {
     console.log(`Setting the bundler to ${bundler}`)
+    console.log()
 
     const redwoodTOMLPath = path.join(TEST_PROJECT_PATH, 'redwood.toml')
     const redwoodTOML = fs.readFileSync(redwoodTOMLPath, 'utf-8')
-    console.log(redwoodTOML)
-
     const redwoodTOMLWithWebpack = redwoodTOML.replace('[web]\n', '[web]\n  bundler = "webpack"\n')
-    console.log(redwoodTOMLWithWebpack )
-
     fs.writeFileSync(redwoodTOMLPath, redwoodTOMLWithWebpack)
+
+    // Sanity check
+    console.log(fs.readFileSync(redwoodTOMLPath, 'utf-8'))
+
     console.log()
   }
 
