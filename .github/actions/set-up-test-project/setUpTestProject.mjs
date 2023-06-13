@@ -88,7 +88,7 @@ const execInProject = createExecWithEnvInCwd(TEST_PROJECT_PATH)
 /**
  * @returns {Promise<void>}
  */
-async function sharedTasks({ bundler }) {
+async function sharedTasks({ bundler } = { bundler: 'vite' }) {
   console.log('Copying framework packages to project')
   await projectCopy(TEST_PROJECT_PATH)
   console.log()
