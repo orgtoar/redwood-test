@@ -31,9 +31,6 @@ export const basePlaywrightConfig: PlaywrightTestConfig = {
     // },
   ],
 
-  reporter: 'list',
+  reporter: [['list', { printSteps: true }]],
   // reporter: [['list'], ['html']],
-
-  /* Run tests in files in parallel */
-  // fullyParallel: true,
 }
