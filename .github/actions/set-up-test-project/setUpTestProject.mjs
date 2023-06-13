@@ -23,10 +23,12 @@ const TEST_PROJECT_PATH = path.join(
 
 core.setOutput('test-project-path', TEST_PROJECT_PATH)
 
+const bundler = core.getInput('bundler')
+
 const {
   dependenciesKey,
   distKey
-} = await createCacheKeys('test-project')
+} = await createCacheKeys(`test-project`, bundler)
 
 /**
  * @returns {Promise<void>}
@@ -86,10 +88,23 @@ const execInProject = createExecWithEnvInCwd(TEST_PROJECT_PATH)
 /**
  * @returns {Promise<void>}
  */
-async function sharedTasks() {
+async function sharedTasks({ bundler }) {
   console.log('Copying framework packages to project')
   await projectCopy(TEST_PROJECT_PATH)
   console.log()
+
+  if (bundler === 'webpack') {
+    console.log(`Setting the bundler to ${bundler}`)
+
+    const redwoodTOMLPath = path.join(TEST_PROJECT_PATH, 'redwood.toml')
+    const redwoodTOML = fs.readFileSync(path.join(TEST_PROJECT_PATH, 'redwood.toml'))
+    fs.writeFileSync(
+      redwoodTOMLPath,
+      redwoodTOML.replace('[web]\n', '[web]\n  bundler = "webpack"\n')
+    )
+    console.log(fs.readFileSync(redwoodTOMLPath, 'utf-8'))
+    console.log()
+  }
 
   console.log('Generating dbAuth secret')
   const { stdout } = await execInProject(

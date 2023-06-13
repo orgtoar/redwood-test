@@ -64,7 +64,7 @@ export function projectCopy(redwoodProjectCwd) {
 /**
  * @param {string} prefix
  */
-export async function createCacheKeys(prefix) {
+export async function createCacheKeys(prefix, bundler = 'vite') {
   const baseKey = [
     prefix,
     process.env.RUNNER_OS,
@@ -84,6 +84,7 @@ export async function createCacheKeys(prefix) {
 
   const distKey = [
     dependenciesKey,
+    bundler,
     'dist',
     await hashFiles([
       'package.json',
