@@ -51,7 +51,7 @@ async function main() {
 
   if (dependenciesCacheKey) {
     console.log(`Cache restored from key: ${dependenciesKey}`)
-    await sharedTasks({ bundler })
+    await sharedTasks()
   } else {
     console.log(`Cache not found for input keys: ${distKey}, ${dependenciesKey}`)
     await setUpTestProject()
@@ -94,7 +94,7 @@ const execInProject = createExecWithEnvInCwd(TEST_PROJECT_PATH)
 /**
  * @returns {Promise<void>}
  */
-async function sharedTasks({ bundler } = { bundler: 'vite' }) {
+async function sharedTasks() {
   console.log('Copying framework packages to project')
   await projectCopy(TEST_PROJECT_PATH)
   console.log()
