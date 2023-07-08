@@ -207,8 +207,51 @@ jobs:
     steps:
       - run: echo "Only doc changes"
 
-  smoke-tests:
+  test-project-fixture:
     needs: check
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        bundler: [vite, webpack]
+
+    name: 🔄 Smoke tests / ${{ matrix.os }} / ${{ matrix.bundler }} / node 18 latest
+    runs-on: ${{ matrix.os }}
+
+    env:
+      REDWOOD_CI: 1
+      REDWOOD_VERBOSE_TELEMETRY: 1
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: ⬢ Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 🐈 Set up yarn cache
+        uses: ./.github/actions/set-up-yarn-cache
+
+      - name: 🐈 Yarn install
+        run: yarn install --inline-builds
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: 🔨 Build
+        run: yarn build
+
+      - name: 🌲 Set up test project
+        id: set-up-test-project
+        uses: ./.github/actions/set-up-test-project
+        with:
+          bundler: ${{ matrix.bundler }}
+        env:
+          REDWOOD_DISABLE_TELEMETRY: 1
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
+
+  smoke-tests:
+    needs: test-project-fixture
 
     strategy:
       matrix:
@@ -298,6 +341,60 @@ jobs:
           REDWOOD_TEST_PROJECT_PATH: ${{ steps.set-up-test-project.outputs.test-project-path }}
           REDWOOD_DISABLE_TELEMETRY: 1
 
+  smoke-tests-docs:
+    needs: only-doc-changes
+    if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    name: 🔄 Smoke test / ${{ matrix.os }} / node 18 latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: echo "Only doc changes"
+
+  cli:
+    needs: test-project-fixture
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        bundler: [vite, webpack]
+
+    name: 🔄 Smoke tests / ${{ matrix.os }} / ${{ matrix.bundler }} / node 18 latest
+    runs-on: ${{ matrix.os }}
+
+    env:
+      REDWOOD_CI: 1
+      REDWOOD_VERBOSE_TELEMETRY: 1
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: ⬢ Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 🐈 Set up yarn cache
+        uses: ./.github/actions/set-up-yarn-cache
+
+      - name: 🐈 Yarn install
+        run: yarn install --inline-builds
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: 🔨 Build
+        run: yarn build
+
+      - name: 🌲 Set up test project
+        id: set-up-test-project
+        uses: ./.github/actions/set-up-test-project
+        with:
+          bundler: ${{ matrix.bundler }}
+        env:
+          REDWOOD_DISABLE_TELEMETRY: 1
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
+
       - name: Run `rw info`
         run: |
           yarn rw info
@@ -308,47 +405,47 @@ jobs:
           yarn rw lint ./api/src --fix
         working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
 
-      - name: Run "rw test api"
+      - name: Run `rw test api`
         run: |
           yarn rw test api --no-watch
         working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
 
-      - name: Run "rw test web"
+      - name: Run `rw test web`
         run: |
           yarn rw test web --no-watch
         working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
 
-      - name: Run "rw check"
+      - name: Run `rw check`
         run: |
           yarn rw check
         working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
 
-      - name: Run "rw storybook"
+      - name: Run `rw storybook`
         run: |
           yarn rw sb --smoke-test
         working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
 
-      - name: Run "rw exec"
+      - name: Run `rw exec`
         run: |
           yarn rw g script testScript && yarn rw exec testScript
         working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
 
-      - name: Run "prisma generate"
+      - name: Run `prisma generate`
         run: |
           yarn rw prisma generate
         working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
 
-      - name: Run "rw data-migrate"
+      - name: Run `rw data-migrate`
         run: |
           yarn rw dataMigrate up
         working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
 
-      - name: Run "data-migrate install"
+      - name: Run `data-migrate install`
         run: |
           yarn rw data-migrate install
         working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
 
-      - name: Run "prisma migrate"
+      - name: Run `prisma migrate`
         run: |
           yarn rw prisma migrate dev --name ci-test
         working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
@@ -361,17 +458,17 @@ jobs:
         run: yarn rw setup --help && yarn rw setup ui --help
         working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
 
-      - name: Run "g page"
+      - name: Run `g page`
         run: |
           yarn rw g page ciTest
         working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
 
-      - name: Run "g sdl"
+      - name: Run `g sdl`
         run: |
           yarn rw g sdl userExample
         working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
 
-      - name: Run "rw type-check"
+      - name: Run `rw type-check`
         run: |
           yarn rw type-check
         working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
@@ -381,32 +478,6 @@ jobs:
           yarn rw g sdl DoesNotExist
         working-directory: ${{ steps.set-up-test-project.outputs.test-project-path }}
         continue-on-error: true
-
-      # We've disabled Replay for now but may add it back. When we do,
-      # we need to add this to all the smoke tests steps' env:
-      #
-      # ```
-      # env:
-      #   RECORD_REPLAY_METADATA_TEST_RUN_TITLE: 🔄  Smoke tests / ${{ matrix.os }} / node 18 latest
-      #   RECORD_REPLAY_TEST_METRICS: 1
-      # ```
-      #
-      # - name: Upload Replays
-      #   if: always()
-      #   uses: replayio/action-upload@v0.5.0
-      #   with:
-      #     api-key: rwk_cZn4WLe8106j6tC5ygNQxDpxAwCLpFo5oLQftiRN7OP
-
-  smoke-tests-docs:
-    needs: only-doc-changes
-    if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    name: 🔄 Smoke test / ${{ matrix.os }} / node 18 latest
-    runs-on: ${{ matrix.os }}
-    steps:
-      - run: echo "Only doc changes"
 
   telemetry-check:
     needs: check
