@@ -2,6 +2,7 @@ name: ⚙️ CI
 
 on:
   pull_request:
+  merge_group:
   push:
     branches: ['next', 'release/**']
 
@@ -16,7 +17,7 @@ env:
 
 jobs:
   only-doc-changes:
-    if: github.repository == 'redwoodjs/redwood'
+    # if: github.repository == 'redwoodjs/redwood'
     name: 📖 Only doc changes?
     runs-on: ubuntu-latest
     outputs:
