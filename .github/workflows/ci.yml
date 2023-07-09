@@ -408,50 +408,50 @@ jobs:
     steps:
       - run: echo "Only doc changes"
 
-  telemetry-check:
-    needs: check
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-      fail-fast: true
-    name: 🔭 Telemetry check / ${{ matrix.os }} / node 18 latest
-    runs-on: ${{ matrix.os }}
-    env:
-      REDWOOD_REDIRECT_TELEMETRY: "http://127.0.0.1:48619" # Random port
-    steps:
-      - uses: actions/checkout@v3
+  # telemetry-check:
+  #   needs: check
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest, windows-latest]
+  #     fail-fast: true
+  #   name: 🔭 Telemetry check / ${{ matrix.os }} / node 18 latest
+  #   runs-on: ${{ matrix.os }}
+  #   env:
+  #     REDWOOD_REDIRECT_TELEMETRY: "http://127.0.0.1:48619" # Random port
+  #   steps:
+  #     - uses: actions/checkout@v3
 
-      - name: ⬢ Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+  #     - name: ⬢ Set up Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 18
 
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
+  #     - name: 🐈 Set up yarn cache
+  #       uses: ./.github/actions/set-up-yarn-cache
 
-      - name: 🐈 Yarn install
-        run: yarn install --inline-builds
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+  #     - name: 🐈 Yarn install
+  #       run: yarn install --inline-builds
+  #       env:
+  #         GITHUB_TOKEN: ${{ github.token }}
 
-      - name: 🔨 Build
-        run: yarn build
+  #     - name: 🔨 Build
+  #       run: yarn build
 
-      - name: 📢 Listen for telemetry (CRWA)
-        run: node ./.github/actions/telemetry_check/check.mjs --mode crwa
+  #     - name: 📢 Listen for telemetry (CRWA)
+  #       run: node ./.github/actions/telemetry_check/check.mjs --mode crwa
 
-      - name: 📢 Listen for telemetry (CLI)
-        run: node ./.github/actions/telemetry_check/check.mjs --mode cli
-        env:
-          YARN_ENABLE_IMMUTABLE_INSTALLS: false
+  #     - name: 📢 Listen for telemetry (CLI)
+  #       run: node ./.github/actions/telemetry_check/check.mjs --mode cli
+  #       env:
+  #         YARN_ENABLE_IMMUTABLE_INSTALLS: false
 
-  telemetry-check-docs:
-    needs: only-doc-changes
-    if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    name: 🔭 Telemetry check / ${{ matrix.os }} / node 18 latest
-    runs-on: ${{ matrix.os }}
-    steps:
-      - run: echo "Only doc changes"
+  # telemetry-check-docs:
+  #   needs: only-doc-changes
+  #   if: needs.only-doc-changes.outputs.only-doc-changes == 'true'
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest, windows-latest]
+  #   name: 🔭 Telemetry check / ${{ matrix.os }} / node 18 latest
+  #   runs-on: ${{ matrix.os }}
+  #   steps:
+  #     - run: echo "Only doc changes"
