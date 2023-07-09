@@ -32,3 +32,5 @@ export const handler = ({ rwVersion }: { rwVersion: string }) => {
     console.log(`- npx @redwoodjs/codemods ${decamelize(codemod)}`)
   })
 }
+
+// test change
