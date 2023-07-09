@@ -8,6 +8,10 @@ function main() {
   // See https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables.
   const event = fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf-8')
 
+  if (event.name !== 'pull_request') {
+    return
+  }
+
   const {
     pull_request: {
       milestone
