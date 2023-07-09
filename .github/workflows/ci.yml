@@ -2,6 +2,7 @@ name: ⚙️ CI
 
 on:
   pull_request:
+  merge_group:
   push:
     branches: ['next', 'release/**']
 
@@ -30,14 +31,14 @@ jobs:
           node-version: 18
 
       - name: 🐈 Yarn install
-        working-directory: ./.github/actions/only_doc_changes
+        working-directory: ./.github/actions/only-doc-changes
         run: yarn install --inline-builds
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: 📖 Only doc changes?
         id: only-doc-changes
-        uses: ./.github/actions/only_doc_changes
+        uses: ./.github/actions/only-doc-changes
 
   check:
     needs: only-doc-changes
