@@ -3,10 +3,18 @@
 import fs from 'node:fs'
 
 function main() {
+  if (process.env.GITHUB_EVENT_NAME !== 'pull_request') {
+    return
+  }
+
   // `GITHUB_EVENT_PATH` is set in the GitHub Actions runner.
   // It's the path to the file on the runner that contains the full event webhook payload.
   // See https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables.
   const event = fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf-8')
+
+  if (event.name !== 'pull_request') {
+    return
+  }
 
   const {
     pull_request: {
