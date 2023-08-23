@@ -4,11 +4,10 @@ import path from 'path'
 import * as esbuild from 'esbuild'
 import { removeSync } from 'fs-extra'
 
-import { getPaths, getConfig } from '@redwoodjs/project-config'
+import { prebuildApiFile } from '@redwoodjs/babel-config'
+import { getPaths } from '@redwoodjs/project-config'
 
 import { findApiFiles } from '../files'
-
-import { getApiSideBabelPlugins, prebuildApiFile } from './babel/api'
 
 export const buildApi = () => {
   // TODO: Be smarter about caching and invalidating files,
@@ -35,9 +34,6 @@ export const cleanApiBuild = () => {
  */
 export const prebuildApiFiles = (srcFiles: string[]) => {
   const rwjsPaths = getPaths()
-  const plugins = getApiSideBabelPlugins({
-    openTelemetry: getConfig().experimental.opentelemetry.enabled,
-  })
 
   return srcFiles.map((srcPath) => {
     const relativePathFromSrc = path.relative(rwjsPaths.base, srcPath)
@@ -45,7 +41,7 @@ export const prebuildApiFiles = (srcFiles: string[]) => {
       .join(rwjsPaths.generated.prebuild, relativePathFromSrc)
       .replace(/\.(ts)$/, '.js')
 
-    const result = prebuildApiFile(srcPath, dstPath, plugins)
+    const result = prebuildApiFile(srcPath, dstPath)
     if (!result?.code) {
       // TODO: Figure out a better way to return these programatically.
       console.warn('Error:', srcPath, 'could not prebuilt.')
