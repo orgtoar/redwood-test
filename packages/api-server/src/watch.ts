@@ -39,6 +39,7 @@ const argv = yargs(hideBin(process.argv))
 
 const rwjsPaths = getPaths()
 
+// ?
 dotenv.config({
   path: rwjsPaths.base,
 })

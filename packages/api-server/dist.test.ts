@@ -71,6 +71,7 @@ describe('dist', () => {
             "type": "string",
           },
         },
+        "createServer": [Function],
         "webCliOptions": {
           "apiHost": {
             "alias": "api-host",
