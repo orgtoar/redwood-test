@@ -7,7 +7,12 @@ import c from 'ansi-colors'
 // @ts-expect-error can't be typed
 import { config } from 'dotenv-defaults'
 import fastify from 'fastify'
-import type { FastifyListenOptions, FastifyServerOptions } from 'fastify'
+import type {
+  FastifyListenOptions,
+  FastifyServerOptions,
+  FastifyInstance,
+  HookHandlerDoneFunction,
+} from 'fastify'
 import fastifyRawBody from 'fastify-raw-body'
 
 import { getConfig, getPaths } from '@redwoodjs/project-config'
@@ -17,7 +22,13 @@ import {
   lambdaRequestHandler,
 } from './plugins/lambdaLoader'
 
-// Load .env files if they haven't already been loaded. This makes this file have an effectful import.
+// Load .env files if they haven't already been loaded. This makes importing this file effectful:
+//
+// ```js
+// # Loads dotenv...
+// import { createServer } from '@redwoodjs/api-server'
+// ```
+//
 // It's here and not in the function below so that users can access env vars before calling `createServer`.
 if (process.env.RWJS_CWD && !process.env.REDWOOD_ENV_FILES_LOADED) {
   config({
@@ -31,7 +42,7 @@ export interface CreateServerOptions {
   /**
    * The prefix for all routes. Defaults to `/`.
    */
-  routePrefix?: string
+  apiRootPath?: string
 
   /**
    * Logger instance or options.
@@ -49,20 +60,28 @@ export interface CreateServerOptions {
  * Creates a server for api functions:
  *
  * ```js
- * const server = await createServer({
- *   logger,
- *   routePrefix: '/api'
- * })
+ * import { createServer } from '@redwoodjs/api-server'
  *
- * // Configure the returned fastify instance:
- * server.register(myPlugin)
+ * import { logger } from 'src/lib/logger'
  *
- * // When ready, start the server:
- * await server.start()
+  async function main() {
+ *   const server = await createServer({
+ *     logger,
+ *     apiRootPath: 'api'
+ *   })
+ *
+ *   // Configure the returned fastify instance:
+ *   server.register(myPlugin)
+ *
+ *   // When ready, start the server:
+ *   await server.start()
+ * }
+ *
+ * main()
  * ```
  */
 export async function createServer(options: CreateServerOptions = {}) {
-  const { routePrefix, fastifyServerOptions } =
+  const { apiRootPath, fastifyServerOptions } =
     resolveCreateServerOptions(options)
 
   // ------------------------
@@ -78,7 +97,7 @@ export async function createServer(options: CreateServerOptions = {}) {
         [
           '',
           `Ignoring \`config\` and \`configureServer\` in api/server.config.js.`,
-          `Migrate them to api/src/server.{ts,js}`,
+          `Migrate them to api/src/server.{ts,js}:`,
           '',
           `\`\`\`js title="api/src/server.{ts,js}"`,
           '// Pass your config to `createServer`',
@@ -98,24 +117,7 @@ export async function createServer(options: CreateServerOptions = {}) {
   // ------------------------
   // Initialize the fastify instance.
   const server = fastify(fastifyServerOptions)
-
-  // ------------------------
-  // Register api/dist functions.
-  // TODO: this should probably all be in a plugin.
-  // TODO: isolate context.
-  server.register(fastifyUrlData)
-  await server.register(fastifyRawBody)
-
-  server.addContentTypeParser(
-    ['application/x-www-form-urlencoded', 'multipart/form-data'],
-    { parseAs: 'string' },
-    server.defaultTextParser
-  )
-
-  server.all(`${routePrefix}:routeName`, lambdaRequestHandler)
-  server.all(`${routePrefix}:routeName/*`, lambdaRequestHandler)
-
-  await loadFunctionsFromDist()
+  await server.register(redwoodFastify, { redwood: { apiRootPath } })
 
   // ------------------------
   // See https://github.com/redwoodjs/redwood/pull/4744.
@@ -136,9 +138,9 @@ export async function createServer(options: CreateServerOptions = {}) {
       return
     }
 
-    server.log.info(
+    console.log(
       `Listening on ${c.magenta(
-        `http://${addressInfo.address}:${addressInfo.port}${routePrefix}`
+        `http://${addressInfo.address}:${addressInfo.port}${apiRootPath}`
       )}`
     )
     done()
@@ -176,8 +178,8 @@ export function resolveCreateServerOptions(
 
   // Set defaults.
   const resolvedOptions: ResolvedCreateServerOptions = {
-    routePrefix:
-      options.routePrefix ?? DEFAULT_CREATE_SERVER_OPTIONS.routePrefix,
+    apiRootPath:
+      options.apiRootPath ?? DEFAULT_CREATE_SERVER_OPTIONS.apiRootPath,
 
     fastifyServerOptions: options.fastifyServerOptions ?? {
       requestTimeout:
@@ -191,17 +193,17 @@ export function resolveCreateServerOptions(
     DEFAULT_CREATE_SERVER_OPTIONS.fastifyServerOptions.requestTimeout
   resolvedOptions.fastifyServerOptions.logger = options.logger
 
-  // Ensure the routePrefix begins and ends with a slash.
-  if (resolvedOptions.routePrefix.charAt(0) !== '/') {
-    resolvedOptions.routePrefix = `/${resolvedOptions.routePrefix}`
+  // Ensure the apiRootPath begins and ends with a slash.
+  if (resolvedOptions.apiRootPath.charAt(0) !== '/') {
+    resolvedOptions.apiRootPath = `/${resolvedOptions.apiRootPath}`
   }
 
   if (
-    resolvedOptions.routePrefix.charAt(
-      resolvedOptions.routePrefix.length - 1
+    resolvedOptions.apiRootPath.charAt(
+      resolvedOptions.apiRootPath.length - 1
     ) !== '/'
   ) {
-    resolvedOptions.routePrefix = `${resolvedOptions.routePrefix}/`
+    resolvedOptions.apiRootPath = `${resolvedOptions.apiRootPath}/`
   }
 
   return resolvedOptions
@@ -214,13 +216,42 @@ type DefaultCreateServerOptions = Required<
 >
 
 export const DEFAULT_CREATE_SERVER_OPTIONS: DefaultCreateServerOptions = {
-  routePrefix: '/',
+  apiRootPath: '/',
   logger: {
     level: process.env.NODE_ENV === 'development' ? 'debug' : 'warn',
   },
   fastifyServerOptions: {
     requestTimeout: 15_000,
   },
+}
+
+export interface RedwoodFastifyAPIOptions {
+  redwood: {
+    apiRootPath: string
+  }
+}
+
+// TODO: isolate context.
+export async function redwoodFastify(
+  fastify: FastifyInstance,
+  opts: RedwoodFastifyAPIOptions,
+  done: HookHandlerDoneFunction
+) {
+  fastify.register(fastifyUrlData)
+  await fastify.register(fastifyRawBody)
+
+  fastify.addContentTypeParser(
+    ['application/x-www-form-urlencoded', 'multipart/form-data'],
+    { parseAs: 'string' },
+    fastify.defaultTextParser
+  )
+
+  fastify.all(`${opts.redwood.apiRootPath}:routeName`, lambdaRequestHandler)
+  fastify.all(`${opts.redwood.apiRootPath}:routeName/*`, lambdaRequestHandler)
+
+  await loadFunctionsFromDist()
+
+  done()
 }
 
 function resolveStartOptions(
@@ -253,6 +284,9 @@ function resolveStartOptions(
  */
 export function parseArgs(args?: string[]) {
   const options = {
+    apiRootPath: {
+      type: 'string',
+    },
     port: {
       type: 'string',
       short: 'p',

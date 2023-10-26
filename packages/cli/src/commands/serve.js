@@ -99,7 +99,7 @@ export const builder = async (yargs) => {
           const { apiExperimentalServerFileHandler } = await import(
             './serveApiHandler.js'
           )
-          await apiExperimentalServerFileHandler()
+          await apiExperimentalServerFileHandler(argv)
         } else {
           const { apiServerHandler } = await import('./serveApiHandler.js')
           await apiServerHandler(argv)

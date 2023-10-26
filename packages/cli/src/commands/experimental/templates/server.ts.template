@@ -1,48 +1,10 @@
-/**
- * This file only applies to serverful deploys.
- */
-
 import { createServer } from '@redwoodjs/api-server'
-import { redwoodFastifyGraphQLServer } from '@redwoodjs/fastify'
-
-import directives from 'src/directives/**/*.{js,ts}'
-import sdls from 'src/graphql/**/*.sdl.{js,ts}'
-import services from 'src/services/**/*.{js,ts}'
-
-// Don't forget to add these imports if you're using authentication:
-// import { authDecoder } from '@redwoodjs/<your-auth-provider>'
-// import { getCurrentUser } from 'src/lib/auth'
 
 import { logger } from 'src/lib/logger'
-
-// Import if using RedwoodJS Realtime via `yarn rw exp setup-realtime`
-// import { realtime } from 'src/lib/realtime'
 
 async function main() {
   const server = await createServer({
     logger,
-  })
-
-  await server.register(redwoodFastifyGraphQLServer, {
-    sdls,
-    services,
-    directives,
-
-    graphiQLEndpoint: '/graphql',
-
-    allowIntrospection: true,
-    allowGraphiQL: true,
-
-    // TODO: see about removing this b/c this plugin should be able to use the fastify instance's logger
-    loggerConfig: {
-      logger,
-    },
-
-    // If authenticating, be sure to import and add in:
-    // authDecoder,
-    // getCurrentUser,
-    // Configure if using RedwoodJS Realtime:
-    // realtime,
   })
 
   await server.start()

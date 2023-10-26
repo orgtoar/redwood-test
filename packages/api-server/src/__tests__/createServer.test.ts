@@ -53,7 +53,7 @@ describe('createServer', () => {
     expect(console.warn.mock.calls[0][0]).toMatchInlineSnapshot(`
       "[33m[39m
       [33mIgnoring \`config\` and \`configureServer\` in api/server.config.js.[39m
-      [33mMigrate them to api/src/server.{ts,js}[39m
+      [33mMigrate them to api/src/server.{ts,js}:[39m
       [33m[39m
       [33m\`\`\`js title="api/src/server.{ts,js}"[39m
       [33m// Pass your config to \`createServer\`[39m
@@ -68,8 +68,8 @@ describe('createServer', () => {
     `)
   })
 
-  it('`routePrefix` prefixes all routes', async () => {
-    const server = await createServer({ routePrefix: '/api' })
+  it('`apiRootPath` prefixes all routes', async () => {
+    const server = await createServer({ apiRootPath: '/api' })
 
     await server.listen({
       port: 8910,
@@ -126,15 +126,13 @@ describe('createServer', () => {
 
     const lastCallIndex = console.log.mock.calls.length - 1
 
-    expect(console.log.mock.calls[lastCallIndex][0]).toMatch(
-      /Done importing in \d+ ms/
-    )
+    expect(console.log.mock.calls[lastCallIndex][0]).toMatch(/Listening on/)
 
     // `console.warn` will be used if there's a `server.config.js` file.
     expect(console.warn.mock.calls[0][0]).toMatchInlineSnapshot(`
       "[33m[39m
       [33mIgnoring \`config\` and \`configureServer\` in api/server.config.js.[39m
-      [33mMigrate them to api/src/server.{ts,js}[39m
+      [33mMigrate them to api/src/server.{ts,js}:[39m
       [33m[39m
       [33m\`\`\`js title="api/src/server.{ts,js}"[39m
       [33m// Pass your config to \`createServer\`[39m
@@ -177,10 +175,6 @@ describe('createServer', () => {
       level: 30,
       msg: 'Server listening at http://127.0.0.1:8910',
     })
-    expect(loggerLogs[4]).toMatchObject({
-      level: 30,
-      msg: 'Listening on [35mhttp://::1:8910/[39m',
-    })
   })
 
   describe('`server.start`', () => {
@@ -213,7 +207,7 @@ describe('resolveCreateServerOptions', () => {
     const resolvedOptions = resolveCreateServerOptions()
 
     expect(resolvedOptions).toEqual({
-      routePrefix: DEFAULT_CREATE_SERVER_OPTIONS.routePrefix,
+      apiRootPath: DEFAULT_CREATE_SERVER_OPTIONS.apiRootPath,
       fastifyServerOptions: {
         requestTimeout:
           DEFAULT_CREATE_SERVER_OPTIONS.fastifyServerOptions.requestTimeout,
@@ -222,25 +216,25 @@ describe('resolveCreateServerOptions', () => {
     })
   })
 
-  it('ensures `routePrefix` has slashes', () => {
+  it('ensures `apiRootPath` has slashes', () => {
     const expected = '/v1/'
 
     expect(
       resolveCreateServerOptions({
-        routePrefix: 'v1',
-      }).routePrefix
+        apiRootPath: 'v1',
+      }).apiRootPath
     ).toEqual(expected)
 
     expect(
       resolveCreateServerOptions({
-        routePrefix: '/v1',
-      }).routePrefix
+        apiRootPath: '/v1',
+      }).apiRootPath
     ).toEqual(expected)
 
     expect(
       resolveCreateServerOptions({
-        routePrefix: 'v1/',
-      }).routePrefix
+        apiRootPath: 'v1/',
+      }).apiRootPath
     ).toEqual(expected)
   })
 

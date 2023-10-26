@@ -84,12 +84,7 @@ export async function handler({ force, verbose }) {
           }
         },
       },
-      addApiPackages([
-        'fastify',
-        'chalk@4.1.2',
-        `@redwoodjs/fastify@${version}`,
-        `@redwoodjs/project-config@${version}`,
-      ]),
+      addApiPackages([`@redwoodjs/api-server@${version}`]),
       {
         task: () => {
           printTaskEpilogue(command, description, EXPERIMENTAL_TOPIC_ID)
