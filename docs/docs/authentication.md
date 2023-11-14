@@ -2,6 +2,9 @@
 description: Set up an authentication provider
 ---
 
+# Meh why not just roll your own auth
+How hard can it be?
+
 # Authentication
 
 Redwood has integrated auth end to end, from the web side to the api side.
