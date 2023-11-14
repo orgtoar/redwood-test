@@ -3,6 +3,8 @@ import { test, expect } from '@playwright/test'
 test('Submitting the form should return a response', async ({ page }) => {
   await page.goto('/')
 
+  // TRIGGER A RSC CI RUN
+
   const h3 = await page.locator('h1').innerHTML()
   expect(h3).toMatch(/Hello Redwood RSAs!!/)
 
