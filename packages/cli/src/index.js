@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+// Some non-rsc, non-ssr, non-docs change
+console.log("Look at me I'm a CLI!")
+
 import fs from 'fs'
 import path from 'path'
 
