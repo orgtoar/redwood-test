@@ -3,6 +3,8 @@ import * as fs from 'node:fs'
 import type { PlaywrightTestConfig } from '@playwright/test'
 import { devices } from '@playwright/test'
 
+// Adding some change here to trigger an SSR CI run
+
 // See https://playwright.dev/docs/test-configuration#global-configuration
 export const basePlaywrightConfig: PlaywrightTestConfig = {
   testDir: './tests',
