@@ -2,7 +2,7 @@
  * Detects if there are RSC changes
  *
  * @param {string[]} changedFiles The list of files which git has listed as changed
- * @returns {Boolean} True if there are changes, false if not
+ * @returns {boolean} True if there are changes, false if not
  */
 export function rscChanged(changedFiles){
   for (const changedFile of changedFiles) {

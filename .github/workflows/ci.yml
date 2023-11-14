@@ -1,9 +1,7 @@
-# TODO: explain this.
 name: ⚙️ CI
 
 on:
   pull_request:
-  # TODO: explain this.
   push:
     branches: ['next', 'release/**']
 
@@ -485,7 +483,8 @@ jobs:
       - run: echo "Skipped"
 
   rsc-smoke-tests:
-    needs: check
+    needs: [check, detect-changes]
+    if: needs.detect-changes.outputs.rsc == 'true'
 
     strategy:
       matrix:
@@ -577,7 +576,8 @@ jobs:
       - run: echo "Skipped"
 
   ssr-smoke-tests:
-    needs: check
+    needs: [check, detect-changes]
+    if: needs.detect-changes.outputs.ssr == 'true'
 
     strategy:
       matrix:
