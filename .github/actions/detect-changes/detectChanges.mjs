@@ -7,7 +7,7 @@ import { ssrChanged } from './cases/ssr.mjs'
 async function main() {
   const branch = process.env.GITHUB_BASE_REF
 
-  // If there is no branch, we're not in a pull request
+  // If there's no branch, we're not in a pull request.
   if (!branch) {
     core.setOutput('onlydocs', false)
     core.setOutput('rsc', false)

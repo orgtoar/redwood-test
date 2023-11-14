@@ -1,7 +1,9 @@
+# TODO: explain this.
 name: ⚙️ CI
 
 on:
   pull_request:
+  # TODO: explain this.
   push:
     branches: ['next', 'release/**']
 
@@ -19,10 +21,12 @@ jobs:
     # if: github.repository == 'redwoodjs/redwood'
     name: 🔍 Detect changes
     runs-on: ubuntu-latest
+
     outputs:
       onlydocs: ${{ steps.detect-changes.outputs.onlydocs }}
       rsc: ${{ steps.detect-changes.outputs.rsc }}
       ssr: ${{ steps.detect-changes.outputs.ssr }}
+
     steps:
       - uses: actions/checkout@v3
 
@@ -44,8 +48,10 @@ jobs:
   check:
     needs: detect-changes
     if: needs.detect-changes.outputs.onlydocs == 'false'
+
     name: ✅ Check constraints, dependencies, and package.json's
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
 
@@ -66,19 +72,23 @@ jobs:
   check-skip:
     needs: detect-changes
     if: needs.detect-changes.outputs.onlydocs == 'true'
+
     name: ✅ Check constraints, dependencies, and package.json's
     runs-on: ubuntu-latest
+
     steps:
       - run: echo "Skipped"
 
   build-lint-test:
     needs: check
+
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-      fail-fast: true
+
     name: 🏗 Build, lint, test / ${{ matrix.os }} / node 18 latest
     runs-on: ${{ matrix.os }}
+
     steps:
       - name: Remove the tsc problem matcher if not ubuntu-latest
         if: matrix.os != 'ubuntu-latest'
@@ -114,12 +124,16 @@ jobs:
         run: yarn test-ci ${{ steps.cpu-cores.outputs.count }}
 
   build-lint-test-skip:
-    needs: check-skip
+    needs: detect-changes
+    if: needs.detect-changes.outputs.onlydocs == 'true'
+
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
+
     name: 🏗 Build, lint, test / ${{ matrix.os }} / node 18 latest
     runs-on: ${{ matrix.os }}
+
     steps:
       - run: echo "Skipped"
 
@@ -198,12 +212,16 @@ jobs:
              cypress/e2e/04-logger/*.cy.js
 
   tutorial-e2e-skip:
-    needs: check-skip
+    needs: detect-changes
+    if: needs.detect-changes.outputs.onlydocs == 'true'
+
     strategy:
       matrix:
         bundler: [vite, webpack]
+
     name: 🌲 Tutorial E2E / ${{ matrix.bundler }} / node 18 latest
     runs-on: ubuntu-latest
+
     steps:
       - run: echo "Skipped"
 
@@ -398,7 +416,9 @@ jobs:
       #     api-key: rwk_cZn4WLe8106j6tC5ygNQxDpxAwCLpFo5oLQftiRN7OP
 
   smoke-tests-skip:
-    needs: check-skip
+    needs: detect-changes
+    if: needs.detect-changes.outputs.onlydocs == 'true'
+
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
@@ -406,19 +426,23 @@ jobs:
 
     name: 🔄 Smoke tests / ${{ matrix.os }} / ${{ matrix.bundler }} / node 18 latest
     runs-on: ${{ matrix.os }}
+
     steps:
       - run: echo "Skipped"
 
   telemetry-check:
     needs: check
+
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-      fail-fast: true
+
     name: 🔭 Telemetry check / ${{ matrix.os }} / node 18 latest
     runs-on: ${{ matrix.os }}
+
     env:
       REDWOOD_REDIRECT_TELEMETRY: "http://127.0.0.1:48619" # Random port
+
     steps:
       - uses: actions/checkout@v3
 
@@ -447,18 +471,21 @@ jobs:
           YARN_ENABLE_IMMUTABLE_INSTALLS: false
 
   telemetry-check-skip:
-    needs: check-skip
+    needs: detect-changes
+    if: needs.detect-changes.outputs.onlydocs == 'true'
+
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
+
     name: 🔭 Telemetry check / ${{ matrix.os }} / node 18 latest
     runs-on: ${{ matrix.os }}
+
     steps:
       - run: echo "Skipped"
 
   rsc-smoke-tests:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.rsc == 'true'
+    needs: check
 
     strategy:
       matrix:
@@ -537,7 +564,7 @@ jobs:
 
   rsc-smoke-tests-skip:
     needs: detect-changes
-    if: needs.detect-changes.outputs.rsc != 'true'
+    if: needs.detect-changes.outputs.rsc == 'false'
 
     strategy:
       matrix:
@@ -550,14 +577,12 @@ jobs:
       - run: echo "Skipped"
 
   ssr-smoke-tests:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.ssr == 'true'
+    needs: check
 
     strategy:
       matrix:
+        # TODO: add `windows-latest`.
         os: [ubuntu-latest]
-        # [ubuntu-latest, windows-latest] disabled, because windows misbehaving
-        # waiting for help from main-man Josh
 
     name: 🔁 SSR Smoke tests / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -625,13 +650,12 @@ jobs:
 
   ssr-smoke-tests-skip:
     needs: detect-changes
-    if: needs.detect-changes.outputs.ssr != 'true'
+    if: needs.detect-changes.outputs.ssr == 'false'
 
     strategy:
       matrix:
+        # TODO: add `windows-latest`.
         os: [ubuntu-latest]
-        # [ubuntu-latest, windows-latest] disabled, because windows misbehaving
-        # waiting for help from main-man Josh
 
     name: 🔁 SSR Smoke tests / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
