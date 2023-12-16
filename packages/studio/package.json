@@ -57,7 +57,7 @@
     "@babel/core": "^7.22.20",
     "@graphiql/plugin-explorer": "0.1.22",
     "@graphiql/toolkit": "0.8.4",
-    "@headlessui/react": "1.7.15",
+    "@headlessui/react": "1.7.17",
     "@heroicons/react": "2.0.18",
     "@nivo/bar": "0.83.0",
     "@nivo/core": "0.83.0",

@@ -4737,19 +4737,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@headlessui/react@npm:1.7.15":
-  version: 1.7.15
-  resolution: "@headlessui/react@npm:1.7.15"
-  dependencies:
-    client-only: "npm:^0.0.1"
-  peerDependencies:
-    react: ^16 || ^17 || ^18
-    react-dom: ^16 || ^17 || ^18
-  checksum: d93fd4be3d134467fe2c904e65ff28ec8218a78a3aa590bdc52a097ed9092bae200b6bf0ed79f12cd9850a1744dd95015fbc08b5b71f17bac7d63d2f6197a7b8
-  languageName: node
-  linkType: hard
-
-"@headlessui/react@npm:^1.7.14, @headlessui/react@npm:^1.7.15":
+"@headlessui/react@npm:1.7.17, @headlessui/react@npm:^1.7.14, @headlessui/react@npm:^1.7.15":
   version: 1.7.17
   resolution: "@headlessui/react@npm:1.7.17"
   dependencies:
@@ -9326,7 +9314,7 @@ __metadata:
     "@fastify/url-data": "npm:5.4.0"
     "@graphiql/plugin-explorer": "npm:0.1.22"
     "@graphiql/toolkit": "npm:0.8.4"
-    "@headlessui/react": "npm:1.7.15"
+    "@headlessui/react": "npm:1.7.17"
     "@heroicons/react": "npm:2.0.18"
     "@nivo/bar": "npm:0.83.0"
     "@nivo/core": "npm:0.83.0"
