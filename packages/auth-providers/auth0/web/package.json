@@ -27,7 +27,7 @@
     "core-js": "3.34.0"
   },
   "devDependencies": {
-    "@auth0/auth0-spa-js": "2.1.2",
+    "@auth0/auth0-spa-js": "2.1.3",
     "@babel/cli": "7.23.4",
     "@babel/core": "^7.22.20",
     "@types/react": "18.2.37",
@@ -36,7 +36,7 @@
     "typescript": "5.3.3"
   },
   "peerDependencies": {
-    "@auth0/auth0-spa-js": "2.1.2"
+    "@auth0/auth0-spa-js": "2.1.3"
   },
   "gitHead": "3905ed045508b861b495f8d5630d76c7a157d8f1"
 }
