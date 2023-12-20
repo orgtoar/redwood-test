@@ -1,23 +1,30 @@
-import fs from 'node:fs'
-
 import * as esbuild from 'esbuild'
+import fs from 'fs-extra'
+
+const jsBanner = `\
+#!/usr/bin/env node
+
+const require = (await import("node:module")).createRequire(import.meta.url);
+const __filename = (await import("node:url")).fileURLToPath(import.meta.url);
+const __dirname = (await import("node:path")).dirname(__filename);
+`
 
 const result = await esbuild.build({
   entryPoints: ['src/create-redwood-app.js'],
-  outfile: 'dist/create-redwood-app.js',
-
-  bundle: true,
-  minify: true,
+  outdir: 'dist',
 
   platform: 'node',
-  target: ['node20'],
-  packages: 'external',
+  format: 'esm',
+  bundle: true,
+
+  banner: {
+    js: jsBanner,
+  },
+
+  minify: true,
 
   logLevel: 'info',
-
-  // For visualizing the bundle.
-  // See https://esbuild.github.io/api/#metafile and https://esbuild.github.io/analyze/.
   metafile: true,
 })
 
-fs.writeFileSync('meta.json', JSON.stringify(result.metafile))
+await fs.writeJSON('meta.json', result.metafile, { spaces: 2 })

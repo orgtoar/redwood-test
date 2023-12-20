@@ -1,6 +1,5 @@
-#!/usr/bin/env node
-
-import path from 'path'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import { trace, SpanStatusCode } from '@opentelemetry/api'
 import checkNodeVersionCb from 'check-node-version'
@@ -14,14 +13,14 @@ import yargs from 'yargs/yargs'
 
 import { RedwoodTUI, ReactiveTUIContent, RedwoodStyling } from '@redwoodjs/tui'
 
-import { name, version } from '../package'
+import { name, version } from '../package.json'
 
 import {
   UID,
   startTelemetry,
   shutdownTelemetry,
   recordErrorViaTelemetry,
-} from './telemetry'
+} from './telemetry.js'
 
 const INITIAL_COMMIT_MESSAGE = 'Initial commit'
 
@@ -222,7 +221,7 @@ async function executeCompatibilityCheck(templateDir) {
  */
 function checkNodeAndYarnVersion(templateDir) {
   return new Promise((resolve) => {
-    const { engines } = require(path.join(templateDir, 'package.json'))
+    const { engines } = fs.readJSONSync(path.join(templateDir, 'package.json'))
 
     checkNodeVersionCb(engines, (_error, result) => {
       return resolve([result.isSatisfied, result.versions])
@@ -756,7 +755,10 @@ async function createRedwoodApp() {
   // Get the directory for installation from the args
   let targetDir = String(args).replace(/,/g, '-')
 
-  const templatesDir = path.resolve(__dirname, '../templates')
+  const templatesDir = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    '../templates'
+  )
 
   // Engine check
   await executeCompatibilityCheck(path.join(templatesDir, 'ts'))
@@ -845,32 +847,30 @@ async function createRedwoodApp() {
   )
 }
 
-;(async () => {
-  // Conditionally start telemetry
-  if (telemetry !== 'false' && !process.env.REDWOOD_DISABLE_TELEMETRY) {
-    try {
-      await startTelemetry()
-    } catch (error) {
-      console.error('Telemetry startup error')
-      console.error(error)
-    }
-  }
-
-  // Execute create redwood app within a span
-  const tracer = trace.getTracer('redwoodjs')
-  await tracer.startActiveSpan('create-redwood-app', async (span) => {
-    await createRedwoodApp()
-
-    // Span housekeeping
-    span?.setStatus({ code: SpanStatusCode.OK })
-    span?.end()
-  })
-
-  // Shutdown telemetry, ensures data is sent before the process exits
+// Conditionally start telemetry
+if (telemetry !== 'false' && !process.env.REDWOOD_DISABLE_TELEMETRY) {
   try {
-    await shutdownTelemetry()
+    await startTelemetry()
   } catch (error) {
-    console.error('Telemetry shutdown error')
+    console.error('Telemetry startup error')
     console.error(error)
   }
-})()
+}
+
+// Execute create redwood app within a span
+const tracer = trace.getTracer('redwoodjs')
+await tracer.startActiveSpan('create-redwood-app', async (span) => {
+  await createRedwoodApp()
+
+  // Span housekeeping
+  span?.setStatus({ code: SpanStatusCode.OK })
+  span?.end()
+})
+
+// Shutdown telemetry, ensures data is sent before the process exits
+try {
+  await shutdownTelemetry()
+} catch (error) {
+  console.error('Telemetry shutdown error')
+  console.error(error)
+}
