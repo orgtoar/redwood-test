@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import path from 'path'
 
 import Configstore from 'configstore/index'
@@ -57,5 +55,4 @@ try {
   })
 } catch (e) {
   console.log()
-  //
 }

@@ -1,6 +1,6 @@
-import path from 'path'
+const path = require('node:path')
 
-import klawSync from 'klaw-sync'
+const klawSync = require('klaw-sync')
 
 const TS_TEMPLATE_DIR = path.join(__dirname, '../templates', 'ts')
 
