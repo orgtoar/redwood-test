@@ -1,80 +1,57 @@
-import { transformTSToJS } from '../../../lib'
-import { yargsDefaults } from '../helpers'
-import {
-  templateForComponentFile,
-  createYargsForComponentGeneration,
-  removeGeneratorName,
-} from '../helpers'
+import terminalLink from 'terminal-link'
 
-const COMPONENT_SUFFIX = 'Layout'
-const REDWOOD_WEB_PATH_NAME = 'layouts'
+import { getYargsDefaults } from '../helpers'
 
-export const files = ({ name, typescript = false, ...options }) => {
-  const layoutName = removeGeneratorName(name, 'layout')
-  const extension = typescript ? '.tsx' : '.jsx'
-  const layoutFile = templateForComponentFile({
-    name: layoutName,
-    suffix: COMPONENT_SUFFIX,
-    webPathSection: REDWOOD_WEB_PATH_NAME,
-    extension,
-    generator: 'layout',
-    templatePath: options.skipLink
-      ? 'layout.tsx.a11yTemplate'
-      : 'layout.tsx.template',
-  })
-  const testFile = templateForComponentFile({
-    name: layoutName,
-    suffix: COMPONENT_SUFFIX,
-    extension: `.test${extension}`,
-    webPathSection: REDWOOD_WEB_PATH_NAME,
-    generator: 'layout',
-    templatePath: 'test.tsx.template',
-  })
-  const storyFile = templateForComponentFile({
-    name: layoutName,
-    suffix: COMPONENT_SUFFIX,
-    extension: `.stories${extension}`,
-    webPathSection: REDWOOD_WEB_PATH_NAME,
-    generator: 'layout',
-    templatePath: 'stories.tsx.template',
-  })
+export const command = 'layout <name>'
 
-  const files = [layoutFile]
-  if (options.stories) {
-    files.push(storyFile)
+export const description = 'Generate a layout component'
+
+export function builder(yargs) {
+  yargs
+    .positional('name', {
+      description: 'Name of the layout',
+      type: 'string',
+    })
+    .epilogue(
+      `Also see the ${terminalLink(
+        'Redwood CLI Reference',
+        `https://redwoodjs.com/docs/cli-commands#generate-layout`
+      )}`
+    )
+    .option('tests', {
+      description: 'Generate test files',
+      type: 'boolean',
+    })
+    .option('stories', {
+      description: 'Generate storybook files',
+      type: 'boolean',
+    })
+    .option('verbose', {
+      description: 'Print all logs',
+      type: 'boolean',
+      default: false,
+    })
+    .option('rollback', {
+      description: 'Revert all generator actions if an error occurs',
+      type: 'boolean',
+      default: true,
+    })
+
+  const optionsObj = {
+    skipLink: {
+      default: false,
+      description: 'Generate with skip link',
+      type: 'boolean',
+    },
+    ...getYargsDefaults(),
   }
 
-  if (options.tests) {
-    files.push(testFile)
-  }
-
-  // Returns
-  // {
-  //    "path/to/fileA": "<<<template>>>",
-  //    "path/to/fileB": "<<<template>>>",
-  // }
-  return files.reduce((acc, [outputPath, content]) => {
-    const template = typescript ? content : transformTSToJS(outputPath, content)
-
-    return {
-      [outputPath]: template,
-      ...acc,
-    }
-  }, {})
-}
-
-const optionsObj = {
-  skipLink: {
-    default: false,
-    description: 'Generate with skip link',
-    type: 'boolean',
-  },
-  ...yargsDefaults,
-}
-
-export const { command, description, builder, handler } =
-  createYargsForComponentGeneration({
-    componentName: 'layout',
-    filesFn: files,
-    optionsObj,
+  Object.entries(optionsObj).forEach(([option, config]) => {
+    yargs.option(option, config)
   })
+}
+
+export async function handler(options) {
+  const { handler } = await import('./layoutHandler.js')
+  return handler(options)
+}

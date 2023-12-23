@@ -126,19 +126,21 @@ export function removeGeneratorName(name, generatorName) {
 }
 
 /** @type {Record<string, import('yargs').Options>} */
-export const yargsDefaults = {
-  force: {
-    alias: 'f',
-    default: false,
-    description: 'Overwrite existing files',
-    type: 'boolean',
-  },
-  typescript: {
-    alias: 'ts',
-    default: isTypeScriptProject(),
-    description: 'Generate TypeScript files',
-    type: 'boolean',
-  },
+export const getYargsDefaults = () => {
+  return {
+    force: {
+      alias: 'f',
+      default: false,
+      description: 'Overwrite existing files',
+      type: 'boolean',
+    },
+    typescript: {
+      alias: 'ts',
+      default: isTypeScriptProject(),
+      description: 'Generate TypeScript files',
+      type: 'boolean',
+    },
+  }
 }
 
 export const validateName = (name) => {
@@ -158,7 +160,7 @@ export const createYargsForComponentGeneration = ({
   preTasksFn = (options) => options,
   /** filesFn is not used if generator implements its own `handler` */
   filesFn = () => ({}),
-  optionsObj = yargsDefaults,
+  optionsObj = getYargsDefaults(),
   positionalsObj = {},
   /** function that takes the options object and returns an array of listr tasks */
   includeAdditionalTasks = () => [],

@@ -3,7 +3,7 @@ globalThis.__dirname = __dirname
 import fs from 'fs-extra'
 
 import '../../../../lib/test'
-import { shouldUseTailwindCSS } from '../scaffold'
+import { shouldUseTailwindCSS } from '../scaffoldHandler'
 
 jest.mock('fs', () => {
   const fs = jest.requireActual('fs')

@@ -4,7 +4,8 @@ import fs from 'fs-extra'
 import '../../../../lib/test'
 
 import { getDefaultArgs } from '../../../../lib'
-import { builder, files } from '../../../generate/service/service'
+import { builder } from '../../../generate/service/service'
+import { files } from '../../../generate/service/serviceHandler'
 import { tasks } from '../service'
 
 jest.mock('fs')

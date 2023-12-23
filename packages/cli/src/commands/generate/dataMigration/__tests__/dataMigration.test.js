@@ -2,7 +2,7 @@ globalThis.__dirname = __dirname
 import path from 'path'
 import '../../../../lib/test'
 
-import * as generator from '../dataMigration'
+import * as generator from '../dataMigrationHandler'
 
 const asyncForEach = async (array, callback) => {
   for (let index = 0; index < array.length; index++) {

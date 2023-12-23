@@ -1,4 +1,4 @@
-import { files as componentFiles } from '../../generate/component/component'
+import { files as componentFiles } from '../../generate/component/componentHandler'
 import { createYargsForComponentDestroy } from '../helpers'
 
 export const description = 'Destroy a component'

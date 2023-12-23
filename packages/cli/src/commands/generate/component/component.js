@@ -1,64 +1,48 @@
-import { transformTSToJS } from '../../../lib'
-import {
-  templateForComponentFile,
-  createYargsForComponentGeneration,
-} from '../helpers'
+import terminalLink from 'terminal-link'
 
-const REDWOOD_WEB_PATH_NAME = 'components'
+import { getYargsDefaults } from '../helpers'
 
-export const files = ({ name, typescript = false, ...options }) => {
-  const extension = typescript ? '.tsx' : '.jsx'
-  const componentFile = templateForComponentFile({
-    name,
-    webPathSection: REDWOOD_WEB_PATH_NAME,
-    extension,
-    generator: 'component',
-    templatePath: 'component.tsx.template',
-  })
-  const testFile = templateForComponentFile({
-    name,
-    extension: `.test${extension}`,
-    webPathSection: REDWOOD_WEB_PATH_NAME,
-    generator: 'component',
-    templatePath: 'test.tsx.template',
-  })
-  const storiesFile = templateForComponentFile({
-    name,
-    extension: `.stories${extension}`,
-    webPathSection: REDWOOD_WEB_PATH_NAME,
-    generator: 'component',
-    // Using two different template files here because we have a TS-specific
-    // information in a comment in the .tsx template
-    templatePath: typescript ? 'stories.tsx.template' : 'stories.jsx.template',
-  })
-
-  const files = [componentFile]
-  if (options.stories) {
-    files.push(storiesFile)
-  }
-
-  if (options.tests) {
-    files.push(testFile)
-  }
-
-  // Returns
-  // {
-  //    "path/to/fileA": "<<<template>>>",
-  //    "path/to/fileB": "<<<template>>>",
-  // }
-  return files.reduce((acc, [outputPath, content]) => {
-    const template = typescript ? content : transformTSToJS(outputPath, content)
-
-    return {
-      [outputPath]: template,
-      ...acc,
-    }
-  }, {})
-}
-
+export const command = 'component <name>'
 export const description = 'Generate a component'
 
-export const { command, builder, handler } = createYargsForComponentGeneration({
-  componentName: 'component',
-  filesFn: files,
-})
+export function builder(yargs) {
+  yargs
+    .positional('name', {
+      description: `Name of the component`,
+      type: 'string',
+    })
+    .option('tests', {
+      description: 'Generate test files',
+      type: 'boolean',
+    })
+    .option('stories', {
+      description: 'Generate storybook files',
+      type: 'boolean',
+    })
+    .option('verbose', {
+      description: 'Print all logs',
+      type: 'boolean',
+      default: false,
+    })
+    .option('rollback', {
+      description: 'Revert all generator actions if an error occurs',
+      type: 'boolean',
+      default: true,
+    })
+    .epilogue(
+      `Also see the ${terminalLink(
+        'Redwood CLI Reference',
+        `https://redwoodjs.com/docs/cli-commands#generate-component`
+      )}`
+    )
+
+  // Add in passed in options
+  Object.entries(getYargsDefaults()).forEach(([option, config]) => {
+    yargs.option(option, config)
+  })
+}
+
+export async function handler(options) {
+  const { handler } = await import('./componentHandler.js')
+  return handler(options)
+}

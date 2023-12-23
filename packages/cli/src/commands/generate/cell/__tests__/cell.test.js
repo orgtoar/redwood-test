@@ -3,7 +3,7 @@ import path from 'path'
 
 // Load mocks
 import '../../../../lib/test'
-import * as cell from '../cell'
+import * as cell from '../cellHandler'
 
 jest.mock('@redwoodjs/structure', () => {
   return {

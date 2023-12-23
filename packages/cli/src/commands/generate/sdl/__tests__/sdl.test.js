@@ -35,7 +35,8 @@ import '../../../../lib/test'
 import { ensurePosixPath } from '@redwoodjs/project-config'
 
 import { getDefaultArgs } from '../../../../lib'
-import * as sdl from '../sdl'
+import { getDefaults as getSDLDefaults } from '../sdl'
+import * as sdl from '../sdlHandler'
 
 afterEach(() => {
   jest.clearAllMocks()
@@ -205,7 +206,7 @@ const itCreatesAnSDLFileWithJsonDefinitions = (baseArgs = {}) => {
 
 describe('without graphql documentations', () => {
   describe('in javascript mode', () => {
-    const baseArgs = { ...getDefaultArgs(sdl.defaults), tests: true }
+    const baseArgs = { ...getDefaultArgs(getSDLDefaults()), tests: true }
 
     itReturnsExactlyFourFiles(baseArgs)
     itCreatesAService(baseArgs)
@@ -219,7 +220,7 @@ describe('without graphql documentations', () => {
 
   describe('in typescript mode', () => {
     const baseArgs = {
-      ...getDefaultArgs(sdl.defaults),
+      ...getDefaultArgs(getSDLDefaults()),
       typescript: true,
       tests: true,
     }
@@ -238,7 +239,7 @@ describe('without graphql documentations', () => {
 describe('with graphql documentations', () => {
   describe('in javascript mode', () => {
     const baseArgs = {
-      ...getDefaultArgs(sdl.defaults),
+      ...getDefaultArgs(getSDLDefaults()),
       tests: true,
       docs: true,
     }
@@ -255,7 +256,7 @@ describe('with graphql documentations', () => {
 
   describe('in typescript mode', () => {
     const baseArgs = {
-      ...getDefaultArgs(sdl.defaults),
+      ...getDefaultArgs(getSDLDefaults()),
       typescript: true,
       tests: true,
       docs: true,

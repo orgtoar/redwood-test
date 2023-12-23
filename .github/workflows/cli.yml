@@ -1,0 +1,74 @@
+name: CLI
+
+on:
+  pull_request:
+  push:
+    branches: ['next', 'release/**']
+
+# Cancel in-progress runs of this workflow.
+# See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#example-only-cancel-in-progress-jobs-or-runs-for-the-current-workflow.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+
+jobs:
+  cli:
+    name: CLI
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: ⬢ Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@stable --activate
+
+      - name: ⬢ Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: 🐈 Set up yarn cache
+        uses: ./.github/actions/set-up-yarn-cache
+
+      - name: 🐈 Yarn install
+        run: yarn install --inline-builds
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: 🏗️ Build
+        run: yarn build
+
+      - name: 🌲 CRWA
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+
+          cd ../
+          yarn create redwood-app ./redwood-app -y
+          cd ./redwood-app
+          yarn
+
+          echo "PROJECT_PATH=$(pwd)" >> $GITHUB_ENV
+
+      - name: 📦 Add framework packages
+        run: |
+          yarn project:tarsync $PROJECT_PATH
+
+          cd $PROJECT_PATH
+          git add .
+          git commit -m 'add framework packages'
+        env:
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
+
+      - name: 🧪 Test
+        run: |
+          PROJECT_PATH=$PROJECT_PATH yarn node --experimental-vm-modules $(yarn bin jest) --runInBand
+        working-directory: ./tasks/cli-e2e
+        env:
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
+          GITHUB_TOKEN: ${{ env.github_token }}

@@ -1,7 +1,6 @@
 import { recordTelemetryAttributes } from '@redwoodjs/cli-helpers'
 
 export const command = 'realtime <name>'
-
 export const description =
   'Generate a subscription or live query used with RedwoodJS Realtime'
 
@@ -40,6 +39,7 @@ export async function handler(options) {
     force: options.force,
     verbose: options.verbose,
   })
+
   const { handler } = await import('./realtimeHandler.js')
   return handler(options)
 }

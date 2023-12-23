@@ -1,4 +1,4 @@
-import { files as layoutFiles } from '../../generate/layout/layout'
+import { files as layoutFiles } from '../../generate/layout/layoutHandler'
 import { createYargsForComponentDestroy } from '../helpers'
 
 export const { command, description, builder, handler, tasks } =

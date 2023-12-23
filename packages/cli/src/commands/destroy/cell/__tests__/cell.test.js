@@ -20,7 +20,7 @@ import fs from 'fs-extra'
 
 import '../../../../lib/test'
 
-import { files } from '../../../generate/cell/cell'
+import { files } from '../../../generate/cell/cellHandler'
 import { tasks } from '../cell'
 
 beforeEach(() => {

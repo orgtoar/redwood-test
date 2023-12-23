@@ -7,7 +7,7 @@ globalThis.__dirname = __dirname
 import '../../../lib/test'
 
 import * as helpers from '../helpers'
-import * as page from '../page/page'
+import * as page from '../page/pageHandler'
 
 const PAGE_TEMPLATE_OUTPUT = `import { Link, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'

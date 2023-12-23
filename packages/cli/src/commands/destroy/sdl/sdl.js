@@ -5,7 +5,7 @@ import { recordTelemetryAttributes } from '@redwoodjs/cli-helpers'
 import { deleteFilesTask } from '../../../lib'
 import c from '../../../lib/colors'
 import { verifyModelName } from '../../../lib/schemaHelpers'
-import { files } from '../../generate/sdl/sdl'
+import { files } from '../../generate/sdl/sdlHandler'
 
 export const command = 'sdl <model>'
 export const description =

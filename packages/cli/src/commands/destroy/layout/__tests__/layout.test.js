@@ -11,7 +11,7 @@ import fs from 'fs-extra'
 
 import '../../../../lib/test'
 
-import { files } from '../../../generate/layout/layout'
+import { files } from '../../../generate/layout/layoutHandler'
 import { tasks } from '../layout'
 
 beforeEach(() => {
