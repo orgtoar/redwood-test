@@ -1,0 +1,54 @@
+name: 🌲 CRWA
+
+on:
+  pull_request:
+  push:
+    branches: ['next', 'release/**']
+
+# Cancel in-progress runs of this workflow.
+# See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#example-only-cancel-in-progress-jobs-or-runs-for-the-current-workflow.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+
+jobs:
+  build-lint-test:
+    needs: check
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    name: 🏗 Build, lint, test / ${{ matrix.os }} / node 18 latest
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: ⬢ Enable Corepack
+        run: corepack enable
+
+      - name: ⬢ Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: ⬢ Enable Corepack
+        run: corepack enable
+
+      - name: 🐈 Set up yarn cache
+        uses: ./.github/actions/set-up-yarn-cache
+
+      - name: 🐈 Yarn install
+        run: yarn install --inline-builds
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: 🏗️ Build
+        run: yarn build
+
+      - name: 🌲 CRWA
+        run: yarn test-ci ${{ steps.cpu-cores.outputs.count }}
