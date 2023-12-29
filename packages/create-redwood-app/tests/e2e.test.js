@@ -13,30 +13,27 @@ describe('crwa', () => {
 
     expect(p.exitCode).toEqual(0)
     expect(p.stdout).toMatchInlineSnapshot(`
-      "------------------------------------------------------------------
-                      🌲⚡️ Welcome to RedwoodJS! ⚡️🌲
-      ------------------------------------------------------------------
-      Usage: create-redwood-app <project directory> [option]
+      "Usage: create-redwood-app <project directory> [options]
 
       Options:
             --help              Show help                                    [boolean]
-            --typescript, --ts  Generate a TypeScript project.
-                                                             [boolean] [default: null]
+            --version           Show version number                          [boolean]
+        -m, --commit-message    Commit message for the initial commit.
+                                                              [string] [default: null]
+            --git-init, --git   Initialize a git repository. [boolean] [default: null]
             --overwrite         Create even if target directory isn't empty
                                                             [boolean] [default: false]
             --telemetry         Enables sending telemetry events for this create
                                 command and all Redwood CLI commands
                                 https://telemetry.redwoodjs.com
                                                              [boolean] [default: true]
-            --git-init, --git   Initialize a git repository. [boolean] [default: null]
-        -m, --commit-message    Commit message for the initial commit.
-                                                              [string] [default: null]
+            --typescript, --ts  Generate a TypeScript project.
+                                                             [boolean] [default: null]
         -y, --yes               Skip prompts and use defaults.
                                                              [boolean] [default: null]
-            --version           Show version number                          [boolean]
 
       Examples:
-        create-redwood-app newapp
+        create-redwood-app redwood-app
       [?25l[?25h"
     `)
     expect(p.stderr).toMatchInlineSnapshot(`"[?25l[?25h"`)
@@ -47,10 +44,7 @@ describe('crwa', () => {
 
     expect(p.exitCode).toEqual(0)
     expect(p.stdout).toMatchInlineSnapshot(`
-      "------------------------------------------------------------------
-                      🌲⚡️ Welcome to RedwoodJS! ⚡️🌲
-      ------------------------------------------------------------------
-      6.0.7
+      "6.0.7
       [?25l[?25h"
     `)
     expect(p.stderr).toMatchInlineSnapshot(`"[?25l[?25h"`)
@@ -68,7 +62,7 @@ describe('crwa', () => {
       "------------------------------------------------------------------
                       🌲⚡️ Welcome to RedwoodJS! ⚡️🌲
       ------------------------------------------------------------------
-      [?25l⠋ Checking node and yarn compatibility
+      [?25l⠋ Checking node compatibility
       [?25h[?25l✔ Compatibility checks passed
       [?25h✔ Creating your Redwood app in ./redwood-app based on command line argument
       ✔ Using TypeScript based on command line flag

@@ -26,6 +26,7 @@
         "^prod"
       ],
       "dependsOn": [
+        "clean",
         "^build"
       ],
       "cache": true

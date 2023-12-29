@@ -18,7 +18,7 @@
 
 <h2 align="center">Ship today with architecture for tomorrow.</h2>
 
-Redwood is an opinionated, edge-ready framework for modern multi-client applications, built on React, GraphQL, and Prisma with full TypeScript support and ready to go with zero config.
+Redwood is an opinionated framework for modern multi-client applications, built on React, GraphQL, and Prisma with full TypeScript support and ready to go with zero config.
 
 Want great developer experience and easy scaling? How about an integrated front- and back-end test suite, boilerplate code generators, component design, logging, API security + auth, and serverless or traditional deploy support? Redwood is here! Redwood works with the components and development workflow you love but with simple conventions and helpers to make your experience even better.
 
@@ -26,23 +26,23 @@ Want great developer experience and easy scaling? How about an integrated front-
 
 <h2>Quick Start</h2>
 
-Redwood requires Node.js >=14.x <=16.x and Yarn v1.15 (or newer).
+Redwood requires Node.js =20.x.
+
 ```console
-yarn create redwood-app redwood-project
-cd redwood-project
+yarn create redwood-app my-redwood-app
+cd my-redwood-app
+yarn install
 yarn redwood dev
 ```
 
 <h3>Resources</h3>
 
-- The [Redwood Tutorial](https://redwoodjs.com/docs/tutorial): The best way to learn Redwood
+- The [Redwood Tutorial](https://redwoodjs.com/docs/tutorial): the best way to learn Redwood
 - The [Redwood CLI](https://redwoodjs.com/docs/cli-commands): code generators, DB helpers, setup commands, and more
 - [Documentation](https://redwoodjs.com/docs) and [How To's](https://redwoodjs.com/how-to/custom-function)
 - Join the Community [Forums](https://community.redwoodjs.com) and [Chat](https://discord.gg/redwoodjs)
 
-<br>
-
-<h1>Contributing to create-redwood-app</h1>
+<h2>Contributing to create-redwood-app</h2>
 
 _Contributors are Welcome! Get started [here](https://redwoodjs.com/docs/contributing). And don't hesitate to ask for help on the forums and chat_
 
