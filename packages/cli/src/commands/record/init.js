@@ -1,9 +1,8 @@
-import { recordTelemetryAttributes } from '@redwoodjs/cli-helpers'
-import { parseDatamodel } from '@redwoodjs/record'
+export const command = 'init'
+export const description =
+  'Caches a JSON version of your data model and adds `api/src/models/index.js` with some config'
 
-export const handler = async () => {
-  recordTelemetryAttributes({
-    command: 'record',
-  })
-  await parseDatamodel()
+export const handler = async (options) => {
+  const { handler } = await import('./initHandler.js')
+  return handler(options)
 }

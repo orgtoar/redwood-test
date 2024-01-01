@@ -6,7 +6,7 @@ import path from 'path'
 
 import yargs from 'yargs'
 
-import * as functionGenerator from '../function'
+import * as functionGenerator from '../functionHandler'
 
 // Should be refactored as it's repeated
 type WordFilesType = { [key: string]: string }

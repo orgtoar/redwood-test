@@ -3,7 +3,7 @@ import path from 'path'
 
 import '../../../../lib/test'
 
-import * as scaffold from '../scaffold'
+import * as scaffold from '../scaffoldHandler'
 
 jest.mock('execa')
 

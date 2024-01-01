@@ -47,7 +47,7 @@ import { ensurePosixPath } from '@redwoodjs/project-config'
 
 import { getPaths } from '../../../../lib'
 import { pathName } from '../../helpers'
-import * as page from '../page'
+import * as page from '../pageHandler'
 
 describe('Single world files', () => {
   const singleWordFiles = page.files({

@@ -12,7 +12,7 @@ import fs from 'fs-extra'
 import '../../../../lib/test'
 
 import { getPaths } from '../../../../lib'
-import { files } from '../../../generate/page/page'
+import { files } from '../../../generate/page/pageHandler'
 import { tasks } from '../page'
 
 beforeEach(() => {

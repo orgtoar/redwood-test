@@ -11,7 +11,7 @@ import fs from 'fs-extra'
 
 import '../../../../lib/test'
 
-import { files } from '../../../generate/function/function'
+import { files } from '../../../generate/function/functionHandler'
 import { tasks } from '../function'
 
 beforeEach(async () => {

@@ -5,8 +5,8 @@ import path from 'path'
 import '../../../../lib/test'
 
 import { getDefaultArgs } from '../../../../lib'
-import { yargsDefaults as defaults } from '../../helpers'
-import * as scaffold from '../scaffold'
+import { getYargsDefaults as defaults } from '../../helpers'
+import * as scaffold from '../scaffoldHandler'
 
 jest.mock('execa')
 
@@ -15,7 +15,7 @@ describe('support custom @id name', () => {
 
   beforeAll(async () => {
     files = await scaffold.files({
-      ...getDefaultArgs(defaults),
+      ...getDefaultArgs(defaults()),
       typescript: true,
       model: 'CustomIdField',
       tests: true,

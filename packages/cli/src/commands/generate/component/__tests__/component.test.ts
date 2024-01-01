@@ -6,7 +6,7 @@ import yargs from 'yargs'
 // Shared mocks for paths, etc.
 import '../../../../lib/test'
 
-import * as component from '../component'
+import * as component from '../componentHandler'
 
 let singleWordDefaultFiles,
   multiWordDefaultFiles,

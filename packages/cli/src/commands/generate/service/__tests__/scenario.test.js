@@ -2,7 +2,7 @@ globalThis.__dirname = __dirname
 // Load mocks
 import '../../../../lib/test'
 
-import * as service from '../service'
+import * as service from '../serviceHandler'
 
 describe('the scenario generator', () => {
   test('parseSchema returns an object with required scalar fields', async () => {

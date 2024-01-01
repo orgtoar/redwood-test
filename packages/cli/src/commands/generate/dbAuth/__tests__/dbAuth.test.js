@@ -12,7 +12,7 @@ import Enquirer from 'enquirer'
 import fs from 'fs-extra'
 
 import { getPaths } from '../../../../lib'
-import * as dbAuth from '../dbAuth'
+import * as dbAuth from '../dbAuthHandler'
 
 // Mock files needed for each test
 const mockFiles = {}

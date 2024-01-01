@@ -8,10 +8,10 @@ import '../../../../lib/test'
 
 import { getPaths, getDefaultArgs } from '../../../../lib'
 import {
-  yargsDefaults as defaults,
+  getYargsDefaults as defaults,
   customOrDefaultTemplatePath,
 } from '../../../generate/helpers'
-import { files } from '../../../generate/scaffold/scaffold'
+import { files } from '../../../generate/scaffold/scaffoldHandler'
 import { tasks } from '../scaffold'
 
 jest.mock('fs')
@@ -65,7 +65,7 @@ describe('rw destroy scaffold', () => {
       fs.__setMockFiles({
         ...scaffoldTemplates,
         ...(await files({
-          ...getDefaultArgs(defaults),
+          ...getDefaultArgs(defaults()),
           model: 'Post',
           tests: false,
           nestScaffoldByModel: true,
@@ -100,7 +100,7 @@ describe('rw destroy scaffold', () => {
       return t.tasks[0].run().then(async () => {
         const generatedFiles = Object.keys(
           await files({
-            ...getDefaultArgs(defaults),
+            ...getDefaultArgs(defaults()),
             model: 'Post',
             tests: false,
             nestScaffoldByModel: true,
@@ -119,7 +119,7 @@ describe('rw destroy scaffold', () => {
         fs.__setMockFiles({
           ...scaffoldTemplates,
           ...(await files({
-            ...getDefaultArgs(defaults),
+            ...getDefaultArgs(defaults()),
             typescript: true,
             model: 'Post',
             tests: false,
@@ -150,7 +150,7 @@ describe('rw destroy scaffold', () => {
         return t.tasks[0].run().then(async () => {
           const generatedFiles = Object.keys(
             await files({
-              ...getDefaultArgs(defaults),
+              ...getDefaultArgs(defaults()),
               typescript: true,
               model: 'Post',
               tests: false,
@@ -193,7 +193,7 @@ describe('rw destroy scaffold', () => {
       fs.__setMockFiles({
         ...scaffoldTemplates,
         ...(await files({
-          ...getDefaultArgs(defaults),
+          ...getDefaultArgs(defaults()),
           model: 'Post',
           path: 'admin',
           tests: false,
@@ -229,7 +229,7 @@ describe('rw destroy scaffold', () => {
       return t.tasks[0].run().then(async () => {
         const generatedFiles = Object.keys(
           await files({
-            ...getDefaultArgs(defaults),
+            ...getDefaultArgs(defaults()),
             model: 'Post',
             path: 'admin',
             tests: false,
@@ -249,7 +249,7 @@ describe('rw destroy scaffold', () => {
         fs.__setMockFiles({
           ...scaffoldTemplates,
           ...(await files({
-            ...getDefaultArgs(defaults),
+            ...getDefaultArgs(defaults()),
             model: 'Post',
             path: 'admin',
             tests: false,
@@ -279,7 +279,7 @@ describe('rw destroy scaffold', () => {
         return t.tasks[0].run().then(async () => {
           const generatedFiles = Object.keys(
             await files({
-              ...getDefaultArgs(defaults),
+              ...getDefaultArgs(defaults()),
               model: 'Post',
               path: 'admin',
               tests: false,

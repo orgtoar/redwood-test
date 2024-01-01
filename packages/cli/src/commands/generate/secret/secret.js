@@ -1,20 +1,12 @@
-import crypto from 'node:crypto'
-
 import terminalLink from 'terminal-link'
 
-import { recordTelemetryAttributes } from '@redwoodjs/cli-helpers'
-
-export const DEFAULT_LENGTH = 32
-
-export const generateSecret = (length = DEFAULT_LENGTH) => {
-  return crypto.randomBytes(length).toString('base64')
-}
+import { DEFAULT_LENGTH } from './secretLib'
 
 export const command = 'secret'
 export const description =
   'Generates a secret key using a cryptographically-secure source of entropy'
 
-export const builder = (yargs) =>
+export function builder(yargs) {
   yargs
     .option('length', {
       description: 'Length of the generated secret',
@@ -34,25 +26,9 @@ export const builder = (yargs) =>
         'https://redwoodjs.com/docs/cli-commands#generate-secret'
       )}`
     )
+}
 
-export const handler = ({ length, raw }) => {
-  recordTelemetryAttributes({
-    command: 'generate secret',
-    length,
-    raw,
-  })
-
-  if (raw) {
-    console.log(generateSecret(length))
-    return
-  }
-
-  console.info('')
-  console.info(`  ${generateSecret(length)}`)
-  console.info('')
-  console.info(
-    "If you're using this with dbAuth, set a SESSION_SECRET environment variable to this value."
-  )
-  console.info('')
-  console.info('Keep it secret, keep it safe!')
+export async function handler(options) {
+  const { handler } = await import('./secretHandler.js')
+  return handler(options)
 }

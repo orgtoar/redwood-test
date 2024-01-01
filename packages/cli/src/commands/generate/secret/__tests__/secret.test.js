@@ -1,11 +1,9 @@
 import yargs from 'yargs'
 
-import {
-  DEFAULT_LENGTH,
-  generateSecret,
-  handler,
-  builder,
-} from './../secret.js'
+import { builder } from '../secret.js'
+import { handler } from '../secretHandler.js'
+
+import { DEFAULT_LENGTH, generateSecret } from './../secretLib.js'
 
 describe('generateSecret', () => {
   it('contains base64-encoded string', () => {

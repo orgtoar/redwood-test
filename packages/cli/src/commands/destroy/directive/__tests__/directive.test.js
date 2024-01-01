@@ -12,7 +12,7 @@ import fs from 'fs-extra'
 
 import '../../../../lib/test'
 
-import { files } from '../../../generate/directive/directive'
+import { files } from '../../../generate/directive/directiveHandler'
 import { tasks } from '../directive'
 
 beforeEach(() => {

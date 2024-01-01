@@ -1,4 +1,4 @@
-import { files as functionFiles } from '../../generate/function/function'
+import { files as functionFiles } from '../../generate/function/functionHandler'
 import { createYargsForComponentDestroy } from '../helpers'
 
 export const description = 'Destroy a Function'

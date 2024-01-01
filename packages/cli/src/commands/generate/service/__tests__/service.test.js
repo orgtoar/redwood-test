@@ -7,7 +7,8 @@ import yargs from 'yargs'
 import '../../../../lib/test'
 
 import { getDefaultArgs } from '../../../../lib'
-import * as service from '../service'
+import { getDefaults as getServiceDefaults } from '../service'
+import * as service from '../serviceHandler'
 
 beforeAll(() => {
   jest.useFakeTimers()
@@ -301,7 +302,7 @@ test('keeps Service in name', () => {
 })
 
 describe('in javascript mode', () => {
-  const baseArgs = { ...getDefaultArgs(service.defaults), tests: true }
+  const baseArgs = { ...getDefaultArgs(getServiceDefaults()), tests: true }
 
   itReturnsExactly3Files(baseArgs)
   itCreatesASingleWordServiceFile(baseArgs)
@@ -322,7 +323,7 @@ describe('in javascript mode', () => {
 
 describe('in typescript mode', () => {
   const baseArgs = {
-    ...getDefaultArgs(service.defaults),
+    ...getDefaultArgs(getServiceDefaults()),
     typescript: true,
     tests: true,
   }
@@ -496,7 +497,7 @@ describe('fieldsToScenario', () => {
 
 test("doesn't include test file when --tests is set to false", async () => {
   const baseArgs = {
-    ...getDefaultArgs(service.defaults),
+    ...getDefaultArgs(getServiceDefaults()),
     javascript: true,
   }
 

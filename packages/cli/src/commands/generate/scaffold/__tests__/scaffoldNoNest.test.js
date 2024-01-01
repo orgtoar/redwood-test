@@ -5,8 +5,8 @@ import path from 'path'
 import '../../../../lib/test'
 
 import { getDefaultArgs } from '../../../../lib'
-import { yargsDefaults as defaults } from '../../helpers'
-import * as scaffold from '../scaffold'
+import { getYargsDefaults as defaults } from '../../helpers'
+import * as scaffold from '../scaffoldHandler'
 
 jest.mock('execa')
 
@@ -15,7 +15,7 @@ describe('in javascript (default) mode', () => {
 
   beforeAll(async () => {
     files = await scaffold.files({
-      ...getDefaultArgs(defaults),
+      ...getDefaultArgs(defaults()),
       model: 'Post',
       tests: true,
       nestScaffoldByModel: false,
@@ -293,7 +293,7 @@ describe('in typescript mode', () => {
 
   beforeAll(async () => {
     tsFiles = await scaffold.files({
-      ...getDefaultArgs(defaults),
+      ...getDefaultArgs(defaults()),
       model: 'Post',
       typescript: true,
       tests: true,

@@ -1,16 +1,10 @@
 import path from 'path'
 
 import fs from 'fs-extra'
-import { Listr } from 'listr2'
 import terminalLink from 'terminal-link'
 
-import { recordTelemetryAttributes } from '@redwoodjs/cli-helpers'
-import { errorTelemetry } from '@redwoodjs/telemetry'
-
-import { getPaths, writeFilesTask } from '../../../lib'
-import c from '../../../lib/colors'
-import { prepareForRollback } from '../../../lib/rollback'
-import { validateName, yargsDefaults } from '../helpers'
+import { getPaths } from '../../../lib'
+import { getYargsDefaults } from '../helpers'
 
 const TEMPLATE_PATH = path.resolve(__dirname, 'templates', 'script.js.template')
 const TSCONFIG_TEMPLATE = path.resolve(
@@ -38,7 +32,8 @@ export const files = ({ name, typescript = false }) => {
 
 export const command = 'script <name>'
 export const description = 'Generate a command line script'
-export const builder = (yargs) => {
+
+export function builder(yargs) {
   yargs
     .positional('name', {
       description: 'A descriptor of what this script does',
@@ -56,55 +51,12 @@ export const builder = (yargs) => {
       )}`
     )
 
-  Object.entries(yargsDefaults).forEach(([option, config]) => {
+  Object.entries(getYargsDefaults()).forEach(([option, config]) => {
     yargs.option(option, config)
   })
 }
 
-export const handler = async ({ force, ...args }) => {
-  recordTelemetryAttributes({
-    command: 'generate script',
-    force,
-    rollback: args.rollback,
-  })
-
-  const POST_RUN_INSTRUCTIONS = `Next steps...\n\n   ${c.warning(
-    'After modifying your script, you can invoke it like:'
-  )}
-
-     yarn rw exec ${args.name}
-
-     yarn rw exec ${args.name} --param1 true
-`
-
-  validateName(args.name)
-
-  const tasks = new Listr(
-    [
-      {
-        title: 'Generating script file...',
-        task: () => {
-          return writeFilesTask(files(args), { overwriteExisting: force })
-        },
-      },
-      {
-        title: 'Next steps...',
-        task: (_ctx, task) => {
-          task.title = POST_RUN_INSTRUCTIONS
-        },
-      },
-    ].filter(Boolean),
-    { rendererOptions: { collapseSubtasks: false } }
-  )
-
-  try {
-    if (args.rollback && !force) {
-      prepareForRollback(tasks)
-    }
-    await tasks.run()
-  } catch (e) {
-    errorTelemetry(process.argv, e.message)
-    console.log(c.error(e.message))
-    process.exit(1)
-  }
+export async function handler(options) {
+  const { handler } = await import('./scriptHandler.js')
+  return handler(options)
 }

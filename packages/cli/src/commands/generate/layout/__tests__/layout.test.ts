@@ -4,7 +4,7 @@ import path from 'path'
 // Load shared mocks
 import '../../../../lib/test'
 
-import * as layout from '../layout'
+import * as layout from '../layoutHandler'
 
 describe('Single Word default files', () => {
   const singleWordDefaultFiles = layout.files({

@@ -5,8 +5,8 @@ import path from 'path'
 import '../../../../lib/test'
 
 import { getDefaultArgs } from '../../../../lib'
-import { yargsDefaults as defaults } from '../../helpers'
-import * as scaffold from '../scaffold'
+import { getYargsDefaults as defaults } from '../../helpers'
+import * as scaffold from '../scaffoldHandler'
 
 jest.mock('execa')
 
@@ -15,7 +15,7 @@ describe('in javascript (default) mode', () => {
 
   beforeAll(async () => {
     files = await scaffold.files({
-      ...getDefaultArgs(defaults),
+      ...getDefaultArgs(defaults()),
       model: 'Post',
       tests: true,
       nestScaffoldByModel: true,
@@ -274,7 +274,7 @@ describe('in javascript (default) mode', () => {
   test('error when no editable fields are in model', async () => {
     await expect(
       scaffold.files({
-        ...getDefaultArgs(defaults),
+        ...getDefaultArgs(defaults()),
         model: 'NoEditableField',
         tests: true,
         nestScaffoldByModel: true,
@@ -415,7 +415,7 @@ describe('in typescript mode', () => {
 
   beforeAll(async () => {
     tsFiles = await scaffold.files({
-      ...getDefaultArgs(defaults),
+      ...getDefaultArgs(defaults()),
       model: 'Post',
       typescript: true,
       tests: true,
@@ -717,7 +717,7 @@ describe('in typescript mode', () => {
 describe('tailwind flag', () => {
   test('set to `false` generates a scaffold.css with raw CSS', async () => {
     const files = await scaffold.files({
-      ...getDefaultArgs(defaults),
+      ...getDefaultArgs(defaults()),
       model: 'Post',
       tailwind: false,
       nestScaffoldByModel: true,
@@ -730,7 +730,7 @@ describe('tailwind flag', () => {
 
   test('set to `true` generates a scaffold.css with Tailwind components', async () => {
     const files = await scaffold.files({
-      ...getDefaultArgs(defaults),
+      ...getDefaultArgs(defaults()),
       model: 'Post',
       tailwind: true,
       nestScaffoldByModel: true,

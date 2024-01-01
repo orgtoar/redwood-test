@@ -1,6 +1,7 @@
 import { getDefaultArgs } from '../../../lib'
 import { verifyModelName } from '../../../lib/schemaHelpers'
-import { builder, files } from '../../generate/service/service'
+import { builder } from '../../generate/service/service'
+import { files } from '../../generate/service/serviceHandler'
 import { createYargsForComponentDestroy } from '../helpers'
 
 // This function wraps files(), so we can pass templateVars. templateVars

@@ -11,7 +11,7 @@ import fs from 'fs-extra'
 
 import '../../../../lib/test'
 
-import { files } from '../../../generate/component/component'
+import { files } from '../../../generate/component/componentHandler'
 import { tasks } from '../component'
 
 beforeEach(() => {

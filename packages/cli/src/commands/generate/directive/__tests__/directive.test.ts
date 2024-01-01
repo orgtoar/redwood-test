@@ -6,7 +6,7 @@ import path from 'path'
 
 import yargs from 'yargs'
 
-import * as directive from '../directive'
+import * as directive from '../directiveHandler'
 
 test('creates a JavaScript validator directive', () => {
   const output = directive.files({
