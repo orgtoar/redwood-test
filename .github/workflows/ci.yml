@@ -179,17 +179,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      - name: 📁 Create a temporary directory
-        id: createpath
-        run: |
-          project_path=$(mktemp -d -t redwood.XXXXXX)
-          echo "::set-output name=project_path::$project_path"
-          framework_path=$(pwd)
-          echo "::set-output name=framework_path::$framework_path"
+      - name: 🌲 Install Cypress
+        run: yarn run cypress install
 
       - name: 🌲 Create a Redwood App
         run: |
-          ./tasks/run-e2e ${{ steps.createpath.outputs.project_path }} \
+          PROJECT_PATH=$(mktemp -dt redwood)
+          echo "project-path=$PROJECT_PATH" >> $GITHUB_OUTPUT
+
+          ./tasks/run-e2e $PROJECT_PATH \
             --no-start \
             --bundler ${{ matrix.bundler }}
         env:
@@ -199,16 +197,15 @@ jobs:
         run: |
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
-          git init --initial-branch main && git add .
-          git commit -a --message=init
+
+          git init
+          git add .
+          git commit -m 'first'
         working-directory: ${{ steps.createpath.outputs.project_path }}
 
-      - name: Start server in background
+      - name: Start the dev server in the background
         run: yarn rw dev --no-generate --fwd="--no-open" &
         working-directory: ${{ steps.createpath.outputs.project_path }}
-
-      - name: 🌲 Install Cypress
-        run: yarn run cypress install
 
       - name: 🌲 Run cypress
         uses: cypress-io/github-action@v5
