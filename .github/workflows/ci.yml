@@ -203,8 +203,9 @@ jobs:
           git commit -a --message=init
         working-directory: ${{ steps.createpath.outputs.project_path }}
 
-      - name: Start server in background
-        run: yarn rw dev --no-generate --fwd="--no-open" &
+      - name: Start the dev server in the background
+        run: |
+          yarn rw dev --no-generate --fwd="--no-open" 2>&1 | tee dev-server.log &
         working-directory: ${{ steps.createpath.outputs.project_path }}
 
       - name: 🌲 Install Cypress
@@ -226,6 +227,14 @@ jobs:
           spec: |
              cypress/e2e/01-tutorial/*.cy.js
              cypress/e2e/04-logger/*.cy.js
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ matrix.bundler }}-logs
+          path: |
+            ${{ steps.crwa.outputs.project-path }}/dev-server.log
+            ${{ steps.crwa.outputs.project-path }}/e2e.log
 
   tutorial-e2e-skip:
     needs: detect-changes
