@@ -179,49 +179,41 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      - name: 📁 Create a temporary directory
-        id: createpath
-        run: |
-          project_path=$(mktemp -d -t redwood.XXXXXX)
-          echo "::set-output name=project_path::$project_path"
-          framework_path=$(pwd)
-          echo "::set-output name=framework_path::$framework_path"
+      - name: 🔨 Build
+        run: yarn build
+
+      - name: 🌲 Install Cypress
+        run: yarn cypress install
 
       - name: 🌲 Create a Redwood App
-        run: |
-          ./tasks/run-e2e ${{ steps.createpath.outputs.project_path }} \
-            --no-start \
-            --bundler ${{ matrix.bundler }}
+        id: crwa
         env:
           YARN_ENABLE_IMMUTABLE_INSTALLS: false
-
-      - name: 🐙 Git init in the Redwood App directory
         run: |
+          project_path=$(mktemp -d -t redwood.XXXXXX)
+          echo "project-path=$project_path" >> $GITHUB_OUTPUT
+
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
-          git init --initial-branch main && git add .
-          git commit -a --message=init
-        working-directory: ${{ steps.createpath.outputs.project_path }}
+
+          ./tasks/run-e2e "$project_path" \
+            --bundler ${{ matrix.bundler }} \
+            --no-build-framework \
+            --no-start
 
       - name: Start the dev server in the background
         run: |
           yarn rw dev --no-generate --fwd="--no-open" 2>&1 | tee dev-server.log &
-        working-directory: ${{ steps.createpath.outputs.project_path }}
+        working-directory: ${{ steps.crwa.outputs.project-path }}
 
-      - name: 🌲 Install Cypress
-        run: yarn run cypress install
-
-      - name: 🌲 Run cypress
-        uses: cypress-io/github-action@v5
+      - name: 🌲 Run Cypress
+        uses: cypress-io/github-action@v6
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CYPRESS_RW_PATH:  "${{ steps.createpath.outputs.project_path }}"
+          CYPRESS_RW_PATH: ${{ steps.crwa.outputs.project-path }}
         with:
-          # We've already installed dependencies.
-          install: false
-          env: true
           browser: chrome
-          record: false
+          env: true
+          install: false
           wait-on: 'http://[::1]:8910'
           working-directory: ./tasks/e2e
           spec: |
