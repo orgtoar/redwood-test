@@ -5,38 +5,38 @@ import path from 'path'
 import chalk from 'chalk'
 import { config } from 'dotenv-defaults'
 import Fastify from 'fastify'
-import yargsParser from 'yargs-parser'
+import { hideBin } from 'yargs/helpers'
+import yargs from 'yargs/yargs'
 
 import { getPaths, getConfig } from '@redwoodjs/project-config'
 
 import { redwoodFastifyWeb } from './web'
 import { withApiProxy } from './withApiProxy'
 
-interface Opts {
-  socket?: string
-  port?: string
-  apiHost?: string
-}
-
-// no help option...
-
 async function serve() {
-  // Parse server file args
-  const args = yargsParser(process.argv.slice(2), {
-    string: ['port', 'socket', 'apiHost'],
-    alias: { apiHost: ['api-host'], port: ['p'] },
-  })
+  const options = yargs(hideBin(process.argv))
+    .scriptName('rw-web-server')
+    .usage('$0', 'Start server for serving only the web side')
+    .strict()
 
-  const options: Opts = {
-    socket: args.socket,
-    port: args.port,
-    apiHost: args.apiHost,
-  }
+    .options({
+      port: {
+        default: getConfig().web?.port || 8910,
+        type: 'number',
+        alias: 'p',
+      },
+      socket: { type: 'string' },
+      apiHost: {
+        alias: 'api-host',
+        type: 'string',
+        desc: 'Forward requests from the apiUrl, defined in redwood.toml to this host',
+      },
+    })
+    .parseSync()
 
   const redwoodProjectPaths = getPaths()
   const redwoodConfig = getConfig()
 
-  const port = options.port ? parseInt(options.port) : redwoodConfig.web.port
   const apiUrl = redwoodConfig.web.apiUrl
 
   const tsServer = Date.now()
@@ -84,7 +84,7 @@ async function serve() {
     listenOptions = { path: options.socket }
   } else {
     listenOptions = {
-      port,
+      port: options.port,
       host: process.env.NODE_ENV === 'production' ? '0.0.0.0' : '::',
     }
   }
@@ -95,7 +95,7 @@ async function serve() {
     if (options.socket) {
       console.log(`Web server started on ${options.socket}`)
     } else {
-      console.log(`Web server started on http://localhost:${port}`)
+      console.log(`Web server started on http://localhost:${options.port}`)
     }
   })
 
