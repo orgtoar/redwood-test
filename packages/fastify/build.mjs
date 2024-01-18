@@ -1,19 +1,19 @@
 import * as esbuild from 'esbuild'
 
-await esbuild.build({
-  entryPoints: [
-    'src/api.ts',
-    'src/config.ts',
-    'src/index.ts',
-    'src/types.ts',
-    'src/web.ts',
-    'src/lambda/index.ts',
-  ],
-  outdir: 'dist',
+import {
+  defaultBuildOptions,
+  getEntryPoints,
+  writeMetaFile,
+} from '../../buildDefaults.mjs'
 
-  format: 'cjs',
-  platform: 'node',
-  target: ['node20'],
+const entryPoints = await getEntryPoints()
 
-  logLevel: 'info',
+const result = await esbuild.build({
+  ...defaultBuildOptions,
+  entryPoints,
+})
+
+await writeMetaFile({
+  importMetaUrl: import.meta.url,
+  metafile: result.metafile,
 })

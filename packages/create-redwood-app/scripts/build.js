@@ -1,7 +1,8 @@
 /* eslint-env node */
 
 import * as esbuild from 'esbuild'
-import fs from 'fs-extra'
+
+import { defaultBuildOptions, writeMetaFile } from '../../../buildDefaults.mjs'
 
 const jsBanner = `\
 #!/usr/bin/env node
@@ -12,11 +13,10 @@ const __dirname = (await import("node:path")).dirname(__filename);
 `
 
 const result = await esbuild.build({
-  entryPoints: ['src/create-redwood-app.js'],
-  outdir: 'dist',
+  ...defaultBuildOptions,
 
-  platform: 'node',
-  target: ['node20'],
+  entryPoints: ['src/create-redwood-app.js'],
+
   format: 'esm',
   bundle: true,
   banner: {
@@ -24,11 +24,9 @@ const result = await esbuild.build({
   },
 
   minify: true,
-
-  logLevel: 'info',
-  metafile: true,
 })
 
-await fs.writeJSON(new URL('./meta.json', import.meta.url), result.metafile, {
-  spaces: 2,
+await writeMetaFile({
+  importMetaUrl: import.meta.url,
+  metafile: result.metafile,
 })

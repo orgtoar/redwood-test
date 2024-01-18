@@ -2,27 +2,33 @@
 
 import * as esbuild from 'esbuild'
 
-const options = {
-  entryPoints: ['./src/index.ts'],
-  outdir: 'dist',
+import { defaultBuildOptions, writeMetaFile } from '../../buildDefaults.mjs'
 
-  platform: 'node',
-  target: ['node20'],
+const options = {
+  ...defaultBuildOptions,
+  entryPoints: ['./src/index.ts'],
   bundle: true,
   packages: 'external',
-
-  logLevel: 'info',
-  metafile: true,
 }
 
-await esbuild.build({
+const esmResult = await esbuild.build({
   ...options,
   format: 'esm',
   outExtension: { '.js': '.mjs' },
 })
 
-await esbuild.build({
+await writeMetaFile({
+  importMetaUrl: import.meta.url,
+  metafile: esmResult.metafile,
+})
+
+const cjsResult = await esbuild.build({
   ...options,
   format: 'cjs',
   outExtension: { '.js': '.cjs' },
+})
+
+await writeMetaFile({
+  importMetaUrl: import.meta.url,
+  metafile: cjsResult.metafile,
 })

@@ -1,0 +1,1 @@
+export { redwoodFastifyWeb } from './web'

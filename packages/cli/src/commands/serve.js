@@ -131,11 +131,10 @@ export const builder = async (yargs) => {
       builder: (yargs) =>
         yargs.options({
           port: {
-            default: getConfig().web?.port || 8910,
+            default: getConfig().web.port,
             type: 'number',
             alias: 'p',
           },
-          socket: { type: 'string' },
           apiHost: {
             alias: 'api-host',
             type: 'string',

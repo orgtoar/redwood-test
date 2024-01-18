@@ -1,19 +1,19 @@
-import fs from 'node:fs'
-
 import * as esbuild from 'esbuild'
 
-// Since this is a library, there's no bundling going on here by design.
-// Instead we plan for this library to be bundled by leaf packages so-to-speak like create-redwood-app.
-const result = await esbuild.build({
-  entryPoints: ['src/index.ts'],
-  format: 'cjs',
-  platform: 'node',
-  target: ['node20'],
-  outfile: 'dist/index.js',
+import {
+  defaultBuildOptions,
+  getEntryPoints,
+  writeMetaFile,
+} from '../../buildDefaults.mjs'
 
-  // For visualizing the bundle.
-  // See https://esbuild.github.io/api/#metafile and https://esbuild.github.io/analyze/.
-  metafile: true,
+const entryPoints = await getEntryPoints()
+
+const result = await esbuild.build({
+  ...defaultBuildOptions,
+  entryPoints,
 })
 
-fs.writeFileSync('meta.json', JSON.stringify(result.metafile))
+await writeMetaFile({
+  importMetaUrl: import.meta.url,
+  metafile: result.metafile,
+})

@@ -3,6 +3,7 @@
 import http from 'node:http'
 import { fileURLToPath } from 'node:url'
 
+import { beforeAll, afterAll, afterEach, describe, expect, it } from 'vitest'
 import { fs, path, $ } from 'zx'
 
 const __dirname = fileURLToPath(new URL('./', import.meta.url))
@@ -10,6 +11,10 @@ const __dirname = fileURLToPath(new URL('./', import.meta.url))
 const FIXTURE_PATH = fileURLToPath(
   new URL('./fixtures/redwood-app', import.meta.url)
 )
+
+////////////////////////////////////////////////////////////////
+// Set verbosity of zx
+$.verbose = !!process.env.VERBOSE
 
 ////////////////////////////////////////////////////////////////
 // Set up RWJS_CWD.
@@ -62,9 +67,11 @@ const redwoodToml = fs.readFileSync(
   'utf-8'
 )
 
-const {
-  groups: { apiUrl },
-} = redwoodToml.match(/apiUrl = "(?<apiUrl>[^"]*)/)
+const match = redwoodToml.match(/apiUrl = "(?<apiUrl>[^"]*)/)
+const apiUrl = match?.groups?.apiUrl
+if (!apiUrl) {
+  throw new Error("'apiUrl' not found in redwood.toml")
+}
 
 describe.each([
   [[commandStrings['@redwoodjs/cli'], 'serve']],

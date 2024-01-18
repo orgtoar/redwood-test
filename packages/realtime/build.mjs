@@ -1,22 +1,16 @@
-import fs from 'node:fs'
-
 import * as esbuild from 'esbuild'
 
+import { defaultBuildOptions, writeMetaFile } from '../../buildDefaults.mjs'
+
 const result = await esbuild.build({
-  entryPoints: ['src/index.ts'],
-  outdir: 'dist',
+  ...defaultBuildOptions,
+  entryPoints: ['./src/index.ts'],
 
   bundle: true,
-
-  platform: 'node',
-  target: ['node20'],
   packages: 'external',
-
-  logLevel: 'info',
-
-  // For visualizing the bundle.
-  // See https://esbuild.github.io/api/#metafile and https://esbuild.github.io/analyze/.
-  metafile: true,
 })
 
-fs.writeFileSync('meta.json', JSON.stringify(result.metafile))
+await writeMetaFile({
+  importMetaUrl: import.meta.url,
+  metafile: result.metafile,
+})

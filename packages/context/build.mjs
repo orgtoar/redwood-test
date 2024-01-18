@@ -1,27 +1,19 @@
-import fs from 'node:fs'
-
 import * as esbuild from 'esbuild'
-import fg from 'fast-glob'
 
-// Get source files
-const sourceFiles = fg.sync(['./src/**/*.ts'], {
-  ignore: ['**/*.test.ts'],
-})
+import {
+  defaultBuildOptions,
+  getEntryPoints,
+  writeMetaFile,
+} from '../../buildDefaults.mjs'
 
-// Build general source files
+const entryPoints = await getEntryPoints()
+
 const result = await esbuild.build({
-  entryPoints: sourceFiles,
-  outdir: 'dist',
-
-  format: 'cjs',
-  platform: 'node',
-  target: ['node18'],
-
-  logLevel: 'info',
-
-  // For visualizing dist.
-  // See https://esbuild.github.io/api/#metafile and https://esbuild.github.io/analyze/.
-  metafile: true,
+  ...defaultBuildOptions,
+  entryPoints,
 })
 
-fs.writeFileSync('meta.json', JSON.stringify(result.metafile, null, 2))
+await writeMetaFile({
+  importMetaUrl: import.meta.url,
+  metafile: result.metafile,
+})
