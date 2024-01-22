@@ -7,14 +7,19 @@
     "directory": "packages/cli-helpers"
   },
   "license": "MIT",
-  "main": "./dist/index.js",
+  "type": "module",
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "import": "./dist/index.mjs",
+    "default": "./dist/index.cjs"
+  },
   "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "yarn build:js && yarn build:types",
-    "build:js": "babel src -d dist --extensions \".js,.jsx,.ts,.tsx\"",
+    "build:js": "node ./build.js",
     "build:pack": "yarn pack -o redwoodjs-cli-helpers.tgz",
     "build:types": "tsc --build --verbose",
     "build:watch": "nodemon --watch src --ext \"js,jsx,ts,tsx\" --ignore dist --exec \"yarn build\"",
