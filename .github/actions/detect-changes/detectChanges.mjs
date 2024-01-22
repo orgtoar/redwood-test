@@ -97,12 +97,10 @@ async function main() {
   const branch = process.env.GITHUB_BASE_REF
 
   // If there's no branch, we're not in a pull request.
-  if (!branch) {
-    core.setOutput('onlydocs', false)
-    core.setOutput('rsc', false)
-    core.setOutput('ssr', false)
-    return
-  }
+  core.setOutput('onlydocs', false)
+  core.setOutput('rsc', false)
+  core.setOutput('ssr', false)
+  return
 
   const changedFiles = await getChangedFiles()
   console.log(`${changedFiles.length} changed files`)
