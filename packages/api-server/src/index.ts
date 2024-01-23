@@ -3,12 +3,12 @@
 import { hideBin } from 'yargs/helpers'
 import yargs from 'yargs/yargs'
 
+import * as webServerCLIConfig from '@redwoodjs/web-server/cli-config'
+
 import {
   apiCliOptions,
-  webCliOptions,
   commonOptions,
   apiServerHandler,
-  webServerHandler,
   bothServerHandler,
 } from './cliHandlers'
 
@@ -40,12 +40,9 @@ if (require.main === module) {
     )
     .command(
       'web',
-      'Start server for serving only the web side',
-      // @ts-expect-error just passing yargs though
-      (yargs) => {
-        yargs.options(webCliOptions)
-      },
-      webServerHandler
+      webServerCLIConfig.description,
+      webServerCLIConfig.builder,
+      webServerCLIConfig.handler
     )
     .parse()
 }

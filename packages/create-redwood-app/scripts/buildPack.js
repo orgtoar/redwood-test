@@ -2,7 +2,7 @@
 
 import { fileURLToPath } from 'node:url'
 
-import { cd, path, within, $ } from 'zx'
+import { cd, fs, path, within, $ } from 'zx'
 
 const tsTemplatePath = fileURLToPath(
   new URL('../templates/ts', import.meta.url)
@@ -27,5 +27,5 @@ await within(async () => {
 
 await $`yarn pack -o create-redwood-app.tgz`
 
-await $`rm ${path.join(tsTemplatePath, 'yarn.lock')}`
-await $`rm ${path.join(jsTemplatePath, 'yarn.lock')}`
+await fs.rm(path.join(tsTemplatePath, 'yarn.lock'))
+await fs.rm(path.join(jsTemplatePath, 'yarn.lock'))
