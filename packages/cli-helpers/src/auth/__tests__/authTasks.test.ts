@@ -88,10 +88,6 @@ import {
   withoutRedwoodApolloAppTsx,
 } from './mockFsFiles'
 
-function platformPath(filePath: string) {
-  return filePath.split('/').join(path.sep)
-}
-
 beforeEach(() => {
   vi.restoreAllMocks()
   vi.mocked(isTypeScriptProject).mockReturnValue(true)
@@ -100,11 +96,21 @@ beforeEach(() => {
     mockedPathGenerator('App.tsx', 'Routes.tsx')
   )
 
+  console.dir(
+    {
+      beforeEach: {
+        vol: Object.keys(vol.toJSON()),
+        paths: getPaths(),
+        example: path.join('abc', 'def/ghi'),
+        platform: process.platform,
+      },
+    },
+    { depth: null }
+  )
+
   vol.fromJSON({
-    [path.join(
-      getPaths().base,
-      platformPath('/templates/web/auth.ts.template')
-    )]: '// web auth template',
+    [path.join(getPaths().base, '/templates/web/auth.ts.template')]:
+      '// web auth template',
     [getPaths().web.app]: webAppTsx,
     [getPaths().api.graphql]: graphqlTs,
     [getPaths().web.routes]: routesTsx,
@@ -115,7 +121,7 @@ describe('authTasks', () => {
   it('Should update App.{jsx,tsx}, Routes.{jsx,tsx} and add auth.ts (Auth0)', () => {
     const templatePath = path.join(
       getPaths().base,
-      platformPath('/templates/web/auth.ts.template')
+      '/templates/web/auth.ts.template'
     )
 
     vol.fromJSON({
@@ -142,7 +148,7 @@ describe('authTasks', () => {
   it('Should update App.{jsx,tsx}, Routes.{jsx,tsx} and add auth.ts (Clerk)', () => {
     const templatePath = path.join(
       getPaths().base,
-      platformPath('/templates/web/auth.tsx.template')
+      '/templates/web/auth.tsx.template'
     )
 
     // NOTE: We reset here because we had to remove the `auth.ts.template`
@@ -302,6 +308,15 @@ describe('authTasks', () => {
         replaceExistingImport: true,
         authDecoderImport: "import { authDecoder } from 'test-auth-api'",
       })
+
+      console.dir(
+        {
+          vol: Object.keys(vol.toJSON()),
+          paths: getPaths(),
+          example: path.join('abc', 'def/ghi'),
+        },
+        { depth: null }
+      )
 
       expect(fs.readFileSync(getPaths().api.graphql, 'utf-8')).toMatchSnapshot()
     })
@@ -632,7 +647,21 @@ describe('authTasks', () => {
       provider: 'auth0',
       setupMode: 'FORCE',
     }
+
+    // NOTE: The current fs related mocking leaves this file around so we must delete it here
+    // This should be fixed in a future refactoring of the entire test suite
+    fs.rmSync(path.join(getPaths().base, 'templates/web/auth.tsx.template'))
+
     createWebAuth(getPaths().base, false).task(ctx)
+
+    console.dir(
+      {
+        vol: Object.keys(vol.toJSON()),
+        paths: getPaths(),
+        example: path.join('abc', 'def/ghi'),
+      },
+      { depth: null }
+    )
 
     expect(
       fs.readFileSync(path.join(getPaths().web.src, 'auth.ts'), 'utf-8')
@@ -651,8 +680,17 @@ describe('authTasks', () => {
       provider: 'auth0',
       setupMode: 'FORCE',
     }
+
     createWebAuth(getPaths().base, false).task(ctx)
 
+    console.dir(
+      {
+        vol: Object.keys(vol.toJSON()),
+        paths: getPaths(),
+        example: path.join('abc', 'def/ghi'),
+      },
+      { depth: null }
+    )
     expect(
       fs.readFileSync(path.join(getPaths().web.src, 'auth.js'), 'utf-8')
     ).toMatchSnapshot()

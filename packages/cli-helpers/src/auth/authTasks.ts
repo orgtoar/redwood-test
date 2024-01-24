@@ -401,6 +401,11 @@ export const createWebAuth = (basedir: string, webAuthn: boolean) => {
         ? template
         : transformTSToJS(authFileName, template)
 
+      console.log({
+        authFileName,
+        templateFileName,
+        templateExtension,
+      })
       fs.writeFileSync(authFileName, template)
     },
   }
