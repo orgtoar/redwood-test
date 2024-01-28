@@ -1,23 +1,31 @@
 import fs from 'fs'
 import path from 'path'
 
+import chalk from 'chalk'
 import type { FastifyInstance, FastifyServerOptions } from 'fastify'
 import Fastify from 'fastify'
 
-import type { GlobalContext } from '@redwoodjs/context'
-import { getAsyncStoreInstance } from '@redwoodjs/context/dist/store'
 import { getPaths, getConfig } from '@redwoodjs/project-config'
 
-import type { FastifySideConfigFn } from './types'
+type FastifySideConfigFn = (
+  fastify: FastifyInstance,
+  options?: {
+    side: 'api' | 'web'
+    apiRootPath?: string
+  }
+) => Promise<FastifyInstance> | void
 
-// Exported for testing.
 export const DEFAULT_OPTIONS = {
+  requestTimeout: 15_000,
   logger: {
-    level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
+    level:
+      process.env.LOG_LEVEL ?? process.env.NODE_ENV === 'development'
+        ? 'debug'
+        : 'info',
   },
 }
 
-let isServerConfigLoaded = false
+let serverConfigLoaded = false
 let serverConfigFile: {
   config: FastifyServerOptions
   configureFastify: FastifySideConfigFn
@@ -26,47 +34,49 @@ let serverConfigFile: {
   configureFastify: async (fastify, options) => {
     fastify.log.trace(
       options,
-      `In configureFastify hook for side: ${options?.side}`
+      `In \`configureFastify\` hook for side: ${options?.side}`
     )
     return fastify
   },
 }
 
-export function loadFastifyConfig() {
-  // @TODO use require.resolve to find the config file
-  // do we need to babel first?
+export function loadUserConfig() {
+  if (serverConfigLoaded) {
+    return serverConfigFile
+  }
+
   const serverConfigPath = path.join(
     getPaths().base,
     getConfig().api.serverConfig
   )
 
-  // If a server.config.js is not found, use the default
-  // options set in packages/api-server/src/app.ts
   if (!fs.existsSync(serverConfigPath)) {
+    serverConfigLoaded = true
     return serverConfigFile
   }
 
-  if (!isServerConfigLoaded) {
-    console.log(`Loading server config from ${serverConfigPath}`)
-    serverConfigFile = { ...require(serverConfigPath) }
-    isServerConfigLoaded = true
-  }
+  console.log(`Loading server config from ${serverConfigPath}`)
+  console.warn(
+    chalk.yellow(
+      [
+        "Using the 'server.config.js' file to configure the server is deprecated. Consider migrating to the new server file:",
+        '',
+        '  yarn rw setup server-file',
+        '',
+      ].join('\n')
+    )
+  )
 
+  serverConfigFile = { ...require(serverConfigPath) }
+  serverConfigLoaded = true
   return serverConfigFile
 }
 
 export const createFastifyInstance = (
   options?: FastifyServerOptions
 ): FastifyInstance => {
-  const { config } = loadFastifyConfig()
-
-  const fastify = Fastify(options || config || DEFAULT_OPTIONS)
-
-  // Ensure that each request has a unique global context
-  fastify.addHook('onRequest', (_req, _reply, done) => {
-    getAsyncStoreInstance().run(new Map<string, GlobalContext>(), done)
-  })
-
+  const { config } = loadUserConfig()
+  const fastify = Fastify(options ?? config ?? DEFAULT_OPTIONS)
   return fastify
 }
 

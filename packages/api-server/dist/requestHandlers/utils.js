@@ -1,57 +1,55 @@
 "use strict";
-
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-_Object$defineProperty(exports, "__esModule", {
-  value: true
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var utils_exports = {};
+__export(utils_exports, {
+  mergeMultiValueHeaders: () => mergeMultiValueHeaders,
+  parseBody: () => parseBody
 });
-exports.parseBody = exports.mergeMultiValueHeaders = void 0;
-var _reduce = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/reduce"));
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/entries"));
-var _forEach = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/instance/for-each"));
-const parseBody = rawBody => {
-  if (typeof rawBody === 'string') {
-    return {
-      body: rawBody,
-      isBase64Encoded: false
-    };
+module.exports = __toCommonJS(utils_exports);
+const parseBody = (rawBody) => {
+  if (typeof rawBody === "string") {
+    return { body: rawBody, isBase64Encoded: false };
   }
   if (rawBody instanceof Buffer) {
-    return {
-      body: rawBody.toString('base64'),
-      isBase64Encoded: true
-    };
+    return { body: rawBody.toString("base64"), isBase64Encoded: true };
   }
-  return {
-    body: '',
-    isBase64Encoded: false
-  };
+  return { body: "", isBase64Encoded: false };
 };
-
-/**
- * `headers` and `multiValueHeaders` are merged into a single object where the
- * key is the header name in lower-case and the value is a list of values for
- * that header. Most multi-values are merged into a single value separated by a
- * semi-colon. The only exception is set-cookie. set-cookie headers should not
- * be merged, they should be set individually by multiple calls to
- * reply.header(). See
- * https://www.fastify.io/docs/latest/Reference/Reply/#set-cookie
- */
-exports.parseBody = parseBody;
 const mergeMultiValueHeaders = (headers, multiValueHeaders) => {
-  var _context, _context2;
-  const mergedHeaders = (0, _reduce.default)(_context = (0, _entries.default)(headers || {})).call(_context, (acc, [name, value]) => {
+  const mergedHeaders = Object.entries(
+    headers || {}
+  ).reduce((acc, [name, value]) => {
     acc[name.toLowerCase()] = [value];
     return acc;
   }, {});
-  (0, _forEach.default)(_context2 = (0, _entries.default)(multiValueHeaders || {})).call(_context2, ([headerName, values]) => {
+  Object.entries(multiValueHeaders || {}).forEach(([headerName, values]) => {
     const name = headerName.toLowerCase();
-    if (name.toLowerCase() === 'set-cookie') {
-      mergedHeaders['set-cookie'] = values;
+    if (name.toLowerCase() === "set-cookie") {
+      mergedHeaders["set-cookie"] = values;
     } else {
-      mergedHeaders[name] = [values.join('; ')];
+      mergedHeaders[name] = [values.join("; ")];
     }
   });
   return mergedHeaders;
 };
-exports.mergeMultiValueHeaders = mergeMultiValueHeaders;
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  mergeMultiValueHeaders,
+  parseBody
+});

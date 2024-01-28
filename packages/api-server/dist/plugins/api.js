@@ -26,66 +26,86 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var lambdaLoader_exports = {};
-__export(lambdaLoader_exports, {
+var api_exports = {};
+__export(api_exports, {
   LAMBDA_FUNCTIONS: () => LAMBDA_FUNCTIONS,
   lambdaRequestHandler: () => lambdaRequestHandler,
   loadFunctionsFromDist: () => loadFunctionsFromDist,
+  redwoodFastifyAPI: () => redwoodFastifyAPI,
   setLambdaFunctions: () => setLambdaFunctions
 });
-module.exports = __toCommonJS(lambdaLoader_exports);
+module.exports = __toCommonJS(api_exports);
 var import_path = __toESM(require("path"));
+var import_url_data = __toESM(require("@fastify/url-data"));
 var import_chalk = __toESM(require("chalk"));
 var import_fast_glob = __toESM(require("fast-glob"));
+var import_fastify_raw_body = __toESM(require("fastify-raw-body"));
 var import_lodash = require("lodash");
+var import_helpers = require("@redwoodjs/fastify-web/helpers");
 var import_project_config = require("@redwoodjs/project-config");
-var import_awsLambdaFastify = require("../requestHandlers/awsLambdaFastify");
+var import_fastify = require("../fastify");
+var import_awsLambdaFastify = require("./awsLambdaFastify");
+async function redwoodFastifyAPI(fastify, opts, done) {
+  const redwoodOptions = opts.redwood ?? {};
+  redwoodOptions.apiRootPath ??= "/";
+  redwoodOptions.apiRootPath = (0, import_helpers.coerceRootPath)(redwoodOptions.apiRootPath);
+  redwoodOptions.loadUserConfig ??= false;
+  fastify.register(import_url_data.default);
+  await fastify.register(import_fastify_raw_body.default);
+  fastify.addContentTypeParser(
+    ["application/x-www-form-urlencoded", "multipart/form-data"],
+    { parseAs: "string" },
+    fastify.defaultTextParser
+  );
+  if (redwoodOptions.loadUserConfig) {
+    const { configureFastify } = (0, import_fastify.loadUserConfig)();
+    if (configureFastify) {
+      await configureFastify(fastify, {
+        side: "api",
+        apiRootPath: redwoodOptions.apiRootPath
+      });
+    }
+  }
+  fastify.all(`${redwoodOptions.apiRootPath}:routeName`, lambdaRequestHandler);
+  fastify.all(`${redwoodOptions.apiRootPath}:routeName/*`, lambdaRequestHandler);
+  await loadFunctionsFromDist({
+    fastGlobOptions: {
+      ignore: ["**/dist/functions/graphql.js"]
+    }
+  });
+  done();
+}
 const LAMBDA_FUNCTIONS = {};
-const setLambdaFunctions = async (foundFunctions) => {
+const setLambdaFunctions = async (apiDistFunctions) => {
   const tsImport = Date.now();
-  console.log(import_chalk.default.dim.italic("Importing Server Functions..."));
-  const imports = foundFunctions.map((fnPath) => {
-    return new Promise((resolve) => {
-      const ts = Date.now();
-      const routeName = import_path.default.basename(fnPath).replace(".js", "");
-      const { handler } = require(fnPath);
-      LAMBDA_FUNCTIONS[routeName] = handler;
-      if (!handler) {
-        console.warn(
-          routeName,
-          "at",
-          fnPath,
-          "does not have a function called handler defined."
-        );
-      }
-      console.log(
-        import_chalk.default.magenta("/" + routeName),
-        import_chalk.default.dim.italic(Date.now() - ts + " ms")
+  console.log(import_chalk.default.dim.italic("Importing api functions..."));
+  const imports = apiDistFunctions.map(async (fnPath) => {
+    const ts = Date.now();
+    const routeName = import_path.default.basename(fnPath).replace(".js", "");
+    const { handler } = await import(fnPath);
+    if (!handler) {
+      console.warn(
+        `${routeName} at ${fnPath} doesn't export a function called \`handler\``
       );
-      return resolve(true);
-    });
+      return;
+    }
+    LAMBDA_FUNCTIONS[routeName] = handler;
+    console.log(import_chalk.default.magenta(`/{routeName}`));
+    console.log(import_chalk.default.dim.italic(Date.now() - ts + " ms"));
   });
-  Promise.all(imports).then((_results) => {
-    console.log(
-      import_chalk.default.dim.italic(
-        "...Done importing in " + (Date.now() - tsImport) + " ms"
-      )
-    );
-  });
+  await Promise.all(imports);
+  console.log(
+    import_chalk.default.dim.italic("Done importing in " + (Date.now() - tsImport) + " ms")
+  );
 };
 const loadFunctionsFromDist = async (options = {}) => {
-  const serverFunctions = findApiDistFunctions(
+  const apiDistFunctions = getApiDistFunctions(
     (0, import_project_config.getPaths)().api.base,
     options?.fastGlobOptions
   );
-  const i = serverFunctions.findIndex((x) => x.indexOf("graphql") !== -1);
-  if (i >= 0) {
-    const graphQLFn = serverFunctions.splice(i, 1)[0];
-    serverFunctions.unshift(graphQLFn);
-  }
-  await setLambdaFunctions(serverFunctions);
+  await setLambdaFunctions(apiDistFunctions);
 };
-function findApiDistFunctions(cwd = (0, import_project_config.getPaths)().api.base, options = {}) {
+function getApiDistFunctions(cwd = (0, import_project_config.getPaths)().api.base, options = {}) {
   return import_fast_glob.default.sync("dist/functions/**/*.{ts,js}", {
     cwd,
     deep: 2,
@@ -118,5 +138,6 @@ const lambdaRequestHandler = async (req, reply) => {
   LAMBDA_FUNCTIONS,
   lambdaRequestHandler,
   loadFunctionsFromDist,
+  redwoodFastifyAPI,
   setLambdaFunctions
 });

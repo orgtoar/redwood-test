@@ -1,62 +1,97 @@
 "use strict";
-
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-_Object$defineProperty(exports, "__esModule", {
-  value: true
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var fastify_exports = {};
+__export(fastify_exports, {
+  DEFAULT_OPTIONS: () => DEFAULT_OPTIONS,
+  createFastifyInstance: () => createFastifyInstance,
+  default: () => fastify_default,
+  loadUserConfig: () => loadUserConfig
 });
-exports.default = exports.createFastifyInstance = exports.DEFAULT_OPTIONS = void 0;
-exports.loadFastifyConfig = loadFastifyConfig;
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/map"));
-var _fs = _interopRequireDefault(require("fs"));
-var _path = _interopRequireDefault(require("path"));
-var _fastify = _interopRequireDefault(require("fastify"));
-var _store = require("@redwoodjs/context/dist/store");
-var _projectConfig = require("@redwoodjs/project-config");
-// Exported for testing.
-const DEFAULT_OPTIONS = exports.DEFAULT_OPTIONS = {
+module.exports = __toCommonJS(fastify_exports);
+var import_fs = __toESM(require("fs"));
+var import_path = __toESM(require("path"));
+var import_chalk = __toESM(require("chalk"));
+var import_fastify = __toESM(require("fastify"));
+var import_project_config = require("@redwoodjs/project-config");
+const DEFAULT_OPTIONS = {
+  requestTimeout: 15e3,
   logger: {
-    level: process.env.NODE_ENV === 'development' ? 'debug' : 'info'
+    level: process.env.LOG_LEVEL ?? process.env.NODE_ENV === "development" ? "debug" : "info"
   }
 };
-let isServerConfigLoaded = false;
+let serverConfigLoaded = false;
 let serverConfigFile = {
   config: DEFAULT_OPTIONS,
   configureFastify: async (fastify, options) => {
-    fastify.log.trace(options, `In configureFastify hook for side: ${options?.side}`);
+    fastify.log.trace(
+      options,
+      `In \`configureFastify\` hook for side: ${options?.side}`
+    );
     return fastify;
   }
 };
-function loadFastifyConfig() {
-  // @TODO use require.resolve to find the config file
-  // do we need to babel first?
-  const serverConfigPath = _path.default.join((0, _projectConfig.getPaths)().base, (0, _projectConfig.getConfig)().api.serverConfig);
-
-  // If a server.config.js is not found, use the default
-  // options set in packages/api-server/src/app.ts
-  if (!_fs.default.existsSync(serverConfigPath)) {
+function loadUserConfig() {
+  if (serverConfigLoaded) {
     return serverConfigFile;
   }
-  if (!isServerConfigLoaded) {
-    console.log(`Loading server config from ${serverConfigPath}`);
-    serverConfigFile = {
-      ...require(serverConfigPath)
-    };
-    isServerConfigLoaded = true;
+  const serverConfigPath = import_path.default.join(
+    (0, import_project_config.getPaths)().base,
+    (0, import_project_config.getConfig)().api.serverConfig
+  );
+  if (!import_fs.default.existsSync(serverConfigPath)) {
+    serverConfigLoaded = true;
+    return serverConfigFile;
   }
+  console.log(`Loading server config from ${serverConfigPath}`);
+  console.warn(
+    import_chalk.default.yellow(
+      [
+        "Using the 'server.config.js' file to configure the server is deprecated. Consider migrating to the new server file:",
+        "",
+        "  yarn rw setup server-file",
+        ""
+      ].join("\n")
+    )
+  );
+  serverConfigFile = { ...require(serverConfigPath) };
+  serverConfigLoaded = true;
   return serverConfigFile;
 }
-const createFastifyInstance = options => {
-  const {
-    config
-  } = loadFastifyConfig();
-  const fastify = (0, _fastify.default)(options || config || DEFAULT_OPTIONS);
-
-  // Ensure that each request has a unique global context
-  fastify.addHook('onRequest', (_req, _reply, done) => {
-    (0, _store.getAsyncStoreInstance)().run(new _map.default(), done);
-  });
+const createFastifyInstance = (options) => {
+  const { config } = loadUserConfig();
+  const fastify = (0, import_fastify.default)(options ?? config ?? DEFAULT_OPTIONS);
   return fastify;
 };
-exports.createFastifyInstance = createFastifyInstance;
-var _default = exports.default = createFastifyInstance;
+var fastify_default = createFastifyInstance;
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  DEFAULT_OPTIONS,
+  createFastifyInstance,
+  loadUserConfig
+});

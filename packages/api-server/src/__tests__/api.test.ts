@@ -1,7 +1,7 @@
 import path from 'path'
 
 import createFastifyInstance from '../fastify'
-import withFunctions from '../plugins/withFunctions'
+import { redwoodFastifyAPI } from '../plugins/api'
 
 // Suppress terminal logging.
 console.log = jest.fn()
@@ -20,32 +20,26 @@ afterAll(() => {
 })
 
 // Set up and teardown the fastify instance for each test.
-let fastifyInstance
-let returnedFastifyInstance
+let fastify
 
 beforeAll(async () => {
-  fastifyInstance = createFastifyInstance()
+  fastify = createFastifyInstance()
 
-  returnedFastifyInstance = await withFunctions(fastifyInstance, {
+  await fastify.register(redwoodFastifyAPI, {
     port: 8911,
     apiRootPath: '/',
   })
 
-  await fastifyInstance.ready()
+  await fastify.ready()
 })
 
 afterAll(async () => {
-  await fastifyInstance.close()
+  await fastify.close()
 })
 
-describe('withFunctions', () => {
-  // Deliberately using `toBe` here to check for referential equality.
-  it('returns the same fastify instance', async () => {
-    expect(returnedFastifyInstance).toBe(fastifyInstance)
-  })
-
+describe('redwoodFastifyApi', () => {
   it('configures the `@fastify/url-data` and `fastify-raw-body` plugins', async () => {
-    const plugins = fastifyInstance.printPlugins()
+    const plugins = fastify.printPlugins()
 
     expect(plugins.includes('@fastify/url-data')).toEqual(true)
     expect(plugins.includes('fastify-raw-body')).toEqual(true)
@@ -53,15 +47,13 @@ describe('withFunctions', () => {
 
   it('configures two additional content type parsers, `application/x-www-form-urlencoded` and `multipart/form-data`', async () => {
     expect(
-      fastifyInstance.hasContentTypeParser('application/x-www-form-urlencoded')
+      fastify.hasContentTypeParser('application/x-www-form-urlencoded')
     ).toEqual(true)
-    expect(fastifyInstance.hasContentTypeParser('multipart/form-data')).toEqual(
-      true
-    )
+    expect(fastify.hasContentTypeParser('multipart/form-data')).toEqual(true)
   })
 
   it('can be configured by the user', async () => {
-    const res = await fastifyInstance.inject({
+    const res = await fastify.inject({
       method: 'GET',
       url: '/rest/v1/users/get/1',
     })
@@ -75,8 +67,7 @@ describe('withFunctions', () => {
   // We can use `printRoutes` with a method for debugging, but not without one.
   // See https://fastify.dev/docs/latest/Reference/Server#printroutes
   it('builds a tree of routes for GET and POST', async () => {
-    expect(fastifyInstance.printRoutes({ method: 'GET' }))
-      .toMatchInlineSnapshot(`
+    expect(fastify.printRoutes({ method: 'GET' })).toMatchInlineSnapshot(`
       "└── /
           ├── rest/v1/users/get/
           │   └── :userId (GET)
@@ -86,8 +77,7 @@ describe('withFunctions', () => {
       "
     `)
 
-    expect(fastifyInstance.printRoutes({ method: 'POST' }))
-      .toMatchInlineSnapshot(`
+    expect(fastify.printRoutes({ method: 'POST' })).toMatchInlineSnapshot(`
       "└── /
           └── :routeName (POST)
               └── /
@@ -98,7 +88,7 @@ describe('withFunctions', () => {
 
   describe('serves functions', () => {
     it('serves hello.js', async () => {
-      const res = await fastifyInstance.inject({
+      const res = await fastify.inject({
         method: 'GET',
         url: '/hello',
       })
@@ -108,7 +98,7 @@ describe('withFunctions', () => {
     })
 
     it('it serves graphql.js', async () => {
-      const res = await fastifyInstance.inject({
+      const res = await fastify.inject({
         method: 'POST',
         url: '/graphql?query={redwood{version}}',
       })
@@ -118,7 +108,7 @@ describe('withFunctions', () => {
     })
 
     it('serves health.js', async () => {
-      const res = await fastifyInstance.inject({
+      const res = await fastify.inject({
         method: 'GET',
         url: '/health',
       })
@@ -127,7 +117,7 @@ describe('withFunctions', () => {
     })
 
     it('serves a nested function, nested.js', async () => {
-      const res = await fastifyInstance.inject({
+      const res = await fastify.inject({
         method: 'GET',
         url: '/nested/nested',
       })
@@ -137,7 +127,7 @@ describe('withFunctions', () => {
     })
 
     it("doesn't serve deeply-nested functions", async () => {
-      const res = await fastifyInstance.inject({
+      const res = await fastify.inject({
         method: 'GET',
         url: '/deeplyNested/nestedDir/deeplyNested',
       })

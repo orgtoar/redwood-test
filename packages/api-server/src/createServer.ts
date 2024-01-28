@@ -2,8 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { parseArgs } from 'util'
 
-import fastifyUrlData from '@fastify/url-data'
-import c from 'ansi-colors'
+import chalk from 'chalk'
 import { config } from 'dotenv-defaults'
 import fg from 'fast-glob'
 import fastify from 'fastify'
@@ -11,18 +10,13 @@ import type {
   FastifyListenOptions,
   FastifyServerOptions,
   FastifyInstance,
-  HookHandlerDoneFunction,
 } from 'fastify'
-import fastifyRawBody from 'fastify-raw-body'
 
 import type { GlobalContext } from '@redwoodjs/context'
 import { getAsyncStoreInstance } from '@redwoodjs/context/dist/store'
 import { getConfig, getPaths } from '@redwoodjs/project-config'
 
-import {
-  loadFunctionsFromDist,
-  lambdaRequestHandler,
-} from './plugins/lambdaLoader'
+import { redwoodFastifyAPI } from './plugins/api'
 
 type StartOptions = Omit<FastifyListenOptions, 'port' | 'host'>
 
@@ -101,7 +95,7 @@ export async function createServer(options: CreateServerOptions = {}) {
 
   if (fs.existsSync(serverConfigPath)) {
     console.warn(
-      c.yellow(
+      chalk.yellow(
         [
           '',
           `Ignoring \`config\` and \`configureServer\` in api/server.config.js.`,
@@ -134,7 +128,9 @@ export async function createServer(options: CreateServerOptions = {}) {
     getAsyncStoreInstance().run(new Map<string, GlobalContext>(), done)
   })
 
-  await server.register(redwoodFastifyFunctions, { redwood: { apiRootPath } })
+  await server.register(redwoodFastifyAPI, {
+    redwood: { apiRootPath },
+  })
 
   // If we can find `api/dist/functions/graphql.js`, register the GraphQL plugin
   const [graphqlFunctionPath] = await fg('dist/functions/graphql.{ts,js}', {
@@ -163,7 +159,7 @@ export async function createServer(options: CreateServerOptions = {}) {
 
   server.addHook('onListen', (done) => {
     console.log(
-      `Server listening at ${c.magenta(
+      `Server listening at ${chalk.magenta(
         `${server.listeningOrigin}${apiRootPath}`
       )}`
     )
@@ -302,36 +298,4 @@ export const DEFAULT_CREATE_SERVER_OPTIONS: DefaultCreateServerOptions = {
   fastifyServerOptions: {
     requestTimeout: 15_000,
   },
-}
-
-export interface RedwoodFastifyAPIOptions {
-  redwood: {
-    apiRootPath: string
-  }
-}
-
-export async function redwoodFastifyFunctions(
-  fastify: FastifyInstance,
-  opts: RedwoodFastifyAPIOptions,
-  done: HookHandlerDoneFunction
-) {
-  fastify.register(fastifyUrlData)
-  await fastify.register(fastifyRawBody)
-
-  fastify.addContentTypeParser(
-    ['application/x-www-form-urlencoded', 'multipart/form-data'],
-    { parseAs: 'string' },
-    fastify.defaultTextParser
-  )
-
-  fastify.all(`${opts.redwood.apiRootPath}:routeName`, lambdaRequestHandler)
-  fastify.all(`${opts.redwood.apiRootPath}:routeName/*`, lambdaRequestHandler)
-
-  await loadFunctionsFromDist({
-    fastGlobOptions: {
-      ignore: ['**/dist/functions/graphql.js'],
-    },
-  })
-
-  done()
 }

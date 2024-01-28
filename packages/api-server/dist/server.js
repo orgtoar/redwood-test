@@ -1,41 +1,54 @@
 "use strict";
-
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-_Object$defineProperty(exports, "__esModule", {
-  value: true
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var server_exports = {};
+__export(server_exports, {
+  startServer: () => startServer
 });
-exports.startServer = void 0;
-var _parseInt2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/parse-int"));
+module.exports = __toCommonJS(server_exports);
 const startServer = async ({
   port = 8911,
   socket,
   fastify
 }) => {
-  const host = process.env.NODE_ENV === 'production' ? '0.0.0.0' : '::';
-  const serverPort = socket ? (0, _parseInt2.default)(socket) : port;
+  const host = process.env.NODE_ENV === "production" ? "0.0.0.0" : "::";
+  const serverPort = socket ? parseInt(socket) : port;
   await fastify.listen({
     port: serverPort,
     host,
-    listenTextResolver: address => {
-      // In the past, in development, we've prioritized showing a friendlier
-      // host than the listen-on-all-ipv6-addresses '[::]'. Here we replace it
-      // with 'localhost' only if 1) we're not in production and 2) it's there.
-      // In production it's important to be transparent.
-      if (process.env.NODE_ENV !== 'production') {
-        address = address.replace(/http:\/\/\[::\]/, 'http://localhost');
+    listenTextResolver: (address) => {
+      if (process.env.NODE_ENV !== "production") {
+        address = address.replace(/http:\/\/\[::\]/, "http://localhost");
       }
       return `Server listening at ${address}`;
     }
   });
   fastify.ready(() => {
-    fastify.log.trace({
-      custom: {
-        ...fastify.initialConfig
-      }
-    }, 'Fastify server configuration');
-    fastify.log.trace(`Registered plugins \n${fastify.printPlugins()}`);
+    fastify.log.trace(
+      { custom: { ...fastify.initialConfig } },
+      "Fastify server configuration"
+    );
+    fastify.log.trace(`Registered plugins 
+${fastify.printPlugins()}`);
   });
   return fastify;
 };
-exports.startServer = startServer;
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  startServer
+});

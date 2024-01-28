@@ -1,111 +1,103 @@
 "use strict";
-
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-_Object$defineProperty(exports, "__esModule", {
-  value: true
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var createServer_exports = {};
+__export(createServer_exports, {
+  DEFAULT_CREATE_SERVER_OPTIONS: () => DEFAULT_CREATE_SERVER_OPTIONS,
+  createServer: () => createServer,
+  resolveOptions: () => resolveOptions
 });
-exports.DEFAULT_CREATE_SERVER_OPTIONS = void 0;
-exports.createServer = createServer;
-exports.redwoodFastifyFunctions = redwoodFastifyFunctions;
-exports.resolveOptions = resolveOptions;
-var _assign = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/object/assign"));
-var _map = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/map"));
-var _parseInt2 = _interopRequireDefault(require("@babel/runtime-corejs3/core-js/parse-int"));
-var _fs = _interopRequireDefault(require("fs"));
-var _path = _interopRequireDefault(require("path"));
-var _util = require("util");
-var _urlData = _interopRequireDefault(require("@fastify/url-data"));
-var _ansiColors = _interopRequireDefault(require("ansi-colors"));
-var _dotenvDefaults = require("dotenv-defaults");
-var _fastGlob = _interopRequireDefault(require("fast-glob"));
-var _fastify = _interopRequireDefault(require("fastify"));
-var _fastifyRawBody = _interopRequireDefault(require("fastify-raw-body"));
-var _store = require("@redwoodjs/context/dist/store");
-var _projectConfig = require("@redwoodjs/project-config");
-var _lambdaLoader = require("./plugins/lambdaLoader");
-// Load .env files if they haven't already been loaded. This makes importing this file effectful:
-//
-// ```js
-// # Loads dotenv...
-// import { createServer } from '@redwoodjs/api-server'
-// ```
-//
-// We do it here and not in the function below so that users can access env vars before calling `createServer`
+module.exports = __toCommonJS(createServer_exports);
+var import_fs = __toESM(require("fs"));
+var import_path = __toESM(require("path"));
+var import_util = require("util");
+var import_chalk = __toESM(require("chalk"));
+var import_dotenv_defaults = require("dotenv-defaults");
+var import_fast_glob = __toESM(require("fast-glob"));
+var import_fastify = __toESM(require("fastify"));
+var import_store = require("@redwoodjs/context/dist/store");
+var import_project_config = require("@redwoodjs/project-config");
+var import_api = require("./plugins/api");
 if (process.env.RWJS_CWD && !process.env.REDWOOD_ENV_FILES_LOADED) {
-  (0, _dotenvDefaults.config)({
-    path: _path.default.join((0, _projectConfig.getPaths)().base, '.env'),
-    defaults: _path.default.join((0, _projectConfig.getPaths)().base, '.env.defaults'),
+  (0, import_dotenv_defaults.config)({
+    path: import_path.default.join((0, import_project_config.getPaths)().base, ".env"),
+    defaults: import_path.default.join((0, import_project_config.getPaths)().base, ".env.defaults"),
     multiline: true
   });
-  process.env.REDWOOD_ENV_FILES_LOADED = 'true';
+  process.env.REDWOOD_ENV_FILES_LOADED = "true";
 }
-/**
- * Creates a server for api functions:
- *
- * ```js
- * import { createServer } from '@redwoodjs/api-server'
- *
- * import { logger } from 'src/lib/logger'
- *
-  async function main() {
- *   const server = await createServer({
- *     logger,
- *     apiRootPath: 'api'
- *   })
- *
- *   // Configure the returned fastify instance:
- *   server.register(myPlugin)
- *
- *   // When ready, start the server:
- *   await server.start()
- * }
- *
- * main()
- * ```
- */
 async function createServer(options = {}) {
-  const {
-    apiRootPath,
-    fastifyServerOptions,
-    port
-  } = resolveOptions(options);
-
-  // Warn about `api/server.config.js`
-  const serverConfigPath = _path.default.join((0, _projectConfig.getPaths)().base, (0, _projectConfig.getConfig)().api.serverConfig);
-  if (_fs.default.existsSync(serverConfigPath)) {
-    console.warn(_ansiColors.default.yellow(['', `Ignoring \`config\` and \`configureServer\` in api/server.config.js.`, `Migrate them to api/src/server.{ts,js}:`, '', `\`\`\`js title="api/src/server.{ts,js}"`, '// Pass your config to `createServer`', 'const server = createServer({', '  fastifyServerOptions: myFastifyConfig', '})', '', '// Then inline your `configureFastify` logic:', 'server.register(myFastifyPlugin)', '```', ''].join('\n')));
+  const { apiRootPath, fastifyServerOptions, port } = resolveOptions(options);
+  const serverConfigPath = import_path.default.join(
+    (0, import_project_config.getPaths)().base,
+    (0, import_project_config.getConfig)().api.serverConfig
+  );
+  if (import_fs.default.existsSync(serverConfigPath)) {
+    console.warn(
+      import_chalk.default.yellow(
+        [
+          "",
+          `Ignoring \`config\` and \`configureServer\` in api/server.config.js.`,
+          `Migrate them to api/src/server.{ts,js}:`,
+          "",
+          `\`\`\`js title="api/src/server.{ts,js}"`,
+          "// Pass your config to `createServer`",
+          "const server = createServer({",
+          "  fastifyServerOptions: myFastifyConfig",
+          "})",
+          "",
+          "// Then inline your `configureFastify` logic:",
+          "server.register(myFastifyPlugin)",
+          "```",
+          ""
+        ].join("\n")
+      )
+    );
   }
-
-  // Initialize the fastify instance
-  const server = (0, _assign.default)((0, _fastify.default)(fastifyServerOptions), {
+  const server = Object.assign((0, import_fastify.default)(fastifyServerOptions), {
     // `start` will get replaced further down in this file
     start: async () => {
-      throw new Error('Not implemented yet');
+      throw new Error("Not implemented yet");
     }
   });
-  server.addHook('onRequest', (_req, _reply, done) => {
-    (0, _store.getAsyncStoreInstance)().run(new _map.default(), done);
+  server.addHook("onRequest", (_req, _reply, done) => {
+    (0, import_store.getAsyncStoreInstance)().run(/* @__PURE__ */ new Map(), done);
   });
-  await server.register(redwoodFastifyFunctions, {
-    redwood: {
-      apiRootPath
-    }
+  await server.register(import_api.redwoodFastifyAPI, {
+    redwood: { apiRootPath }
   });
-
-  // If we can find `api/dist/functions/graphql.js`, register the GraphQL plugin
-  const [graphqlFunctionPath] = await (0, _fastGlob.default)('dist/functions/graphql.{ts,js}', {
-    cwd: (0, _projectConfig.getPaths)().api.base,
+  const [graphqlFunctionPath] = await (0, import_fast_glob.default)("dist/functions/graphql.{ts,js}", {
+    cwd: (0, import_project_config.getPaths)().api.base,
     absolute: true
   });
   if (graphqlFunctionPath) {
-    const {
-      redwoodFastifyGraphQLServer
-    } = require('./plugins/graphql');
-    // This comes from a babel plugin that's applied to api/dist/functions/graphql.{ts,js} in user projects
-    const {
-      __rw_graphqlOptions
-    } = require(graphqlFunctionPath);
+    const { redwoodFastifyGraphQLServer } = require("./plugins/graphql");
+    const { __rw_graphqlOptions } = require(graphqlFunctionPath);
     await server.register(redwoodFastifyGraphQLServer, {
       redwood: {
         apiRootPath,
@@ -113,30 +105,23 @@ async function createServer(options = {}) {
       }
     });
   }
-
-  // For baremetal and pm2. See https://github.com/redwoodjs/redwood/pull/4744
-  server.addHook('onReady', done => {
-    process.send?.('ready');
+  server.addHook("onReady", (done) => {
+    process.send?.("ready");
     done();
   });
-  server.addHook('onListen', done => {
-    console.log(`Server listening at ${_ansiColors.default.magenta(`${server.listeningOrigin}${apiRootPath}`)}`);
+  server.addHook("onListen", (done) => {
+    console.log(
+      `Server listening at ${import_chalk.default.magenta(
+        `${server.listeningOrigin}${apiRootPath}`
+      )}`
+    );
     done();
   });
-
-  /**
-   * A wrapper around `fastify.listen` that handles `--port`, `REDWOOD_API_PORT` and [api].port in redwood.toml
-   *
-   * The order of precedence is:
-   * - `--port`
-   * - `REDWOOD_API_PORT`
-   * - [api].port in redwood.toml
-   */
-  server.start = (options = {}) => {
+  server.start = (options2 = {}) => {
     return server.listen({
-      ...options,
+      ...options2,
       port,
-      host: process.env.NODE_ENV === 'production' ? '0.0.0.0' : '::'
+      host: process.env.NODE_ENV === "production" ? "0.0.0.0" : "::"
     });
   };
   return server;
@@ -144,13 +129,11 @@ async function createServer(options = {}) {
 function resolveOptions(options = {}, args) {
   options.logger ??= DEFAULT_CREATE_SERVER_OPTIONS.logger;
   let defaultPort;
-  if (process.env.REDWOOD_API_PORT === undefined) {
-    defaultPort = (0, _projectConfig.getConfig)().api.port;
+  if (process.env.REDWOOD_API_PORT === void 0) {
+    defaultPort = (0, import_project_config.getConfig)().api.port;
   } else {
-    defaultPort = (0, _parseInt2.default)(process.env.REDWOOD_API_PORT);
+    defaultPort = parseInt(process.env.REDWOOD_API_PORT);
   }
-
-  // Set defaults.
   const resolvedOptions = {
     apiRootPath: options.apiRootPath ?? DEFAULT_CREATE_SERVER_OPTIONS.apiRootPath,
     fastifyServerOptions: options.fastifyServerOptions ?? {
@@ -159,20 +142,16 @@ function resolveOptions(options = {}, args) {
     },
     port: defaultPort
   };
-
-  // Merge fastifyServerOptions.
   resolvedOptions.fastifyServerOptions.requestTimeout ??= DEFAULT_CREATE_SERVER_OPTIONS.fastifyServerOptions.requestTimeout;
   resolvedOptions.fastifyServerOptions.logger = options.logger;
-  const {
-    values
-  } = (0, _util.parseArgs)({
+  const { values } = (0, import_util.parseArgs)({
     options: {
       apiRootPath: {
-        type: 'string'
+        type: "string"
       },
       port: {
-        type: 'string',
-        short: 'p'
+        type: "string",
+        short: "p"
       }
     },
     // When running Jest, `process.argv` is...
@@ -187,54 +166,43 @@ function resolveOptions(options = {}, args) {
     //
     // `parseArgs` strips the first two, leaving the third, which is interpreted as a positional argument.
     // Which fails our options. We'd still like to be strict, but can't do it for tests.
-    strict: process.env.NODE_ENV === 'test' ? false : true,
-    ...(args && {
-      args
-    })
+    strict: process.env.NODE_ENV === "test" ? false : true,
+    ...args && { args }
   });
-  if (values.apiRootPath && typeof values.apiRootPath !== 'string') {
-    throw new Error('`apiRootPath` must be a string');
+  if (values.apiRootPath && typeof values.apiRootPath !== "string") {
+    throw new Error("`apiRootPath` must be a string");
   }
   if (values.apiRootPath) {
     resolvedOptions.apiRootPath = values.apiRootPath;
   }
-
-  // Format `apiRootPath`
-  if (resolvedOptions.apiRootPath.charAt(0) !== '/') {
+  if (resolvedOptions.apiRootPath.charAt(0) !== "/") {
     resolvedOptions.apiRootPath = `/${resolvedOptions.apiRootPath}`;
   }
-  if (resolvedOptions.apiRootPath.charAt(resolvedOptions.apiRootPath.length - 1) !== '/') {
+  if (resolvedOptions.apiRootPath.charAt(
+    resolvedOptions.apiRootPath.length - 1
+  ) !== "/") {
     resolvedOptions.apiRootPath = `${resolvedOptions.apiRootPath}/`;
   }
   if (values.port) {
     resolvedOptions.port = +values.port;
     if (isNaN(resolvedOptions.port)) {
-      throw new Error('`port` must be an integer');
+      throw new Error("`port` must be an integer");
     }
   }
   return resolvedOptions;
 }
-const DEFAULT_CREATE_SERVER_OPTIONS = exports.DEFAULT_CREATE_SERVER_OPTIONS = {
-  apiRootPath: '/',
+const DEFAULT_CREATE_SERVER_OPTIONS = {
+  apiRootPath: "/",
   logger: {
-    level: process.env.NODE_ENV === 'development' ? 'debug' : 'warn'
+    level: process.env.NODE_ENV === "development" ? "debug" : "warn"
   },
   fastifyServerOptions: {
-    requestTimeout: 15_000
+    requestTimeout: 15e3
   }
 };
-async function redwoodFastifyFunctions(fastify, opts, done) {
-  fastify.register(_urlData.default);
-  await fastify.register(_fastifyRawBody.default);
-  fastify.addContentTypeParser(['application/x-www-form-urlencoded', 'multipart/form-data'], {
-    parseAs: 'string'
-  }, fastify.defaultTextParser);
-  fastify.all(`${opts.redwood.apiRootPath}:routeName`, _lambdaLoader.lambdaRequestHandler);
-  fastify.all(`${opts.redwood.apiRootPath}:routeName/*`, _lambdaLoader.lambdaRequestHandler);
-  await (0, _lambdaLoader.loadFunctionsFromDist)({
-    fastGlobOptions: {
-      ignore: ['**/dist/functions/graphql.js']
-    }
-  });
-  done();
-}
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  DEFAULT_CREATE_SERVER_OPTIONS,
+  createServer,
+  resolveOptions
+});

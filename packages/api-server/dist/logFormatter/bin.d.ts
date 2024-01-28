@@ -1,3 +1,3 @@
-#! /usr/bin/env node
+#!/usr/bin/env node
 export {};
 //# sourceMappingURL=bin.d.ts.map

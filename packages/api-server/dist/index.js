@@ -1,51 +1,73 @@
 #!/usr/bin/env node
 "use strict";
-
-var _context;
-var _Object$defineProperty = require("@babel/runtime-corejs3/core-js/object/define-property");
-var _forEachInstanceProperty = require("@babel/runtime-corejs3/core-js/instance/for-each");
-var _Object$keys = require("@babel/runtime-corejs3/core-js/object/keys");
-var _interopRequireWildcard = require("@babel/runtime-corejs3/helpers/interopRequireWildcard").default;
-var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault").default;
-_Object$defineProperty(exports, "__esModule", {
-  value: true
-});
-var _path = _interopRequireDefault(require("path"));
-var _dotenvDefaults = require("dotenv-defaults");
-var _helpers = require("yargs/helpers");
-var _yargs = _interopRequireDefault(require("yargs/yargs"));
-var _projectConfig = require("@redwoodjs/project-config");
-var webServerCLIConfig = _interopRequireWildcard(require("@redwoodjs/web-server"));
-var _cliHandlers = require("./cliHandlers");
-var _types = require("./types");
-_forEachInstanceProperty(_context = _Object$keys(_types)).call(_context, function (key) {
-  if (key === "default" || key === "__esModule") return;
-  if (key in exports && exports[key] === _types[key]) return;
-  _Object$defineProperty(exports, key, {
-    enumerable: true,
-    get: function () {
-      return _types[key];
-    }
-  });
-});
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __reExport = (target, mod, secondTarget) => (__copyProps(target, mod, "default"), secondTarget && __copyProps(secondTarget, mod, "default"));
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var src_exports = {};
+module.exports = __toCommonJS(src_exports);
+var import_path = __toESM(require("path"));
+var import_dotenv_defaults = require("dotenv-defaults");
+var import_helpers = require("yargs/helpers");
+var import_yargs = __toESM(require("yargs/yargs"));
+var import_project_config = require("@redwoodjs/project-config");
+var webServerCLIConfig = __toESM(require("@redwoodjs/web-server"));
+var import_cliHandlers = require("./cliHandlers");
+__reExport(src_exports, require("./types"), module.exports);
 if (!process.env.REDWOOD_ENV_FILES_LOADED) {
-  (0, _dotenvDefaults.config)({
-    path: _path.default.join((0, _projectConfig.getPaths)().base, '.env'),
-    defaults: _path.default.join((0, _projectConfig.getPaths)().base, '.env.defaults'),
+  (0, import_dotenv_defaults.config)({
+    path: import_path.default.join((0, import_project_config.getPaths)().base, ".env"),
+    defaults: import_path.default.join((0, import_project_config.getPaths)().base, ".env.defaults"),
     multiline: true
   });
-  process.env.REDWOOD_ENV_FILES_LOADED = 'true';
+  process.env.REDWOOD_ENV_FILES_LOADED = "true";
 }
 if (require.main === module) {
-  (0, _yargs.default)((0, _helpers.hideBin)(process.argv)).scriptName('rw-server').usage('usage: $0 <side>').strict().command('$0', 'Run both api and web servers',
-  // @ts-expect-error just passing yargs though
-  yargs => {
-    yargs.options(_cliHandlers.commonOptions);
-  }, _cliHandlers.bothServerHandler).command('api', 'Start server for serving only the api',
-  // @ts-expect-error just passing yargs though
-  yargs => {
-    yargs.options(_cliHandlers.apiCliOptions);
-  }, _cliHandlers.apiServerHandler).command('web', webServerCLIConfig.description,
-  // @ts-expect-error just passing yargs though
-  webServerCLIConfig.builder, webServerCLIConfig.handler).parse();
+  (0, import_yargs.default)((0, import_helpers.hideBin)(process.argv)).scriptName("rw-server").usage("usage: $0 <side>").strict().command(
+    "$0",
+    "Run both api and web servers",
+    // @ts-expect-error just passing yargs though
+    (yargs2) => {
+      yargs2.options(import_cliHandlers.commonOptions);
+    },
+    import_cliHandlers.bothServerHandler
+  ).command(
+    "api",
+    "Start server for serving only the api",
+    // @ts-expect-error just passing yargs though
+    (yargs2) => {
+      yargs2.options(import_cliHandlers.apiCliOptions);
+    },
+    import_cliHandlers.apiServerHandler
+  ).command(
+    "web",
+    webServerCLIConfig.description,
+    // @ts-expect-error just passing yargs though
+    webServerCLIConfig.builder,
+    webServerCLIConfig.handler
+  ).parse();
 }
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  ...require("./types")
+});

@@ -5,7 +5,7 @@ import { fork } from 'child_process'
 import fs from 'fs'
 import path from 'path'
 
-import c from 'ansi-colors'
+import chalk from 'chalk'
 import chokidar from 'chokidar'
 import dotenv from 'dotenv'
 import { debounce } from 'lodash'
@@ -66,9 +66,11 @@ const validate = async () => {
     return true
   } catch (e: any) {
     killApiServer()
-    console.log(c.redBright(`[GQL Server Error] - Schema validation failed`))
-    console.error(c.red(e?.message))
-    console.log(c.redBright('-'.repeat(40)))
+    console.log(
+      chalk.redBright(`[GQL Server Error] - Schema validation failed`)
+    )
+    console.error(chalk.red(e?.message))
+    console.log(chalk.redBright('-'.repeat(40)))
 
     debouncedBuild.cancel()
     debouncedRebuild.cancel()
@@ -85,7 +87,7 @@ const buildAndRestart = async ({
     killApiServer()
 
     const buildTs = Date.now()
-    console.log(c.dim.italic('Building...'))
+    console.log(chalk.dim.italic('Building...'))
 
     if (clean) {
       await cleanApiBuild()
@@ -96,7 +98,7 @@ const buildAndRestart = async ({
     } else {
       await buildApi()
     }
-    console.log(c.dim.italic('Took ' + (Date.now() - buildTs) + ' ms'))
+    console.log(chalk.dim.italic('Took ' + (Date.now() - buildTs) + ' ms'))
 
     const forkOpts = {
       execArgv: process.execArgv,
@@ -145,7 +147,7 @@ const buildAndRestart = async ({
       )
     } else {
       httpServerProcess = fork(
-        path.join(__dirname, 'index.js'),
+        path.join(__dirname, 'bin.js'),
         ['api', '--port', port.toString()],
         forkOpts
       )
@@ -235,7 +237,7 @@ chokidar
     }
 
     console.log(
-      c.dim(`[${eventName}] ${filePath.replace(rwjsPaths.api.base, '')}`)
+      chalk.dim(`[${eventName}] ${filePath.replace(rwjsPaths.api.base, '')}`)
     )
 
     if (eventName === 'add' || eventName === 'unlink') {

@@ -114,7 +114,7 @@ describe('createServer', () => {
     await server.listen({ port: 8910 })
     await server.close()
 
-    // We expect console log to be called with `withFunctions` logs.
+    // We expect console log to be called with `redwoodFastifyApi` logs.
     expect(consoleLogSpy.mock.calls[0][0]).toMatch(/Importing Server Functions/)
 
     const lastCallIndex = consoleLogSpy.mock.calls.length - 1

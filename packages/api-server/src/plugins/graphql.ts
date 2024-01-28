@@ -18,7 +18,7 @@ import { getPaths } from '@redwoodjs/project-config'
  * Transform a Fastify Request to an event compatible with the RedwoodGraphQLContext's event
  * which is based on the AWS Lambda event
  */
-import { lambdaEventForFastifyRequest } from '../requestHandlers/awsLambdaFastify'
+import { lambdaEventForFastifyRequest } from './awsLambdaFastify'
 
 export interface RedwoodFastifyGraphQLOptions {
   redwood: {
@@ -41,9 +41,7 @@ export async function redwoodFastifyGraphQLServer(
   // These two plugins are needed to transform a Fastify Request to a Lambda event
   // which is used by the RedwoodGraphQLContext and mimics the behavior of the
   // api-server withFunction plugin
-  if (!fastify.hasPlugin('@fastify/url-data')) {
-    await fastify.register(fastifyUrlData)
-  }
+  await fastify.register(fastifyUrlData)
   await fastify.register(fastifyRawBody)
 
   try {

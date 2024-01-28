@@ -1,4 +1,5 @@
-#! /usr/bin/env node
+#!/usr/bin/env node
+
 import split from 'split2'
 
 import { LogFormatter } from './index'

@@ -29,11 +29,12 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 var awsLambdaFastify_exports = {};
 __export(awsLambdaFastify_exports, {
   lambdaEventForFastifyRequest: () => lambdaEventForFastifyRequest,
+  mergeMultiValueHeaders: () => mergeMultiValueHeaders,
+  parseBody: () => parseBody,
   requestHandler: () => requestHandler
 });
 module.exports = __toCommonJS(awsLambdaFastify_exports);
 var import_qs = __toESM(require("qs"));
-var import_utils = require("./utils");
 const lambdaEventForFastifyRequest = (request) => {
   return {
     httpMethod: request.method,
@@ -46,7 +47,7 @@ const lambdaEventForFastifyRequest = (request) => {
         sourceIp: request.ip
       }
     },
-    ...(0, import_utils.parseBody)(request.rawBody || "")
+    ...parseBody(request.rawBody || "")
     // adds `body` and `isBase64Encoded`
   };
 };
@@ -57,7 +58,7 @@ const fastifyResponseForLambdaResult = (reply, lambdaResult) => {
     body = "",
     multiValueHeaders
   } = lambdaResult;
-  const mergedHeaders = (0, import_utils.mergeMultiValueHeaders)(headers, multiValueHeaders);
+  const mergedHeaders = mergeMultiValueHeaders(headers, multiValueHeaders);
   Object.entries(mergedHeaders).forEach(
     ([name, values]) => values.forEach((value) => reply.header(name, value))
   );
@@ -96,8 +97,36 @@ const requestHandler = async (req, reply, handler) => {
     }
   }
 };
+const parseBody = (rawBody) => {
+  if (typeof rawBody === "string") {
+    return { body: rawBody, isBase64Encoded: false };
+  }
+  if (rawBody instanceof Buffer) {
+    return { body: rawBody.toString("base64"), isBase64Encoded: true };
+  }
+  return { body: "", isBase64Encoded: false };
+};
+const mergeMultiValueHeaders = (headers, multiValueHeaders) => {
+  const mergedHeaders = Object.entries(
+    headers || {}
+  ).reduce((acc, [name, value]) => {
+    acc[name.toLowerCase()] = [value];
+    return acc;
+  }, {});
+  Object.entries(multiValueHeaders || {}).forEach(([headerName, values]) => {
+    const name = headerName.toLowerCase();
+    if (name.toLowerCase() === "set-cookie") {
+      mergedHeaders["set-cookie"] = values;
+    } else {
+      mergedHeaders[name] = [values.join("; ")];
+    }
+  });
+  return mergedHeaders;
+};
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   lambdaEventForFastifyRequest,
+  mergeMultiValueHeaders,
+  parseBody,
   requestHandler
 });
