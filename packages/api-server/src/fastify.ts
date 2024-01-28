@@ -10,19 +10,23 @@ import { getPaths, getConfig } from '@redwoodjs/project-config'
 
 import type { FastifySideConfigFn } from './types'
 
-// Exported for testing.
-export const DEFAULT_OPTIONS = {
+export const DEFAULT_REDWOOD_FASTIFY_CONFIG: FastifyServerOptions = {
+  requestTimeout: 15_000,
   logger: {
-    level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
+    level:
+      process.env.LOG_LEVEL ?? process.env.NODE_ENV === 'development'
+        ? 'debug'
+        : 'info',
   },
 }
 
 let isServerConfigLoaded = false
+
 let serverConfigFile: {
   config: FastifyServerOptions
   configureFastify: FastifySideConfigFn
 } = {
-  config: DEFAULT_OPTIONS,
+  config: DEFAULT_REDWOOD_FASTIFY_CONFIG,
   configureFastify: async (fastify, options) => {
     fastify.log.trace(
       options,
@@ -40,8 +44,7 @@ export function loadFastifyConfig() {
     getConfig().api.serverConfig
   )
 
-  // If a server.config.js is not found, use the default
-  // options set in packages/api-server/src/app.ts
+  // If a server.config.js is not found, use the default options.
   if (!fs.existsSync(serverConfigPath)) {
     return serverConfigFile
   }
@@ -60,7 +63,7 @@ export const createFastifyInstance = (
 ): FastifyInstance => {
   const { config } = loadFastifyConfig()
 
-  const fastify = Fastify(options || config || DEFAULT_OPTIONS)
+  const fastify = Fastify(options || config || DEFAULT_REDWOOD_FASTIFY_CONFIG)
 
   // Ensure that each request has a unique global context
   fastify.addHook('onRequest', (_req, _reply, done) => {

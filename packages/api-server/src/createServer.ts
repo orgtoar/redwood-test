@@ -3,7 +3,7 @@ import path from 'path'
 import { parseArgs } from 'util'
 
 import fastifyUrlData from '@fastify/url-data'
-import c from 'ansi-colors'
+import chalk from 'chalk'
 import { config } from 'dotenv-defaults'
 import fg from 'fast-glob'
 import fastify from 'fastify'
@@ -101,7 +101,7 @@ export async function createServer(options: CreateServerOptions = {}) {
 
   if (fs.existsSync(serverConfigPath)) {
     console.warn(
-      c.yellow(
+      chalk.yellow(
         [
           '',
           `Ignoring \`config\` and \`configureServer\` in api/server.config.js.`,
@@ -163,7 +163,7 @@ export async function createServer(options: CreateServerOptions = {}) {
 
   server.addHook('onListen', (done) => {
     console.log(
-      `Server listening at ${c.magenta(
+      `Server listening at ${chalk.magenta(
         `${server.listeningOrigin}${apiRootPath}`
       )}`
     )

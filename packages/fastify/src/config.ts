@@ -10,12 +10,10 @@ import type { FastifySideConfigFn, FastifySideConfigFnOptions } from './types'
 export const DEFAULT_REDWOOD_FASTIFY_CONFIG: FastifyServerOptions = {
   requestTimeout: 15_000,
   logger: {
-    // Note: If running locally using `yarn rw serve` you may want to adust
-    // the default non-development level to `info`
     level:
       process.env.LOG_LEVEL ?? process.env.NODE_ENV === 'development'
         ? 'debug'
-        : 'warn',
+        : 'info',
   },
 }
 

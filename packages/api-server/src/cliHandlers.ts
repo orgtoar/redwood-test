@@ -1,4 +1,4 @@
-import c from 'ansi-colors'
+import chalk from 'chalk'
 
 import { redwoodFastifyWeb, coerceRootPath } from '@redwoodjs/fastify-web'
 import { getConfig } from '@redwoodjs/project-config'
@@ -43,7 +43,7 @@ export const apiCliOptions = {
 export const apiServerHandler = async (options: ApiServerArgs) => {
   const { port, socket, apiRootPath } = options
   const tsApiServer = Date.now()
-  console.log(c.dim.italic('Starting API Server...'))
+  console.log(chalk.dim.italic('Starting API Server...'))
 
   let fastify = createFastifyInstance()
 
@@ -53,7 +53,7 @@ export const apiServerHandler = async (options: ApiServerArgs) => {
   fastify = await startFastifyServer({ port, socket, fastify })
 
   fastify.ready(() => {
-    console.log(c.dim.italic('Took ' + (Date.now() - tsApiServer) + ' ms'))
+    console.log(chalk.dim.italic('Took ' + (Date.now() - tsApiServer) + ' ms'))
 
     // In the past, in development, we've prioritized showing a friendlier
     // host than the listen-on-all-ipv6-addresses '[::]'. Here we replace it
@@ -67,8 +67,8 @@ export const apiServerHandler = async (options: ApiServerArgs) => {
       address = address.replace(/http:\/\/\[::\]/, 'http://localhost')
     }
 
-    const apiServer = c.magenta(`${address}${apiRootPath}`)
-    const graphqlEndpoint = c.magenta(`${apiServer}graphql`)
+    const apiServer = chalk.magenta(`${address}${apiRootPath}`)
+    const graphqlEndpoint = chalk.magenta(`${apiServer}graphql`)
 
     console.log(`API server listening at ${apiServer}`)
     console.log(`GraphQL endpoint at ${graphqlEndpoint}`)
@@ -83,7 +83,7 @@ export const apiServerHandler = async (options: ApiServerArgs) => {
 export const bothServerHandler = async (options: BothServerArgs) => {
   const { port, socket } = options
   const tsServer = Date.now()
-  console.log(c.dim.italic('Starting API and Web Servers...'))
+  console.log(chalk.dim.italic('Starting API and Web Servers...'))
   const apiRootPath = coerceRootPath(getConfig().web.apiUrl)
 
   let fastify = createFastifyInstance()
@@ -96,9 +96,9 @@ export const bothServerHandler = async (options: BothServerArgs) => {
   fastify.ready(() => {
     console.log(c.dim.italic('Took ' + (Date.now() - tsServer) + ' ms'))
 
-    const webServer = c.green(fastify.listeningOrigin)
-    const apiServer = c.magenta(`${fastify.listeningOrigin}${apiRootPath}`)
-    const graphqlEndpoint = c.magenta(`${apiServer}graphql`)
+    const webServer = chalk.green(fastify.listeningOrigin)
+    const apiServer = chalk.magenta(`${fastify.listeningOrigin}${apiRootPath}`)
+    const graphqlEndpoint = chalk.magenta(`${apiServer}graphql`)
 
     console.log(`Web server listening at ${webServer}`)
     console.log(`API server listening at ${apiServer}`)
