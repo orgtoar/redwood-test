@@ -1,2 +1,4 @@
 !src/__tests__/fixtures/**/dist
 coverage
+
+!dist
