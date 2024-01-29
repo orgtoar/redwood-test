@@ -32,10 +32,6 @@ export const apiServerHandler = async (options) => {
 
   const fastify = createFastifyInstance()
 
-  process.on('exit', () => {
-    fastify?.close()
-  })
-
   await fastify.register(redwoodFastifyAPI, {
     redwood: {
       ...options,

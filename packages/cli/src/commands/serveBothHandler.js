@@ -94,10 +94,6 @@ export const bothServerHandler = async (options) => {
 
   const fastify = createFastifyInstance()
 
-  process.on('exit', () => {
-    fastify?.close()
-  })
-
   await fastify.register(redwoodFastifyWeb, {
     redwood: {
       ...options,

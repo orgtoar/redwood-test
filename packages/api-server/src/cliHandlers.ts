@@ -75,9 +75,6 @@ export const apiServerHandler = async (options: ApiServerArgs) => {
 
     sendProcessReady()
   })
-  process.on('exit', () => {
-    fastify?.close()
-  })
 }
 
 export const bothServerHandler = async (options: BothServerArgs) => {
