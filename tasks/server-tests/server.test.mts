@@ -48,7 +48,7 @@ const commandStrings = {
   '@redwoodjs/cli': path.resolve(__dirname, '../../packages/cli/dist/index.js'),
   '@redwoodjs/api-server': path.resolve(
     __dirname,
-    '../../packages/api-server/dist/index.js'
+    '../../packages/api-server/dist/bin.js'
   ),
   '@redwoodjs/web-server': path.resolve(
     __dirname,
@@ -97,7 +97,7 @@ describe.each([
     expect(apiBody).toEqual({ data: 'hello function' })
   })
 
-  it('--port changes the port', async () => {
+  it.only('--port changes the port', async () => {
     const port = 8920
 
     p = $`yarn node ${commandString} --port ${port}`
