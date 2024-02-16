@@ -87,6 +87,7 @@
     "cypress": "13.6.1",
     "cypress-fail-fast": "7.1.0",
     "cypress-wait-until": "3.0.1",
+    "danger": "^11.3.1",
     "dependency-cruiser": "15.5.0",
     "dotenv": "16.3.1",
     "eslint": "8.55.0",
