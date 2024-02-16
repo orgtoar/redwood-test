@@ -1,0 +1,13 @@
+import { createServer as createApiServer } from '@redwoodjs/api-server'
+import { createServer as createWebServer } from '@redwoodjs/web-server'
+
+import { logger } from 'src/lib/logger'
+
+async function main() {
+  const apiServer = await createApiServer({ logger })
+  const webServer = await createWebServer({ logger })
+
+  await Promise.all([apiServer.start(), webServer.start()])
+}
+
+main()

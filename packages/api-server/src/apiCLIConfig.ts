@@ -1,10 +1,10 @@
 import type { Argv } from 'yargs'
 
-import type { APIParsedOptions } from './types'
+import type { ApiParsedOptions } from './types'
 
 export const description = 'Start a server for serving the api side'
 
-export function builder(yargs: Argv<APIParsedOptions>) {
+export function builder(yargs: Argv<ApiParsedOptions>) {
   yargs.options({
     port: {
       description: 'The port to listen at',
@@ -16,10 +16,10 @@ export function builder(yargs: Argv<APIParsedOptions>) {
         "The host to listen at. Note that you most likely want this to be '0.0.0.0' in production",
       type: 'string',
     },
-    apiRootPath: {
+    rootPath: {
       description: 'Root path where your api functions are served',
       type: 'string',
-      alias: ['api-root-path', 'rootPath', 'root-path'],
+      alias: ['root-path', 'apiRootPath', 'api-root-path'],
       default: '/',
     },
     // This became a no-op in v7 because env files weren't loaded by default
@@ -31,7 +31,7 @@ export function builder(yargs: Argv<APIParsedOptions>) {
   })
 }
 
-export async function handler(options: APIParsedOptions) {
+export async function handler(options: ApiParsedOptions) {
   const { handler } = await import('./apiCLIConfigHandler.js')
   await handler(options)
 }

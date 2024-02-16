@@ -3,7 +3,7 @@ import path from 'path'
 import { vi, beforeAll, afterAll, describe, it, expect } from 'vitest'
 
 import createFastifyInstance from '../fastify'
-import { redwoodFastifyAPI } from '../plugins/api'
+import { redwoodFastifyApi } from '../plugins/api'
 
 // Suppress terminal logging.
 console.log = vi.fn()
@@ -27,7 +27,7 @@ let fastifyInstance: Awaited<ReturnType<typeof createFastifyInstance>>
 beforeAll(async () => {
   fastifyInstance = await createFastifyInstance()
 
-  fastifyInstance.register(redwoodFastifyAPI, {
+  fastifyInstance.register(redwoodFastifyApi, {
     redwood: {
       loadUserConfig: true,
     },
@@ -40,7 +40,7 @@ afterAll(async () => {
   await fastifyInstance.close()
 })
 
-describe('redwoodFastifyAPI', () => {
+describe('redwoodFastifyApi', () => {
   it('configures the `@fastify/url-data` and `fastify-raw-body` plugins', async () => {
     const plugins = fastifyInstance.printPlugins()
 

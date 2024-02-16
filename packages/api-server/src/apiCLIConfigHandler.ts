@@ -1,24 +1,24 @@
 import chalk from 'chalk'
 
-import { getAPIPort, getAPIHost } from './cliHelpers'
+import { getApiPort, getApiHost } from './cliHelpers'
 import createFastifyInstance from './fastify'
-import { redwoodFastifyAPI } from './plugins/api'
-import type { APIParsedOptions } from './types'
+import { redwoodFastifyApi } from './plugins/api'
+import type { ApiParsedOptions } from './types'
 
-export async function handler(options: APIParsedOptions) {
+export async function handler(options: ApiParsedOptions) {
   const timeStart = Date.now()
   console.log(chalk.dim.italic('Starting API Server...'))
 
   const fastify = await createFastifyInstance()
-  fastify.register(redwoodFastifyAPI, {
+  fastify.register(redwoodFastifyApi, {
     redwood: {
       ...options,
       loadUserConfig: true,
     },
   })
 
-  options.host ??= getAPIHost()
-  options.port ??= getAPIPort()
+  options.host ??= getApiHost()
+  options.port ??= getApiPort()
 
   await fastify.listen({
     port: options.port,

@@ -14,7 +14,7 @@ const { version } = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, '../../../../package.json'), 'utf-8')
 )
 
-export function setupServerFileTasks({ force = false } = {}) {
+export function setupServerFileTasks({ web = false, force = false } = {}) {
   return [
     {
       title: 'Adding the server file...',
@@ -27,7 +27,9 @@ export function setupServerFileTasks({ force = false } = {}) {
         )
 
         const serverFileTemplateContent = fs.readFileSync(
-          path.join(__dirname, 'templates', 'server.ts.template'),
+          web
+            ? path.join(__dirname, 'templates', 'server.withWeb.ts.template')
+            : path.join(__dirname, 'templates', 'server.ts.template'),
           'utf-8'
         )
 

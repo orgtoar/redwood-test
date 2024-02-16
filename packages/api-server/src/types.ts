@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify'
 
-import type { RedwoodFastifyAPIOptions } from './plugins/api'
+import type { RedwoodFastifyApiOptions } from './plugins/api'
 
 // Types for using server.config.js
 export type FastifySideConfigFnOptions = {
@@ -10,14 +10,14 @@ export type FastifySideConfigFnOptions = {
 export type FastifySideConfigFn = (
   fastify: FastifyInstance,
   options?: FastifySideConfigFnOptions &
-    Pick<RedwoodFastifyAPIOptions['redwood'], 'apiRootPath'>
+    Pick<RedwoodFastifyApiOptions['redwood'], 'apiRootPath'>
 ) => Promise<FastifyInstance> | void
 
-export type APIParsedOptions = {
+export type ApiParsedOptions = {
   port?: number
   host?: string
   loadEnvFiles?: boolean
-} & Omit<RedwoodFastifyAPIOptions['redwood'], 'fastGlobOptions'>
+} & Omit<RedwoodFastifyApiOptions['redwood'], 'fastGlobOptions'>
 
 export type BothParsedOptions = {
   webPort?: number
@@ -25,4 +25,4 @@ export type BothParsedOptions = {
   apiPort?: number
   apiHost?: string
   apiRootPath?: string
-} & Omit<RedwoodFastifyAPIOptions['redwood'], 'fastGlobOptions'>
+} & Omit<RedwoodFastifyApiOptions['redwood'], 'fastGlobOptions'>

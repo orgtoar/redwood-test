@@ -13,7 +13,7 @@ import { getConfig, getPaths } from '@redwoodjs/project-config'
 
 import { resolveOptions } from './createServerHelpers'
 import type { CreateServerOptions } from './createServerHelpers'
-import { redwoodFastifyAPI } from './plugins/api'
+import { redwoodFastifyApi } from './plugins/api'
 
 type StartOptions = Omit<FastifyListenOptions, 'port' | 'host'>
 
@@ -108,7 +108,7 @@ export async function createServer(options: CreateServerOptions = {}) {
     getAsyncStoreInstance().run(new Map<string, GlobalContext>(), done)
   })
 
-  await server.register(redwoodFastifyAPI, {
+  await server.register(redwoodFastifyApi, {
     redwood: {
       apiRootPath,
       fastGlobOptions: {
@@ -157,7 +157,7 @@ export async function createServer(options: CreateServerOptions = {}) {
    * A wrapper around `fastify.listen` that handles `--port`, `REDWOOD_API_PORT` and [api].port in redwood.toml
    *
    * The order of precedence is:
-   * - `--port`
+   * - `--apiPort`
    * - `REDWOOD_API_PORT`
    * - [api].port in redwood.toml
    */

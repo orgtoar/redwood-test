@@ -11,7 +11,7 @@ import { loadFastifyConfig } from '../fastify'
 
 import { lambdaRequestHandler, loadFunctionsFromDist } from './lambdaLoader'
 
-export interface RedwoodFastifyAPIOptions {
+export interface RedwoodFastifyApiOptions {
   redwood: {
     apiRootPath?: string
     fastGlobOptions?: FastGlobOptions
@@ -19,9 +19,9 @@ export interface RedwoodFastifyAPIOptions {
   }
 }
 
-export async function redwoodFastifyAPI(
+export async function redwoodFastifyApi(
   fastify: FastifyInstance,
-  opts: RedwoodFastifyAPIOptions
+  opts: RedwoodFastifyApiOptions
 ) {
   const redwoodOptions = opts.redwood ?? {}
   redwoodOptions.apiRootPath ??= '/'

@@ -5,8 +5,8 @@ import execa from 'execa'
 
 import { handler as apiServerHandler } from '@redwoodjs/api-server/dist/apiCLIConfigHandler'
 import {
-  getAPIHost,
-  getAPIPort,
+  getApiHost,
+  getApiPort,
   getWebHost,
   getWebPort,
 } from '@redwoodjs/api-server/dist/cliHelpers'
@@ -28,8 +28,8 @@ export const bothServerFileHandler = async (argv) => {
       shell: true,
     })
   } else {
-    argv.apiPort ??= getAPIPort()
-    argv.apiHost ??= getAPIHost()
+    argv.apiPort ??= getApiPort()
+    argv.apiHost ??= getApiHost()
     argv.webPort ??= getWebPort()
     argv.webHost ??= getWebHost()
 

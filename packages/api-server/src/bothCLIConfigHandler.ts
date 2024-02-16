@@ -2,9 +2,9 @@ import chalk from 'chalk'
 
 import { redwoodFastifyWeb, coerceRootPath } from '@redwoodjs/fastify-web'
 
-import { getWebHost, getWebPort, getAPIHost, getAPIPort } from './cliHelpers'
+import { getWebHost, getWebPort, getApiHost, getApiPort } from './cliHelpers'
 import createFastifyInstance from './fastify'
-import { redwoodFastifyAPI } from './plugins/api'
+import { redwoodFastifyApi } from './plugins/api'
 import type { BothParsedOptions } from './types'
 
 export async function handler(options: BothParsedOptions) {
@@ -13,8 +13,8 @@ export async function handler(options: BothParsedOptions) {
 
   options.webHost ??= getWebHost()
   options.webPort ??= getWebPort()
-  options.apiHost ??= getAPIHost()
-  options.apiPort ??= getAPIPort()
+  options.apiHost ??= getApiHost()
+  options.apiPort ??= getApiPort()
 
   options.apiRootPath = coerceRootPath(options.apiRootPath ?? '/')
 
@@ -34,7 +34,7 @@ export async function handler(options: BothParsedOptions) {
   })
 
   const apiFastify = await createFastifyInstance()
-  apiFastify.register(redwoodFastifyAPI, {
+  apiFastify.register(redwoodFastifyApi, {
     redwood: {
       apiRootPath: options.apiRootPath,
       loadUserConfig: true,

@@ -2,23 +2,18 @@ import { parseArgs } from 'util'
 
 import type { FastifyServerOptions } from 'fastify'
 
-import { coerceRootPath } from '@redwoodjs/fastify-web/dist/helpers'
+import { getConfig } from '@redwoodjs/project-config'
 
-import { getApiHost, getApiPort } from './cliHelpers'
+import { getWebHost, getWebPort, getApiHost, getApiPort } from './cliHelpers'
 
 export interface CreateServerOptions {
-  /**
-   * The prefix for all routes. Defaults to `/`.
-   */
-  apiRootPath?: string
-
   /**
    * Logger instance or options.
    */
   logger?: FastifyServerOptions['logger']
 
   /**
-   * Options for the Fastify server instance.
+   * Options for the fastify server instance.
    * Omitting logger here because we move it up.
    */
   fastifyServerOptions?: Omit<FastifyServerOptions, 'logger'>
@@ -27,16 +22,21 @@ export interface CreateServerOptions {
    * Whether to parse args or not. Defaults to `true`.
    */
   parseArgs?: boolean
+
+  /**
+   * The fully-qualified URL to proxy requests to from `apiUrl`.
+   */
+  apiProxyTarget?: string
 }
 
-type DefaultCreateServerOptions = Required<
-  Omit<CreateServerOptions, 'fastifyServerOptions'> & {
-    fastifyServerOptions: Pick<FastifyServerOptions, 'requestTimeout'>
-  }
->
+type DefaultCreateServerOptions = Omit<
+  CreateServerOptions,
+  'fastifyServerOptions'
+> & {
+  fastifyServerOptions: Pick<FastifyServerOptions, 'requestTimeout'>
+}
 
 export const DEFAULT_CREATE_SERVER_OPTIONS: DefaultCreateServerOptions = {
-  apiRootPath: '/',
   logger: {
     level:
       process.env.LOG_LEVEL ??
@@ -53,6 +53,7 @@ type ResolvedOptions = Required<
     fastifyServerOptions: FastifyServerOptions
     port: number
     host: string
+    apiProxyTarget: string | undefined
   }
 >
 
@@ -62,19 +63,33 @@ export function resolveOptions(
 ) {
   options.logger ??= DEFAULT_CREATE_SERVER_OPTIONS.logger
 
+  const apiUrl = getConfig().web.apiUrl
+  const apiUrlIsFullyQualifiedUrl = isFullyQualifiedUrl(apiUrl)
+
+  let apiHost
+  let apiPort
+  let apiRootPath
+  let apiProxyTarget
+
+  if (!apiUrlIsFullyQualifiedUrl) {
+    apiHost = getApiHost()
+    apiPort = getApiPort()
+    apiRootPath = '/'
+    apiProxyTarget = `http://${apiHost}:${apiPort}${apiRootPath}`
+  }
+
   // Set defaults.
   const resolvedOptions: ResolvedOptions = {
-    apiRootPath:
-      options.apiRootPath ?? DEFAULT_CREATE_SERVER_OPTIONS.apiRootPath,
-
     fastifyServerOptions: options.fastifyServerOptions ?? {
       requestTimeout:
         DEFAULT_CREATE_SERVER_OPTIONS.fastifyServerOptions.requestTimeout,
       logger: options.logger ?? DEFAULT_CREATE_SERVER_OPTIONS.logger,
     },
 
-    host: getApiHost(),
-    port: getApiPort(),
+    host: getWebHost(),
+    port: getWebPort(),
+
+    apiProxyTarget,
   }
 
   // Merge fastifyServerOptions.
@@ -82,9 +97,17 @@ export function resolveOptions(
     DEFAULT_CREATE_SERVER_OPTIONS.fastifyServerOptions.requestTimeout
   resolvedOptions.fastifyServerOptions.logger = options.logger
 
+  // Parse args so that the user has the chance to override host and port at the CLI.
+  // We parse api host and port as well so that we can proxy requests to the api server.
   if (options.parseArgs) {
     const { values } = parseArgs({
       options: {
+        webHost: {
+          type: 'string',
+        },
+        webPort: {
+          type: 'string',
+        },
         apiHost: {
           type: 'string',
         },
@@ -99,17 +122,31 @@ export function resolveOptions(
       ...(args && { args }),
     })
 
+    if (values.webHost && typeof values.webHost !== 'string') {
+      throw new Error('`webHost` must be a string')
+    }
+    if (values.webHost) {
+      resolvedOptions.host = values.webHost
+    }
+    if (values.webPort) {
+      resolvedOptions.port = +values.webPort
+
+      if (isNaN(resolvedOptions.port)) {
+        throw new Error('`webPort` must be an integer')
+      }
+    }
+
     if (values.apiHost && typeof values.apiHost !== 'string') {
-      throw new Error('`apiHost` must be a string')
+      throw new Error('`host` must be a string')
     }
     if (values.apiHost) {
-      resolvedOptions.host = values.apiHost
+      apiHost = values.apiHost
     }
 
     if (values.apiPort) {
-      resolvedOptions.port = +values.apiPort
+      apiPort = +values.apiPort
 
-      if (isNaN(resolvedOptions.port)) {
+      if (isNaN(apiPort)) {
         throw new Error('`apiPort` must be an integer')
       }
     }
@@ -118,11 +155,27 @@ export function resolveOptions(
       throw new Error('`apiRootPath` must be a string')
     }
     if (values.apiRootPath) {
-      resolvedOptions.apiRootPath = values.apiRootPath
+      apiRootPath = values.apiRootPath
     }
   }
 
-  resolvedOptions.apiRootPath = coerceRootPath(resolvedOptions.apiRootPath)
+  if (apiHost?.includes(':')) {
+    apiHost = `[${apiHost}]`
+  }
+
+  if (!apiUrlIsFullyQualifiedUrl) {
+    resolvedOptions.apiProxyTarget = `http://${apiHost}:${apiPort}${apiRootPath}`
+  }
 
   return resolvedOptions
+}
+
+function isFullyQualifiedUrl(url: string) {
+  try {
+    // eslint-disable-next-line no-new
+    new URL(url)
+    return true
+  } catch (e) {
+    return false
+  }
 }

@@ -6,6 +6,11 @@ export const description = 'Setup the server file'
 
 export function builder(yargs) {
   yargs
+    .option('web', {
+      default: false,
+      description: 'Set up the server file for serving the web too',
+      type: 'boolean',
+    })
     .option('force', {
       alias: 'f',
       default: false,
@@ -23,6 +28,7 @@ export function builder(yargs) {
 export async function handler(options) {
   recordTelemetryAttributes({
     command: 'setup server-file',
+    web: options.web,
     force: options.force,
     verbose: options.verbose,
   })
