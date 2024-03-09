@@ -54,9 +54,10 @@ export const transformTSToJS = (filename: string, content: string) => {
  */
 export const getPrettierOptions = async () => {
   try {
-    const { default: options } = await import(
-      path.join(getPaths().base, 'prettier.config.js')
-    )
+    console.log('getPrettierOptions')
+    const importPath = path.join(getPaths().base, 'prettier.config.js')
+    console.log(importPath)
+    const { default: options } = await import(importPath)
 
     if (options.tailwindConfig?.startsWith('.')) {
       // Make this work with --cwd
@@ -68,6 +69,7 @@ export const getPrettierOptions = async () => {
 
     return options
   } catch (e) {
+    console.log('getPrettierOptions error', e)
     return undefined
   }
 }
