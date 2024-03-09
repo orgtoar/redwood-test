@@ -55,7 +55,10 @@ export const transformTSToJS = (filename: string, content: string) => {
 export const getPrettierOptions = async () => {
   try {
     console.log('getPrettierOptions')
-    const importPath = path.join(getPaths().base, 'prettier.config.js')
+    const importPath = `file://${path.join(
+      getPaths().base,
+      'prettier.config.js'
+    )}`
     console.log(importPath)
     const { default: options } = await import(importPath)
 
