@@ -8,7 +8,7 @@ import yargs from 'yargs/yargs'
 import { exec, getExecaOptions as utilGetExecaOptions } from './util'
 
 function getExecaOptions(cwd: string) {
-  return { ...utilGetExecaOptions(cwd), stdio: 'pipe' }
+  return { ...utilGetExecaOptions(cwd) }
 }
 
 const args = yargs(hideBin(process.argv))
