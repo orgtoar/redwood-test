@@ -30,6 +30,10 @@ async function runCommand() {
   const redwoodTomlPath = path.join(OUTPUT_PROJECT_PATH, 'redwood.toml')
   const redwoodTomlContent = fs.readFileSync(redwoodTomlPath, 'utf-8')
 
+  console.log({
+    redwoodTomlContent,
+  })
+
   // NOTE: The checks we do here are very specific. This would never be enough
   // for a user's project. But since we're in full control of the generation of
   // the project here, we can get away with these simpler checks
@@ -54,6 +58,10 @@ async function runCommand() {
   )
   const graphqlHandlerContent = fs.readFileSync(graphqlHandlerPath, 'utf-8')
   const storeImport = "import { store } from 'src/lib/trustedDocumentsStore'"
+
+  console.log({
+    graphqlHandlerContent,
+  })
 
   if (!graphqlHandlerContent.includes(storeImport)) {
     console.error(
