@@ -129,13 +129,8 @@ jobs:
       - name: 🌡 Test Types
         run: yarn test:types
 
-      - name: Get number of CPU cores
-        if: always()
-        id: cpu-cores
-        uses: SimenB/github-actions-cpu-cores@v2
-
       - name: 🧪 Test
-        run: yarn test-ci --minWorkers=1 --maxWorkers=${{ steps.cpu-cores.outputs.count }}
+        run: yarn test
 
   build-lint-test-skip:
     needs: detect-changes
