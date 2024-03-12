@@ -73,9 +73,6 @@ jobs:
         with:
           node-version: 20
 
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
-
       - name: 🐈 Yarn install
         run: yarn install --inline-builds
         env:

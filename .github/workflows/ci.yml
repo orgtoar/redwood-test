@@ -112,9 +112,6 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
-
       - name: 🐈 Yarn install
         run: yarn install --inline-builds
         env:
@@ -171,9 +168,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
 
       - name: 🐈 Yarn install
         run: yarn install --inline-builds
@@ -270,9 +264,6 @@ jobs:
 
       - name: Enable Corepack
         run: corepack enable
-
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
 
       - name: 🐈 Yarn install
         run: yarn install --inline-builds
@@ -381,9 +372,6 @@ jobs:
 
       - name: Enable Corepack
         run: corepack enable
-
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
 
       - name: 🐈 Yarn install
         run: yarn install --inline-builds
@@ -510,9 +498,6 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
-
       - name: 🐈 Yarn install
         run: yarn install --inline-builds
         env:
@@ -571,9 +556,6 @@ jobs:
 
       - name: Enable Corepack
         run: corepack enable
-
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
 
       - name: 🐈 Yarn install
         run: yarn install --inline-builds
@@ -679,9 +661,6 @@ jobs:
         with:
           node-version: 20
 
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
-
       - name: 🐈 Yarn install
         run: yarn install --inline-builds
         env:
@@ -770,9 +749,6 @@ jobs:
 
       - name: Enable Corepack
         run: corepack enable
-
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
 
       - name: 🐈 Yarn install
         run: yarn install --inline-builds
@@ -866,9 +842,6 @@ jobs:
         with:
           node-version: 20
 
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
-
       - name: 🐈 Yarn install
         run: yarn install --inline-builds
         env:
@@ -961,9 +934,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
 
       - name: 🐈 Yarn install
         run: yarn install --inline-builds

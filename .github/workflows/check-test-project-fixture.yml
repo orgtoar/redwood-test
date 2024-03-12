@@ -25,10 +25,6 @@ jobs:
         with:
           node-version: 20
 
-      - name: 🐈 Set up yarn cache
-        if: "!contains(github.event.pull_request.labels.*.name, 'fixture-ok')"
-        uses: ./.github/actions/set-up-yarn-cache
-
       - name: 🐈 Yarn install
         if: "!contains(github.event.pull_request.labels.*.name, 'fixture-ok')"
         run: yarn install --inline-builds
