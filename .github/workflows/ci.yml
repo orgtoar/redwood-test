@@ -259,7 +259,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Enable Corepack
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: ⬢ Set up Node.js
@@ -267,7 +267,8 @@ jobs:
         with:
           node-version: 20
 
-      - name: Enable Corepack
+      # We have to do this again for Windows.
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: 🐈 Set up yarn cache
@@ -278,7 +279,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      - name: 🔨 Build
+      - name: 🏗️ Build
         run: yarn build
 
       - name: 🌲 Set up test project
@@ -288,7 +289,8 @@ jobs:
           bundler: ${{ matrix.bundler }}
         env:
           REDWOOD_DISABLE_TELEMETRY: 1
-          YARN_ENABLE_IMMUTABLE_INSTALLS: false
+          YARN_ENABLE_HARDENED_MODE: 0
+          YARN_ENABLE_IMMUTABLE_INSTALLS: 0
 
       - name: 🎭 Install playwright dependencies
         run: npx playwright install --with-deps chromium
