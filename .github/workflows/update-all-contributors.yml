@@ -22,7 +22,7 @@ jobs:
         with:
           token: ${{ secrets.JTOAR_TOKEN }}
 
-      - name: Enable Corepack
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - uses: actions/setup-node@v4

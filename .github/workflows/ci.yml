@@ -18,6 +18,7 @@ env:
 jobs:
   detect-changes:
     if: github.repository == 'redwoodjs/redwood'
+
     name: 🔍 Detect changes
     runs-on: ubuntu-latest
 
@@ -29,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Enable Corepack
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: ⬢ Set up Node.js
@@ -57,7 +58,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Enable Corepack
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: ⬢ Set up Node.js
@@ -101,7 +102,7 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - name: Enable Corepack
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: ⬢ Set up Node.js
@@ -109,7 +110,10 @@ jobs:
         with:
           node-version: 20
 
-      - name: Enable Corepack
+      # For Windows, we have to enable Corepack a second time. 🤷
+      # In general, we're waiting on [this issue](https://github.com/actions/setup-node/issues/531)
+      # to be resolved so that `actions/setup-node@v4` has first-class Corepack support.
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: 🐈 Set up yarn cache
@@ -164,7 +168,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Enable Corepack
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: ⬢ Set up Node.js
@@ -260,7 +264,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Enable Corepack
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: ⬢ Set up Node.js
@@ -268,7 +272,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Enable Corepack
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: 🐈 Set up yarn cache
@@ -371,7 +375,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Enable Corepack
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: ⬢ Set up Node.js
@@ -379,7 +383,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Enable Corepack
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: 🐈 Set up yarn cache
@@ -499,7 +503,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Enable Corepack
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: ⬢ Set up Node.js
@@ -507,7 +511,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Enable Corepack
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: 🐈 Set up yarn cache
@@ -561,7 +565,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Enable Corepack
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: ⬢ Set up Node.js
@@ -569,7 +573,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Enable Corepack
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: 🐈 Set up yarn cache
@@ -671,7 +675,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Enable Corepack
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: ⬢ Set up Node.js
@@ -760,7 +764,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Enable Corepack
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: ⬢ Set up Node.js
@@ -768,7 +772,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Enable Corepack
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: 🐈 Set up yarn cache
@@ -793,7 +797,7 @@ jobs:
           YARN_ENABLE_IMMUTABLE_INSTALLS: false
 
       - name: Run Fragments codemods on test project
-        run: npx -y tsx ./tasks/test-project/add-gql-fragments ${{ steps.set-up-test-project.outputs.test-project-path }}
+        run: yarn tsx ./tasks/test-project/add-gql-fragments ${{ steps.set-up-test-project.outputs.test-project-path }}
         env:
           REDWOOD_DISABLE_TELEMETRY: 1
 
@@ -821,7 +825,7 @@ jobs:
           REDWOOD_DISABLE_TELEMETRY: 1
 
       - name: Enable trusted-documents in Fragments test project
-        run: npx -y tsx ./tasks/test-project/set-up-trusted-documents ${{ steps.set-up-test-project.outputs.test-project-path }}
+        run: yarn tsx ./tasks/test-project/set-up-trusted-documents ${{ steps.set-up-test-project.outputs.test-project-path }}
         env:
           REDWOOD_DISABLE_TELEMETRY: 1
 
@@ -954,7 +958,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Enable Corepack
+      - name: ⬢ Enable Corepack
         run: corepack enable
 
       - name: ⬢ Set up Node.js
