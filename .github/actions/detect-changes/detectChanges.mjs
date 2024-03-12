@@ -98,8 +98,8 @@ async function main() {
 
   // If there's no branch, we're not in a pull request.
     core.setOutput('onlydocs', false)
-    core.setOutput('rsc', false)
-    core.setOutput('ssr', false)
+    core.setOutput('rsc', true)
+    core.setOutput('ssr', true)
     return
 
   const changedFiles = await getChangedFiles()
