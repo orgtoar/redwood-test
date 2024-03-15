@@ -100,28 +100,8 @@ jobs:
         run: echo "echo "::remove-matcher owner=tsc::""
 
       - uses: actions/checkout@v4
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: ⬢ Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
-
-      - name: 🐈 Yarn install
-        run: yarn install --inline-builds
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-
-      - name: 🔨 Build
-        run: yarn build
+      - name: Set up job
+        uses: ./.github/actions/set-up-job
 
       - name: 🔎 Lint
         run: yarn lint
@@ -163,25 +143,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: ⬢ Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
-
-      - name: 🐈 Yarn install
-        run: yarn install --inline-builds
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-
-      - name: 🔨 Build
-        run: yarn build
+      - name: Set up job
+        uses: ./.github/actions/set-up-job
 
       - name: 🌲 Install Cypress
         run: yarn cypress install
@@ -259,28 +222,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: ⬢ Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
-
-      - name: 🐈 Yarn install
-        run: yarn install --inline-builds
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-
-      - name: 🔨 Build
-        run: yarn build
+      - name: Set up job
+        uses: ./.github/actions/set-up-job
 
       - name: 🌲 Set up test project
         id: set-up-test-project
@@ -370,28 +313,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: ⬢ Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
-
-      - name: 🐈 Yarn install
-        run: yarn install --inline-builds
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-
-      - name: 🔨 Build
-        run: yarn build
+      - name: Set up job
+        uses: ./.github/actions/set-up-job
 
       - name: 🌲 Set up test project
         id: set-up-test-project
@@ -498,28 +421,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: ⬢ Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
-
-      - name: 🐈 Yarn install
-        run: yarn install --inline-builds
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-
-      - name: 🔨 Build
-        run: yarn build
+      - name: Set up job
+        uses: ./.github/actions/set-up-job
 
       - name: 📢 Listen for telemetry (CRWA)
         run: node ./.github/actions/telemetry_check/check.mjs --mode crwa
@@ -560,28 +463,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: ⬢ Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
-
-      - name: 🐈 Yarn install
-        run: yarn install --inline-builds
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-
-      - name: 🔨 Build
-        run: yarn build
+      - name: Set up job
+        uses: ./.github/actions/set-up-job
 
       - name: 🌲 Set up RSC project
         id: set-up-rsc-project
@@ -670,25 +553,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: ⬢ Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
-
-      - name: 🐈 Yarn install
-        run: yarn install --inline-builds
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-
-      - name: 🔨 Build
-        run: yarn build
+      - name: Set up job
+        uses: ./.github/actions/set-up-job
 
       - name: 🌲 Set up test project
         id: set-up-test-project
@@ -759,28 +625,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: ⬢ Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
-
-      - name: 🐈 Yarn install
-        run: yarn install --inline-builds
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-
-      - name: 🔨 Build
-        run: yarn build
+      - name: Set up job
+        uses: ./.github/actions/set-up-job
 
       - name: 🌲 Set up test project
         id: set-up-test-project
@@ -857,25 +703,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: ⬢ Enable Corepack
-        run: corepack enable
-
-      - name: ⬢ Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
-
-      - name: 🐈 Yarn install
-        run: yarn install --inline-builds
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-
-      - name: 🏗️ Build
-        run: yarn build
+      - name: Set up job
+        uses: ./.github/actions/set-up-job
 
       - name: Set up test project
         run: |
@@ -953,25 +782,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: ⬢ Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: 🐈 Set up yarn cache
-        uses: ./.github/actions/set-up-yarn-cache
-
-      - name: 🐈 Yarn install
-        run: yarn install --inline-builds
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-
-      - name: 🔨 Build
-        run: yarn build
+      - name: Set up job
+        uses: ./.github/actions/set-up-job
 
       - run: yarn vitest run
         working-directory: ./tasks/server-tests

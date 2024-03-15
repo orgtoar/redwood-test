@@ -1,0 +1,35 @@
+name: Set up job
+description: >
+  Everything you need to run a job.
+  Checkout this repo (redwoodjs/redwood), set up Node.js, yarn install, and build.
+
+runs:
+  using: composite
+
+  steps:
+    - name: ⬢ Enable Corepack
+      run: corepack enable
+      shell: bash
+
+    - name: ⬢ Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    # We have to do this again for Windows.
+    - name: ⬢ Enable Corepack
+      run: corepack enable
+      shell: bash
+
+    - name: 🐈 Set up yarn cache
+      uses: ./.github/actions/set-up-yarn-cache
+
+    - name: 🐈 Yarn install
+      run: yarn install --inline-builds
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
+    - name: 🏗️ Build
+      run: yarn build
+      shell: bash
