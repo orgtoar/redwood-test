@@ -28,20 +28,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: ⬢ Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up job
+        uses: ./.github/actions/set-up-job
         with:
-          node-version: 20
-
-      - name: 🐈 Yarn install
-        working-directory: ./.github/actions/detect-changes
-        run: yarn install --inline-builds
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+          set-up-yarn-cache: false
+          yarn-install-directory: ./.github/actions/detect-changes
+          build: false
 
       - name: 🔍 Detect changes
         id: detect-changes
@@ -56,20 +48,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: ⬢ Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up job
+        uses: ./.github/actions/set-up-job
         with:
-          node-version: 20
-
-      - name: 🐈 Yarn install
-        working-directory: ./tasks/check
-        run: yarn install --inline-builds
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+          set-up-yarn-cache: false
+          yarn-install-directory: ./tasks/check
+          build: false
 
       - name: ✅ Check constraints, dependencies, and package.json's
         uses: ./tasks/check
