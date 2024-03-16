@@ -4,7 +4,6 @@ import type { Request, Response } from 'express'
 import {
   decodeReply,
   decodeReplyFromBusboy,
-  // @ts-expect-error There aren't any types for this since it's bundled from Flow
 } from '../../compiled/react-server-dom-webpack.server.js'
 import { hasStatusCode } from '../lib/StatusError.js'
 
