@@ -127,7 +127,7 @@ function getFrameworkSpinner({ text }) {
 }
 
 async function buildTarballs() {
-  await $`yarn nx run-many -t build:pack --exclude create-redwood-app`
+  await $`yarn nx run-many -t build:pack --exclude create-redwood-app --skipNxCache`
 }
 
 async function moveTarballs(projectPath) {

@@ -581,7 +581,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: 🔨 Build
-        run: yarn build
+        run: yarn build --skipNxCache
 
       - name: 🌲 Set up RSC project
         id: set-up-rsc-project
