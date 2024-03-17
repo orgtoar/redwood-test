@@ -24,16 +24,11 @@ declare module 'react-server-dom-webpack/server' {
 
   import type { Busboy } from 'busboy'
 
-  // The types for these functions were taken from react-server-dom-webpack/src/ReactFlightDOMServerNode.js
-  // which is what 'react-server-dom-webpack/server' resolves to with the 'react-server' condition.
-  // See https://github.com/facebook/react/blob/b09e102ff1e2aaaf5eb6585b04609ac7ff54a5c8/packages/react-server-dom-webpack/src/ReactFlightDOMServerNode.js#L120.
-  //
   // It's difficult to know the true type of `ServerManifest`.
   // A lot of react's source files are stubs that are replaced at build time.
   // Going off this reference for now: https://github.com/facebook/react/blob/b09e102ff1e2aaaf5eb6585b04609ac7ff54a5c8/packages/react-server-dom-webpack/src/ReactFlightClientConfigBundlerWebpack.js#L40
   type ImportManifestEntry = {
     id: string
-    // chunks is a double indexed array of chunkId / chunkFilename pairs
     chunks: Array<string>
     name: string
   }
@@ -41,6 +36,10 @@ declare module 'react-server-dom-webpack/server' {
   type ServerManifest = {
     [id: string]: ImportManifestEntry
   }
+
+  // The types for `decodeReply` and `decodeReplyFromBusboy` were taken from
+  // https://github.com/facebook/react/blob/b09e102ff1e2aaaf5eb6585b04609ac7ff54a5c8/packages/react-server-dom-webpack/src/ReactFlightDOMServerNode.js
+  // which is what 'react-server-dom-webpack/server' resolves to with the 'react-server' condition.
 
   /**
    * WARNING: The types for this were handwritten by looking at React's source and could be wrong.
@@ -68,6 +67,9 @@ declare module 'react-server-dom-webpack/server' {
     abort(reason: any): void
     pipe<T extends Writable>(destination: T): T
   }
+
+  // The types for `renderToPipeableStream` are incomplete and were taken from
+  // https://github.com/facebook/react/blob/b09e102ff1e2aaaf5eb6585b04609ac7ff54a5c8/packages/react-server-dom-webpack/src/ReactFlightDOMServerNode.js#L75.
 
   /**
    * WARNING: The types for this were handwritten by looking at React's source and could be wrong.
