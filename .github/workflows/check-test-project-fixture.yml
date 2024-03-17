@@ -10,39 +10,27 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+  YARN_ENABLE_HARDENED_MODE: 0
+  YARN_ENABLE_IMMUTABLE_INSTALLS: 0
+
 jobs:
   check-test-project-fixture:
     name: Check test project fixture
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up job
-        if: "!contains(github.event.pull_request.labels.*.name, 'fixture-ok')"
         uses: ./.github/actions/set-up-job
+        with:
+          yarn-install-directory: .github/scripts
+          build: false
 
-      - name: Rebuild test-project fixture
-        if: "!contains(github.event.pull_request.labels.*.name, 'fixture-ok')"
-        run: yarn rebuild-test-project-fixture
+      - name: Check test project fixture
+        working-directory: .github/scripts
+        # This is to get colors in the output.
+        # See https://github.com/chalk/supports-color/issues/106.
         env:
-          REDWOOD_DISABLE_TELEMETRY: 1
-          YARN_ENABLE_IMMUTABLE_INSTALLS: false
-
-      - name: Check for changed files
-        if: "!contains(github.event.pull_request.labels.*.name, 'fixture-ok')"
-        run: |
-          if [ $(git status --porcelain | wc -l) -gt 0 ]; then
-            echo 'Updating the test project fixture caused files to change'
-            echo 'Please run `yarn rebuild-test-project-fixture` locally and commit any changes'
-            echo
-            echo 'Deleted files:'
-            git status --porcelain | grep '^ D ' | awk '{print "        " $2}'
-            echo
-            echo 'Modified files:'
-            git status --porcelain | grep '^ M ' | awk '{print "        " $2}'
-            echo
-            echo 'Untracked files:'
-            git status --porcelain | grep '^?? ' | awk '{print "        " $2}'
-            echo
-            exit 1;
-          fi
+          FORCE_COLOR: 2
+        run: yarn tsx checkTestProjectFixture.mts
