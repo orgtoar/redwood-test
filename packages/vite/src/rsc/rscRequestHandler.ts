@@ -54,7 +54,8 @@ export function createRscRequestHandler() {
         if (req.headers['content-type']?.startsWith('multipart/form-data')) {
           console.log('RSA: multipart/form-data')
           const bb = busboy({ headers: req.headers })
-          const reply = decodeReplyFromBusboy(bb)
+          // TODO (RSC): The generic here could be typed better
+          const reply = decodeReplyFromBusboy<unknown[]>(bb)
 
           req.pipe(bb)
           args = await reply

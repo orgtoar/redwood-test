@@ -20,6 +20,10 @@ declare module 'react-server-dom-webpack/client' {
 }
 
 declare module 'react-server-dom-webpack/server' {
+  import type { Writable } from 'stream'
+
+  import type { Busboy } from 'busboy'
+
   // The types for these functions were taken from react-server-dom-webpack/src/ReactFlightDOMServerNode.js
   // which is what 'react-server-dom-webpack/server' resolves to with the 'react-server' condition.
   // See https://github.com/facebook/react/blob/b09e102ff1e2aaaf5eb6585b04609ac7ff54a5c8/packages/react-server-dom-webpack/src/ReactFlightDOMServerNode.js#L120.
@@ -27,14 +31,14 @@ declare module 'react-server-dom-webpack/server' {
   // It's difficult to know the true type of `ServerManifest`.
   // A lot of react's source files are stubs that are replaced at build time.
   // Going off this reference for now: https://github.com/facebook/react/blob/b09e102ff1e2aaaf5eb6585b04609ac7ff54a5c8/packages/react-server-dom-webpack/src/ReactFlightClientConfigBundlerWebpack.js#L40
-  export type ImportManifestEntry = {
+  type ImportManifestEntry = {
     id: string
     // chunks is a double indexed array of chunkId / chunkFilename pairs
     chunks: Array<string>
     name: string
   }
 
-  export type ServerManifest = {
+  type ServerManifest = {
     [id: string]: ImportManifestEntry
   }
 
@@ -46,8 +50,6 @@ declare module 'react-server-dom-webpack/server' {
     webpackMap?: ServerManifest,
   ): Promise<T>
 
-  import type { Busboy } from 'busboy'
-
   /**
    * WARNING: The types for this were handwritten by looking at React's source and could be wrong.
    */
@@ -55,6 +57,25 @@ declare module 'react-server-dom-webpack/server' {
     busboyStream: Busboy,
     webpackMap?: ServerManifest,
   ): Promise<T>
+
+  type ClientReferenceManifestEntry = ImportManifestEntry
+
+  type ClientManifest = {
+    [id: string]: ClientReferenceManifestEntry
+  }
+
+  type PipeableStream = {
+    abort(reason: any): void
+    pipe<T extends Writable>(destination: T): T
+  }
+
+  /**
+   * WARNING: The types for this were handwritten by looking at React's source and could be wrong.
+   */
+  export function renderToPipeableStream(
+    model: ReactClientValue,
+    webpackMap: ClientManifest,
+  ): PipeableStream
 }
 
 declare module 'acorn-loose'
