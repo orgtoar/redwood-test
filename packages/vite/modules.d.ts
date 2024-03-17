@@ -1,5 +1,3 @@
-declare module 'react-server-dom-webpack/node-loader'
-
 declare module 'react-server-dom-webpack/client' {
   // https://github.com/facebook/react/blob/dfaed5582550f11b27aae967a8e7084202dd2d90/packages/react-server-dom-webpack/src/ReactFlightDOMClientBrowser.js#L31
   export type Options<A, T> = {
@@ -79,6 +77,3 @@ declare module 'react-server-dom-webpack/server' {
     webpackMap: ClientManifest,
   ): PipeableStream
 }
-
-declare module 'acorn-loose'
-declare module 'vite-plugin-cjs-interop'
