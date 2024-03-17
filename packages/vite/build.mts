@@ -4,12 +4,12 @@ import * as esbuild from 'esbuild'
 
 await build()
 
-// Bundle some react dependencies with the "react-server" condition
+// We bundle some react packages with the "react-server" condition
 // so that we don't need to specify it at runtime.
 
 await esbuild.build({
-  entryPoints: ['prebundled/react-server-dom-webpack.server.js'],
-  outdir: 'compiled',
+  entryPoints: ['prebundled/*'],
+  outdir: 'bundled',
 
   bundle: true,
   conditions: ['react-server'],

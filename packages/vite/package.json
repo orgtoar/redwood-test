@@ -55,7 +55,7 @@
     "dist",
     "inject",
     "cjsWrapper.js",
-    "compiled"
+    "bundled"
   ],
   "scripts": {
     "build": "tsx build.mts && yarn build:types",

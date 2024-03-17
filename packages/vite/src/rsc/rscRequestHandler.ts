@@ -4,7 +4,7 @@ import type { Request, Response } from 'express'
 import {
   decodeReply,
   decodeReplyFromBusboy,
-} from '../../compiled/react-server-dom-webpack.server.js'
+} from '../../bundled/react-server-dom-webpack.server.js'
 import { hasStatusCode } from '../lib/StatusError.js'
 
 import { sendRscFlightToStudio } from './rscStudioHandlers.js'
