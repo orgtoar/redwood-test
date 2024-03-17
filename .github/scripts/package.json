@@ -1,0 +1,11 @@
+{
+  "name": "redwood-ci-scripts",
+  "private": true,
+  "dependencies": {
+    "@actions/github": "6.0.0",
+    "boxen": "^7.1.1",
+    "tsx": "^4.7.1",
+    "zx": "^7.2.3"
+  },
+  "packageManager": "yarn@4.1.1"
+}

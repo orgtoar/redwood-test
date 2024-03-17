@@ -10,20 +10,27 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  YARN_ENABLE_HARDENED_MODE: 0
+
 jobs:
   check-create-redwood-app:
     name: Check create redwood app
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
       - name: Set up job
         uses: ./.github/actions/set-up-job
         with:
           set-up-yarn-cache: false
-          yarn-install-directory: ./.github/actions/check_create_redwood_app
+          yarn-install-directory: .github/scripts
           build: false
 
       - name: Check create redwood app
-        uses: ./.github/actions/check_create_redwood_app
-        with:
-          labels: '{ "labels": ${{ toJSON(github.event.pull_request.labels) }} }'
+        working-directory: .github/scripts
+        # This is to get colors in the output.
+        # See https://github.com/chalk/supports-color/issues/106.
+        env:
+          FORCE_COLOR: 2
+        run: yarn tsx checkCreateRedwoodApp.mts

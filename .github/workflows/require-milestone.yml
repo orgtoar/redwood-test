@@ -10,6 +10,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  YARN_ENABLE_HARDENED_MODE: 0
+
 jobs:
   require-milestone:
     name: 🚩 Require milestone
@@ -17,11 +20,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: ⬢ Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up job
+        uses: ./.github/actions/set-up-job
         with:
-          node-version: 20
+          set-up-yarn-cache: false
+          yarn-install-directory: .github/scripts
+          build: false
 
-      - name: ✅ Check milestone
-        uses: ./.github/actions/require-milestone
+      - name: Require milestone
+        working-directory: .github/scripts
+        # This is to get colors in the output.
+        # See https://github.com/chalk/supports-color/issues/106.
+        env:
+          FORCE_COLOR: 2
+        run: yarn tsx requireMilestone.mts
