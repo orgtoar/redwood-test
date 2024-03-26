@@ -29,3 +29,5 @@ packages/create-redwood-app/create-redwood-app.tgz
 **/meta.*.json
 
 .nx/cache
+
+!packages/cli/dist

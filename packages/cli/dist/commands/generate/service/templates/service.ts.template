@@ -1,0 +1,38 @@
+import type { QueryResolvers<% if (crud) { %>, MutationResolvers<% } %><% if (relations.length) { %>, ${singularPascalName}RelationResolvers<% } %> } from 'types/graphql'
+
+import { db } from 'src/lib/db'
+
+export const ${pluralCamelName}: QueryResolvers['${pluralCamelName}'] = () => {
+  return db.${singularCamelName}.findMany()
+}<% if (crud || relations.length) { %>
+
+export const ${singularCamelName}: QueryResolvers['${singularCamelName}'] = ({ ${idName} }) => {
+  return db.${singularCamelName}.findUnique({
+    where: { ${idName} },
+  })
+}<% } %><% if (crud) { %>
+
+export const create${singularPascalName}: MutationResolvers['create${singularPascalName}'] = ({ input }) => {
+  return db.${singularCamelName}.create({
+    data: input,
+  })
+}
+
+export const update${singularPascalName}: MutationResolvers['update${singularPascalName}'] = ({ ${idName}, input }) => {
+  return db.${singularCamelName}.update({
+    data: input,
+    where: { ${idName} },
+  })
+}
+
+export const delete${singularPascalName}: MutationResolvers['delete${singularPascalName}'] = ({ ${idName} }) => {
+  return db.${singularCamelName}.delete({
+    where: { ${idName} },
+  })
+}<% } %><% if (relations.length) { %>
+
+export const ${singularPascalName}: ${singularPascalName}RelationResolvers = {<% relations.forEach(relation => { %>
+  ${relation}: (_obj, { root }) => {
+    return db.${singularCamelName}.findUnique({ where: { ${idName}: root?.${idName} } }).${relation}()
+  },<% }) %>
+}<% } %>

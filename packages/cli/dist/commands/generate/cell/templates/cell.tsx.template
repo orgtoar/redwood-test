@@ -1,0 +1,34 @@
+import type { ${operationName}, ${operationName}Variables } from 'types/graphql'
+
+import type {
+  CellSuccessProps,
+  CellFailureProps,
+  TypedDocumentNode,
+} from '@redwoodjs/web'
+
+export const QUERY: TypedDocumentNode<
+  ${operationName},
+  ${operationName}Variables
+> = gql`
+  query ${operationName}($id: ${idType}!) {
+    ${camelName}: ${camelName}(${idName}: $id) {
+      ${idName}
+    }
+  }
+`
+
+export const Loading = () => <div>Loading...</div>
+
+export const Empty = () => <div>Empty</div>
+
+export const Failure = ({
+  error,
+}: CellFailureProps<${operationName}Variables>) => (
+  <div style={{ color: 'red' }}>Error: {error?.message}</div>
+)
+
+export const Success = ({
+  ${camelName},
+}: CellSuccessProps<${operationName}, ${operationName}Variables>) => {
+  return <div>{JSON.stringify(${camelName})}</div>
+}
