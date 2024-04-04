@@ -225,12 +225,17 @@ async function main() {
   const branch = process.env.GITHUB_BASE_REF
 
   // If there's no branch, we're not in a pull request.
+<<<<<<< Updated upstream
   if (!branch) {
     core.setOutput('code', false)
     core.setOutput('rsc', false)
     core.setOutput('ssr', false)
+=======
+    core.setOutput('onlydocs', false)
+    core.setOutput('rsc', true)
+    core.setOutput('ssr', true)
+>>>>>>> Stashed changes
     return
-  }
 
   const branchName = await getPrBranchName()
   const workflowRun = await getLatestCompletedWorkflowRun(branchName)
