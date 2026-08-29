@@ -110,7 +110,7 @@
     "typescript": "5.4.3",
     "vitest": "1.4.0",
     "yargs": "17.7.2",
-    "zx": "7.2.3"
+    "zx": "8.8.5"
   },
   "packageManager": "yarn@4.1.1",
   "npmClient": "yarn"
