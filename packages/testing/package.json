@@ -28,7 +28,7 @@
     "test:watch": "vitest watch"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "7.24.1",
+    "@babel/runtime-corejs3": "7.26.10",
     "@redwoodjs/auth": "workspace:*",
     "@redwoodjs/babel-config": "workspace:*",
     "@redwoodjs/context": "workspace:*",
