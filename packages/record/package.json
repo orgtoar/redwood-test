@@ -23,7 +23,7 @@
     "test:watch": "vitest watch"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "7.24.1",
+    "@babel/runtime-corejs3": "7.26.10",
     "@prisma/client": "5.11.0",
     "@redwoodjs/project-config": "workspace:*",
     "core-js": "3.36.1"
