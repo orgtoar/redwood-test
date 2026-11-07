@@ -34,7 +34,7 @@
     "@babel/cli": "7.24.1",
     "@babel/core": "^7.22.20",
     "@redwoodjs/api": "workspace:*",
-    "@simplewebauthn/server": "7.4.0",
+    "@simplewebauthn/server": "13.3.2",
     "@types/md5": "2.3.5",
     "@types/uuid": "9.0.8",
     "typescript": "5.4.3",
